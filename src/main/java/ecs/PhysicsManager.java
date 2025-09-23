@@ -100,18 +100,14 @@ public class PhysicsManager {
 
             to = from.add(movement.multiply(collisionTime));
 
-            if (collider.onCollisionEnter != null) {
-                collider.onCollisionEnter.accept(otherCollider);
-            }
-
-            if (otherCollider.onCollisionEnter != null) {
-                otherCollider.onCollisionEnter.accept(collider);
-            }
-
             result.collided = true;
             result.otherCollider = otherCollider;
             result.contactPoint = to;
             result.hitNormal = hitNormal;
+
+            if (collider.onCollisionEnter != null) {
+                collider.onCollisionEnter.accept(result);
+            }
 
         }
 

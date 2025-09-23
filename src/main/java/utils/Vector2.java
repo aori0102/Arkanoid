@@ -117,12 +117,22 @@ public class Vector2 {
     }
 
     /**
-     * Mutltiply this vector with {@code other} component-wise.
+     * Multiply this vector with {@code other} component-wise.
      *
      * @param other The other vector.
      * @return Product of {@code this} and {@code other} component-wise.
      */
-    public Vector2 scale(Vector2 other) {
+    public Vector2 scaleUp(Vector2 other) {
+        return new Vector2(x * other.x, y * other.y);
+    }
+
+    /**
+     * Divide this vector with {@code other} component-wise.
+     *
+     * @param other The other vector.
+     * @return Quotient of {@code this} and {@code other} component-wise.
+     */
+    public Vector2 scaleDown(Vector2 other) {
         return new Vector2(x * other.x, y * other.y);
     }
 

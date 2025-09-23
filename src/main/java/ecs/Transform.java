@@ -6,55 +6,107 @@ import java.util.function.Function;
 
 public class Transform extends MonoBehaviour {
 
-    private Vector2 position;
-    private Vector2 scale;
+    private Vector2 localPosition;
+    private Vector2 localScale;
+    private Transform parent;
 
     protected Function<Void, Void> onPositionChanged;
 
     public Transform(GameObject owner) {
         super(owner);
-        position = new Vector2();
-        scale = new Vector2(1.0, 1.0);
+        localPosition = new Vector2();
+        localScale = new Vector2(1.0, 1.0);
+        parent = null;
     }
 
     /**
-     * Get the transform position.
+     * Get this object's scale in local space relative to its parent.
      *
      * @return The transform position.
      */
-    public Vector2 getPosition() {
-        return new Vector2(position);
+    public Vector2 getLocalPosition() {
+        return new Vector2(localPosition);
     }
 
     /**
-     * Get the transform scale.
+     * Get this object's scale in local space relative to its parent.
      *
-     * @return The transform scale.
+     * @return The local scale.
      */
-    public Vector2 getScale() {
-        return new Vector2(scale);
+    public Vector2 getLocalScale() {
+        return new Vector2(localScale);
     }
 
     /**
-     * Set the transform position.
+     * Get this object's position in world space.
+     *
+     * @return The global position.
      */
-    public void setPosition(Vector2 position) {
-        this.position = new Vector2(position);
+    public Vector2 getGlobalPosition() {
+        if (parent == null) {
+            return getLocalPosition();
+        }
+        return localPosition.add(parent.getGlobalPosition());
     }
 
     /**
-     * Set the transform scale.
+     * Get this object's scale in world space.
+     *
+     * @return The global scale.
      */
-    public void setScale(Vector2 scale) {
-        this.scale = new Vector2(scale);
+    public Vector2 getGlobalScale() {
+        if (parent == null) {
+            return getLocalScale();
+        }
+        return localScale.scaleUp(parent.getGlobalScale());
+    }
+
+    /**
+     * Set the global position for this object.
+     *
+     * @param globalPosition The global position.
+     */
+    public void setGlobalPosition(Vector2 globalPosition) {
+        if (parent == null) {
+            localPosition = globalPosition;
+        } else {
+            localPosition = globalPosition.subtract(parent.getGlobalPosition());
+        }
+    }
+
+    /**
+     * Set the global scale of this object.
+     *
+     * @param globalScale The global scale
+     */
+    public void setGlobalScale(Vector2 globalScale) {
+        if (parent == null) {
+            localScale = globalScale;
+        } else {
+            localScale = globalScale.scaleDown(parent.getGlobalScale());
+        }
+    }
+
+    /**
+     * Set the local position for this object.
+     */
+    public void setLocalPosition(Vector2 localPosition) {
+        this.localPosition = new Vector2(localPosition);
+    }
+
+    /**
+     * Set the local scale for this object.
+     */
+    public void setLocalScale(Vector2 localScale) {
+        this.localScale = new Vector2(localScale);
     }
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
 
         Transform newTransform = new Transform(newOwner);
-        newTransform.position = this.position;
-        newTransform.scale = this.scale;
+        newTransform.localPosition = this.localPosition;
+        newTransform.localScale = this.localScale;
         return newTransform;
 
     }
@@ -66,25 +118,46 @@ public class Transform extends MonoBehaviour {
      */
     public void translate(Vector2 translation) {
 
-        Vector2 destination = position.add(translation);
+        Vector2 destination = getGlobalPosition().add(translation);
         var collider = getComponent(BoxCollider.class);
         if (collider != null) {
 
-            var collisionData = PhysicsManager.validateMovement(collider, position, destination);
+            var collisionData = PhysicsManager.validateMovement(collider, getGlobalPosition(), destination);
             if (collisionData.collided) {
-                position = collisionData.contactPoint;
+                localPosition = collisionData.contactPoint;
             }
 
         }
 
-        position = destination;
+        localPosition = destination;
 
+    }
+
+    /**
+     * Set the parent for this object.
+     *
+     * @param parent The parent.
+     */
+    public void setParent(Transform parent) {
+        if (parent == this) {
+            System.out.println(gameObject.name + " cannot be its own parent!");
+        }
+        this.parent = parent;
+    }
+
+    /**
+     * Get this object's parent.
+     *
+     * @return The object's parent.
+     */
+    public Transform getParent() {
+        return parent;
     }
 
     @Override
     protected void clear() {
-        position = null;
-        scale = null;
+        localPosition = null;
+        localScale = null;
     }
 
 }
