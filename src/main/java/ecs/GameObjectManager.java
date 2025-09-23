@@ -1,0 +1,150 @@
+package ecs;
+
+import java.util.HashSet;
+
+public class GameObjectManager {
+
+    private static final HashSet<GameObject> gameObjectSet = new HashSet<>();
+
+    public static void InitializeAll() {
+
+        for (var object : gameObjectSet) {
+
+            if (object.Initialize != null) {
+                object.Initialize.apply(null);
+            }
+
+        }
+
+    }
+
+    /**
+     * Call all game objects upon Awake state.
+     */
+    public static void Awake() {
+
+        for (var object : gameObjectSet) {
+
+            if (object.IsActive()) {
+                object.HandleAwake();
+            }
+
+        }
+
+    }
+
+    /**
+     * Call all game objects upon Start state.
+     */
+    public static void Start() {
+
+        for (var object : gameObjectSet) {
+
+            if (object.IsActive()) {
+                object.HandleStart();
+            }
+
+        }
+
+    }
+
+    /**
+     * Call all game objects upon Update state.
+     */
+    public static void Update() {
+
+        for (var object : gameObjectSet) {
+
+            if (object.IsActive()) {
+                object.HandleUpdate();
+            }
+
+        }
+
+    }
+
+    /**
+     * Call all game objects upon Late Update state.
+     */
+    public static void LateUpdate() {
+
+        for (var object : gameObjectSet) {
+
+            if (object.IsActive()) {
+                object.HandleLateUpdate();
+            }
+
+        }
+
+    }
+
+    /**
+     * Register a game object to the query list.
+     *
+     * @param gameObject The game object to register.
+     */
+    private static void RegisterGameObject(GameObject gameObject) {
+        gameObjectSet.add(gameObject);
+    }
+
+    /**
+     * Unregister a game object from the query list.
+     *
+     * @param gameObject The game object to unregister.
+     */
+    private static void UnregisterGameObject(GameObject gameObject) {
+        gameObjectSet.remove(gameObject);
+    }
+
+    /**
+     * Create an empty game object.
+     *
+     * @return An empty game object.
+     */
+    public static GameObject Instantiate() {
+        var newGameObject = new GameObject();
+        gameObjectSet.add(newGameObject);
+        return newGameObject;
+    }
+
+    /**
+     * Create an empty game object.
+     *
+     * @param name The name for the game object.
+     * @return An empty game object.
+     */
+    public static GameObject Instantiate(String name) {
+        var newGameObject = new GameObject(name);
+        gameObjectSet.add(newGameObject);
+        return newGameObject;
+    }
+
+    /**
+     * Copy a game object along with all of its component.
+     *
+     * @param source The source game object to copy from.
+     * @return The copied game object.
+     */
+    public static GameObject Instantiate(GameObject source) {
+        var newGameObject = new GameObject(source);
+        gameObjectSet.add(newGameObject);
+        return newGameObject;
+    }
+
+    /**
+     * Create a copy of the game object that the MonoBehaviour
+     * is attached to. All the MonoBehaviour attached to the
+     * source will be cloned.
+     *
+     * @param monoBehaviour The source MonoBehaviour.
+     * @param type          The type of the MonoBehaviour.
+     * @param <T>           The type of the MonoBehaviour.
+     * @return The copied game object.
+     */
+    public static <T extends MonoBehaviour> T Instantiate(MonoBehaviour monoBehaviour, Class<T> type) {
+        var newGameObject = new GameObject(monoBehaviour.gameObject);
+        gameObjectSet.add(newGameObject);
+        return newGameObject.GetComponent(type);
+    }
+
+}
