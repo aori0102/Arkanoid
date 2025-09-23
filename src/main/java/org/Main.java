@@ -18,7 +18,10 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 
         RendererManager.initializeMain(stage);
-        GameObjectManager.spawnObjects();
+        Init.Init_Aori();
+        Init.Init_Duc();
+        Init.Init_Dui();
+        Init.Init_Kine();
         GameObjectManager.initializeAll();
 
         var params = getParameters().getRaw();

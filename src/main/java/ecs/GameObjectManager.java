@@ -9,15 +9,6 @@ public class GameObjectManager {
     private static final HashSet<GameObject> gameObjectSet = new HashSet<>();
 
     /**
-     * Spawn all objects. This function acts as an editor.
-     */
-    public static void spawnObjects() {
-        var obj = instantiate("test");
-        obj.addComponent(Test.class);
-        obj.addComponent(SpriteRenderer.class);
-    }
-
-    /**
      * Run initialization for all objects.
      */
     public static void initializeAll() {
