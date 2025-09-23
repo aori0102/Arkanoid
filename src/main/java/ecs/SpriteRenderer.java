@@ -45,7 +45,7 @@ public class SpriteRenderer extends MonoBehaviour {
     public void update() {
         var transform = transform();
         var position = transform.getGlobalPosition();
-        var size = transform.getLocalScale().scaleUp(imageDimension);
+        var size = transform.getGlobalScale().scaleUp(imageDimension);
         sprite.setX(position.x);
         sprite.setY(position.y);
         sprite.setFitWidth(size.x);

@@ -136,4 +136,8 @@ public class Vector2 {
         return new Vector2(x * other.x, y * other.y);
     }
 
+    public Vector2 inverse() {
+        return new Vector2(-x, -y);
+    }
+
 }
