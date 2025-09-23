@@ -20,26 +20,26 @@ public class Vector2 {
         this.y = v.y;
     }
 
-    public void Normalize() {
+    public void normalize() {
 
-        float mag = Magnitude();
+        float mag = magnitude();
         x /= mag;
         y /= mag;
 
     }
 
-    public float Magnitude() {
+    public float magnitude() {
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    public static float Dot(Vector2 a, Vector2 b) {
+    public static float dot(Vector2 a, Vector2 b) {
         return a.x * b.x + a.y * b.y;
     }
 
-    public static float Angle(Vector2 a, Vector2 b) {
+    public static float angle(Vector2 a, Vector2 b) {
 
-        float dot = Dot(a, b);
-        float product = a.Magnitude() * b.Magnitude();
+        float dot = dot(a, b);
+        float product = a.magnitude() * b.magnitude();
 
         if (product == 0f) {
             return 0f;
@@ -49,23 +49,23 @@ public class Vector2 {
 
     }
 
-    public Vector2 Add(Vector2 other) {
+    public Vector2 add(Vector2 other) {
         return new Vector2(x + other.x, y + other.y);
     }
 
-    public Vector2 Subtract(Vector2 other) {
+    public Vector2 subtract(Vector2 other) {
         return new Vector2(x - other.x, y - other.y);
     }
 
-    public Vector2 Multiply(float other) {
+    public Vector2 multiply(float other) {
         return new Vector2(x * other, y * other);
     }
 
-    public Vector2 Divide(float other) {
+    public Vector2 divide(float other) {
         return new Vector2(x / other, y / other);
     }
 
-    public Vector2 Scale(Vector2 other) {
+    public Vector2 scale(Vector2 other) {
         return new Vector2(x * other.x, y * other.y);
     }
 

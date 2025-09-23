@@ -8,7 +8,7 @@ public class BoxCollider extends MonoBehaviour {
     private Vector2 size = new Vector2();
 
     @Override
-    protected MonoBehaviour Clone(MonoBehaviour source) {
+    protected MonoBehaviour clone(MonoBehaviour source) {
         BoxCollider newBoxCollider = new BoxCollider();
         newBoxCollider.center = this.center;
         newBoxCollider.size = this.size;
@@ -16,7 +16,7 @@ public class BoxCollider extends MonoBehaviour {
     }
 
     @Override
-    protected void Clear() {
+    protected void clear() {
         center = null;
         size = null;
     }

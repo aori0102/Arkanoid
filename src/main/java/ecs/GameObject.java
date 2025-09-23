@@ -24,7 +24,7 @@ public class GameObject {
      *
      * @return {@code true} if this object is enabled, otherwise {@code false}.
      */
-    public boolean IsActive() {
+    public boolean isActive() {
         return isActive;
     }
 
@@ -33,19 +33,19 @@ public class GameObject {
      *
      * @param active Enable or disable.
      */
-    public void SetActive(boolean active) {
+    public void setActive(boolean active) {
         isActive = active;
     }
 
     /**
      * Handle Awake state. Should only be called within {@link GameObjectManager}.
      */
-    protected void HandleAwake() {
+    protected void handleAwake() {
 
         while (!preAwakeMonoBehaviourQueue.isEmpty()) {
 
             var mono = preAwakeMonoBehaviourQueue.poll();
-            mono.Awake();
+            mono.awake();
             preStartMonoBehaviourQueue.offer(mono);
 
         }
@@ -55,12 +55,12 @@ public class GameObject {
     /**
      * Handle Start state. Should only be called within {@link GameObjectManager}.
      */
-    protected void HandleStart() {
+    protected void handleStart() {
 
         while (!preStartMonoBehaviourQueue.isEmpty()) {
 
             var mono = preStartMonoBehaviourQueue.poll();
-            mono.Start();
+            mono.start();
 
         }
 
@@ -69,10 +69,10 @@ public class GameObject {
     /**
      * Handle Update state. Should only be called within {@link GameObjectManager}.
      */
-    protected void HandleUpdate() {
+    protected void handleUpdate() {
 
         for (var mono : monoBehaviourSet) {
-            mono.Update();
+            mono.update();
         }
 
     }
@@ -80,10 +80,10 @@ public class GameObject {
     /**
      * Handle Late Update state. Should only be called within {@link GameObjectManager}.
      */
-    protected void HandleLateUpdate() {
+    protected void handleLateUpdate() {
 
         for (var mono : monoBehaviourSet) {
-            mono.LateUpdate();
+            mono.lateUpdate();
         }
 
     }
@@ -93,7 +93,7 @@ public class GameObject {
      */
     protected GameObject() {
         name = DEFAULT_NAME;
-        AddComponent(Transform.class);
+        addComponent(Transform.class);
     }
 
     /**
@@ -103,7 +103,7 @@ public class GameObject {
      */
     protected GameObject(String name) {
         this.name = name;
-        AddComponent(Transform.class);
+        addComponent(Transform.class);
     }
 
     /**
@@ -120,10 +120,10 @@ public class GameObject {
     /**
      * Wipe clean this game object's components.
      */
-    protected void ClearComponents() {
+    protected void clearComponents() {
 
         for (var monoBehaviour : monoBehaviourSet) {
-            monoBehaviour.Clear();
+            monoBehaviour.clear();
         }
 
         monoBehaviourSet.clear();
@@ -139,7 +139,7 @@ public class GameObject {
      * @param <T>  Component type, must derive from {@link MonoBehaviour}.
      * @return A component, or {@code null} if not found any.
      */
-    public <T extends MonoBehaviour> T GetComponent(Class<T> type) {
+    public <T extends MonoBehaviour> T getComponent(Class<T> type) {
 
         for (var component : monoBehaviourSet) {
 
@@ -160,9 +160,9 @@ public class GameObject {
      * @param <T>  Component type, must derive from {@linkplain MonoBehaviour}.
      * @return A valid component. If the component already exists, return that version.
      */
-    public <T extends MonoBehaviour> T AddComponent(Class<T> type) {
+    public <T extends MonoBehaviour> T addComponent(Class<T> type) {
 
-        var comp = GetComponent(type);
+        var comp = getComponent(type);
         if (comp == null) {
             try {
                 comp = type.getDeclaredConstructor().newInstance();

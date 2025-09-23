@@ -3,11 +3,9 @@ package org;
 import ecs.GameObjectManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 
@@ -43,17 +41,17 @@ public class Main extends Application {
             }
         };
 
-        GameObjectManager.InitializeAll();
+        GameObjectManager.initializeAll();
 
         loop.start(); // 🚀 kick it off
 
     }
 
     private void update() {
-        GameObjectManager.Awake();
-        GameObjectManager.Start();
-        GameObjectManager.Update();
-        GameObjectManager.LateUpdate();
+        GameObjectManager.awake();
+        GameObjectManager.start();
+        GameObjectManager.update();
+        GameObjectManager.lateUpdate();
     }
 
     private void render() {
