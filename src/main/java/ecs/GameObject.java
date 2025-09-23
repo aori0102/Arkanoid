@@ -166,13 +166,9 @@ public class GameObject {
         var comp = getComponent(type);
         if (comp == null) {
             try {
-                System.out.println("Adding " + type);
                 comp = type.getDeclaredConstructor(GameObject.class).newInstance(this);
-                System.out.println(1);
                 preAwakeMonoBehaviourQueue.offer(comp);
-                System.out.println(2);
                 monoBehaviourSet.add(comp);
-                System.out.println(3);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException("No such method");
             } catch (IllegalAccessException e) {

@@ -122,7 +122,7 @@ public class Transform extends MonoBehaviour {
         var collider = getComponent(BoxCollider.class);
         if (collider != null) {
 
-            var collisionData = PhysicsManager.validateMovement(collider, getGlobalPosition(), destination);
+            var collisionData = PhysicsManager.validateMovement(collider, translation);
             if (collisionData.collided) {
                 localPosition = collisionData.contactPoint;
             }
