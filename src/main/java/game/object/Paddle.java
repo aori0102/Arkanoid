@@ -2,12 +2,13 @@ package game.object;
 
 import ecs.*;
 import org.ActionMap;
+import utils.Time;
 import utils.Vector2;
 
 public class Paddle extends MonoBehaviour {
 
     private SpriteRenderer sprite;
-    private float paddleSpeed;
+    private double paddleSpeed = 1000;
     private ActionMap actionMap;
 
     /**
@@ -20,7 +21,7 @@ public class Paddle extends MonoBehaviour {
     }
 
     /**
-     * Initialize paddle specs
+     * Initialize paddle specs.
      */
     public void awake() {
         actionMap = gameObject.getComponent(ActionMap.class);
@@ -33,17 +34,18 @@ public class Paddle extends MonoBehaviour {
 
     }
 
-    public void update()
-    {
+    public void update() {
         handleMovement();
     }
 
-    public void handleMovement()
-    {
-        switch(actionMap.currentAction)
-        {
-            case GoLeft -> System.out.println("Go Left");
-            case GoRight -> System.out.println("");
+    /**
+     * Handle the movement of the paddle
+     * Using Action defined in Action map to decide move direction
+     */
+    public void handleMovement() {
+        switch (actionMap.currentAction) {
+            case GoLeft -> transform().translate(new Vector2(-paddleSpeed * Time.deltaTime, 0));
+            case GoRight -> transform().translate(new Vector2(paddleSpeed * Time.deltaTime, 0));
             //default -> System.out.println("Unknown Action");
         }
     }

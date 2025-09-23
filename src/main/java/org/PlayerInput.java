@@ -11,7 +11,6 @@ import javafx.scene.input.KeyCode;
 public class PlayerInput extends MonoBehaviour {
 
     private Set<KeyCode> pressedKey = new HashSet<KeyCode>();
-    private ActionMap actionMap;
     private Scene scene;
 
     public PlayerInput(GameObject owner) {
@@ -19,7 +18,6 @@ public class PlayerInput extends MonoBehaviour {
     }
 
     public void awake() {
-        actionMap = gameObject.getComponent(ActionMap.class);
         scene = Main.scene;
     }
 
@@ -27,15 +25,24 @@ public class PlayerInput extends MonoBehaviour {
         HandlePlayerInput();
     }
 
-
+    /**
+     * Add the input from keyboard to pressedKey set and remove it when releasing.
+     */
     public void HandlePlayerInput() {
         scene.setOnKeyPressed(e -> {
             pressedKey.add(e.getCode());
-            System.out.println("Press " + pressedKey.toString());});
-        scene.setOnKeyReleased(e -> {pressedKey.remove(e.getCode());});
+        });
+        scene.setOnKeyReleased(e -> {
+            pressedKey.remove(e.getCode());
+        });
     }
 
 
+    /**
+     * Check if the key is pressed.
+     * @param keyCode the wanted check key
+     * @return true if the key is pressed.
+     */
     public boolean isKeyPressed(KeyCode keyCode) {
         return pressedKey.contains(keyCode);
     }

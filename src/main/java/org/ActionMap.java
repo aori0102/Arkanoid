@@ -8,6 +8,9 @@ import javafx.scene.input.KeyCode;
 
 public class ActionMap extends MonoBehaviour {
 
+    /**
+     * Action state of the paddle. Each state corresponds with each button input from keyboard.
+     */
     public enum Action {
         GoLeft,
         GoRight,
@@ -27,6 +30,9 @@ public class ActionMap extends MonoBehaviour {
         assignActionMap();
     }
 
+    /**
+     * Assign the input with corresponding action state.
+     */
     public void assignActionMap() {
 
         actionMap.put(KeyCode.A, Action.GoLeft);
@@ -34,12 +40,14 @@ public class ActionMap extends MonoBehaviour {
 
     }
 
+    /**
+     * Adjust the current action state.
+     */
     public void update() {
+        currentAction = Action.None;
         for (KeyCode keyCode : actionMap.keySet()) {
             if (playerInput.isKeyPressed(keyCode)) {
                 currentAction = actionMap.get(keyCode);
-            } else {
-                currentAction = Action.None;
             }
         }
     }
