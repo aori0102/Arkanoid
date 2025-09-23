@@ -2,11 +2,16 @@ package org;
 
 import ecs.GameObjectManager;
 import ecs.SpriteRenderer;
-import test.Bocchi;
+import game.object.Paddle;
 
 public class Init {
 
     public static void Init_Kine() {
+        var paddle = GameObjectManager.instantiate("paddle");
+        paddle.addComponent(SpriteRenderer.class);
+        paddle.addComponent(ActionMap.class);
+        paddle.addComponent(PlayerInput.class);
+        paddle.addComponent(Paddle.class);
 
     }
 
@@ -22,7 +27,6 @@ public class Init {
 
         // Init bocchi
         var bocchi = GameObjectManager.instantiate("Bocchi");
-        bocchi.addComponent(Bocchi.class);
         bocchi.addComponent(SpriteRenderer.class);
 
     }

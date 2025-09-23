@@ -56,7 +56,7 @@ public class SpriteRenderer extends MonoBehaviour {
         super(owner);
         sprite = new ImageView();
         imageDimension = new Vector2();
-        RendererManager.RegisterNode(sprite);
+        RendererManager.registerNode(sprite);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class SpriteRenderer extends MonoBehaviour {
 
     @Override
     protected void clear() {
-        RendererManager.UnregisterNode(sprite);
+        RendererManager.unregisterNode(sprite);
     }
 
 }
