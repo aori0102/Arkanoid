@@ -7,9 +7,13 @@ public class BoxCollider extends MonoBehaviour {
     private Vector2 center = new Vector2();
     private Vector2 size = new Vector2();
 
+    public BoxCollider(GameObject owner) {
+        super(owner);
+    }
+
     @Override
-    protected MonoBehaviour clone(MonoBehaviour source) {
-        BoxCollider newBoxCollider = new BoxCollider();
+    protected MonoBehaviour clone(GameObject newOwner) {
+        BoxCollider newBoxCollider = new BoxCollider(newOwner);
         newBoxCollider.center = this.center;
         newBoxCollider.size = this.size;
         return newBoxCollider;

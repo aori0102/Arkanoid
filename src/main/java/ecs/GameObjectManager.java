@@ -1,11 +1,25 @@
 package ecs;
 
+import test.Test;
+
 import java.util.HashSet;
 
 public class GameObjectManager {
 
     private static final HashSet<GameObject> gameObjectSet = new HashSet<>();
 
+    /**
+     * Spawn all objects. This function acts as an editor.
+     */
+    public static void spawnObjects() {
+        var obj = instantiate("test");
+        obj.addComponent(Test.class);
+        obj.addComponent(SpriteRenderer.class);
+    }
+
+    /**
+     * Run initialization for all objects.
+     */
     public static void initializeAll() {
 
         for (var object : gameObjectSet) {
@@ -103,7 +117,7 @@ public class GameObjectManager {
      */
     public static GameObject instantiate() {
         var newGameObject = new GameObject();
-        gameObjectSet.add(newGameObject);
+        RegisterGameObject(newGameObject);
         return newGameObject;
     }
 
@@ -115,7 +129,7 @@ public class GameObjectManager {
      */
     public static GameObject instantiate(String name) {
         var newGameObject = new GameObject(name);
-        gameObjectSet.add(newGameObject);
+        RegisterGameObject(newGameObject);
         return newGameObject;
     }
 
@@ -127,7 +141,7 @@ public class GameObjectManager {
      */
     public static GameObject instantiate(GameObject source) {
         var newGameObject = new GameObject(source);
-        gameObjectSet.add(newGameObject);
+        RegisterGameObject(newGameObject);
         return newGameObject;
     }
 
@@ -143,7 +157,7 @@ public class GameObjectManager {
      */
     public static <T extends MonoBehaviour> T instantiate(MonoBehaviour monoBehaviour, Class<T> type) {
         var newGameObject = new GameObject(monoBehaviour.gameObject);
-        gameObjectSet.add(newGameObject);
+        RegisterGameObject(newGameObject);
         return newGameObject.getComponent(type);
     }
 

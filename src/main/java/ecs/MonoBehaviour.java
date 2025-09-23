@@ -7,10 +7,28 @@ public abstract class MonoBehaviour {
     /**
      * Clone this MonoBehaviour.
      *
-     * @param source The source MonoBehaviour.
+     * @param newOwner The new owner of the cloned MonoBehaviour.
      * @return The cloned version of this MonoBehaviour from source.
      */
-    protected abstract MonoBehaviour clone(MonoBehaviour source);
+    protected abstract MonoBehaviour clone(GameObject newOwner);
+
+    /**
+     * Get the {@link Transform} for this game object.
+     *
+     * @return The {@link Transform} for this game object.
+     */
+    public Transform transform() {
+        return gameObject.transform;
+    }
+
+    /**
+     * Get the game object this MonoBehaviour is attached to.
+     *
+     * @param owner The owner of this component.
+     */
+    public MonoBehaviour(GameObject owner) {
+        gameObject = owner;
+    }
 
     /**
      * Wipe clean this MonoBehaviours data.

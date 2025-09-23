@@ -1,5 +1,6 @@
 package ecs;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -93,7 +94,8 @@ public class GameObject {
      */
     protected GameObject() {
         name = DEFAULT_NAME;
-        addComponent(Transform.class);
+        isActive = true;
+        transform = addComponent(Transform.class);
     }
 
     /**
@@ -103,7 +105,8 @@ public class GameObject {
      */
     protected GameObject(String name) {
         this.name = name;
-        addComponent(Transform.class);
+        isActive = true;
+        transform = addComponent(Transform.class);
     }
 
     /**
@@ -113,7 +116,6 @@ public class GameObject {
      */
     protected GameObject(GameObject gameObject) {
         this.name = gameObject.name;
-        this.transform = gameObject.transform;
         this.isActive = gameObject.isActive;
     }
 
@@ -165,10 +167,27 @@ public class GameObject {
         var comp = getComponent(type);
         if (comp == null) {
             try {
-                comp = type.getDeclaredConstructor().newInstance();
-                comp.gameObject = this;
+                System.out.println("Adding " + type);
+                comp = type.getDeclaredConstructor(GameObject.class).newInstance(this);
+                System.out.println(1);
                 preAwakeMonoBehaviourQueue.offer(comp);
+                System.out.println(2);
                 monoBehaviourSet.add(comp);
+                System.out.println(3);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException("No such method");
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Illegal access");
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Illegal argument");
+            } catch (InstantiationException e) {
+                throw new RuntimeException("InstantiationException");
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException("InvocationTargetException");
+            } catch (ExceptionInInitializerError e) {
+                throw new RuntimeException("ExceptionInInitializerError");
+            } catch (SecurityException e) {
+                throw new RuntimeException("SecurityException");
             } catch (Exception e) {
                 throw new RuntimeException("Cannot create component of type " + type, e);
             }

@@ -1,32 +1,30 @@
 package org;
 
+import ecs.EditorManager;
+import ecs.RendererManager;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import utils.Time;
 import ecs.GameObjectManager;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.Group;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 
 public class Main extends Application {
-
-    private int x = 100;
-    private int y = 100;
-    private Group root = null;
 
     @Override
     public void start(Stage stage) throws Exception {
 
-        // root node (empty container for now)
-        root = new Group();
+        RendererManager.initializeMain(stage);
+        GameObjectManager.spawnObjects();
+        GameObjectManager.initializeAll();
 
-        // scene = like your canvas
-        Scene scene = new Scene(root, 1200, 800);
-
-        stage.setTitle("NigArkanoid");
-        stage.setScene(scene);
-        stage.show(); // 🚀 show the window
+        var params = getParameters().getRaw();
+        if (params.contains("--editor_enabled")) {
+            EditorManager.initializeEditor();
+        }
 
         // --- Game/render loop ---
         AnimationTimer loop = new AnimationTimer() {
@@ -36,38 +34,22 @@ public class Main extends Application {
                 // Update game logic
                 update();
 
-                // Render/draw (JavaFX handles actual drawing)
-                render();
             }
         };
-
-        GameObjectManager.initializeAll();
 
         loop.start(); // 🚀 kick it off
 
     }
 
+    /**
+     * Update of every frame
+     */
     private void update() {
+        Time.updateTime();
         GameObjectManager.awake();
         GameObjectManager.start();
         GameObjectManager.update();
         GameObjectManager.lateUpdate();
-    }
-
-    private void render() {
-
-    }
-
-    private void updateBall(int deltaX, int deltaY) {
-
-        x += deltaX;
-        y += deltaY;
-
-        Circle circle = new Circle(20, Color.GREEN);
-        circle.setCenterX(x);
-        circle.setCenterY(y);
-        root.getChildren().add(circle);
-
     }
 
     /**
