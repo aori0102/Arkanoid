@@ -21,6 +21,9 @@ public class Init {
         buttonUI.setOnClick(()->{
             System.out.println("Bocchi clicked!");
         });
+        buttonUI.setAdditionalOnClick(()->{
+            System.out.println("Bocchi called again!");
+        });
 
     }
 

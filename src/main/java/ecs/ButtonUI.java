@@ -45,6 +45,9 @@ public class ButtonUI extends UI
 
         attachPointerClick(image.getView());
         attachPointerEnter(image.getView());
+        attachPointerUp(image.getView());
+        attachPointerDown(image.getView());
+        attachPointerExited(image.getView());
 
     }
 
