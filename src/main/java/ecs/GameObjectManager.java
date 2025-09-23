@@ -1,7 +1,5 @@
 package ecs;
 
-import test.Test;
-
 import java.util.HashSet;
 
 public class GameObjectManager {

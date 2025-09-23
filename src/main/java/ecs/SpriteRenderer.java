@@ -6,8 +6,8 @@ import utils.Vector2;
 
 public class SpriteRenderer extends MonoBehaviour {
 
-    protected ImageView sprite = new ImageView();
-    private Vector2 imageDimension = new Vector2();
+    protected ImageView sprite;
+    private Vector2 imageDimension;
 
     /**
      * Set the image for this Renderer.
@@ -37,7 +37,7 @@ public class SpriteRenderer extends MonoBehaviour {
     /**
      * Remove the image for this Renderer.
      */
-    public void ResetImage() {
+    public void resetImage() {
         sprite.setImage(null);
     }
 
@@ -54,6 +54,8 @@ public class SpriteRenderer extends MonoBehaviour {
 
     public SpriteRenderer(GameObject owner) {
         super(owner);
+        sprite = new ImageView();
+        imageDimension = new Vector2();
         RendererManager.RegisterNode(sprite);
     }
 

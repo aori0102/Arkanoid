@@ -7,7 +7,7 @@ public class Time {
     /**
      * The current time in seconds from the start of the application.
      */
-    public static double time = System.nanoTime();
+    public static double time = 0.0;
 
     /**
      * The time difference in seconds between this and last frame.

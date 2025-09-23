@@ -2,7 +2,7 @@ package org;
 
 import ecs.GameObjectManager;
 import ecs.SpriteRenderer;
-import test.Test;
+import test.Bocchi;
 
 public class Init {
 
@@ -19,9 +19,12 @@ public class Init {
     }
 
     public static void Init_Aori() {
-        var obj = GameObjectManager.instantiate("test");
-        obj.addComponent(Test.class);
-        obj.addComponent(SpriteRenderer.class);
+
+        // Init bocchi
+        var bocchi = GameObjectManager.instantiate("Bocchi");
+        bocchi.addComponent(Bocchi.class);
+        bocchi.addComponent(SpriteRenderer.class);
+
     }
 
 }
