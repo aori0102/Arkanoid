@@ -1,11 +1,19 @@
-package ecs.UI;
+package ecs;
 
 
-import ecs.GameObject;
-
-public abstract class UI extends GameObject {
+public abstract class UI extends MonoBehaviour {
     private double height;
     private double width;
+
+    /**
+     * Get the game object this MonoBehaviour is attached to.
+     *
+     * @param owner The owner of this component.
+     */
+    public UI(GameObject owner) {
+        super(owner);
+    }
+
     public double getHeight() {
         return height;
     }

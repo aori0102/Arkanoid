@@ -8,6 +8,10 @@ public class SpriteRenderer extends MonoBehaviour {
 
     protected ImageView sprite = new ImageView();
     private Vector2 imageDimension = new Vector2();
+    
+    protected ImageView getView(){
+        return sprite;
+    }
 
     /**
      * Set the image for this Renderer.
