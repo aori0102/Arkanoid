@@ -1,5 +1,6 @@
 package ecs;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -17,14 +18,13 @@ public class GameObject {
 
     public Transform transform;
     public String name;
-    public Function<Void, Void> Initialize = null;
 
     /**
      * Return the activeness of this game object.
      *
      * @return {@code true} if this object is enabled, otherwise {@code false}.
      */
-    public boolean IsActive() {
+    public boolean isActive() {
         return isActive;
     }
 
@@ -33,19 +33,19 @@ public class GameObject {
      *
      * @param active Enable or disable.
      */
-    public void SetActive(boolean active) {
+    public void setActive(boolean active) {
         isActive = active;
     }
 
     /**
      * Handle Awake state. Should only be called within {@link GameObjectManager}.
      */
-    protected void HandleAwake() {
+    protected void handleAwake() {
 
         while (!preAwakeMonoBehaviourQueue.isEmpty()) {
 
             var mono = preAwakeMonoBehaviourQueue.poll();
-            mono.Awake();
+            mono.awake();
             preStartMonoBehaviourQueue.offer(mono);
 
         }
@@ -55,12 +55,12 @@ public class GameObject {
     /**
      * Handle Start state. Should only be called within {@link GameObjectManager}.
      */
-    protected void HandleStart() {
+    protected void handleStart() {
 
         while (!preStartMonoBehaviourQueue.isEmpty()) {
 
             var mono = preStartMonoBehaviourQueue.poll();
-            mono.Start();
+            mono.start();
 
         }
 
@@ -69,10 +69,10 @@ public class GameObject {
     /**
      * Handle Update state. Should only be called within {@link GameObjectManager}.
      */
-    protected void HandleUpdate() {
+    protected void handleUpdate() {
 
         for (var mono : monoBehaviourSet) {
-            mono.Update();
+            mono.update();
         }
 
     }
@@ -80,10 +80,10 @@ public class GameObject {
     /**
      * Handle Late Update state. Should only be called within {@link GameObjectManager}.
      */
-    protected void HandleLateUpdate() {
+    protected void handleLateUpdate() {
 
         for (var mono : monoBehaviourSet) {
-            mono.LateUpdate();
+            mono.lateUpdate();
         }
 
     }
@@ -93,7 +93,8 @@ public class GameObject {
      */
     protected GameObject() {
         name = DEFAULT_NAME;
-        AddComponent(Transform.class);
+        isActive = true;
+        transform = addComponent(Transform.class);
     }
 
     /**
@@ -103,7 +104,8 @@ public class GameObject {
      */
     protected GameObject(String name) {
         this.name = name;
-        AddComponent(Transform.class);
+        isActive = true;
+        transform = addComponent(Transform.class);
     }
 
     /**
@@ -113,17 +115,16 @@ public class GameObject {
      */
     protected GameObject(GameObject gameObject) {
         this.name = gameObject.name;
-        this.transform = gameObject.transform;
         this.isActive = gameObject.isActive;
     }
 
     /**
      * Wipe clean this game object's components.
      */
-    protected void ClearComponents() {
+    protected void clearComponents() {
 
         for (var monoBehaviour : monoBehaviourSet) {
-            monoBehaviour.Clear();
+            monoBehaviour.clear();
         }
 
         monoBehaviourSet.clear();
@@ -139,7 +140,7 @@ public class GameObject {
      * @param <T>  Component type, must derive from {@link MonoBehaviour}.
      * @return A component, or {@code null} if not found any.
      */
-    public <T extends MonoBehaviour> T GetComponent(Class<T> type) {
+    public <T extends MonoBehaviour> T getComponent(Class<T> type) {
 
         for (var component : monoBehaviourSet) {
 
@@ -160,15 +161,32 @@ public class GameObject {
      * @param <T>  Component type, must derive from {@linkplain MonoBehaviour}.
      * @return A valid component. If the component already exists, return that version.
      */
-    public <T extends MonoBehaviour> T AddComponent(Class<T> type) {
+    public <T extends MonoBehaviour> T addComponent(Class<T> type) {
 
-        var comp = GetComponent(type);
+        var comp = getComponent(type);
         if (comp == null) {
             try {
-                comp = type.getDeclaredConstructor().newInstance();
-                comp.gameObject = this;
+                System.out.println("Adding " + type);
+                comp = type.getDeclaredConstructor(GameObject.class).newInstance(this);
+                System.out.println(1);
                 preAwakeMonoBehaviourQueue.offer(comp);
+                System.out.println(2);
                 monoBehaviourSet.add(comp);
+                System.out.println(3);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException("No such method");
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Illegal access");
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Illegal argument");
+            } catch (InstantiationException e) {
+                throw new RuntimeException("InstantiationException");
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException("InvocationTargetException");
+            } catch (ExceptionInInitializerError e) {
+                throw new RuntimeException("ExceptionInInitializerError");
+            } catch (SecurityException e) {
+                throw new RuntimeException("SecurityException");
             } catch (Exception e) {
                 throw new RuntimeException("Cannot create component of type " + type, e);
             }

@@ -7,44 +7,62 @@ public abstract class MonoBehaviour {
     /**
      * Clone this MonoBehaviour.
      *
-     * @param source The source MonoBehaviour.
+     * @param newOwner The new owner of the cloned MonoBehaviour.
      * @return The cloned version of this MonoBehaviour from source.
      */
-    protected abstract MonoBehaviour Clone(MonoBehaviour source);
+    protected abstract MonoBehaviour clone(GameObject newOwner);
+
+    /**
+     * Get the {@link Transform} for this game object.
+     *
+     * @return The {@link Transform} for this game object.
+     */
+    public Transform transform() {
+        return gameObject.transform;
+    }
+
+    /**
+     * Get the game object this MonoBehaviour is attached to.
+     *
+     * @param owner The owner of this component.
+     */
+    public MonoBehaviour(GameObject owner) {
+        gameObject = owner;
+    }
 
     /**
      * Wipe clean this MonoBehaviours data.
      */
-    protected abstract void Clear();
+    protected abstract void clear();
 
     /**
      * Called when initializing object
      */
-    public void Init() {
+    public void init() {
     }
 
     /**
      * Called when an object is instantiated and is active.
      */
-    public void Awake() {
+    public void awake() {
     }
 
     /**
      * Called in the first frame of update.
      */
-    public void Start() {
+    public void start() {
     }
 
     /**
      * Called every frame.
      */
-    public void Update() {
+    public void update() {
     }
 
     /**
      * Called late every frame after all Update().
      */
-    public void LateUpdate() {
+    public void lateUpdate() {
     }
 
     /**
@@ -52,7 +70,7 @@ public abstract class MonoBehaviour {
      *
      * @return the game object this MonoBehaviour is attached to.
      */
-    public GameObject GetGameObject() {
+    public GameObject getGameObject() {
         return gameObject;
     }
 
@@ -63,7 +81,7 @@ public abstract class MonoBehaviour {
      * @param <T>  the type under MonoBehaviour.
      * @return a valid class derive from MonoBehaviour, or {@code null} if error.
      */
-    public <T extends MonoBehaviour> T As(Class<T> type) {
+    public <T extends MonoBehaviour> T as(Class<T> type) {
         try {
             return type.cast(this);
         } catch (ClassCastException e) {

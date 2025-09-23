@@ -1,32 +1,22 @@
 package ecs;
 
+
+
 import java.util.HashSet;
 
 public class GameObjectManager {
 
     private static final HashSet<GameObject> gameObjectSet = new HashSet<>();
 
-    public static void InitializeAll() {
-
-        for (var object : gameObjectSet) {
-
-            if (object.Initialize != null) {
-                object.Initialize.apply(null);
-            }
-
-        }
-
-    }
-
     /**
      * Call all game objects upon Awake state.
      */
-    public static void Awake() {
+    public static void awake() {
 
         for (var object : gameObjectSet) {
 
-            if (object.IsActive()) {
-                object.HandleAwake();
+            if (object.isActive()) {
+                object.handleAwake();
             }
 
         }
@@ -36,12 +26,12 @@ public class GameObjectManager {
     /**
      * Call all game objects upon Start state.
      */
-    public static void Start() {
+    public static void start() {
 
         for (var object : gameObjectSet) {
 
-            if (object.IsActive()) {
-                object.HandleStart();
+            if (object.isActive()) {
+                object.handleStart();
             }
 
         }
@@ -51,12 +41,12 @@ public class GameObjectManager {
     /**
      * Call all game objects upon Update state.
      */
-    public static void Update() {
+    public static void update() {
 
         for (var object : gameObjectSet) {
 
-            if (object.IsActive()) {
-                object.HandleUpdate();
+            if (object.isActive()) {
+                object.handleUpdate();
             }
 
         }
@@ -66,12 +56,12 @@ public class GameObjectManager {
     /**
      * Call all game objects upon Late Update state.
      */
-    public static void LateUpdate() {
+    public static void lateUpdate() {
 
         for (var object : gameObjectSet) {
 
-            if (object.IsActive()) {
-                object.HandleLateUpdate();
+            if (object.isActive()) {
+                object.handleLateUpdate();
             }
 
         }
@@ -101,9 +91,9 @@ public class GameObjectManager {
      *
      * @return An empty game object.
      */
-    public static GameObject Instantiate() {
+    public static GameObject instantiate() {
         var newGameObject = new GameObject();
-        gameObjectSet.add(newGameObject);
+        RegisterGameObject(newGameObject);
         return newGameObject;
     }
 
@@ -113,9 +103,9 @@ public class GameObjectManager {
      * @param name The name for the game object.
      * @return An empty game object.
      */
-    public static GameObject Instantiate(String name) {
+    public static GameObject instantiate(String name) {
         var newGameObject = new GameObject(name);
-        gameObjectSet.add(newGameObject);
+        RegisterGameObject(newGameObject);
         return newGameObject;
     }
 
@@ -125,9 +115,9 @@ public class GameObjectManager {
      * @param source The source game object to copy from.
      * @return The copied game object.
      */
-    public static GameObject Instantiate(GameObject source) {
+    public static GameObject instantiate(GameObject source) {
         var newGameObject = new GameObject(source);
-        gameObjectSet.add(newGameObject);
+        RegisterGameObject(newGameObject);
         return newGameObject;
     }
 
@@ -141,10 +131,10 @@ public class GameObjectManager {
      * @param <T>           The type of the MonoBehaviour.
      * @return The copied game object.
      */
-    public static <T extends MonoBehaviour> T Instantiate(MonoBehaviour monoBehaviour, Class<T> type) {
+    public static <T extends MonoBehaviour> T instantiate(MonoBehaviour monoBehaviour, Class<T> type) {
         var newGameObject = new GameObject(monoBehaviour.gameObject);
-        gameObjectSet.add(newGameObject);
-        return newGameObject.GetComponent(type);
+        RegisterGameObject(newGameObject);
+        return newGameObject.getComponent(type);
     }
 
 }

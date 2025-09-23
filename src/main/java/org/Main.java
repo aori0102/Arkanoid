@@ -1,34 +1,22 @@
 package org;
 
-import ecs.UI.ButtonUI;
+import ecs.RendererManager;
+import utils.Time;
 import ecs.GameObjectManager;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.Group;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 
 public class Main extends Application {
 
-    private int x = 100;
-    private int y = 100;
-    private Group root = null;
-
     @Override
     public void start(Stage stage) throws Exception {
 
-        // root node (empty container for now)
-        root = new Group();
-
-        // scene = like your canvas
-        Scene scene = new Scene(root, 1200, 800);
-
-        stage.setTitle("NigArkanoid");
-        stage.setScene(scene);
-        stage.show(); // 🚀 show the window
+        RendererManager.initializeMain(stage);
+        Init.Init_Aori();
+        Init.Init_Duc();
+        Init.Init_Dui();
+        Init.Init_Kine();
 
         // --- Game/render loop ---
         AnimationTimer loop = new AnimationTimer() {
@@ -38,38 +26,22 @@ public class Main extends Application {
                 // Update game logic
                 update();
 
-                // Render/draw (JavaFX handles actual drawing)
-                render();
             }
         };
-
-        GameObjectManager.InitializeAll();
 
         loop.start(); // 🚀 kick it off
 
     }
 
+    /**
+     * Update of every frame
+     */
     private void update() {
-        GameObjectManager.Awake();
-        GameObjectManager.Start();
-        GameObjectManager.Update();
-        GameObjectManager.LateUpdate();
-    }
-
-    private void render() {
-
-    }
-
-    private void updateBall(int deltaX, int deltaY) {
-
-        x += deltaX;
-        y += deltaY;
-
-        Circle circle = new Circle(20, Color.GREEN);
-        circle.setCenterX(x);
-        circle.setCenterY(y);
-        root.getChildren().add(circle);
-
+        Time.updateTime();
+        GameObjectManager.awake();
+        GameObjectManager.start();
+        GameObjectManager.update();
+        GameObjectManager.lateUpdate();
     }
 
     /**
