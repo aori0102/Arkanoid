@@ -8,7 +8,7 @@ public class BoxCollider extends MonoBehaviour {
 
     private Vector2 center = new Vector2();
     private Vector2 size = new Vector2();
-    public Consumer<BoxCollider> onCollisionEnter;
+    public Consumer<CollisionData> onCollisionEnter;
 
     public BoxCollider(GameObject owner) {
         super(owner);
@@ -34,7 +34,7 @@ public class BoxCollider extends MonoBehaviour {
     }
 
     public Vector2 getCenter() {
-        return transform().getPosition().add(center);
+        return transform().getGlobalPosition().add(center);
     }
 
     public Vector2 getLocalSize() {
@@ -42,7 +42,7 @@ public class BoxCollider extends MonoBehaviour {
     }
 
     public Vector2 getSize() {
-        return size.scale(transform().getScale());
+        return size.scaleUp(transform().getGlobalScale());
     }
 
     public void setLocalCenter(Vector2 center) {
