@@ -9,21 +9,6 @@ public class GameObjectManager {
     private static final HashSet<GameObject> gameObjectSet = new HashSet<>();
 
     /**
-     * Run initialization for all objects.
-     */
-    public static void initializeAll() {
-
-        for (var object : gameObjectSet) {
-
-            if (object.Initialize != null) {
-                object.Initialize.apply(null);
-            }
-
-        }
-
-    }
-
-    /**
      * Call all game objects upon Awake state.
      */
     public static void awake() {

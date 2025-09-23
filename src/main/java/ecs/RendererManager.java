@@ -19,8 +19,6 @@ public class RendererManager {
      */
     public static void initializeMain(Stage stage) {
 
-        System.out.println("Initializing Main");
-
         // root node (empty container for now)
         root = new Group();
 
@@ -30,8 +28,6 @@ public class RendererManager {
         stage.setTitle("NigArkanoid");
         stage.setScene(scene);
         stage.show(); // 🚀 show the window
-
-        System.out.println("Done");
 
     }
 

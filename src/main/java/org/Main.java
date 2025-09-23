@@ -1,16 +1,11 @@
 package org;
 
-import ecs.EditorManager;
 import ecs.RendererManager;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import utils.Time;
 import ecs.GameObjectManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 
 public class Main extends Application {
 
@@ -22,12 +17,6 @@ public class Main extends Application {
         Init.Init_Duc();
         Init.Init_Dui();
         Init.Init_Kine();
-        GameObjectManager.initializeAll();
-
-        var params = getParameters().getRaw();
-        if (params.contains("--editor_enabled")) {
-            EditorManager.initializeEditor();
-        }
 
         // --- Game/render loop ---
         AnimationTimer loop = new AnimationTimer() {

@@ -18,7 +18,6 @@ public class GameObject {
 
     public Transform transform;
     public String name;
-    public Function<Void, Void> Initialize = null;
 
     /**
      * Return the activeness of this game object.
