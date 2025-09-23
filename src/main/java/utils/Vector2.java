@@ -20,14 +20,19 @@ public class Vector2 {
         this.y = v.y;
     }
 
-    /**
-     * Normalize this vector.
-     */
-    public void normalize() {
 
+    /**
+     * Get the normalized of this vector.
+     *
+     * @return This vector normalized.
+     */
+    public Vector2 normalize() {
+
+        Vector2 normalized = new Vector2(this);
         double mag = magnitude();
-        x /= mag;
-        y /= mag;
+        normalized.x /= mag;
+        normalized.y /= mag;
+        return normalized;
 
     }
 

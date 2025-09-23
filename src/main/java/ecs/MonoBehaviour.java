@@ -89,4 +89,27 @@ public abstract class MonoBehaviour {
         }
     }
 
+    /**
+     * Get the component of type {@link T} of this object.
+     *
+     * @param type The type of the component.
+     * @param <T>  The type of the component.
+     * @return The component, or {@code null} if not found.
+     */
+    public <T extends MonoBehaviour> T getComponent(Class<T> type) {
+        return gameObject.getComponent(type);
+    }
+
+    /**
+     * Add component of type {@code type} to this game object.
+     *
+     * @param type The type of the component.
+     * @param <T>  The type of the component.
+     * @return The added component. If the game object already has a component
+     * of type {@code type}, return that.
+     */
+    public <T extends MonoBehaviour> T addComponent(Class<T> type) {
+        return gameObject.addComponent(type);
+    }
+
 }
