@@ -52,11 +52,6 @@ public class SpriteRenderer extends MonoBehaviour {
         sprite.setFitHeight(size.y);
     }
 
-    @Override
-    protected void destroyMono() {
-        sprite = null;
-    }
-
     public SpriteRenderer(GameObject owner) {
         super(owner);
         sprite = new ImageView();
@@ -72,6 +67,7 @@ public class SpriteRenderer extends MonoBehaviour {
     @Override
     protected void clear() {
         RendererManager.UnregisterNode(sprite);
+        sprite = null;
     }
 
 }

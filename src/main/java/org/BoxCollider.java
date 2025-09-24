@@ -29,12 +29,6 @@ public class BoxCollider extends MonoBehaviour {
     protected void clear() {
         localCenter = null;
         localSize = null;
-    }
-
-    @Override
-    protected void destroyMono() {
-        localCenter = null;
-        localSize = null;
         onCollisionEnter = null;
     }
 

@@ -158,12 +158,6 @@ public class Transform extends MonoBehaviour {
     protected void clear() {
         localPosition = null;
         localScale = null;
-    }
-
-    @Override
-    protected void destroyMono() {
-        localPosition = null;
-        localScale = null;
         parent = null;
     }
 
