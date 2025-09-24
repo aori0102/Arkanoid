@@ -115,4 +115,9 @@ public abstract class MonoBehaviour {
         return gameObject.addComponent(type);
     }
 
+    /**
+     * Clean up this MonoBehaviour's data.
+     */
+    protected abstract void destroyMono();
+
 }

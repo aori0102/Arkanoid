@@ -52,6 +52,11 @@ public class SpriteRenderer extends MonoBehaviour {
         sprite.setFitHeight(size.y);
     }
 
+    @Override
+    protected void destroyMono() {
+        sprite = null;
+    }
+
     public SpriteRenderer(GameObject owner) {
         super(owner);
         sprite = new ImageView();
