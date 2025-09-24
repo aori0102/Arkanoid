@@ -8,7 +8,7 @@ public class BoxCollider extends MonoBehaviour {
 
     private Vector2 localCenter;
     private Vector2 localSize;
-    public Consumer<CollisionData> onCollisionEnter;
+    protected Consumer<CollisionData> onCollisionEnter;
 
     public BoxCollider(GameObject owner) {
         super(owner);
@@ -29,6 +29,13 @@ public class BoxCollider extends MonoBehaviour {
     protected void clear() {
         localCenter = null;
         localSize = null;
+    }
+
+    @Override
+    protected void destroyMono() {
+        localCenter = null;
+        localSize = null;
+        onCollisionEnter = null;
     }
 
     /**
@@ -113,6 +120,15 @@ public class BoxCollider extends MonoBehaviour {
      */
     public Vector2 getExtents() {
         return getLocalSize().divide(2.0);
+    }
+
+    /**
+     * Set the callback when collision happens.
+     *
+     * @param onCollisionEnter The callback when collision happens.
+     */
+    public void setOnCollisionEnterCallback(Consumer<CollisionData> onCollisionEnter) {
+        this.onCollisionEnter = onCollisionEnter;
     }
 
 }
