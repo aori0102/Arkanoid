@@ -1,10 +1,8 @@
-package ecs;
+package org;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
 
 public class RendererManager {

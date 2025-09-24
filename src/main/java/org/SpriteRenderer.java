@@ -1,4 +1,4 @@
-package ecs;
+package org;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

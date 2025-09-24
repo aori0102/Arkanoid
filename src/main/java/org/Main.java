@@ -1,8 +1,7 @@
 package org;
 
-import ecs.RendererManager;
+import game.Init;
 import utils.Time;
-import ecs.GameObjectManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;

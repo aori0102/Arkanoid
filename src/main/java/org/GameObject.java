@@ -1,10 +1,9 @@
-package ecs;
+package org;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.function.Function;
 
 public class GameObject {
 

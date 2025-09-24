@@ -1,8 +1,8 @@
-package ecs;
+package org;
 
 public abstract class MonoBehaviour {
 
-    protected GameObject gameObject = null;
+    protected transient GameObject gameObject = null;
 
     /**
      * Clone this MonoBehaviour.

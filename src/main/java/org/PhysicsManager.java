@@ -1,4 +1,4 @@
-package ecs;
+package org;
 
 import utils.Vector2;
 
