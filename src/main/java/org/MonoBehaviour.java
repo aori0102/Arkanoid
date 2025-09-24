@@ -22,7 +22,7 @@ public abstract class MonoBehaviour {
     }
 
     /**
-     * Get the game object this MonoBehaviour is attached to.
+     * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */

@@ -139,17 +139,15 @@ public class PhysicsManager {
             result.contactPoint = to;
             result.hitNormal = hitNormal;
 
+            var inverseResult = result.getInverseData();
+            inverseResult.contactPoint = otherCollider.getCenter();
+
             if (collider.onCollisionEnter != null) {
                 collider.onCollisionEnter.accept(result);
             }
 
-            result.contactPoint = otherCollider.getCenter();
-            result.hitNormal = hitNormal.inverse();
-            result.thisCollider = otherCollider;
-            result.otherCollider = collider;
-
             if (otherCollider.onCollisionEnter != null) {
-                otherCollider.onCollisionEnter.accept(result);
+                otherCollider.onCollisionEnter.accept(inverseResult);
             }
 
         }

@@ -124,12 +124,12 @@ public class Transform extends MonoBehaviour {
 
             var collisionData = PhysicsManager.validateMovement(collider, translation);
             if (collisionData.collided) {
-                localPosition = collisionData.contactPoint;
+                destination = collisionData.contactPoint.subtract(collider.getLocalCenter());
             }
 
         }
 
-        localPosition = destination;
+        setGlobalPosition(destination);
 
     }
 
