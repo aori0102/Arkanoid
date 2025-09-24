@@ -140,9 +140,15 @@ public class Transform extends MonoBehaviour {
      */
     public void setParent(Transform parent) {
         if (parent == this) {
-            System.out.println(gameObject.name + " cannot be its own parent!");
+            throw new RuntimeException(gameObject.getName() + " cannot be its own parent!");
         }
+
+        if (this.parent != null) {
+            this.parent.gameObject.removeChild(gameObject);
+        }
+
         this.parent = parent;
+        parent.gameObject.addChild(gameObject);
     }
 
     /**
@@ -155,7 +161,7 @@ public class Transform extends MonoBehaviour {
     }
 
     @Override
-    protected void clear() {
+    protected void destroyComponent() {
         localPosition = null;
         localScale = null;
         parent = null;

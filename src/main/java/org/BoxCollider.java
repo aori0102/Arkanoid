@@ -26,7 +26,8 @@ public class BoxCollider extends MonoBehaviour {
     }
 
     @Override
-    protected void clear() {
+    protected void destroyComponent() {
+        PhysicsManager.UnregisterCollider(this);
         localCenter = null;
         localSize = null;
         onCollisionEnter = null;
@@ -47,7 +48,7 @@ public class BoxCollider extends MonoBehaviour {
      * @return The center of the bounding box in world space.
      */
     public Vector2 getCenter() {
-        return transform().getGlobalPosition().add(localCenter);
+        return getTransform().getGlobalPosition().add(localCenter);
     }
 
     /**
@@ -65,7 +66,7 @@ public class BoxCollider extends MonoBehaviour {
      * @return The size of the bounding box in world space.
      */
     public Vector2 getSize() {
-        return localSize.scaleUp(transform().getGlobalScale());
+        return localSize.scaleUp(getTransform().getGlobalScale());
     }
 
     /**

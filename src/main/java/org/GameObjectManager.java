@@ -1,19 +1,35 @@
 package org;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class GameObjectManager {
 
     private static final HashSet<GameObject> gameObjectSet = new HashSet<>();
 
     /**
+     * Run all update for the current frame in the
+     * order Awake - Start - Update - Late Update - Clean Up.
+     */
+    protected static void runUpdate() {
+
+        awake();
+        start();
+        update();
+        lateUpdate();
+        cleanUp();
+
+    }
+
+    /**
      * Call all game objects upon Awake state.
      */
-    public static void awake() {
+    private static void awake() {
 
         for (var object : gameObjectSet) {
 
-            if (object.isActive()) {
+            if (!object.isDestroyed() && object.isActive()) {
                 object.handleAwake();
             }
 
@@ -24,11 +40,11 @@ public class GameObjectManager {
     /**
      * Call all game objects upon Start state.
      */
-    public static void start() {
+    private static void start() {
 
         for (var object : gameObjectSet) {
 
-            if (object.isActive()) {
+            if (!object.isDestroyed() && object.isActive()) {
                 object.handleStart();
             }
 
@@ -39,11 +55,11 @@ public class GameObjectManager {
     /**
      * Call all game objects upon Update state.
      */
-    public static void update() {
+    private static void update() {
 
         for (var object : gameObjectSet) {
 
-            if (object.isActive()) {
+            if (!object.isDestroyed() && object.isActive()) {
                 object.handleUpdate();
             }
 
@@ -54,13 +70,34 @@ public class GameObjectManager {
     /**
      * Call all game objects upon Late Update state.
      */
-    public static void lateUpdate() {
+    private static void lateUpdate() {
 
         for (var object : gameObjectSet) {
 
-            if (object.isActive()) {
+            if (!object.isDestroyed() && object.isActive()) {
                 object.handleLateUpdate();
             }
+
+        }
+
+    }
+
+    /**
+     * Clean any destroyed object from scene.
+     */
+    private static void cleanUp() {
+
+        Queue<GameObject> destroyedQueue = new LinkedList<>();
+        for (var object : gameObjectSet) {
+            if (object.isDestroyed()) {
+                destroyedQueue.add(object);
+            }
+        }
+
+        while (!destroyedQueue.isEmpty()) {
+
+            var destroyed = destroyedQueue.poll();
+            gameObjectSet.remove(destroyed);
 
         }
 
@@ -133,6 +170,19 @@ public class GameObjectManager {
         var newGameObject = new GameObject(monoBehaviour.gameObject);
         RegisterGameObject(newGameObject);
         return newGameObject.getComponent(type);
+    }
+
+    /**
+     * Destroy a game object and all of its components.
+     *
+     * @param gameObject The game object to destroy.
+     */
+    public static void destroy(GameObject gameObject) {
+
+        if (gameObjectSet.contains(gameObject)) {
+            gameObject.destroyObject();
+        }
+
     }
 
 }

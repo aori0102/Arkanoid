@@ -43,7 +43,7 @@ public class SpriteRenderer extends MonoBehaviour {
 
     @Override
     public void update() {
-        var transform = transform();
+        var transform = getTransform();
         var position = transform.getGlobalPosition();
         var size = transform.getGlobalScale().scaleUp(imageDimension);
         sprite.setX(position.x);
@@ -65,7 +65,7 @@ public class SpriteRenderer extends MonoBehaviour {
     }
 
     @Override
-    protected void clear() {
+    protected void destroyComponent() {
         RendererManager.UnregisterNode(sprite);
         sprite = null;
     }
