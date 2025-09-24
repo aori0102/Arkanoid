@@ -31,38 +31,86 @@ public class BoxCollider extends MonoBehaviour {
         localSize = null;
     }
 
+    /**
+     * Get the center of the bounding box in local space.
+     *
+     * @return The center of the bounding box in local space
+     */
     public Vector2 getLocalCenter() {
         return new Vector2(localCenter);
     }
 
+    /**
+     * Get the center of the bounding box in world space.
+     *
+     * @return The center of the bounding box in world space.
+     */
     public Vector2 getCenter() {
         return transform().getGlobalPosition().add(localCenter);
     }
 
+    /**
+     * Get the size of the bounding box in local space.
+     *
+     * @return The size of the bounding box in local space.
+     */
     public Vector2 getLocalSize() {
         return new Vector2(localSize);
     }
 
+    /**
+     * Get the size of the bounding box in world space.
+     *
+     * @return The size of the bounding box in world space.
+     */
     public Vector2 getSize() {
         return localSize.scaleUp(transform().getGlobalScale());
     }
 
+    /**
+     * Set the center for the bounding box in local space.
+     *
+     * @param center The center in local space.
+     */
     public void setLocalCenter(Vector2 center) {
         this.localCenter = center;
     }
 
+    /**
+     * Set the size for the bounding box in local space.
+     *
+     * @param size The size in local space.
+     */
     public void setLocalSize(Vector2 size) {
         this.localSize = size;
     }
 
+    /**
+     * Get the min bound of the bounding box. This is
+     * always equal to {@code center} - {@code extents}.
+     *
+     * @return The min bound of the bounding box.
+     */
     public Vector2 getMinBound() {
         return getCenter().subtract(getExtents());
     }
 
+    /**
+     * Get the max bound of the bounding box. This is
+     * always equal to {@code center} + {@code extents}.
+     *
+     * @return The max bound of the bounding box.
+     */
     public Vector2 getMaxBound() {
         return getCenter().add(getExtents());
     }
 
+    /**
+     * Get the extents of the bounding box. This is
+     * always equal to twice the {@code size}.
+     *
+     * @return The extents of the bounding box.
+     */
     public Vector2 getExtents() {
         return getLocalSize().divide(2.0);
     }
