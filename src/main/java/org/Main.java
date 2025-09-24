@@ -1,26 +1,18 @@
 package org;
 
 import ecs.RendererManager;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import utils.Time;
 import ecs.GameObjectManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 
 public class Main extends Application {
 
-    protected static Group root;
-    protected static Scene scene;
-
     @Override
     public void start(Stage stage) throws Exception {
-        root = new Group();
-        scene = new Scene(root, 1200, 800);
-        RendererManager.initializeMain(stage, scene, root);
+
+        RendererManager.initializeMain(stage);
         Init.Init_Aori();
         Init.Init_Duc();
         Init.Init_Dui();

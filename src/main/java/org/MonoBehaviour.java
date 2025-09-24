@@ -1,8 +1,8 @@
-package ecs;
+package org;
 
 public abstract class MonoBehaviour {
 
-    protected GameObject gameObject = null;
+    protected transient GameObject gameObject = null;
 
     protected MonoBehaviour() {
     }
@@ -25,7 +25,7 @@ public abstract class MonoBehaviour {
     }
 
     /**
-     * Get the game object this MonoBehaviour is attached to.
+     * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
