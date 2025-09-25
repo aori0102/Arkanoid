@@ -1,15 +1,25 @@
 package game.object;
 
-import ecs.*;
-import org.ActionMap;
+import javafx.scene.input.MouseButton;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import org.*;
 import utils.Time;
 import utils.Vector2;
 
-public class Paddle extends MonoBehaviour {
+import javafx.scene.input.MouseEvent;
 
-    private SpriteRenderer sprite;
-    private double paddleSpeed = 1000;
+import java.awt.*;
+
+public class Paddle extends MonoBehaviour {
+    private final double paddleSpeed = 1000;
+
     private ActionMap actionMap;
+    private PlayerInput playerInput;
+    private BoxCollider boxCollider;
+    private Vector2  fireDirection;
+    private Line line;
+
 
     /**
      * Get the game object this MonoBehaviour is attached to.
@@ -25,17 +35,27 @@ public class Paddle extends MonoBehaviour {
      */
     public void awake() {
         actionMap = gameObject.getComponent(ActionMap.class);
-        sprite = gameObject.getComponent(SpriteRenderer.class);
+        boxCollider = gameObject.getComponent(BoxCollider.class);
+        playerInput = gameObject.getComponent(PlayerInput.class);
+        boxCollider.setLocalCenter(new Vector2(0, 0));
+        boxCollider.setLocalSize(new Vector2(100, 100));
+        transform().setGlobalPosition(new Vector2(600, 600));
+        transform().setGlobalScale(new Vector2(0.2, 0.2));
 
-        sprite.setImage("/paddle.png");
-        transform().setPosition(new Vector2(600, 600));
-        transform().setScale(new Vector2(0.2, 0.2));
-
+        line = new Line();
+        line.setStroke(Color.RED);
+        line.setStrokeWidth(5);
+        playerInput.getRoot().getChildren().add(line);
 
     }
 
     public void update() {
         handleMovement();
+    }
+
+    @Override
+    protected void destroyMono() {
+
     }
 
     /**
@@ -46,7 +66,23 @@ public class Paddle extends MonoBehaviour {
         switch (actionMap.currentAction) {
             case GoLeft -> transform().translate(new Vector2(-paddleSpeed * Time.deltaTime, 0));
             case GoRight -> transform().translate(new Vector2(paddleSpeed * Time.deltaTime, 0));
-            //default -> System.out.println("Unknown Action");
+            case MousePressed -> {
+                System.out.println("Pressed");
+                if (playerInput.getMouseEvent(MouseButton.PRIMARY) != null) {
+                    System.out.println("Pressed MousePressed");
+                    MouseEvent mouseEvent = playerInput.getMouseEvent(MouseButton.PRIMARY);
+
+                    Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
+                    fireDirection = transform().getGlobalPosition().add(new Vector2(50, 50)).subtract(mousePos).normalize();
+                    Vector2 direction = transform().getGlobalPosition()
+                            .add(fireDirection.multiply(100));
+
+                    line.setStartX(transform().getGlobalPosition().x + 50);
+                    line.setStartY(transform().getGlobalPosition().y);
+                    line.setEndX(direction.x);
+                    line.setEndY(direction.y);
+                }
+            }
         }
     }
 

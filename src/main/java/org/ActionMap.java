@@ -2,9 +2,8 @@ package org;
 
 import java.util.HashMap;
 
-import ecs.GameObject;
-import ecs.MonoBehaviour;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 
 public class ActionMap extends MonoBehaviour {
 
@@ -14,11 +13,14 @@ public class ActionMap extends MonoBehaviour {
     public enum Action {
         GoLeft,
         GoRight,
+        MousePressed,
+        MouseReleased,
         None
     }
 
     private PlayerInput playerInput;
-    private HashMap<KeyCode, Action> actionMap = new HashMap<>();
+    private HashMap<KeyCode, Action> keyActionMap = new HashMap<>();
+    private HashMap<MouseButton, Action> mouseActionMap = new HashMap<>();
     public Action currentAction = Action.None;
 
     public ActionMap(GameObject owner) {
@@ -35,8 +37,9 @@ public class ActionMap extends MonoBehaviour {
      */
     public void assignActionMap() {
 
-        actionMap.put(KeyCode.A, Action.GoLeft);
-        actionMap.put(KeyCode.D, Action.GoRight);
+        keyActionMap.put(KeyCode.A, Action.GoLeft);
+        keyActionMap.put(KeyCode.D, Action.GoRight);
+        mouseActionMap.put(MouseButton.PRIMARY, Action.MousePressed);
 
     }
 
@@ -45,11 +48,21 @@ public class ActionMap extends MonoBehaviour {
      */
     public void update() {
         currentAction = Action.None;
-        for (KeyCode keyCode : actionMap.keySet()) {
+        for (KeyCode keyCode : keyActionMap.keySet()) {
             if (playerInput.isKeyPressed(keyCode)) {
-                currentAction = actionMap.get(keyCode);
+                currentAction = keyActionMap.get(keyCode);
             }
         }
+        for (MouseButton mouseButton : mouseActionMap.keySet()) {
+            if (playerInput.isMousePressed(mouseButton)) {
+                currentAction = mouseActionMap.get(mouseButton);
+            }
+        }
+    }
+
+    @Override
+    protected void destroyMono() {
+
     }
 
     @Override
