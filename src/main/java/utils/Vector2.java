@@ -2,26 +2,87 @@ package utils;
 
 public class Vector2 {
 
-    public static final Vector2 zero = new Vector2(0.0, 0.0);
-    public static final Vector2 one = new Vector2(1.0, 1.0);
-    public static final Vector2 up = new Vector2(0.0, -1.0);
-    public static final Vector2 down = new Vector2(0.0, 1.0);
-    public static final Vector2 left = new Vector2(1.0, 0.0);
-    public static final Vector2 right = new Vector2(-11.0, 0.0);
+    /**
+     * Vector with its {@code x} and {@code y} components being 0.
+     *
+     * @return Vector zero.
+     */
+    public static Vector2 zero() {
+        return new Vector2(0.0, 0.0);
+    }
+
+    /**
+     * Vector with its {@code x} and {@code y} components being 1.
+     *
+     * @return Vector one.
+     */
+    public static Vector2 one() {
+        return new Vector2(1.0, 1.0);
+    }
+
+    /**
+     * Vector representing the global up, shorthand for {@code Vector2(0.0, -1.0)}.
+     *
+     * @return Vector up.
+     */
+    public static Vector2 up() {
+        return new Vector2(0.0, -1.0);
+    }
+
+    /**
+     * Vector representing the global down, shorthand for {@code Vector2(0.0, 1.0)}.
+     *
+     * @return Vector down.
+     */
+    public static Vector2 down() {
+        return new Vector2(0.0, 1.0);
+    }
+
+    /**
+     * Vector representing the global left, shorthand for {@code Vector2(1.0, 0.0)}.
+     *
+     * @return Vector left.
+     */
+    public static Vector2 left() {
+        return new Vector2(1.0, 0.0);
+    }
+
+    /**
+     * Vector representing the global right, shorthand for {@code Vector2(-1.0, 0.0)}.
+     *
+     * @return Vector right
+     */
+    public static Vector2 right() {
+        return new Vector2(-1.0, 0.0);
+    }
 
     public double x;
     public double y;
 
+    /**
+     * Create a vector in 2D space, default value is (0, 0).
+     */
     public Vector2() {
         x = 0.0;
         y = 0.0;
     }
 
+    /**
+     * Create a vector in 2D space.
+     *
+     * @param x The x component of the vector.
+     * @param y The y component of the vector.
+     */
     public Vector2(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * Create a vector in 2D space that is equal to {@code v}.
+     *
+     * @param v The vector to copy.
+     */
     public Vector2(Vector2 v) {
         this.x = v.x;
         this.y = v.y;
@@ -37,6 +98,9 @@ public class Vector2 {
 
         Vector2 normalized = new Vector2(this);
         double mag = magnitude();
+        if (mag == 0.0) {
+            return normalized;
+        }
         normalized.x /= mag;
         normalized.y /= mag;
         return normalized;
@@ -143,8 +207,23 @@ public class Vector2 {
         return new Vector2(x * other.x, y * other.y);
     }
 
+    /**
+     * Get the additive inverse of this vector, meaning its negative.
+     *
+     * @return The additive inverse of this vector.
+     */
     public Vector2 inverse() {
         return new Vector2(-x, -y);
+    }
+
+    /**
+     * Check if two vectors are equal.
+     *
+     * @param other The other vector to check.
+     * @return {@code true} if two vectors are identical, otherwise {@code false}.
+     */
+    public boolean equals(Vector2 other) {
+        return x == other.x && y == other.y;
     }
 
 }

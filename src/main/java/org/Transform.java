@@ -118,6 +118,10 @@ public class Transform extends MonoBehaviour {
      */
     public void translate(Vector2 translation) {
 
+        if (translation.equals(Vector2.zero())) {
+            return;
+        }
+
         Vector2 destination = getGlobalPosition().add(translation);
         var collider = getComponent(BoxCollider.class);
         if (collider != null) {
@@ -125,6 +129,16 @@ public class Transform extends MonoBehaviour {
             var collisionData = PhysicsManager.validateMovement(collider, translation);
             if (collisionData.collided) {
                 destination = collisionData.contactPoint.subtract(collider.getLocalCenter());
+            }
+
+            var movement = destination.subtract(getGlobalPosition());
+            var collisionDataWithTrigger = PhysicsManager.checkForTrigger(collider, movement);
+            if (collisionDataWithTrigger != null) {
+
+                for (var data : collisionDataWithTrigger) {
+                    System.out.println("Trigger " + data.otherCollider.gameObject.getName());
+                }
+
             }
 
         }

@@ -2,7 +2,9 @@ package org;
 
 import utils.Vector2;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class PhysicsManager {
 
@@ -41,26 +43,32 @@ public class PhysicsManager {
 
         var result = new CollisionData();
 
+        // Only proceed if collider is valid
         if (collider == null) {
             return result;
         }
 
+        // Set this collider
         result.thisCollider = collider;
 
+        // Define collision movement attributes
         var from = collider.getCenter();
         var to = from.add(movement);
         var extents = collider.getExtents();
         double collisionTime = Double.MAX_VALUE;
         boolean collided = false;
-        BoxCollider otherCollider = null;
+        BoxCollider hitCollider = null;
         Vector2 hitNormal = null;
 
+        // Process all non-trigger colliders
         for (var other : colliderSet) {
 
-            if (other == collider) {
+            // Skip if processing the same colliders or collider is trigger or collider is inactive
+            if (!other.gameObject.isActive() || other == collider || other.isTrigger) {
                 continue;
             }
 
+            // Get other's bound
             var minBound = other.getMinBound();
             var maxBound = other.getMaxBound();
 
@@ -75,7 +83,7 @@ public class PhysicsManager {
 
                 collisionTime = topTime;
                 collided = true;
-                otherCollider = other;
+                hitCollider = other;
                 hitNormal = topNormal;
 
             }
@@ -91,7 +99,7 @@ public class PhysicsManager {
 
                 collisionTime = leftTime;
                 collided = true;
-                otherCollider = other;
+                hitCollider = other;
                 hitNormal = leftNormal;
 
             }
@@ -107,7 +115,7 @@ public class PhysicsManager {
 
                 collisionTime = bottomTime;
                 collided = true;
-                otherCollider = other;
+                hitCollider = other;
                 hitNormal = bottomNormal;
 
             }
@@ -123,36 +131,169 @@ public class PhysicsManager {
 
                 collisionTime = rightTime;
                 collided = true;
-                otherCollider = other;
+                hitCollider = other;
                 hitNormal = rightNormal;
 
             }
 
         }
 
+        // Finalize collision data if a collision happens
         if (collided) {
 
-            to = from.add(movement.multiply(collisionTime));
-
+            // Call collision on the first collider
             result.collided = true;
-            result.otherCollider = otherCollider;
-            result.contactPoint = to;
+            result.otherCollider = hitCollider;
+            result.contactPoint = from.add(movement.multiply(collisionTime));
             result.hitNormal = hitNormal;
-
-            var inverseResult = result.getInverseData();
-            inverseResult.contactPoint = otherCollider.getCenter();
 
             if (collider.onCollisionEnter != null) {
                 collider.onCollisionEnter.accept(result);
             }
 
-            if (otherCollider.onCollisionEnter != null) {
-                otherCollider.onCollisionEnter.accept(inverseResult);
+            // Call collision on the second collider
+            var inverseResult = result.getInverseData();
+            inverseResult.contactPoint = hitCollider.getCenter();
+
+            if (hitCollider.onCollisionEnter != null) {
+                hitCollider.onCollisionEnter.accept(inverseResult);
             }
 
         }
 
         return result;
+
+    }
+
+    /**
+     * Return the collision data array for all collisions with trigger colliders.
+     *
+     * @param collider The collider to check, this must be a non-trigger collider.
+     * @param movement The movement of {@code collider}.
+     * @return The collision data array against trigger colliders.
+     */
+    protected static CollisionData[] checkForTrigger(BoxCollider collider, Vector2 movement) {
+
+        // Only proceed if this collider is non-trigger
+        if (collider.isTrigger) {
+            return null;
+        }
+
+        Vector2 from = collider.getCenter();
+        Vector2 to = from.add(movement);
+        Vector2 extents = collider.getExtents();
+        List<CollisionData> dataList = new ArrayList<CollisionData>();
+
+        for (var other : colliderSet) {
+
+            // Skip if processing the same colliders or other is non-trigger or other is inactive
+            if (!other.gameObject.isActive() || other == collider || !other.isTrigger) {
+                continue;
+            }
+
+            // Get other bounds
+            Vector2 minBound = other.getMinBound();
+            Vector2 maxBound = other.getMaxBound();
+
+            // Check left surface (max x)
+            Vector2 rightNormal = Vector2.right();
+            double rightCollision = maxBound.x + extents.x;
+            double rightTime = getArrivalTime(from.x, to.x, rightCollision);
+            if (canCollide(movement, rightNormal) &&
+                    isArrivalValid(rightTime) &&
+                    isOverlap(getArrivalPoint(from.y, to.y, rightTime), extents.y, minBound.y, maxBound.y)) {
+
+                var collisionData = new CollisionData();
+                collisionData.contactPoint = from;
+                collisionData.hitNormal = rightNormal;
+                collisionData.thisCollider = collider;
+                collisionData.otherCollider = other;
+                collisionData.collided = true;
+                dataList.add(collisionData);
+
+                continue;
+
+            }
+
+            // Check left surface (min x)
+            Vector2 leftNormal = Vector2.left();
+            double leftCollision = minBound.x - extents.x;
+            double leftTime = getArrivalTime(from.x, to.x, leftCollision);
+            if (canCollide(movement, leftNormal) &&
+                    isArrivalValid(leftTime) &&
+                    isOverlap(getArrivalPoint(from.y, to.y, leftTime), extents.y, minBound.y, maxBound.y)) {
+
+                var collisionData = new CollisionData();
+                collisionData.contactPoint = from;
+                collisionData.hitNormal = leftNormal;
+                collisionData.thisCollider = collider;
+                collisionData.otherCollider = other;
+                collisionData.collided = true;
+                dataList.add(collisionData);
+
+                continue;
+
+            }
+
+            // Check bottom surface (max y)
+            Vector2 bottomNormal = Vector2.down();
+            double bottomCollision = maxBound.y + extents.y;
+            double bottomTime = getArrivalTime(from.y, to.y, bottomCollision);
+            if (canCollide(movement, bottomNormal) &&
+                    isArrivalValid(bottomTime) &&
+                    isOverlap(getArrivalPoint(from.x, to.x, bottomTime), extents.x, minBound.x, maxBound.x)) {
+
+                var collisionData = new CollisionData();
+                collisionData.contactPoint = from;
+                collisionData.hitNormal = bottomNormal;
+                collisionData.thisCollider = collider;
+                collisionData.otherCollider = other;
+                collisionData.collided = true;
+                dataList.add(collisionData);
+
+                continue;
+
+            }
+
+            // Check top surface (min y)
+            Vector2 topNormal = Vector2.up();
+            double topCollision = minBound.y - extents.y;
+            double topTime = getArrivalTime(from.y, to.y, topCollision);
+            if (canCollide(movement, topNormal) &&
+                    isArrivalValid(topTime) &&
+                    isOverlap(getArrivalPoint(from.x, to.x, topTime), extents.x, minBound.x, maxBound.x)) {
+
+                var collisionData = new CollisionData();
+                collisionData.contactPoint = from;
+                collisionData.hitNormal = topNormal;
+                collisionData.thisCollider = collider;
+                collisionData.otherCollider = other;
+                collisionData.collided = true;
+                dataList.add(collisionData);
+
+            }
+
+        }
+
+        CollisionData[] resultArray = new CollisionData[dataList.size()];
+        for (int i = 0; i < resultArray.length; i++) {
+
+            var data = dataList.get(i);
+            var inverseData = data.getInverseData();
+
+            if (collider.onTriggerEnter != null) {
+                collider.onTriggerEnter.accept(data);
+            }
+
+            if (data.otherCollider.onTriggerEnter != null) {
+                data.otherCollider.onTriggerEnter.accept(inverseData);
+            }
+
+            resultArray[i] = data;
+
+        }
+
+        return resultArray;
 
     }
 

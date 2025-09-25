@@ -9,12 +9,16 @@ public class BoxCollider extends MonoBehaviour {
     private Vector2 localCenter;
     private Vector2 localSize;
     protected Consumer<CollisionData> onCollisionEnter;
+    protected Consumer<CollisionData> onTriggerEnter;
+
+    public boolean isTrigger;
 
     public BoxCollider(GameObject owner) {
         super(owner);
         localCenter = new Vector2(0.0, 0.0);
         localSize = new Vector2(1.0, 1.0);
         PhysicsManager.RegisterCollider(this);
+        isTrigger = false;
     }
 
     @Override
@@ -22,6 +26,8 @@ public class BoxCollider extends MonoBehaviour {
         BoxCollider newBoxCollider = new BoxCollider(newOwner);
         newBoxCollider.localCenter = this.localCenter;
         newBoxCollider.localSize = this.localSize;
+        newBoxCollider.isTrigger = this.isTrigger;
+        newBoxCollider.onCollisionEnter = this.onCollisionEnter;
         return newBoxCollider;
     }
 
@@ -124,6 +130,14 @@ public class BoxCollider extends MonoBehaviour {
      */
     public void setOnCollisionEnterCallback(Consumer<CollisionData> onCollisionEnter) {
         this.onCollisionEnter = onCollisionEnter;
+    }
+
+    /**
+     * Set the callback when trigger happens.
+     * @param onTriggerEnter The callback when trigger happens.
+     */
+    public void setOnTriggerEnter(Consumer<CollisionData> onTriggerEnter) {
+        this.onTriggerEnter = onTriggerEnter;
     }
 
 }
