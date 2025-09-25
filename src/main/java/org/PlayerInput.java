@@ -39,18 +39,18 @@ public class PlayerInput extends MonoBehaviour {
      */
    public void HandlePlayerInput() {
          scene.setOnKeyPressed(e -> {
+             System.out.println("pressed");
             pressedKey.add(e.getCode());
         });
         scene.setOnKeyReleased(e -> {
             pressedKey.remove(e.getCode());
         });
-        scene.setOnMouseDragEntered(e -> {
+        scene.setOnMouseDragged(e -> {
             pressedMouse.put(e.getButton(), e);
         });
-        scene.setOnMouseDragExited(e -> {
+        scene.setOnMouseReleased(e -> {
             pressedMouse.remove(e.getButton());
         });
-
     }
 
 

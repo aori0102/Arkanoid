@@ -67,13 +67,14 @@ public class Paddle extends MonoBehaviour {
             case GoLeft -> transform().translate(new Vector2(-paddleSpeed * Time.deltaTime, 0));
             case GoRight -> transform().translate(new Vector2(paddleSpeed * Time.deltaTime, 0));
             case MousePressed -> {
-                System.out.println("Pressed");
                 if (playerInput.getMouseEvent(MouseButton.PRIMARY) != null) {
-                    System.out.println("Pressed MousePressed");
+                    line.setVisible(true);
                     MouseEvent mouseEvent = playerInput.getMouseEvent(MouseButton.PRIMARY);
 
                     Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
-                    fireDirection = transform().getGlobalPosition().add(new Vector2(50, 50)).subtract(mousePos).normalize();
+                    fireDirection = transform().getGlobalPosition()
+                            .add(new Vector2(50, 50))
+                            .subtract(mousePos).normalize();
                     Vector2 direction = transform().getGlobalPosition()
                             .add(fireDirection.multiply(100));
 
@@ -82,7 +83,7 @@ public class Paddle extends MonoBehaviour {
                     line.setEndX(direction.x);
                     line.setEndY(direction.y);
                 }
-            }
+            }default -> line.setVisible(false);
         }
     }
 
