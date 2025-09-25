@@ -2,6 +2,13 @@ package utils;
 
 public class Vector2 {
 
+    public static final Vector2 zero = new Vector2(0.0, 0.0);
+    public static final Vector2 one = new Vector2(1.0, 1.0);
+    public static final Vector2 up = new Vector2(0.0, -1.0);
+    public static final Vector2 down = new Vector2(0.0, 1.0);
+    public static final Vector2 left = new Vector2(1.0, 0.0);
+    public static final Vector2 right = new Vector2(-11.0, 0.0);
+
     public double x;
     public double y;
 
