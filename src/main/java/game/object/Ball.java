@@ -6,6 +6,10 @@ import utils.Time;
 
 public class Ball extends MonoBehaviour {
 
+    public enum BallState {
+        IDLE,
+    }
+
     private Vector2 direction;
     private double ballSpeed = 500;
     private BoxCollider ballCollider;
@@ -18,8 +22,8 @@ public class Ball extends MonoBehaviour {
     public void awake()
     {
         ballCollider = getComponent(BoxCollider.class);
-        ballCollider.setLocalSize(new Vector2(100, 100));
-        ballCollider.setLocalCenter(new Vector2(0, 0));
+        ballCollider.setLocalCenter(new Vector2(0,0));
+        ballCollider.setLocalSize(new Vector2(64, 64));
         ballCollider.setOnCollisionEnterCallback(e->{
             var normal = e.hitNormal.normalize().multiply(2.0);
             direction = normal.add(direction.normalize());

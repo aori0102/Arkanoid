@@ -18,17 +18,17 @@ public class Init {
 
         var paddleVisual = GameObjectManager.instantiate("paddleVisual");
         paddleVisual.transform.setParent(paddle.transform);
+        paddleVisual.transform.setLocalPosition(new Vector2(-47, 0));
         paddleVisual.addComponent(SpriteRenderer.class).setImage("/paddle.png");
 
-        var ball1 = GameObjectManager.instantiate("ball1");
-        ball1.addComponent(Ball.class).setDirection(new Vector2(1, -1));
-        ball1.addComponent(BoxCollider.class);
-        ball1.transform.setGlobalPosition(new Vector2(300, 300));
-        ball1.transform.setGlobalScale(new Vector2(0.2, 0.2));
+        var ball = GameObjectManager.instantiate("ball");
+        ball.addComponent(BoxCollider.class);
+        ball.transform.setGlobalPosition(new Vector2(584,550 ));
+        ball.transform.setGlobalScale(new Vector2(0.5, 0.5));
 
-        var ball1Visual = GameObjectManager.instantiate("ball1Visual");
-        ball1Visual.transform.setParent(ball1.transform);
-        ball1Visual.addComponent(SpriteRenderer.class).setImage("/bocchi.png");
+        var ballVisual = GameObjectManager.instantiate("ballVisual");
+        ballVisual.transform.setParent(ball.transform);
+        ballVisual.addComponent(SpriteRenderer.class).setImage("/ball.png");
     }
 
     public static void Init_Dui() {

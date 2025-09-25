@@ -72,13 +72,13 @@ public class Paddle extends MonoBehaviour {
                     MouseEvent mouseEvent = playerInput.getMouseEvent(MouseButton.PRIMARY);
 
                     Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
-                    fireDirection = transform().getGlobalPosition()
-                            .add(new Vector2(50, 50))
-                            .subtract(mousePos).normalize();
+                    fireDirection = ((transform().getGlobalPosition()
+                            .add(new Vector2(50, 50)))
+                            .subtract(mousePos)).normalize();
                     Vector2 direction = transform().getGlobalPosition()
                             .add(fireDirection.multiply(100));
 
-                    line.setStartX(transform().getGlobalPosition().x + 50);
+                    line.setStartX(transform().getGlobalPosition().x);
                     line.setStartY(transform().getGlobalPosition().y);
                     line.setEndX(direction.x);
                     line.setEndY(direction.y);
