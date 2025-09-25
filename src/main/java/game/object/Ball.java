@@ -8,6 +8,7 @@ public class Ball extends MonoBehaviour {
 
     public enum BallState {
         IDLE,
+        Moving
     }
 
     private Vector2 direction;
