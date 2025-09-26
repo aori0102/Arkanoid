@@ -1,5 +1,8 @@
-package ecs;
+package ecs.UI;
 
+
+import ecs.GameObject;
+import ecs.MonoBehaviour;
 
 public abstract class UI extends MonoBehaviour {
     private double height;

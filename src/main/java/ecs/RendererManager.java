@@ -36,7 +36,7 @@ public class RendererManager {
      *
      * @param node The registering node.
      */
-    protected static void RegisterNode(Node node) {
+    public static void RegisterNode(Node node) {
         root.getChildren().add(node);
     }
 
