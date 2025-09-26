@@ -1,10 +1,9 @@
-package ecs;
+package org;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.function.Function;
 
 public class GameObject {
 
@@ -15,9 +14,71 @@ public class GameObject {
     private final HashSet<MonoBehaviour> monoBehaviourSet = new HashSet<>();
 
     private boolean isActive;
+    private boolean isDestroyed;
 
-    public Transform transform;
-    public String name;
+    private Transform transform;
+    private String name;
+
+    /**
+     * Only access within {@link GameObject} or {@link GameObjectManager}.
+     */
+    protected HashSet<GameObject> childSet;
+
+    public Transform getTransform() {
+
+        ValidateObjectLife();
+
+        return transform;
+
+    }
+
+    public void setTransform(Transform transform) {
+
+        ValidateObjectLife();
+
+        this.transform = transform;
+
+    }
+
+    public String getName() {
+
+        ValidateObjectLife();
+
+        return name;
+
+    }
+
+    public boolean isDestroyed() {
+        return isDestroyed;
+    }
+
+    public void setName(String name) {
+
+        ValidateObjectLife();
+
+        this.name = name;
+
+    }
+
+    /**
+     * Add a child to this object.
+     * Only access within {@link Transform}.
+     *
+     * @param child The child to add.
+     */
+    protected void addChild(GameObject child) {
+        childSet.add(child);
+    }
+
+    /**
+     * Remove a child from this object.
+     * Only access within {@link Transform}.
+     *
+     * @param child The child to remove.
+     */
+    protected void removeChild(GameObject child) {
+        childSet.remove(child);
+    }
 
     /**
      * Return the activeness of this game object.
@@ -25,7 +86,11 @@ public class GameObject {
      * @return {@code true} if this object is enabled, otherwise {@code false}.
      */
     public boolean isActive() {
+
+        ValidateObjectLife();
+
         return isActive;
+
     }
 
     /**
@@ -34,7 +99,11 @@ public class GameObject {
      * @param active Enable or disable.
      */
     public void setActive(boolean active) {
+
+        ValidateObjectLife();
+
         isActive = active;
+
     }
 
     /**
@@ -42,10 +111,17 @@ public class GameObject {
      */
     protected void handleAwake() {
 
+        ValidateObjectLife();
+
         while (!preAwakeMonoBehaviourQueue.isEmpty()) {
 
             var mono = preAwakeMonoBehaviourQueue.poll();
             mono.awake();
+            try {
+                ValidateObjectLife();
+            } catch (Exception e) {
+                return;
+            }
             preStartMonoBehaviourQueue.offer(mono);
 
         }
@@ -57,10 +133,18 @@ public class GameObject {
      */
     protected void handleStart() {
 
+        ValidateObjectLife();
+
         while (!preStartMonoBehaviourQueue.isEmpty()) {
 
             var mono = preStartMonoBehaviourQueue.poll();
             mono.start();
+
+            try {
+                ValidateObjectLife();
+            } catch (Exception e) {
+                return;
+            }
 
         }
 
@@ -71,8 +155,18 @@ public class GameObject {
      */
     protected void handleUpdate() {
 
+        ValidateObjectLife();
+
         for (var mono : monoBehaviourSet) {
+
             mono.update();
+
+            try {
+                ValidateObjectLife();
+            } catch (Exception e) {
+                return;
+            }
+
         }
 
     }
@@ -82,8 +176,17 @@ public class GameObject {
      */
     protected void handleLateUpdate() {
 
+        ValidateObjectLife();
+
         for (var mono : monoBehaviourSet) {
+
             mono.lateUpdate();
+            try {
+                ValidateObjectLife();
+            } catch (Exception e) {
+                return;
+            }
+
         }
 
     }
@@ -94,6 +197,8 @@ public class GameObject {
     protected GameObject() {
         name = DEFAULT_NAME;
         isActive = true;
+        isDestroyed = false;
+        childSet = new HashSet<>();
         transform = addComponent(Transform.class);
     }
 
@@ -105,6 +210,8 @@ public class GameObject {
     protected GameObject(String name) {
         this.name = name;
         isActive = true;
+        isDestroyed = false;
+        childSet = new HashSet<>();
         transform = addComponent(Transform.class);
     }
 
@@ -114,22 +221,37 @@ public class GameObject {
      * @param gameObject The copied game object.
      */
     protected GameObject(GameObject gameObject) {
-        this.name = gameObject.name;
-        this.isActive = gameObject.isActive;
+        isActive = gameObject.isActive;
+        isDestroyed = gameObject.isDestroyed;
+        name = gameObject.name;
+        childSet = new HashSet<>();
+        for (var child : gameObject.childSet) {
+            childSet.add(new GameObject(child));
+        }
+        transform = addComponent(Transform.class);
     }
 
     /**
-     * Wipe clean this game object's components.
+     * Wipe clean this game object's data.
      */
-    protected void clearComponents() {
+    protected void destroyObject() {
+
+        ValidateObjectLife();
+
+        isDestroyed = true;
 
         for (var monoBehaviour : monoBehaviourSet) {
-            monoBehaviour.clear();
+            monoBehaviour.destroyComponent();
         }
 
         monoBehaviourSet.clear();
         preStartMonoBehaviourQueue.clear();
         preAwakeMonoBehaviourQueue.clear();
+
+        for (var child : childSet) {
+            GameObjectManager.destroy(child);
+        }
+        childSet = null;
 
     }
 
@@ -141,6 +263,8 @@ public class GameObject {
      * @return A component, or {@code null} if not found any.
      */
     public <T extends MonoBehaviour> T getComponent(Class<T> type) {
+
+        ValidateObjectLife();
 
         for (var component : monoBehaviourSet) {
 
@@ -163,16 +287,14 @@ public class GameObject {
      */
     public <T extends MonoBehaviour> T addComponent(Class<T> type) {
 
+        ValidateObjectLife();
+
         var comp = getComponent(type);
         if (comp == null) {
             try {
-                System.out.println("Adding " + type);
                 comp = type.getDeclaredConstructor(GameObject.class).newInstance(this);
-                System.out.println(1);
                 preAwakeMonoBehaviourQueue.offer(comp);
-                System.out.println(2);
                 monoBehaviourSet.add(comp);
-                System.out.println(3);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException("No such method");
             } catch (IllegalAccessException e) {
@@ -193,6 +315,19 @@ public class GameObject {
         }
 
         return comp;
+
+    }
+
+    /**
+     * Validate this object life for accessing.
+     *
+     * @throws IllegalStateException if this object is destroyed.
+     */
+    private void ValidateObjectLife() {
+
+        if (isDestroyed) {
+            throw new IllegalStateException("You are trying to access a destroyed game object!");
+        }
 
     }
 

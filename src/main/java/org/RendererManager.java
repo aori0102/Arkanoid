@@ -1,10 +1,8 @@
-package ecs;
+package org;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
 
 public class RendererManager {
@@ -36,7 +34,7 @@ public class RendererManager {
      *
      * @param node The registering node.
      */
-    public static void RegisterNode(Node node) {
+    protected static void RegisterNode(Node node) {
         root.getChildren().add(node);
     }
 

@@ -1,8 +1,8 @@
-package ecs;
+package org;
 
 public abstract class MonoBehaviour {
 
-    protected GameObject gameObject = null;
+    protected transient GameObject gameObject = null;
 
     /**
      * Clone this MonoBehaviour.
@@ -17,12 +17,12 @@ public abstract class MonoBehaviour {
      *
      * @return The {@link Transform} for this game object.
      */
-    public Transform transform() {
-        return gameObject.transform;
+    public Transform getTransform() {
+        return gameObject.getTransform();
     }
 
     /**
-     * Get the game object this MonoBehaviour is attached to.
+     * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
@@ -33,13 +33,7 @@ public abstract class MonoBehaviour {
     /**
      * Wipe clean this MonoBehaviours data.
      */
-    protected abstract void clear();
-
-    /**
-     * Called when initializing object
-     */
-    public void init() {
-    }
+    protected abstract void destroyComponent();
 
     /**
      * Called when an object is instantiated and is active.
@@ -87,6 +81,29 @@ public abstract class MonoBehaviour {
         } catch (ClassCastException e) {
             return null;
         }
+    }
+
+    /**
+     * Get the component of type {@link T} of this object.
+     *
+     * @param type The type of the component.
+     * @param <T>  The type of the component.
+     * @return The component, or {@code null} if not found.
+     */
+    public <T extends MonoBehaviour> T getComponent(Class<T> type) {
+        return gameObject.getComponent(type);
+    }
+
+    /**
+     * Add component of type {@code type} to this game object.
+     *
+     * @param type The type of the component.
+     * @param <T>  The type of the component.
+     * @return The added component. If the game object already has a component
+     * of type {@code type}, return that.
+     */
+    public <T extends MonoBehaviour> T addComponent(Class<T> type) {
+        return gameObject.addComponent(type);
     }
 
 }

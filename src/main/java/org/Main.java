@@ -1,8 +1,8 @@
 package org;
 
-import ecs.RendererManager;
+import game.Init;
+import utils.Random;
 import utils.Time;
-import ecs.GameObjectManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
@@ -12,6 +12,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        Random.init();
         RendererManager.initializeMain(stage);
         Init.Init_Aori();
         Init.Init_Duc();
@@ -38,10 +39,7 @@ public class Main extends Application {
      */
     private void update() {
         Time.updateTime();
-        GameObjectManager.awake();
-        GameObjectManager.start();
-        GameObjectManager.update();
-        GameObjectManager.lateUpdate();
+        GameObjectManager.runUpdate();
     }
 
     /**
