@@ -120,7 +120,7 @@ public class BoxCollider extends MonoBehaviour {
      * @return The extents of the bounding box.
      */
     public Vector2 getExtents() {
-        return getLocalSize().divide(2.0);
+        return getSize().divide(2.0);
     }
 
     /**
