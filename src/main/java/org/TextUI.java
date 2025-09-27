@@ -1,11 +1,12 @@
-package ecs;
+package org;
 
-import ecs.UI.UI;
+import javafx.scene.Node;
+import org.UI.UI;
 import javafx.geometry.VPos;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-public class TextUI extends UI {
+public class TextUI extends UI implements IHasNode {
     private Text text = new Text();
     ;
 
@@ -16,19 +17,21 @@ public class TextUI extends UI {
     }
 
     @Override
+    protected void destroyComponent() {
+
+    }
+
+    @Override
     protected MonoBehaviour clone(GameObject newOwner) {
         return new TextUI(newOwner);
     }
 
-    @Override
-    protected void clear() {
 
-    }
 
     @Override
     public void update() {
-        var transform = transform();
-        var position = transform.getPosition();
+        var transform = getTransform();
+        var position = transform.getGlobalPosition();
 
         if(text.getTextOrigin() != VPos.TOP){
             text.setTextOrigin(VPos.TOP); //Set the box of text's pivot to the top left corner
@@ -73,5 +76,9 @@ public class TextUI extends UI {
     @Override
     public double getHeight() {
         return text.getLayoutBounds().getHeight();
+    }
+    @Override
+    public Node getNode(){
+        return text;
     }
 }

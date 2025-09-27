@@ -1,12 +1,11 @@
-package ecs.UI;
+package org.UI;
 
-
-import ecs.GameObject;
-import ecs.MonoBehaviour;
+import org.*;
 
 public abstract class UI extends MonoBehaviour {
     private double height;
     private double width;
+    protected Transform transform;
 
     /**
      * Get the game object this MonoBehaviour is attached to.
@@ -15,8 +14,14 @@ public abstract class UI extends MonoBehaviour {
      */
     public UI(GameObject owner) {
         super(owner);
+        transform = owner.addComponent(Transform.class);
+
     }
 
+    public Transform getTransform() {
+        return transform;
+    }
+    public void setTransform(Transform transform) {}
     public double getHeight() {
         return height;
     }

@@ -1,10 +1,13 @@
-package ecs;
+package org;
 
-import ecs.MouseEvent.*;
-import ecs.UI.UI;
+import javafx.scene.Node;
+import org.*;
+
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.scene.text.Text;
+import org.MouseEvent.*;
+import org.UI.UI;
 import utils.Vector2;
 
 
@@ -16,6 +19,7 @@ public class ButtonUI extends UI
         IPointerExitHandler {
 
     private SpriteRenderer image;
+
     private Runnable buttonClickFunction;
     private Runnable buttonEnterFunction;
     private Runnable buttonUpFunction;
@@ -35,37 +39,46 @@ public class ButtonUI extends UI
 
 
         image = owner.addComponent(SpriteRenderer.class);
-        textUI = owner.addComponent(TextUI.class);
+        var textUI = GameObjectManager.instantiate("textUI");
+        this.textUI = textUI.addComponent(TextUI.class);
+        textUI.getTransform().setParent(this.getTransform());
 
 
         //Attach mouse event
         buttonClickFunction = null;
-        attachPointerClick(image.getView());
-        attachPointerEnter(image.getView());
-        attachPointerUp(image.getView());
-        attachPointerDown(image.getView());
-        attachPointerExited(image.getView());
+        attachPointerClick(getTransform());
+        attachPointerEnter(getTransform());
+        attachPointerUp(getTransform());
+        attachPointerDown(getTransform());
+        attachPointerExited(getTransform());
 
     }
+
+    @Override
+    protected void destroyComponent() {
+
+    }
+
     @Override
     public void update() {
-        if(!isCentered) {
+        if (!isCentered) {
             setTextUIPositionCenter();
             isCentered = true;
         }
     }
+
     public TextUI getTextUI() {
         return textUI;
     }
 
     @Override
     public double getHeight() {
-        return image.getView().getBoundsInParent().getHeight();
+        return image.sprite.getBoundsInParent().getHeight();
     }
 
     @Override
     public double getWidth() {
-        return image.getView().getBoundsInParent().getWidth();
+        return image.sprite.getBoundsInParent().getWidth();
     }
 
     public void setTextUIPositionCenter() {
@@ -77,15 +90,14 @@ public class ButtonUI extends UI
         double textH = b.getHeight();
 
         // center position of the box
-        double centerX = this.transform().getPosition().x + boxW / 2;
-        double centerY = this.transform().getPosition().y + boxH / 2;
+        double centerX = getTransform().getGlobalPosition().x + boxW / 2;
+        double centerY = getTransform().getGlobalPosition().y + boxH / 2;
 
         // shift text so its center = box center
         double posX = centerX - (textW / 2 + b.getMinX());
         double posY = centerY - (textH / 2 + b.getMinY());
 
-        textUI.getText().setX(posX);
-        textUI.getText().setY(posY);
+        textUI.getTransform().setGlobalPosition(new Vector2(posX, posY));
 
 
     }
@@ -100,14 +112,6 @@ public class ButtonUI extends UI
      */
     public void setImage(String path) {
         image.setImage(path);
-
-        attachPointerClick(image.getView());
-        attachPointerEnter(image.getView());
-        attachPointerUp(image.getView());
-        attachPointerDown(image.getView());
-        attachPointerExited(image.getView());
-
-
     }
 
     /**
@@ -135,6 +139,38 @@ public class ButtonUI extends UI
     public void setOnClick(Runnable action) {
         buttonClickFunction = action;
     }
+    /**
+     * Initialize action or overwrite action of the {@link #buttonEnterFunction} of the button
+     *
+     * @param action Action you want the {@link #buttonEnterFunction} to be.
+     */
+    public void setOnEnter(Runnable action) {
+        buttonEnterFunction = action;
+    }
+    /**
+     * Initialize action or overwrite action of the {@link #buttonExitFunction} of the button
+     *
+     * @param action Action you want the {@link #buttonExitFunction} to be.
+     */
+    public void setOnExit(Runnable action) {
+        buttonExitFunction = action;
+    }
+    /**
+     * Initialize action or overwrite action of the {@link #buttonDownFunction} of the button
+     *
+     * @param action Action you want the {@link #buttonDownFunction} to be.
+     */
+    public void setOnDown(Runnable action) {
+        buttonDownFunction = action;
+    }
+    /**
+     * Initialize action or overwrite action of the {@link #buttonUpFunction} of the button
+     *
+     * @param action Action you want the {@link #buttonUpFunction} to be.
+     */
+    public void setOnUp(Runnable action) {
+        buttonUpFunction = action;
+    }
 
     @Override
     public void onPointerClicked() {
@@ -148,10 +184,6 @@ public class ButtonUI extends UI
         return new ButtonUI(newOwner);
     }
 
-    @Override
-    protected void clear() {
-
-    }
 
     @Override
     public void onPointerEntered() {

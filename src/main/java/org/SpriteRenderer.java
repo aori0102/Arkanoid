@@ -1,10 +1,11 @@
 package org;
 
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utils.Vector2;
 
-public class SpriteRenderer extends MonoBehaviour {
+public class SpriteRenderer extends MonoBehaviour implements IHasNode {
 
     protected ImageView sprite;
     private Vector2 imageOriginalDimension;
@@ -114,6 +115,10 @@ public class SpriteRenderer extends MonoBehaviour {
         pivot = null;
         imageSize = null;
         imageOriginalDimension = null;
+    }
+    @Override
+    public Node getNode(){
+        return sprite;
     }
 
 }

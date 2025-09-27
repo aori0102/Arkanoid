@@ -1,8 +1,17 @@
-package ecs.MouseEvent;
+package org.MouseEvent;
+
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.GameObject;
+import org.IHasNode;
+import org.Transform;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.MouseEvent.PointerUtils.collectNodes;
 
 public interface IPointerExitHandler {
     /**
@@ -22,27 +31,17 @@ public interface IPointerExitHandler {
      *             (Recommend to use {@link ImageView} to initialize effective area).
      *             </p>
      */
-    default void attachPointerExited(Node node) {
-        if(node instanceof ImageView imageView){
-            Image image = imageView.getImage();
-            imageView.setOnMouseExited(e -> {
-                int x = (int) e.getX();
-                int y = (int) e.getY();
-
-                // Check transparency at clicked pixel
-                if (x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
-                    int argb = image.getPixelReader().getArgb(x, y);
-                    int alpha = (argb >> 24) & 0xff;
-
-                    if (alpha > 0) {
-                        onPointerExited();
-                    } else {
-                        e.consume(); // ignore transparent clicks
-                    }
-                }
-            });
-        }
-        else {
+    /**
+     * Attach this click handler to a {@link GameObject} and all of its children.
+     * <p>
+     * This will collect every component in the GameObject hierarchy that implements {@link IHasNode},
+     * retrieve its underlying JavaFX {@link Node}, and register a mouse exited event listener on it.
+     * </p>
+     * @param transform The root {@link Transform} {@link GameObject} to attach press detection to.
+     */
+    default void attachPointerExited(Transform transform) {
+        List<Node> nodes = new ArrayList<>(collectNodes(transform));
+        for(var node : nodes) {
             node.setOnMouseExited(e -> onPointerExited());
         }
     }

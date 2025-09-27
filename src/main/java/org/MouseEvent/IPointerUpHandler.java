@@ -1,8 +1,17 @@
-package ecs.MouseEvent;
+package org.MouseEvent;
+
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.GameObject;
+import org.IHasNode;
+import org.Transform;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.MouseEvent.PointerUtils.collectNodes;
 
 public interface IPointerUpHandler {
     /**
@@ -13,36 +22,17 @@ public interface IPointerUpHandler {
      * </p>
      */
     public void onPointerUp();
-
     /**
-     * Attach area that the event will occur.
-     *
-     * @param node Area that you want the event to occur on.
-     *             <p>
-     *             If the node has an instance of an {@link ImageView} type, the area of that image will be used.
-     *             (Recommend to use {@link ImageView} to initialize effective area).
-     *             </p>
+     * Attach this click handler to a {@link GameObject} and all of its children.
+     * <p>
+     * This will collect every component in the GameObject hierarchy that implements {@link IHasNode},
+     * retrieve its underlying JavaFX {@link Node}, and register a mouse released event listener on it.
+     * </p>
+     * @param transform The root {@link Transform} {@link GameObject} to attach release detection to.
      */
-    default void attachPointerUp(Node node) {
-        if (node instanceof ImageView imageView) {
-            Image image = imageView.getImage();
-            imageView.setOnMouseReleased(e -> {
-                int x = (int) e.getX();
-                int y = (int) e.getY();
-
-                // Check transparency at clicked pixel
-                if (x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
-                    int argb = image.getPixelReader().getArgb(x, y);
-                    int alpha = (argb >> 24) & 0xff;
-
-                    if (alpha > 0) {
-                        onPointerUp();
-                    } else {
-                        e.consume(); // ignore transparent clicks
-                    }
-                }
-            });
-        } else {
+    default void attachPointerUp(Transform transform) {
+        List<Node> nodes = new ArrayList<>(collectNodes(transform));
+        for(var node : nodes) {
             node.setOnMouseReleased(e -> onPointerUp());
         }
     }
