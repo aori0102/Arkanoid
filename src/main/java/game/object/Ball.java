@@ -15,33 +15,31 @@ public class Ball extends MonoBehaviour {
     private double ballSpeed = 500;
     private BoxCollider ballCollider;
     private Paddle paddle;
+    private Vector2 offsetVector = new Vector2(1, 1);
 
     private boolean isMoving = false;
 
-    public Ball(GameObject owner)
-    {
+    public Ball(GameObject owner) {
         super(owner);
     }
 
-    public void awake()
-    {
+    public void awake() {
         ballCollider = getComponent(BoxCollider.class);
-        ballCollider.setLocalCenter(new Vector2(0,0));
+        ballCollider.setLocalCenter(new Vector2(0, 0));
         ballCollider.setLocalSize(new Vector2(64, 64));
-        ballCollider.setOnCollisionEnterCallback(e->{
-            var normal = e.hitNormal.normalize().multiply(2.0);
-            direction = normal.add(direction.normalize());
+        ballCollider.setOnCollisionEnterCallback(e -> {
+            handleAngleDirection(e);
 
         });
 
-        paddle.onMouseReleased.addListener((e)->{
+        paddle.onMouseReleased.addListener((e) -> {
             setDirection(e);
             isMoving = true;
+            paddle.isFired = true;
         });
     }
 
-    public void update()
-    {
+    public void update() {
         handleMovement();
     }
 
@@ -50,26 +48,35 @@ public class Ball extends MonoBehaviour {
 
     }
 
-    public void handleMovement()
-    {
+    public void handleMovement() {
         if (!isMoving) return;
         transform().translate(direction.normalize().multiply(ballSpeed * Time.deltaTime));
 
     }
 
-    private void setDirection(Vector2 direction)
-    {
-        System.out.println(direction);
-        this.direction = direction;
+    public void handleAngleDirection(CollisionData collisionData) {
+        if (!isMoving) return;
+        var normal = collisionData.hitNormal.normalize().multiply(2.0);
+
+        double dotCoefficient = Vector2.dot(direction.normalize(), normal.normalize());
+
+        if ((dotCoefficient <= 1 && dotCoefficient >= 0.95) || (dotCoefficient >= -1 && dotCoefficient <= -0.95)) {
+            direction = normal.add(direction.normalize()).add(offsetVector.normalize());
+        } else {
+            direction = normal.add(direction.normalize());
+        }
     }
 
-    public void setBallSpeed(double ballSpeed)
-    {
+    private void setDirection(Vector2 direction) {
+        this.direction = direction;
+        paddle.onMouseReleased.removeAllListeners();
+    }
+
+    public void setBallSpeed(double ballSpeed) {
         this.ballSpeed = ballSpeed;
     }
 
-    public void setPaddle(Paddle paddle)
-    {
+    public void setPaddle(Paddle paddle) {
         this.paddle = paddle;
     }
 

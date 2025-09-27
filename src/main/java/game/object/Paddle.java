@@ -21,6 +21,7 @@ public class Paddle extends MonoBehaviour {
     private BoxCollider boxCollider;
     private Vector2 fireDirection;
     private Line line;
+    public boolean isFired = false;
 
 
     /**
@@ -85,8 +86,14 @@ public class Paddle extends MonoBehaviour {
         }
     }
 
-
+    /**
+     *
+     */
     private void HandleRayDirection() {
+        if (isFired) {
+            return;
+        }
+
         if (playerInput.getMouseEvent(MouseButton.PRIMARY) != null) {
             line.setVisible(true);
             MouseEvent mouseEvent = playerInput.getMouseEvent(MouseButton.PRIMARY);
