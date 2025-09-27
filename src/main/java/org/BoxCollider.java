@@ -134,6 +134,7 @@ public class BoxCollider extends MonoBehaviour {
 
     /**
      * Set the callback when trigger happens.
+     *
      * @param onTriggerEnter The callback when trigger happens.
      */
     public void setOnTriggerEnter(Consumer<CollisionData> onTriggerEnter) {

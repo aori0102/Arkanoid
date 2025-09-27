@@ -174,8 +174,8 @@ public class PhysicsManager {
      */
     protected static CollisionData[] checkForTrigger(BoxCollider collider, Vector2 movement) {
 
-        // Only proceed if this collider is non-trigger
-        if (collider.isTrigger) {
+        // Only proceed if this collider is valid
+        if (collider == null) {
             return null;
         }
 
@@ -186,8 +186,9 @@ public class PhysicsManager {
 
         for (var other : colliderSet) {
 
-            // Skip if processing the same colliders or other is non-trigger or other is inactive
-            if (!other.gameObject.isActive() || other == collider || !other.isTrigger) {
+            // Skip if processing the same colliders or other's trigger is not the same (trigger hits
+            // non-trigger or vice versa) or other is inactive
+            if (!other.gameObject.isActive() || other == collider || other.isTrigger == collider.isTrigger) {
                 continue;
             }
 
