@@ -14,7 +14,6 @@ public class ActionMap extends MonoBehaviour {
         GoLeft,
         GoRight,
         MousePressed,
-        MouseReleased,
         None
     }
 
@@ -56,9 +55,6 @@ public class ActionMap extends MonoBehaviour {
         for (MouseButton mouseButton : mouseActionMap.keySet()) {
             if (playerInput.isMousePressed(mouseButton)) {
                 currentAction = mouseActionMap.get(mouseButton);
-            } else
-            {
-                currentAction = Action.None;
             }
         }
     }

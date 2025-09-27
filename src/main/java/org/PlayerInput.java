@@ -17,6 +17,8 @@ public class PlayerInput extends MonoBehaviour {
     private HashMap pressedMouse = new HashMap<MouseButton, MouseEvent>();
     private Scene scene;
 
+    public boolean isMouseReleased = false;
+
     public PlayerInput(GameObject owner) {
         super(owner);
     }
@@ -39,7 +41,6 @@ public class PlayerInput extends MonoBehaviour {
      */
    public void HandlePlayerInput() {
          scene.setOnKeyPressed(e -> {
-             System.out.println("pressed");
             pressedKey.add(e.getCode());
         });
         scene.setOnKeyReleased(e -> {
@@ -50,6 +51,7 @@ public class PlayerInput extends MonoBehaviour {
         });
         scene.setOnMouseReleased(e -> {
             pressedMouse.remove(e.getButton());
+            isMouseReleased = true;
         });
     }
 

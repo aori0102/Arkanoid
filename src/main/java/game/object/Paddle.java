@@ -14,10 +14,12 @@ import java.awt.*;
 public class Paddle extends MonoBehaviour {
     private final double paddleSpeed = 1000;
 
+    public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>();
+
     private ActionMap actionMap;
     private PlayerInput playerInput;
     private BoxCollider boxCollider;
-    private Vector2  fireDirection;
+    private Vector2 fireDirection;
     private Line line;
 
 
@@ -46,7 +48,6 @@ public class Paddle extends MonoBehaviour {
         line.setStroke(Color.RED);
         line.setStrokeWidth(5);
         playerInput.getRoot().getChildren().add(line);
-
     }
 
     public void update() {
@@ -63,27 +64,44 @@ public class Paddle extends MonoBehaviour {
      * Using Action defined in Action map to decide move direction
      */
     public void handleMovement() {
+
+        // Current action
         switch (actionMap.currentAction) {
+            // Go left
             case GoLeft -> transform().translate(new Vector2(-paddleSpeed * Time.deltaTime, 0));
+            // Go Right
             case GoRight -> transform().translate(new Vector2(paddleSpeed * Time.deltaTime, 0));
+            // Adjust ray direction by pressing left mouse button
             case MousePressed -> {
-                if (playerInput.getMouseEvent(MouseButton.PRIMARY) != null) {
-                    line.setVisible(true);
-                    MouseEvent mouseEvent = playerInput.getMouseEvent(MouseButton.PRIMARY);
-
-                    Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
-                    fireDirection = ((transform().getGlobalPosition()
-                            .add(new Vector2(50, 50)))
-                            .subtract(mousePos)).normalize();
-                    Vector2 direction = transform().getGlobalPosition()
-                            .add(fireDirection.multiply(100));
-
-                    line.setStartX(transform().getGlobalPosition().x);
-                    line.setStartY(transform().getGlobalPosition().y);
-                    line.setEndX(direction.x);
-                    line.setEndY(direction.y);
+                HandleRayDirection();
+            }
+            default -> {
+                line.setVisible(false);
+                if (playerInput.isMouseReleased) {
+                    onMouseReleased.invoke(fireDirection);
+                    playerInput.isMouseReleased = false;
                 }
-            }default -> line.setVisible(false);
+            }
+        }
+    }
+
+
+    private void HandleRayDirection() {
+        if (playerInput.getMouseEvent(MouseButton.PRIMARY) != null) {
+            line.setVisible(true);
+            MouseEvent mouseEvent = playerInput.getMouseEvent(MouseButton.PRIMARY);
+
+            Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
+            fireDirection = ((transform().getGlobalPosition()
+                    .add(new Vector2(50, 50)))
+                    .subtract(mousePos)).normalize();
+            Vector2 direction = transform().getGlobalPosition()
+                    .add(fireDirection.multiply(100));
+
+            line.setStartX(transform().getGlobalPosition().x);
+            line.setStartY(transform().getGlobalPosition().y);
+            line.setEndX(direction.x);
+            line.setEndY(direction.y);
         }
     }
 

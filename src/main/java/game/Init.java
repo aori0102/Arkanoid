@@ -22,7 +22,9 @@ public class Init {
         paddleVisual.addComponent(SpriteRenderer.class).setImage("/paddle.png");
 
         var ball = GameObjectManager.instantiate("ball");
+        ball.addComponent(Ball.class);
         ball.addComponent(BoxCollider.class);
+        ball.getComponent(Ball.class).setPaddle(paddle.getComponent(Paddle.class));
         ball.transform.setGlobalPosition(new Vector2(584,550 ));
         ball.transform.setGlobalScale(new Vector2(0.5, 0.5));
 

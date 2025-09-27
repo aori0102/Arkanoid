@@ -14,6 +14,9 @@ public class Ball extends MonoBehaviour {
     private Vector2 direction;
     private double ballSpeed = 500;
     private BoxCollider ballCollider;
+    private Paddle paddle;
+
+    private boolean isMoving = false;
 
     public Ball(GameObject owner)
     {
@@ -30,6 +33,11 @@ public class Ball extends MonoBehaviour {
             direction = normal.add(direction.normalize());
 
         });
+
+        paddle.onMouseReleased.addListener((e)->{
+            setDirection(e);
+            isMoving = true;
+        });
     }
 
     public void update()
@@ -44,12 +52,14 @@ public class Ball extends MonoBehaviour {
 
     public void handleMovement()
     {
+        if (!isMoving) return;
         transform().translate(direction.normalize().multiply(ballSpeed * Time.deltaTime));
 
     }
 
-    public void setDirection(Vector2 direction)
+    private void setDirection(Vector2 direction)
     {
+        System.out.println(direction);
         this.direction = direction;
     }
 
@@ -57,6 +67,12 @@ public class Ball extends MonoBehaviour {
     {
         this.ballSpeed = ballSpeed;
     }
+
+    public void setPaddle(Paddle paddle)
+    {
+        this.paddle = paddle;
+    }
+
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
