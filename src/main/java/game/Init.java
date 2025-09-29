@@ -13,7 +13,7 @@ public class Init {
         paddle.addComponent(PlayerInput.class);
         paddle.addComponent(ActionMap.class);
         paddle.addComponent(BoxCollider.class);
-        paddle.transform.setGlobalScale(new Vector2(0.2, 0.2));
+        paddle.transform.setGlobalScale(new Vector2(1.25, 1.25));
         paddle.transform.setGlobalPosition(new Vector2(600, 550));
 
         var paddleVisual = GameObjectManager.instantiate("paddleVisual");
@@ -25,8 +25,8 @@ public class Init {
         ball.addComponent(Ball.class);
         ball.addComponent(BoxCollider.class);
         ball.getComponent(Ball.class).setPaddle(paddle.getComponent(Paddle.class));
-        ball.transform.setGlobalPosition(new Vector2(584,550 ));
-        ball.transform.setGlobalScale(new Vector2(0.5, 0.5));
+        ball.transform.setGlobalPosition(new Vector2(584,530 ));
+        ball.transform.setGlobalScale(new Vector2(1.25, 1.25));
 
         var ballVisual = GameObjectManager.instantiate("ballVisual");
         ballVisual.transform.setParent(ball.transform);

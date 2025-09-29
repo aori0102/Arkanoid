@@ -140,4 +140,7 @@ public class Vector2 {
         return new Vector2(-x, -y);
     }
 
+    public boolean isZero() {
+        return x == 0 && y == 0;
+    }
 }

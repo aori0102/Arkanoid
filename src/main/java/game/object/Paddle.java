@@ -6,6 +6,8 @@ import javafx.scene.shape.Line;
 import org.*;
 import utils.Time;
 import utils.Vector2;
+import javafx.scene.shape.Rectangle;
+
 
 import javafx.scene.input.MouseEvent;
 
@@ -21,8 +23,11 @@ public class Paddle extends MonoBehaviour {
     private BoxCollider boxCollider;
     private Vector2 fireDirection;
     private Line line;
-    public boolean isFired = false;
 
+    public boolean isFired = false;
+    public Vector2 movementVector = new Vector2(0, 0);
+
+    private Rectangle colliderRect;
 
     /**
      * Get the game object this MonoBehaviour is attached to.
@@ -41,9 +46,8 @@ public class Paddle extends MonoBehaviour {
         boxCollider = gameObject.getComponent(BoxCollider.class);
         playerInput = gameObject.getComponent(PlayerInput.class);
         boxCollider.setLocalCenter(new Vector2(0, 0));
-        boxCollider.setLocalSize(new Vector2(100, 100));
-        transform().setGlobalPosition(new Vector2(600, 600));
-        transform().setGlobalScale(new Vector2(0.2, 0.2));
+        boxCollider.setLocalSize(new Vector2(80, 20));
+
 
         line = new Line();
         line.setStroke(Color.RED);
@@ -53,6 +57,7 @@ public class Paddle extends MonoBehaviour {
 
     public void update() {
         handleMovement();
+        drawCollider();
     }
 
     @Override
@@ -66,17 +71,19 @@ public class Paddle extends MonoBehaviour {
      */
     public void handleMovement() {
 
+        transform().translate(movementVector);
         // Current action
         switch (actionMap.currentAction) {
             // Go left
-            case GoLeft -> transform().translate(new Vector2(-paddleSpeed * Time.deltaTime, 0));
+            case GoLeft -> movementVector = new Vector2(-paddleSpeed * Time.deltaTime, 0);
             // Go Right
-            case GoRight -> transform().translate(new Vector2(paddleSpeed * Time.deltaTime, 0));
+            case GoRight -> movementVector = new Vector2(paddleSpeed * Time.deltaTime, 0);
             // Adjust ray direction by pressing left mouse button
             case MousePressed -> {
                 HandleRayDirection();
             }
             default -> {
+                movementVector = new Vector2(0, 0);
                 line.setVisible(false);
                 if (playerInput.isMouseReleased) {
                     onMouseReleased.invoke(fireDirection);
@@ -112,6 +119,24 @@ public class Paddle extends MonoBehaviour {
         }
     }
 
+    public void drawCollider() {
+        if (colliderRect == null) {
+            colliderRect = new Rectangle();
+            colliderRect.setStroke(Color.BLUE);   // màu viền
+            colliderRect.setFill(Color.TRANSPARENT); // không tô màu
+            colliderRect.setStrokeWidth(2);
+            playerInput.getRoot().getChildren().add(colliderRect);
+        }
+
+        // Lấy center và size từ BoxCollider
+        Vector2 center = transform().getGlobalPosition().add(boxCollider.getLocalCenter());
+        Vector2 size = boxCollider.getLocalSize();
+
+        colliderRect.setX(center.x - size.x / 2);
+        colliderRect.setY(center.y - size.y / 2);
+        colliderRect.setWidth(size.x);
+        colliderRect.setHeight(size.y);
+    }
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
