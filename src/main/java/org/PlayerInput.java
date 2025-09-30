@@ -31,11 +31,6 @@ public class PlayerInput extends MonoBehaviour {
         HandlePlayerInput();
     }
 
-    @Override
-    protected void destroyMono() {
-
-    }
-
     /**
      * Add the input from keyboard to pressedKey set and remove it when releasing.
      */
@@ -91,7 +86,7 @@ public class PlayerInput extends MonoBehaviour {
     }
 
     @Override
-    protected void clear() {
+    protected void destroyComponent() {
 
     }
 }

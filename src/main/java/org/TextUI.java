@@ -13,7 +13,7 @@ public class TextUI extends UI implements IHasNode {
     public TextUI(GameObject owner) {
         super(owner);
 
-        RendererManager.RegisterNode(text);
+        RendererManager.registerNode(text);
     }
 
     @Override
@@ -49,9 +49,9 @@ public class TextUI extends UI implements IHasNode {
     }
 
     public void setText(Text text) {
-        RendererManager.UnregisterNode(this.text); // remove old one if needed
+        RendererManager.unregisterNode(this.text); // remove old one if needed
         this.text = text;
-        RendererManager.RegisterNode(this.text);   // add new one
+        RendererManager.registerNode(this.text);   // add new one
     }
 
     public void setText(String text) {

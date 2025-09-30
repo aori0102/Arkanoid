@@ -146,7 +146,7 @@ public class SpriteRenderer extends MonoBehaviour implements IHasNode {
         imageOriginalDimension = new Vector2();
         imageSize = new Vector2();
         pivot = new Vector2();
-        RendererManager.RegisterNode(sprite);
+        RendererManager.registerNode(sprite);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class SpriteRenderer extends MonoBehaviour implements IHasNode {
 
     @Override
     protected void destroyComponent() {
-        RendererManager.UnregisterNode(sprite);
+        RendererManager.unregisterNode(sprite);
         sprite = null;
         pivot = null;
         imageSize = null;

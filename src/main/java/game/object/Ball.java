@@ -44,11 +44,6 @@ public class Ball extends MonoBehaviour {
         handleMovement();
     }
 
-    @Override
-    protected void destroyMono() {
-
-    }
-
     /**
      * Handle ball movement.
      */
@@ -58,9 +53,9 @@ public class Ball extends MonoBehaviour {
 
         // Make the ball follow the paddle position if player haven't fired it
         if (!paddle.isFired) {
-            transform().setGlobalPosition(paddle.transform().getGlobalPosition());
+            getTransform().setGlobalPosition(paddle.getTransform().getGlobalPosition());
         } else {
-            transform().translate(direction.normalize().multiply(ballSpeed * Time.deltaTime));
+            getTransform().translate(direction.normalize().multiply(ballSpeed * Time.deltaTime));
         }
     }
 
@@ -90,7 +85,7 @@ public class Ball extends MonoBehaviour {
 
         // If the ball interacts with the moving paddle, the reflected direction will be different from the motionless paddle,
         // and it will be calculated by adding the moving vector to the reflected direction
-        if (isPaddleCollided(collisionData) && !paddle.movementVector.isZero()) {
+        if (isPaddleCollided(collisionData) && !paddle.movementVector.equals(Vector2.zero())) {
             reflectDir = reflectDir.add(paddle.movementVector.normalize());
         }
 
@@ -133,7 +128,7 @@ public class Ball extends MonoBehaviour {
     }
 
     @Override
-    protected void clear() {
+    protected void destroyComponent() {
 
     }
 }

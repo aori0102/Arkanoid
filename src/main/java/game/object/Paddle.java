@@ -60,18 +60,13 @@ public class Paddle extends MonoBehaviour {
         drawCollider();
     }
 
-    @Override
-    protected void destroyMono() {
-
-    }
-
     /**
      * Handle the movement of the paddle
      * Using Action defined in Action map to decide move direction
      */
     public void handleMovement() {
 
-        transform().translate(movementVector);
+        getTransform().translate(movementVector);
         // Current action
         switch (actionMap.currentAction) {
             // Go left
@@ -106,14 +101,14 @@ public class Paddle extends MonoBehaviour {
             MouseEvent mouseEvent = playerInput.getMouseEvent(MouseButton.PRIMARY);
 
             Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
-            fireDirection = ((transform().getGlobalPosition()
+            fireDirection = ((getTransform().getGlobalPosition()
                     .add(new Vector2(50, 50)))
                     .subtract(mousePos)).normalize();
-            Vector2 direction = transform().getGlobalPosition()
+            Vector2 direction = getTransform().getGlobalPosition()
                     .add(fireDirection.multiply(100));
 
-            line.setStartX(transform().getGlobalPosition().x);
-            line.setStartY(transform().getGlobalPosition().y);
+            line.setStartX(getTransform().getGlobalPosition().x);
+            line.setStartY(getTransform().getGlobalPosition().y);
             line.setEndX(direction.x);
             line.setEndY(direction.y);
         }
@@ -129,7 +124,7 @@ public class Paddle extends MonoBehaviour {
         }
 
         // Lấy center và size từ BoxCollider
-        Vector2 center = transform().getGlobalPosition().add(boxCollider.getLocalCenter());
+        Vector2 center = getTransform().getGlobalPosition().add(boxCollider.getLocalCenter());
         Vector2 size = boxCollider.getLocalSize();
 
         colliderRect.setX(center.x - size.x / 2);
@@ -144,7 +139,7 @@ public class Paddle extends MonoBehaviour {
     }
 
     @Override
-    protected void clear() {
+    protected void destroyComponent() {
 
     }
 }

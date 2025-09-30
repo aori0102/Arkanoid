@@ -60,17 +60,12 @@ public class ActionMap extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyMono() {
-
-    }
-
-    @Override
     protected MonoBehaviour clone(GameObject newOwner) {
         return null;
     }
 
     @Override
-    protected void clear() {
+    protected void destroyComponent() {
 
     }
 }
