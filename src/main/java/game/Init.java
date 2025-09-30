@@ -15,7 +15,6 @@ public class Init {
     }
 
     public static void Init_Aori() {
-
     }
 
 }
