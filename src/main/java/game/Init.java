@@ -1,16 +1,7 @@
 package game;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import game.Player.Player;
-import game.Player.PlayerPowerUpHandler;
-import game.PowerUp.DuplicateBall;
 import org.*;
 import utils.Vector2;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class Init {
 
@@ -53,7 +44,6 @@ public class Init {
         borderBottom.getTransform().setLocalPosition(new Vector2(600.0, 500.0));
         var collider = borderBottom.addComponent(BoxCollider.class);
         collider.setLocalSize(new Vector2(2000.0, 1.0));
-        collider.setIncludeLayer(Layer._17.getUnderlyingValue());
         var borderBottomVisual = GameObjectManager.instantiate();
         borderBottomVisual.getTransform().setParent(borderBottom.getTransform());
 
