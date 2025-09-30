@@ -133,7 +133,7 @@ public class Transform extends MonoBehaviour {
             }
 
             var movement = destination.subtract(getGlobalPosition());
-            PhysicsManager.checkForTrigger(collider, movement);
+            PhysicsManager.handleTriggerCollision(collider, movement);
 
         }
 
