@@ -30,11 +30,6 @@ public class Paddle extends MonoBehaviour {
 
     private Vector2 normalVector = new Vector2(0, -1);
 
-    /**
-     * Get the game object this MonoBehaviour is attached to.
-     *
-     * @param owner The owner of this component.
-     */
     public Paddle(GameObject owner) {
         super(owner);
     }
@@ -43,13 +38,16 @@ public class Paddle extends MonoBehaviour {
      * Initialize paddle specs.
      */
     public void awake() {
+        // Assign components
         actionMap = gameObject.getComponent(ActionMap.class);
         boxCollider = gameObject.getComponent(BoxCollider.class);
         playerInput = gameObject.getComponent(PlayerInput.class);
+
+        //Assign collider specs
         boxCollider.setLocalCenter(new Vector2(0, 0));
         boxCollider.setLocalSize(new Vector2(80, 20));
 
-
+        //Assign line specs
         line = new Line();
         line.setStroke(Color.RED);
         line.setStrokeWidth(5);
@@ -66,8 +64,8 @@ public class Paddle extends MonoBehaviour {
     }
 
     /**
-     * Handle the movement of the paddle
-     * Using Action defined in Action map to decide move direction
+     * Handle the movement of the paddle.
+     * Using Action defined in Action map to decide move direction.
      */
     public void handleMovement() {
 
@@ -83,8 +81,13 @@ public class Paddle extends MonoBehaviour {
                 HandleRayDirection();
             }
             default -> {
+                // Set the movement vector to zero to stop the paddle
                 movementVector = new Vector2(0, 0);
+
+                // Turn off the line
                 line.setVisible(false);
+
+                //Fire the ball if the ball is not fired
                 if (playerInput.isMouseReleased) {
                     if (isDirectionValid(fireDirection)) {
                         onMouseReleased.invoke(fireDirection);
@@ -96,34 +99,47 @@ public class Paddle extends MonoBehaviour {
     }
 
     /**
-     *
+     * Handle the direction ray.
      */
     private void HandleRayDirection() {
         if (isFired) {
             return;
         }
 
+        // If the mouse input is left button, then turn on the line and calculate the fire direction as well as the line's end point
         if (playerInput.getMouseEvent(MouseButton.PRIMARY) != null) {
             line.setVisible(true);
+            // Get mouse event
             MouseEvent mouseEvent = playerInput.getMouseEvent(MouseButton.PRIMARY);
 
+            // Get mouse position
             Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
+
+            // Calculate fire direction and direction
             fireDirection = ((transform().getGlobalPosition()
                     .subtract(mousePos)).normalize());
-            Vector2 direction = transform().getGlobalPosition()
+            Vector2 lineEndPoint = transform().getGlobalPosition()
                     .add(fireDirection.multiply(100));
+
+            // If the direction is in the valid range then draw it
             if (isDirectionValid(fireDirection)) {
                 line.setStartX(transform().getGlobalPosition().x);
                 line.setStartY(transform().getGlobalPosition().y);
-                line.setEndX(direction.x);
-                line.setEndY(direction.y);
+                line.setEndX(lineEndPoint.x);
+                line.setEndY(lineEndPoint.y);
             } else {
                 line.setVisible(false);
             }
         }
     }
 
+    /**
+     * Check if the direction is in the valid range.
+     * @param direction : the fire direction.
+     * @return true if the direction is valid.
+     */
     private boolean isDirectionValid(Vector2 direction) {
+        if (direction == null) return false;
         double angle = Vector2.angle(direction.normalize(), normalVector);
         return Math.toDegrees(angle) <= dotLimitAngle;
     }

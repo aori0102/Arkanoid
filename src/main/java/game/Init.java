@@ -18,7 +18,7 @@ public class Init {
 
         var paddleVisual = GameObjectManager.instantiate("paddleVisual");
         paddleVisual.transform.setParent(paddle.transform);
-        paddleVisual.transform.setLocalPosition(new Vector2(-47, 0));
+        paddleVisual.transform.setLocalPosition(new Vector2(-40, 0));
         paddleVisual.addComponent(SpriteRenderer.class).setImage("/paddle.png");
 
         var ball = GameObjectManager.instantiate("ball");

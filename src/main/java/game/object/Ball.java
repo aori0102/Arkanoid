@@ -11,8 +11,8 @@ public class Ball extends MonoBehaviour {
     private BoxCollider ballCollider;
     private Paddle paddle;
     private Vector2 offsetVector = new Vector2(0.5, 0.5);
+    private Vector2 offsetBallPosition ;
 
-    private boolean isMoving = false;
 
     public Ball(GameObject owner) {
         super(owner);
@@ -26,7 +26,7 @@ public class Ball extends MonoBehaviour {
         // Assign collider specs and the function
         ballCollider = getComponent(BoxCollider.class);
         ballCollider.setLocalCenter(new Vector2(0, 0));
-        ballCollider.setLocalSize(new Vector2(16, 20));
+        ballCollider.setLocalSize(new Vector2(20, 16));
         ballCollider.setOnCollisionEnterCallback(e -> {
             handleAngleDirection(e);
 
@@ -35,9 +35,11 @@ public class Ball extends MonoBehaviour {
         // Add listener to paddle event
         paddle.onMouseReleased.addListener((e) -> {
             setDirection(e);
-            isMoving = true;
             paddle.isFired = true;
         });
+
+        // Off set ball position when it follows the paddle in order to make it is in the surface
+        offsetBallPosition = new Vector2(-ballCollider.getLocalSize().x / 2, -20);
     }
 
     public void update() {
@@ -53,13 +55,13 @@ public class Ball extends MonoBehaviour {
      * Handle ball movement.
      */
     public void handleMovement() {
-        // If the ball cannot move, then return.
-        if (!isMoving) return;
 
         // Make the ball follow the paddle position if player haven't fired it
         if (!paddle.isFired) {
-            transform().setGlobalPosition(paddle.transform().getGlobalPosition());
-        } else {
+            transform().setGlobalPosition(paddle.transform().getGlobalPosition().add(offsetBallPosition));
+        }
+        // Moving the ball
+        else {
             transform().translate(direction.normalize().multiply(ballSpeed * Time.deltaTime));
         }
     }
@@ -69,7 +71,6 @@ public class Ball extends MonoBehaviour {
      * @param collisionData : the collision data of the interacted surface.
      */
     public void handleAngleDirection(CollisionData collisionData) {
-        if (!isMoving) return;
 
         // Normal vector to calculate reflect direction
         var normal = collisionData.hitNormal.normalize().multiply(2.0);
