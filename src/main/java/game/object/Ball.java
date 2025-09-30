@@ -73,6 +73,7 @@ public class Ball extends MonoBehaviour {
 
         // Normal vector to calculate reflect direction
         var normal = collisionData.hitNormal.normalize().multiply(2.0);
+
         // Dot product of the ball's direction with the surface
         double dotCoefficient = Vector2.dot(direction.normalize(), normal.normalize());
 
@@ -90,8 +91,12 @@ public class Ball extends MonoBehaviour {
 
         // If the ball interacts with the moving paddle, the reflected direction will be different from the motionless paddle,
         // and it will be calculated by adding the moving vector to the reflected direction
-        if (isPaddleCollided(collisionData) && !paddle.movementVector.isZero()) {
+        if (isCollidedWith(collisionData, Paddle.class) && !paddle.movementVector.isZero()) {
             reflectDir = reflectDir.add(paddle.movementVector.normalize());
+        }
+
+        if (collisionData.otherCollider.transform().getGlobalPosition().y >= 750) {
+
         }
 
         direction = reflectDir;
@@ -116,13 +121,14 @@ public class Ball extends MonoBehaviour {
     }
 
     /**
-     * Check if the ball is collided with the paddle
-     * @param collisionData : data of the collided object.
-     * @return true if the object is the paddle.
+     * check if the ball is collided with the expected object.
+     * @param collisionData : the collision data of the object.
+     * @param type : the desired type.
+     * @return true if the object matches with the desired type.
      */
-    private boolean isPaddleCollided(CollisionData collisionData) {
+    private boolean isCollidedWith(CollisionData collisionData, Class type) {
         GameObject collidedObject = collisionData.otherCollider.getGameObject();
-        return collidedObject.getComponent(Paddle.class) != null;
+        return collidedObject.getComponent(type) != null;
     }
 
 
@@ -134,6 +140,6 @@ public class Ball extends MonoBehaviour {
 
     @Override
     protected void clear() {
-
+        
     }
 }

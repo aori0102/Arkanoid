@@ -15,6 +15,7 @@ import java.awt.*;
 
 public class Paddle extends MonoBehaviour {
     private final double paddleSpeed = 1000;
+    private final double dotLimitAngle = 60;
 
     public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>();
 
@@ -27,7 +28,7 @@ public class Paddle extends MonoBehaviour {
     public boolean isFired = false;
     public Vector2 movementVector = new Vector2(0, 0);
 
-    private Rectangle colliderRect;
+    private Vector2 normalVector = new Vector2(0, -1);
 
     /**
      * Get the game object this MonoBehaviour is attached to.
@@ -57,7 +58,6 @@ public class Paddle extends MonoBehaviour {
 
     public void update() {
         handleMovement();
-        drawCollider();
     }
 
     @Override
@@ -86,8 +86,10 @@ public class Paddle extends MonoBehaviour {
                 movementVector = new Vector2(0, 0);
                 line.setVisible(false);
                 if (playerInput.isMouseReleased) {
-                    onMouseReleased.invoke(fireDirection);
-                    playerInput.isMouseReleased = false;
+                    if (isDirectionValid(fireDirection)) {
+                        onMouseReleased.invoke(fireDirection);
+                        playerInput.isMouseReleased = false;
+                    }
                 }
             }
         }
@@ -107,35 +109,23 @@ public class Paddle extends MonoBehaviour {
 
             Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
             fireDirection = ((transform().getGlobalPosition()
-                    .add(new Vector2(50, 50)))
-                    .subtract(mousePos)).normalize();
+                    .subtract(mousePos)).normalize());
             Vector2 direction = transform().getGlobalPosition()
                     .add(fireDirection.multiply(100));
-
-            line.setStartX(transform().getGlobalPosition().x);
-            line.setStartY(transform().getGlobalPosition().y);
-            line.setEndX(direction.x);
-            line.setEndY(direction.y);
+            if (isDirectionValid(fireDirection)) {
+                line.setStartX(transform().getGlobalPosition().x);
+                line.setStartY(transform().getGlobalPosition().y);
+                line.setEndX(direction.x);
+                line.setEndY(direction.y);
+            } else {
+                line.setVisible(false);
+            }
         }
     }
 
-    public void drawCollider() {
-        if (colliderRect == null) {
-            colliderRect = new Rectangle();
-            colliderRect.setStroke(Color.BLUE);   // màu viền
-            colliderRect.setFill(Color.TRANSPARENT); // không tô màu
-            colliderRect.setStrokeWidth(2);
-            playerInput.getRoot().getChildren().add(colliderRect);
-        }
-
-        // Lấy center và size từ BoxCollider
-        Vector2 center = transform().getGlobalPosition().add(boxCollider.getLocalCenter());
-        Vector2 size = boxCollider.getLocalSize();
-
-        colliderRect.setX(center.x - size.x / 2);
-        colliderRect.setY(center.y - size.y / 2);
-        colliderRect.setWidth(size.x);
-        colliderRect.setHeight(size.y);
+    private boolean isDirectionValid(Vector2 direction) {
+        double angle = Vector2.angle(direction.normalize(), normalVector);
+        return Math.toDegrees(angle) <= dotLimitAngle;
     }
 
     @Override
