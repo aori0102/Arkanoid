@@ -7,8 +7,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class TextUI extends UI implements IHasNode {
+
     private Text text = new Text();
-    ;
 
     public TextUI(GameObject owner) {
         super(owner);
@@ -69,16 +69,20 @@ public class TextUI extends UI implements IHasNode {
     public double getTextHeight() {
         return text.getBoundsInLocal().getHeight();
     }
+
     @Override
     public double getWidth() {
         return text.getLayoutBounds().getWidth();
     }
+
     @Override
     public double getHeight() {
         return text.getLayoutBounds().getHeight();
     }
+
     @Override
     public Node getNode(){
         return text;
     }
+
 }
