@@ -330,5 +330,22 @@ public class GameObject {
         }
 
     }
-
+    /**
+     * Get all components attached to this GameObject.
+     *
+     * @return A copy of all components.
+     */
+    public HashSet<MonoBehaviour> getAllComponents() {
+        ValidateObjectLife();
+        return new HashSet<>(monoBehaviourSet); // return a copy to avoid external modification
+    }
+    /**
+     * Get all children of this GameObject.
+     *
+     * @return A copy of all children GameObjects.
+     */
+    public HashSet<GameObject> getChildren() {
+        ValidateObjectLife();
+        return new HashSet<>(childSet); // return a copy
+    }
 }

@@ -2,6 +2,8 @@ package game;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import org.*;
 import utils.Vector2;
 
@@ -16,7 +18,59 @@ public class Init {
     }
 
     public static void Init_Dui() {
+//        GameObject ui2 = GameObjectManager.instantiate("TextUI");
+//        Text text = new Text("Hiiii!");
+//        text.setStyle("-fx-font-size: 100px; -fx-fill: blue;");
+//
+//        var textUI = ui2.addComponent(TextUI.class);
+//        textUI.setText(text);
+//
+//        textUI.transform().setPosition(new Vector2(0,0));
+//        Text testText = new Text("mao");
+//        testText.setFont(Font.font(100));
+//        testText.setTextOrigin(VPos.TOP);  ;
+//
+//        Bounds bounds = testText.getBoundsInParent();
+//        Rectangle outline = new Rectangle(
+//                bounds.getMinX(),
+//                bounds.getMinY(),
+//                bounds.getWidth(),
+//                bounds.getHeight()
+//        );
+//        outline.setFill(Color.TRANSPARENT);
+//        outline.setStroke(Color.RED);
+//        Group g = new Group(outline, testText);
+//
+//        g.setTranslateX(0);
+//        g.setTranslateY(0);
+//
+//        RendererManager.RegisterNode(g);
 
+        GameObject ui = GameObjectManager.instantiate("UI");
+        var buttonUI = ui.addComponent(ButtonUI.class);
+
+        buttonUI.setImage("/TabBackgroundSelected.png");
+        buttonUI.getTextUI().setText("Button");
+        buttonUI.getTextUI().getText().setFont(Font.font("Arial", FontWeight.BOLD, 20));
+
+        ui.getTransform().setGlobalPosition(new Vector2(0,0));
+
+
+        buttonUI.setOnClick(()->{
+            System.out.println("Bocchi clicked!");
+        });
+        buttonUI.setOnUp(()->{
+            System.out.println("Bocchi up!");
+        });
+        buttonUI.setOnDown(()->{
+            System.out.println("Bocchi down!");
+        });
+        buttonUI.setOnExit(()->{
+            System.out.println("Bocchi exited!");
+        });
+        buttonUI.setOnEnter(()->{
+            System.out.println("Bocchi entered!");
+        });
     }
 
     public static void Init_Duc() {
@@ -24,35 +78,7 @@ public class Init {
     }
 
     public static void Init_Aori() {
-        //InitBocchi("Bocchi_1", new Vector2(100.0, 100.0), new Vector2(1.0, 0.0));
-        //InitBocchi("Bocchi_2", new Vector2(500.0, 100.0), new Vector2(-1.0, 0.0));
 
-        var kita = GameObjectManager.instantiate("Kita");
-        kita.addComponent(Kita.class);
-
-        var borderLeft = GameObjectManager.instantiate("Border_Left");
-        borderLeft.getTransform().setLocalPosition(new Vector2(5.0, 400.0));
-        borderLeft.addComponent(BoxCollider.class).setLocalSize(new Vector2(1.0, 2000.0));
-        var borderLeftVisual = GameObjectManager.instantiate();
-        borderLeftVisual.getTransform().setParent(borderLeft.getTransform());
-
-        var borderRight = GameObjectManager.instantiate("Border_Right");
-        borderRight.getTransform().setLocalPosition(new Vector2(900.0, 400.0));
-        borderRight.addComponent(BoxCollider.class).setLocalSize(new Vector2(1.0, 2000.0));
-        var borderRightVisual = GameObjectManager.instantiate();
-        borderRightVisual.getTransform().setParent(borderRight.getTransform());
-
-        var borderTop = GameObjectManager.instantiate("Border_Top");
-        borderTop.getTransform().setLocalPosition(new Vector2(600.0, 5.0));
-        borderTop.addComponent(BoxCollider.class).setLocalSize(new Vector2(2000.0, 1.0));
-        var borderTopVisual = GameObjectManager.instantiate();
-        borderTopVisual.getTransform().setParent(borderTop.getTransform());
-
-        var borderBottom = GameObjectManager.instantiate("Border_Bottom");
-        borderBottom.getTransform().setLocalPosition(new Vector2(600.0, 500.0));
-        borderBottom.addComponent(BoxCollider.class).setLocalSize(new Vector2(2000.0, 1.0));
-        var borderBottomVisual = GameObjectManager.instantiate();
-        borderBottomVisual.getTransform().setParent(borderBottom.getTransform());
 
     }
 
