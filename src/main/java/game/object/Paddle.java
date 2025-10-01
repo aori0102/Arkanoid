@@ -22,10 +22,11 @@ public class Paddle extends MonoBehaviour {
     private ActionMap actionMap;
     private PlayerInput playerInput;
     private BoxCollider boxCollider;
-    private Vector2 fireDirection;
+    private Vector2 fireDirection = new Vector2();
     private Line line;
 
     public boolean isFired = false;
+    private boolean canInvoke;
     public Vector2 movementVector = new Vector2(0, 0);
 
     private Vector2 normalVector = new Vector2(0, -1);
@@ -58,10 +59,6 @@ public class Paddle extends MonoBehaviour {
         handleMovement();
     }
 
-    @Override
-    protected void destroyMono() {
-
-    }
 
     /**
      * Handle the movement of the paddle.
@@ -69,7 +66,7 @@ public class Paddle extends MonoBehaviour {
      */
     public void handleMovement() {
 
-        transform().translate(movementVector);
+        getTransform().translate(movementVector);
         // Current action
         switch (actionMap.currentAction) {
             // Go left
@@ -90,8 +87,10 @@ public class Paddle extends MonoBehaviour {
                 //Fire the ball if the ball is not fired
                 if (playerInput.isMouseReleased) {
                     if (isDirectionValid(fireDirection)) {
-                        onMouseReleased.invoke(fireDirection);
-                        playerInput.isMouseReleased = false;
+                        if (canInvoke) {
+                            onMouseReleased.invoke(fireDirection);
+                            playerInput.isMouseReleased = false;
+                        }
                     }
                 }
             }
@@ -115,21 +114,27 @@ public class Paddle extends MonoBehaviour {
             // Get mouse position
             Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
 
+            if (mousePos.y < getTransform().getGlobalPosition().y) {
+                canInvoke = false;
+                return;
+            } else {
+                canInvoke = true;
+            }
+
             // The direction we want the ball to follow
-            Vector2 expectedDirection = ((transform().getGlobalPosition()
+            Vector2 expectedDirection = ((getTransform().getGlobalPosition()
                     .subtract(mousePos)).normalize());
             // If the direction is in the range, then assigning it to fire direction
             if (isDirectionValid(expectedDirection)) {
                 fireDirection = expectedDirection;
             }
 
-            // Calculate line end point in order to draw the ray
-            Vector2 lineEndPoint = transform().getGlobalPosition()
+            Vector2 lineEndPoint = getTransform().getGlobalPosition()
                     .add(fireDirection.multiply(100));
 
             // Draw the fire ray
-            line.setStartX(transform().getGlobalPosition().x);
-            line.setStartY(transform().getGlobalPosition().y);
+            line.setStartX(getTransform().getGlobalPosition().x);
+            line.setStartY(getTransform().getGlobalPosition().y);
             line.setEndX(lineEndPoint.x);
             line.setEndY(lineEndPoint.y);
         }

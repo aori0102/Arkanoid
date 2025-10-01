@@ -48,25 +48,22 @@ public class Ball extends MonoBehaviour {
         handleMovement();
     }
 
-    @Override
-    protected void destroyMono() {
-
-    }
 
     /**
      * Handle ball movement.
      */
     public void handleMovement() {
-        // If the ball cannot move, then return.
-        if (!isMoving) return;
-
         // Make the ball follow the paddle position if player haven't fired it
         if (!paddle.isFired) {
-            transform().setGlobalPosition(paddle.transform().getGlobalPosition().add(offsetBallPosition));
+            getTransform().setGlobalPosition(paddle.getTransform().getGlobalPosition().add(offsetBallPosition));
         }
         // Moving the ball
         else {
-            transform().translate(direction.normalize().multiply(ballSpeed * Time.deltaTime));
+            getTransform().translate(direction.normalize().multiply(ballSpeed * Time.deltaTime));
+        }
+
+        if (getTransform().getGlobalPosition().y > 1000 ) {
+            GameObjectManager.destroy(getGameObject());
         }
     }
 
@@ -75,6 +72,8 @@ public class Ball extends MonoBehaviour {
      * @param collisionData : the collision data of the interacted surface.
      */
     public void handleAngleDirection(CollisionData collisionData) {
+
+        if (direction == null) return;
 
         // Normal vector to calculate reflect direction
         var normal = collisionData.hitNormal.normalize().multiply(2.0);
@@ -96,7 +95,7 @@ public class Ball extends MonoBehaviour {
 
         // If the ball interacts with the moving paddle, the reflected direction will be different from the motionless paddle,
         // and it will be calculated by adding the moving vector to the reflected direction
-        if (isCollidedWith(collisionData, Paddle.class) && !paddle.movementVector.isZero()) {
+        if (isCollidedWith(collisionData, Paddle.class) && !paddle.movementVector.equals(Vector2.zero())) {
             reflectDir = reflectDir.add(paddle.movementVector.normalize());
         }
 
@@ -141,7 +140,9 @@ public class Ball extends MonoBehaviour {
     }
 
     @Override
-    protected void clear() {
+    protected void destroyComponent() {
 
     }
+
+
 }
