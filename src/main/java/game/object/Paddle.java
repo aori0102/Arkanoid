@@ -50,7 +50,7 @@ public class Paddle extends MonoBehaviour {
         //Assign line specs
         line = new Line();
         line.setStroke(Color.RED);
-        line.setStrokeWidth(5);
+        line.setStrokeWidth(2);
         playerInput.getRoot().getChildren().add(line);
     }
 
@@ -115,21 +115,23 @@ public class Paddle extends MonoBehaviour {
             // Get mouse position
             Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
 
-            // Calculate fire direction and direction
-            fireDirection = ((transform().getGlobalPosition()
+            // The direction we want the ball to follow
+            Vector2 expectedDirection = ((transform().getGlobalPosition()
                     .subtract(mousePos)).normalize());
+            // If the direction is in the range, then assigning it to fire direction
+            if (isDirectionValid(expectedDirection)) {
+                fireDirection = expectedDirection;
+            }
+
+            // Calculate line end point in order to draw the ray
             Vector2 lineEndPoint = transform().getGlobalPosition()
                     .add(fireDirection.multiply(100));
 
-            // If the direction is in the valid range then draw it
-            if (isDirectionValid(fireDirection)) {
-                line.setStartX(transform().getGlobalPosition().x);
-                line.setStartY(transform().getGlobalPosition().y);
-                line.setEndX(lineEndPoint.x);
-                line.setEndY(lineEndPoint.y);
-            } else {
-                line.setVisible(false);
-            }
+            // Draw the fire ray
+            line.setStartX(transform().getGlobalPosition().x);
+            line.setStartY(transform().getGlobalPosition().y);
+            line.setEndX(lineEndPoint.x);
+            line.setEndY(lineEndPoint.y);
         }
     }
 

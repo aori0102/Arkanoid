@@ -96,9 +96,6 @@ public class Ball extends MonoBehaviour {
             reflectDir = reflectDir.add(paddle.movementVector.normalize());
         }
 
-        if (collisionData.otherCollider.transform().getGlobalPosition().y >= 750) {
-
-        }
 
         direction = reflectDir;
     }
