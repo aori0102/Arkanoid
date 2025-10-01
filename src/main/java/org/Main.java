@@ -1,12 +1,13 @@
 package org;
 
+import game.Init;
+import utils.Random;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import utils.Time;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
-import game.Init;
 
 public class Main extends Application {
 
@@ -16,6 +17,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        Random.init();
+        RendererManager.initializeMain(stage, scene, root);
         root = new Group();
         scene = new Scene(root, 1200, 800);
 
@@ -45,10 +48,7 @@ public class Main extends Application {
      */
     private void update() {
         Time.updateTime();
-        GameObjectManager.awake();
-        GameObjectManager.start();
-        GameObjectManager.update();
-        GameObjectManager.lateUpdate();
+        GameObjectManager.runUpdate();
     }
 
     /**

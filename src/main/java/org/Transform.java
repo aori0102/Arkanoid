@@ -2,6 +2,7 @@ package org;
 
 import utils.Vector2;
 
+import java.util.HashSet;
 import java.util.function.Function;
 
 public class Transform extends MonoBehaviour {
@@ -118,14 +119,21 @@ public class Transform extends MonoBehaviour {
      */
     public void translate(Vector2 translation) {
 
+        if (translation.equals(Vector2.zero())) {
+            return;
+        }
+
         Vector2 destination = getGlobalPosition().add(translation);
         var collider = getComponent(BoxCollider.class);
         if (collider != null) {
 
             var collisionData = PhysicsManager.validateMovement(collider, translation);
-            if (collisionData.collided) {
+            if (collisionData.collided && !collider.isTrigger) {
                 destination = collisionData.contactPoint.subtract(collider.getLocalCenter());
             }
+
+            var movement = destination.subtract(getGlobalPosition());
+            PhysicsManager.handleTriggerCollision(collider, movement);
 
         }
 
@@ -140,9 +148,15 @@ public class Transform extends MonoBehaviour {
      */
     public void setParent(Transform parent) {
         if (parent == this) {
-            System.out.println(gameObject.name + " cannot be its own parent!");
+            throw new RuntimeException(gameObject.getName() + " cannot be its own parent!");
         }
+
+        if (this.parent != null) {
+            this.parent.gameObject.removeChild(gameObject);
+        }
+
         this.parent = parent;
+        parent.gameObject.addChild(gameObject);
     }
 
     /**
@@ -155,16 +169,23 @@ public class Transform extends MonoBehaviour {
     }
 
     @Override
-    protected void clear() {
-        localPosition = null;
-        localScale = null;
-    }
-
-    @Override
-    protected void destroyMono() {
+    protected void destroyComponent() {
         localPosition = null;
         localScale = null;
         parent = null;
     }
+    /**
+     * Get all child transforms of this Transform.
+     *
+     * @return A copy of all children transforms.
+     */
+    public HashSet<Transform> getChildren() {
+        var children = new HashSet<Transform>();
+        for (var child : gameObject.getChildren()) {
+            children.add(child.getTransform());
+        }
+        return children;
+    }
+
 
 }

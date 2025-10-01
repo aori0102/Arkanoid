@@ -13,6 +13,7 @@ public class Ball extends MonoBehaviour {
     private Vector2 offsetVector = new Vector2(0.5, 0.5);
     private Vector2 offsetBallPosition ;
 
+    private boolean isMoving = false;
 
     public Ball(GameObject owner) {
         super(owner);
@@ -35,6 +36,7 @@ public class Ball extends MonoBehaviour {
         // Add listener to paddle event
         paddle.onMouseReleased.addListener((e) -> {
             setDirection(e);
+            isMoving = true;
             paddle.isFired = true;
         });
 
@@ -55,6 +57,8 @@ public class Ball extends MonoBehaviour {
      * Handle ball movement.
      */
     public void handleMovement() {
+        // If the ball cannot move, then return.
+        if (!isMoving) return;
 
         // Make the ball follow the paddle position if player haven't fired it
         if (!paddle.isFired) {
@@ -138,6 +142,6 @@ public class Ball extends MonoBehaviour {
 
     @Override
     protected void clear() {
-        
+
     }
 }

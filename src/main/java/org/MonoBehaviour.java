@@ -20,8 +20,8 @@ public abstract class MonoBehaviour {
      *
      * @return The {@link Transform} for this game object.
      */
-    public Transform transform() {
-        return gameObject.transform;
+    public Transform getTransform() {
+        return gameObject.getTransform();
     }
 
     /**
@@ -36,13 +36,7 @@ public abstract class MonoBehaviour {
     /**
      * Wipe clean this MonoBehaviours data.
      */
-    protected abstract void clear();
-
-    /**
-     * Called when initializing object
-     */
-    public void init() {
-    }
+    protected abstract void destroyComponent();
 
     /**
      * Called when an object is instantiated and is active.
@@ -114,10 +108,5 @@ public abstract class MonoBehaviour {
     public <T extends MonoBehaviour> T addComponent(Class<T> type) {
         return gameObject.addComponent(type);
     }
-
-    /**
-     * Clean up this MonoBehaviour's data.
-     */
-    protected abstract void destroyMono();
 
 }

@@ -9,12 +9,36 @@ public class BoxCollider extends MonoBehaviour {
     private Vector2 localCenter;
     private Vector2 localSize;
     protected Consumer<CollisionData> onCollisionEnter;
+    protected Consumer<CollisionData> onTriggerEnter;
+
+    public boolean isTrigger;
+    private int includeLayer;
 
     public BoxCollider(GameObject owner) {
         super(owner);
         localCenter = new Vector2(0.0, 0.0);
         localSize = new Vector2(1.0, 1.0);
         PhysicsManager.RegisterCollider(this);
+        isTrigger = false;
+        includeLayer = Layer.EVERYTHING;
+    }
+
+    /**
+     * Set the layer mask for collision check.
+     *
+     * @param layerMask The layers to include in collision check.
+     */
+    public void setIncludeLayer(int layerMask) {
+        includeLayer = layerMask;
+    }
+
+    /**
+     * Get the included layers for collision check.
+     *
+     * @return The included layers for collision check.
+     */
+    public int getIncludeLayer() {
+        return includeLayer;
     }
 
     @Override
@@ -22,17 +46,14 @@ public class BoxCollider extends MonoBehaviour {
         BoxCollider newBoxCollider = new BoxCollider(newOwner);
         newBoxCollider.localCenter = this.localCenter;
         newBoxCollider.localSize = this.localSize;
+        newBoxCollider.isTrigger = this.isTrigger;
+        newBoxCollider.onCollisionEnter = this.onCollisionEnter;
         return newBoxCollider;
     }
 
     @Override
-    protected void clear() {
-        localCenter = null;
-        localSize = null;
-    }
-
-    @Override
-    protected void destroyMono() {
+    protected void destroyComponent() {
+        PhysicsManager.UnregisterCollider(this);
         localCenter = null;
         localSize = null;
         onCollisionEnter = null;
@@ -53,7 +74,7 @@ public class BoxCollider extends MonoBehaviour {
      * @return The center of the bounding box in world space.
      */
     public Vector2 getCenter() {
-        return transform().getGlobalPosition().add(localCenter);
+        return getTransform().getGlobalPosition().add(localCenter);
     }
 
     /**
@@ -71,7 +92,7 @@ public class BoxCollider extends MonoBehaviour {
      * @return The size of the bounding box in world space.
      */
     public Vector2 getSize() {
-        return localSize.scaleUp(transform().getGlobalScale());
+        return localSize.scaleUp(getTransform().getGlobalScale());
     }
 
     /**
@@ -119,7 +140,7 @@ public class BoxCollider extends MonoBehaviour {
      * @return The extents of the bounding box.
      */
     public Vector2 getExtents() {
-        return getLocalSize().divide(2.0);
+        return getSize().divide(2.0);
     }
 
     /**
@@ -129,6 +150,15 @@ public class BoxCollider extends MonoBehaviour {
      */
     public void setOnCollisionEnterCallback(Consumer<CollisionData> onCollisionEnter) {
         this.onCollisionEnter = onCollisionEnter;
+    }
+
+    /**
+     * Set the callback when trigger happens.
+     *
+     * @param onTriggerEnter The callback when trigger happens.
+     */
+    public void setOnTriggerEnter(Consumer<CollisionData> onTriggerEnter) {
+        this.onTriggerEnter = onTriggerEnter;
     }
 
 }

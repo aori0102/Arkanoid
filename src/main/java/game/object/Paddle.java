@@ -152,7 +152,7 @@ public class Paddle extends MonoBehaviour {
     }
 
     @Override
-    protected void clear() {
+    protected void destroyComponent() {
 
     }
 }
