@@ -2,6 +2,7 @@ package org;
 
 import utils.Vector2;
 
+import java.util.HashSet;
 import java.util.function.Function;
 
 public class Transform extends MonoBehaviour {
@@ -173,5 +174,18 @@ public class Transform extends MonoBehaviour {
         localScale = null;
         parent = null;
     }
+    /**
+     * Get all child transforms of this Transform.
+     *
+     * @return A copy of all children transforms.
+     */
+    public HashSet<Transform> getChildren() {
+        var children = new HashSet<Transform>();
+        for (var child : gameObject.getChildren()) {
+            children.add(child.getTransform());
+        }
+        return children;
+    }
+
 
 }
