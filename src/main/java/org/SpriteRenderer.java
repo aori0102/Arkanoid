@@ -1,12 +1,13 @@
 package org;
 
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
 import utils.Vector2;
 
-public class SpriteRenderer extends MonoBehaviour {
+public class SpriteRenderer extends MonoBehaviour implements IHasNode {
 
     protected ImageView sprite;
     private Vector2 imageOriginalDimension;
@@ -186,10 +187,10 @@ public class SpriteRenderer extends MonoBehaviour {
         imageOriginalDimension = new Vector2();
         imageSize = new Vector2();
         pivot = new Vector2();
-        RendererManager.RegisterNode(sprite);
         rotate = new Rotate();
         rotateAngle = 0.0;
         sprite.getTransforms().add(rotate);
+        RendererManager.registerNode(sprite);
     }
 
     @Override
@@ -199,11 +200,15 @@ public class SpriteRenderer extends MonoBehaviour {
 
     @Override
     protected void destroyComponent() {
-        RendererManager.UnregisterNode(sprite);
+        RendererManager.unregisterNode(sprite);
         sprite = null;
         pivot = null;
         imageSize = null;
         imageOriginalDimension = null;
+    }
+    @Override
+    public Node getNode(){
+        return sprite;
     }
 
     private void validateComponentCompatibility() {

@@ -15,13 +15,13 @@ public class RendererManager {
      *
      * @param stage The stage of the application.
      */
-    public static void initializeMain(Stage stage) {
+    public static void initializeMain(Stage stage, Scene mainScene, Group mainGroup) {
 
         // root node (empty container for now)
-        root = new Group();
+         root = mainGroup;
 
         // scene = like your canvas
-        Scene scene = new Scene(root, 1200, 800);
+        Scene scene = mainScene;
 
         stage.setTitle("NigArkanoid");
         stage.setScene(scene);
@@ -34,7 +34,7 @@ public class RendererManager {
      *
      * @param node The registering node.
      */
-    protected static void RegisterNode(Node node) {
+    protected static void registerNode(Node node) {
         root.getChildren().add(node);
     }
 
@@ -43,7 +43,7 @@ public class RendererManager {
      *
      * @param node The unregistering node.
      */
-    protected static void UnregisterNode(Node node) {
+    protected static void unregisterNode(Node node) {
         root.getChildren().remove(node);
     }
 
