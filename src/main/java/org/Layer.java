@@ -4,7 +4,7 @@ public enum Layer {
 
     None(0),
     Default(1),
-    _2(2),
+    PowerUp(2),
     _3(3),
     _4(4),
     _5(5),

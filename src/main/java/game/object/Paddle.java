@@ -1,5 +1,6 @@
 package game.object;
 
+import game.PowerUp.PowerUp;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -14,9 +15,11 @@ import javafx.scene.input.MouseEvent;
 import java.awt.*;
 
 public class Paddle extends MonoBehaviour {
+
     private final double paddleSpeed = 1000;
 
-    public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(this);
+    public EventHandler<Vector2> onMouseReleased = new EventHandler<>(this);
+    public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(this);
 
     private ActionMap actionMap;
     private PlayerInput playerInput;
@@ -47,12 +50,21 @@ public class Paddle extends MonoBehaviour {
         playerInput = gameObject.getComponent(PlayerInput.class);
         boxCollider.setLocalCenter(new Vector2(0, 0));
         boxCollider.setLocalSize(new Vector2(80, 20));
-
+        boxCollider.setOnTriggerEnter(this::onTriggerEnter);
 
         line = new Line();
         line.setStroke(Color.RED);
         line.setStrokeWidth(5);
         playerInput.getRoot().getChildren().add(line);
+    }
+
+    private void onTriggerEnter(CollisionData collisionData) {
+
+        var powerUp = collisionData.otherCollider.getComponent(PowerUp.class);
+        if (powerUp != null) {
+            onPowerUpConsumed.invoke(this, powerUp);
+        }
+
     }
 
     public void update() {
@@ -142,4 +154,5 @@ public class Paddle extends MonoBehaviour {
     protected void destroyComponent() {
 
     }
+
 }
