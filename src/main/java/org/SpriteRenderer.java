@@ -1,5 +1,6 @@
 package org;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utils.Vector2;
@@ -32,7 +33,11 @@ public class SpriteRenderer extends MonoBehaviour {
      * @param imageSize The size in pixel.
      */
     public void setImageSize(Vector2 imageSize) {
+
+        validateComponentCompatibility();
+
         this.imageSize = imageSize;
+
     }
 
     /**
@@ -55,6 +60,8 @@ public class SpriteRenderer extends MonoBehaviour {
      */
     public void setImage(String path) {
 
+        validateComponentCompatibility();
+
         try {
             // Get the resource folder
             java.io.InputStream stream = getClass().getResourceAsStream(path);
@@ -73,12 +80,51 @@ public class SpriteRenderer extends MonoBehaviour {
     }
 
     /**
+     * Override the current image of this SpriteRenderer,
+     * can only be called by {@link SpriteAnimator}.
+     *
+     * @param image The image to override.
+     */
+    protected void overrideImage(Image image) {
+        sprite.setImage(image);
+        imageOriginalDimension = new Vector2(image.getWidth(), image.getHeight());
+        imageSize = new Vector2(imageOriginalDimension);
+    }
+
+    /**
+     * Override the current viewport of this SpriteRenderer,
+     * can only be called by {@link SpriteAnimator}.
+     *
+     * @param anchor The top left point of the clip.
+     * @param size   The size from the {@code anchor} of the clip.
+     */
+    protected void overrideClip(Vector2 anchor, Vector2 size) {
+        sprite.setViewport(new Rectangle2D(anchor.x, anchor.y, size.x, size.y));
+        imageSize = new Vector2(size);
+    }
+
+    /**
+     * Override the current render size of the image from
+     * this SpriteRenderer, can only be called within
+     * {@link SpriteAnimator}.
+     *
+     * @param renderSize The render size of the image.
+     */
+    protected void overrideRenderSize(Vector2 renderSize) {
+        imageSize = new Vector2(renderSize);
+    }
+
+    /**
      * Remove the image for this Renderer.
      */
     public void resetImage() {
+
+        validateComponentCompatibility();
+
         sprite.setImage(null);
         imageSize = new Vector2();
         imageOriginalDimension = new Vector2();
+
     }
 
     @Override
@@ -114,6 +160,14 @@ public class SpriteRenderer extends MonoBehaviour {
         pivot = null;
         imageSize = null;
         imageOriginalDimension = null;
+    }
+
+    private void validateComponentCompatibility() {
+
+        if (getComponent(SpriteAnimator.class) != null) {
+            throw new IllegalStateException("This SpriteRenderer is being driven by SpriteAnimator");
+        }
+
     }
 
 }
