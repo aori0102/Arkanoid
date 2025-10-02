@@ -28,7 +28,7 @@ public class Init {
         //InitBocchi("Bocchi_2", new Vector2(500.0, 100.0), new Vector2(-1.0, 0.0));
 
         var kita = GameObjectManager.instantiate("Kita");
-        kita.addComponent(Kita.class);
+
 
         var borderLeft = GameObjectManager.instantiate("Border_Left");
         borderLeft.getTransform().setLocalPosition(new Vector2(5.0, 400.0));
