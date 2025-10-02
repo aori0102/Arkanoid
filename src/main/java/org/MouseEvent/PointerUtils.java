@@ -1,8 +1,7 @@
 package org.MouseEvent;
 
 import javafx.scene.Node;
-import org.GameObject;
-import org.IHasNode;
+import game.Interface.IHasNode;
 import org.Transform;
 
 import java.util.ArrayList;

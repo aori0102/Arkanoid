@@ -1,5 +1,6 @@
 package org;
 
+import game.Interface.IHasNode;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;

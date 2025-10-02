@@ -16,6 +16,7 @@ import java.awt.*;
 public class Paddle extends MonoBehaviour {
     private final double paddleSpeed = 1000;
     private final double dotLimitAngle = 60;
+    private final double stunnedTime = 2d;
 
     public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>();
 
@@ -25,10 +26,14 @@ public class Paddle extends MonoBehaviour {
     private Vector2 fireDirection = new Vector2();
     private Line line;
 
-    public boolean isFired = false;
     private boolean canInvoke;
-    public Vector2 movementVector = new Vector2(0, 0);
+    private boolean isMoving = true;
+    private boolean canStartStunnedCounter = false;
+    private double stunnedCounter = 0;
 
+    public boolean isFired = false;
+
+    public Vector2 movementVector = new Vector2(0, 0);
     private Vector2 normalVector = new Vector2(0, -1);
 
     public Paddle(GameObject owner) {
@@ -53,10 +58,18 @@ public class Paddle extends MonoBehaviour {
         line.setStroke(Color.RED);
         line.setStrokeWidth(2);
         playerInput.getRoot().getChildren().add(line);
+
+        ObstacleManager.onPaddleCollidedWithObstacles.addListener((obstacleCollided) -> {
+            canStartStunnedCounter = true;
+            handleInteractWithObstacle();
+        });
+
+
     }
 
     public void update() {
         handleMovement();
+        handleStunnedCounter();
     }
 
 
@@ -65,7 +78,9 @@ public class Paddle extends MonoBehaviour {
      * Using Action defined in Action map to decide move direction.
      */
     public void handleMovement() {
-
+        if (!isMoving) {
+            return;
+        }
         getTransform().translate(movementVector);
         // Current action
         switch (actionMap.currentAction) {
@@ -137,6 +152,21 @@ public class Paddle extends MonoBehaviour {
             line.setStartY(getTransform().getGlobalPosition().y);
             line.setEndX(lineEndPoint.x);
             line.setEndY(lineEndPoint.y);
+        }
+    }
+
+    private void handleInteractWithObstacle() {
+        isMoving = false;
+        if (stunnedCounter >= stunnedTime) {
+            isMoving = true;
+            stunnedCounter = 0;
+            canStartStunnedCounter = false;
+        }
+    }
+
+    private void handleStunnedCounter() {
+        if (canStartStunnedCounter) {
+            stunnedCounter += Time.deltaTime;
         }
     }
 

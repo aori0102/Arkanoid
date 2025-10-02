@@ -1,10 +1,10 @@
 package org;
 
+import game.Interface.IHasNode;
 import javafx.scene.Node;
 import org.UI.UI;
 import javafx.geometry.VPos;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
 public class TextUI extends UI implements IHasNode {
 

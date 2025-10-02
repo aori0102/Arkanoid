@@ -1,4 +1,4 @@
-package org;
+package game.Interface;
 
 import javafx.scene.Node;
 

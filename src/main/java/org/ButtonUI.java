@@ -1,12 +1,8 @@
 package org;
 
-import javafx.scene.Node;
-import org.*;
+import game.Interface.*;
 
-import javafx.application.Platform;
 import javafx.geometry.Bounds;
-import javafx.scene.text.Text;
-import org.MouseEvent.*;
 import org.UI.UI;
 import utils.Vector2;
 
