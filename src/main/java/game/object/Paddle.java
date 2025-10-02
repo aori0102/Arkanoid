@@ -16,7 +16,7 @@ import java.awt.*;
 public class Paddle extends MonoBehaviour {
     private final double paddleSpeed = 1000;
 
-    public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>();
+    public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(this);
 
     private ActionMap actionMap;
     private PlayerInput playerInput;
@@ -81,7 +81,7 @@ public class Paddle extends MonoBehaviour {
                 movementVector = new Vector2(0, 0);
                 line.setVisible(false);
                 if (playerInput.isMouseReleased) {
-                    onMouseReleased.invoke(fireDirection);
+                    onMouseReleased.invoke(this, fireDirection);
                     playerInput.isMouseReleased = false;
                 }
             }
