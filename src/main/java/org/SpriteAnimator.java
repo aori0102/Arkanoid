@@ -118,6 +118,10 @@ public class SpriteAnimator extends MonoBehaviour {
         lastFramePlayingTick = Time.time;
         currentFrameDuration = currentAnimationClipFrame.duration;
 
+        spriteRenderer.overrideImage(currentAnimationClipFrame.image);
+        spriteRenderer.overrideClip(currentAnimationClipFrame.clipAnchor, currentAnimationClipFrame.clipSize);
+        spriteRenderer.overrideRenderSize(currentAnimationClipFrame.renderSize);
+
     }
 
     /**
@@ -165,5 +169,6 @@ public class SpriteAnimator extends MonoBehaviour {
         currentFrameDuration = 0.0;
         lastFramePlayingTick = 0.0;
     }
+
 
 }

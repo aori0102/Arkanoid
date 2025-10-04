@@ -28,6 +28,7 @@ public class ButtonUI extends UI
     private TextUI textUI;
     private boolean isCentered = false;
 
+
     /**
      * Get the game object this MonoBehaviour is attached to.
      *
@@ -54,6 +55,7 @@ public class ButtonUI extends UI
 
     }
 
+
     @Override
     protected void destroyComponent() {
 
@@ -65,6 +67,8 @@ public class ButtonUI extends UI
             setTextUIPositionCenter();
             isCentered = true;
         }
+
+
     }
 
     public TextUI getTextUI() {
@@ -212,4 +216,6 @@ public class ButtonUI extends UI
             buttonDownFunction.run();
         }
     }
+
+
 }
