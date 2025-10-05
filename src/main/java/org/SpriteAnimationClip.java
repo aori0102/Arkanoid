@@ -33,6 +33,11 @@ public class SpriteAnimationClip {
         public Image image = null;
 
         /**
+         * The angle of rotation in degrees.
+         */
+        public double rotationAngle = 0.0;
+
+        /**
          * The size of the clip to be rendered.
          */
         public Vector2 renderSize = null;
@@ -59,12 +64,13 @@ public class SpriteAnimationClip {
      * Add a frame to this animation clip's sequence. Should
      * only be called within {@link SpriteAnimator}.
      *
-     * @param clipAnchor The anchor point of the clip (top left).
-     * @param clipSize   The size from {@code clipAnchor} of the clip.
-     * @param renderSize The size to render the clip.
-     * @param duration   The duration of the frame.
+     * @param clipAnchor    The anchor point of the clip (top left).
+     * @param clipSize      The size from {@code clipAnchor} of the clip.
+     * @param renderSize    The size to render the clip.
+     * @param duration      The duration of the frame.
+     * @param rotationAngle The angle of rotation in degrees.
      */
-    protected void addFrame(Vector2 clipAnchor, Vector2 clipSize, Vector2 renderSize, double duration) {
+    protected void addFrame(Vector2 clipAnchor, Vector2 clipSize, Vector2 renderSize, double duration, double rotationAngle) {
 
         // Create node
         var animationNode = new AnimationNode();
@@ -73,6 +79,7 @@ public class SpriteAnimationClip {
         animationNode.duration = duration;
         animationNode.image = image;
         animationNode.renderSize = renderSize;
+        animationNode.rotationAngle = rotationAngle;
 
         // Insert into link list
         if (currentFrame == null) {

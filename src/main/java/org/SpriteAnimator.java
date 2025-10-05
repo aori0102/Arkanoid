@@ -83,19 +83,20 @@ public class SpriteAnimator extends MonoBehaviour {
     /**
      * Add a frame to an animation clip.
      *
-     * @param clipKey    The key of the animation to set.
-     * @param clipAnchor The anchor point (top left) of the sprite clip.
-     * @param clipSize   The size from the {@code clipAnchor} of the sprite clip.
-     * @param renderSize The size to render the clip.
-     * @param duration   The duration of the frame in seconds.
+     * @param clipKey       The key of the animation to set.
+     * @param clipAnchor    The anchor point (top left) of the sprite clip.
+     * @param clipSize      The size from the {@code clipAnchor} of the sprite clip.
+     * @param renderSize    The size to render the clip.
+     * @param duration      The duration of the frame in seconds.
+     * @param rotationAngle The angle of rotation in degrees.
      */
-    public void addFrame(String clipKey, Vector2 clipAnchor, Vector2 clipSize, Vector2 renderSize, double duration) {
+    public void addFrame(String clipKey, Vector2 clipAnchor, Vector2 clipSize, Vector2 renderSize, double duration, double rotationAngle) {
 
         if (!animationClipMap.containsKey(clipKey)) {
             throw new RuntimeException("Animation clip doesn't exist. Use addAnimationClip() to create an animation clip");
         }
 
-        animationClipMap.get(clipKey).addFrame(clipAnchor, clipSize, renderSize, duration);
+        animationClipMap.get(clipKey).addFrame(clipAnchor, clipSize, renderSize, duration, rotationAngle);
 
     }
 
@@ -139,6 +140,7 @@ public class SpriteAnimator extends MonoBehaviour {
                     spriteRenderer.overrideImage(currentAnimationClipFrame.image);
                     spriteRenderer.overrideClip(currentAnimationClipFrame.clipAnchor, currentAnimationClipFrame.clipSize);
                     spriteRenderer.overrideRenderSize(currentAnimationClipFrame.renderSize);
+                    spriteRenderer.overrideRotation(currentAnimationClipFrame.rotationAngle);
                     lastFramePlayingTick = Time.time;
                 }
 

@@ -5,21 +5,24 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.transform.Rotate;
 import utils.Vector2;
 
-public class SpriteRenderer extends MonoBehaviour implements IHasNode {
+public class SpriteRenderer extends MonoBehaviour {
 
     protected ImageView sprite;
     private Vector2 imageOriginalDimension;
     private Vector2 imageSize;
     private Vector2 pivot;
+    private double rotateAngle;
+    private final Rotate rotate;
 
     /**
      * Set the pivot for rendering image, indicating the offset of
      * the original image point to the transform. Pivot is within
      * {@code (0, 0)} and {@code (1, 1)}, with {@code (0, 0)} being
      * the top left corner and {@code (1, 1)} being the bottom
-     * right corner.
+     * right corner. This affect the sprite's rotation as well.
      *
      * @param pivot The pivot desired for the image.
      */
@@ -27,6 +30,7 @@ public class SpriteRenderer extends MonoBehaviour implements IHasNode {
         pivot.x = Math.clamp(pivot.x, 0.0, 1.0);
         pivot.y = Math.clamp(pivot.y, 0.0, 1.0);
         this.pivot = pivot;
+        updateRotate();
     }
 
     /**
@@ -39,6 +43,32 @@ public class SpriteRenderer extends MonoBehaviour implements IHasNode {
         validateComponentCompatibility();
 
         this.imageSize = imageSize;
+
+    }
+
+    /**
+     * Set the rotation for this image rendering.
+     *
+     * @param degrees The angle in degree.
+     */
+    public void setImageRotation(double degrees) {
+
+        validateComponentCompatibility();
+
+        rotateAngle = degrees;
+        updateRotate();
+
+    }
+
+    /**
+     * Update the rotation rendering for this image.
+     */
+    private void updateRotate() {
+
+        var pivotByDimension = imageOriginalDimension.scaleUp(pivot);
+        rotate.setAngle(rotateAngle);
+        rotate.setPivotX(pivotByDimension.x);
+        rotate.setPivotY(pivotByDimension.y);
 
     }
 
@@ -91,6 +121,17 @@ public class SpriteRenderer extends MonoBehaviour implements IHasNode {
         sprite.setImage(image);
         imageOriginalDimension = new Vector2(image.getWidth(), image.getHeight());
         imageSize = new Vector2(imageOriginalDimension);
+    }
+
+    /**
+     * Override the current rotation of this SpriteRenderer,
+     * can only be called by {@link SpriteAnimator}.
+     *
+     * @param degrees The angle of rotation in degrees.
+     */
+    protected void overrideRotation(double degrees) {
+        rotateAngle = degrees;
+        updateRotate();
     }
 
     /**
@@ -147,7 +188,10 @@ public class SpriteRenderer extends MonoBehaviour implements IHasNode {
         imageOriginalDimension = new Vector2();
         imageSize = new Vector2();
         pivot = new Vector2();
-        RendererManager.registerNode(sprite);
+        RendererManager.RegisterNode(sprite);
+        rotate = new Rotate();
+        rotateAngle = 0.0;
+        sprite.getTransforms().add(rotate);
     }
 
     @Override
@@ -157,15 +201,11 @@ public class SpriteRenderer extends MonoBehaviour implements IHasNode {
 
     @Override
     protected void destroyComponent() {
-        RendererManager.unregisterNode(sprite);
+        RendererManager.UnregisterNode(sprite);
         sprite = null;
         pivot = null;
         imageSize = null;
         imageOriginalDimension = null;
-    }
-    @Override
-    public Node getNode(){
-        return sprite;
     }
 
     private void validateComponentCompatibility() {

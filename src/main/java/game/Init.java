@@ -5,6 +5,10 @@ import game.object.Paddle;
 import org.*;
 import utils.Vector2;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Init {
 
     public static void Init_Kine() {
@@ -42,6 +46,9 @@ public class Init {
     }
 
     public static void Init_Aori() {
+
+        var kita = GameObjectManager.instantiate("Kita");
+        kita.addComponent(Kita.class);
 
         var borderLeft = GameObjectManager.instantiate("Border_Left");
         borderLeft.getTransform().setLocalPosition(new Vector2(5.0, 0));
