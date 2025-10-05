@@ -2,7 +2,6 @@ package org.MouseEvent;
 
 
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.GameObject;
 import org.IHasNode;
@@ -11,7 +10,7 @@ import org.Transform;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.MouseEvent.PointerUtils.collectNodes;
+import static utils.NodeUtils.collectNodes;
 
 public interface IPointerExitHandler {
     /**

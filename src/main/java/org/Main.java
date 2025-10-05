@@ -13,7 +13,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 
         Random.init();
-        RendererManager.initializeMain(stage);
+        SceneManager.initializeStage(stage);
         Init.Init_Aori();
         Init.Init_Duc();
         Init.Init_Dui();

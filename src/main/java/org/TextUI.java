@@ -9,11 +9,12 @@ import javafx.scene.text.TextAlignment;
 public class TextUI extends UI implements IHasNode {
     private Text text = new Text();
     ;
+    private String registeredSceneKey;
 
     public TextUI(GameObject owner) {
         super(owner);
 
-        RendererManager.RegisterNode(text);
+
     }
 
     @Override
@@ -49,9 +50,7 @@ public class TextUI extends UI implements IHasNode {
     }
 
     public void setText(Text text) {
-        RendererManager.UnregisterNode(this.text); // remove old one if needed
         this.text = text;
-        RendererManager.RegisterNode(this.text);   // add new one
     }
 
     public void setText(String text) {

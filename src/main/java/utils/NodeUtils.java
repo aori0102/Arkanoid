@@ -1,16 +1,15 @@
-package org.MouseEvent;
+package utils;
 
 import javafx.scene.Node;
-import org.GameObject;
 import org.IHasNode;
 import org.Transform;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class PointerUtils {
+public final class NodeUtils {
 
-    private PointerUtils() {} // prevent instantiation
+    private NodeUtils() {} // prevent instantiation
 
     public static List<Node> collectNodes(Transform transform) {
         List<Node> nodes = new ArrayList<>();

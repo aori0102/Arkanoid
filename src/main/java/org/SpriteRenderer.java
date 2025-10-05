@@ -2,6 +2,7 @@ package org;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utils.Vector2;
@@ -12,6 +13,8 @@ public class SpriteRenderer extends MonoBehaviour implements IHasNode {
     private Vector2 imageOriginalDimension;
     private Vector2 imageSize;
     private Vector2 pivot;
+
+    private GameObject gameObject = null;
 
     /**
      * Set the pivot for rendering image, indicating the offset of
@@ -146,7 +149,7 @@ public class SpriteRenderer extends MonoBehaviour implements IHasNode {
         imageOriginalDimension = new Vector2();
         imageSize = new Vector2();
         pivot = new Vector2();
-        RendererManager.RegisterNode(sprite);
+        gameObject = owner;
     }
 
     @Override
@@ -156,7 +159,7 @@ public class SpriteRenderer extends MonoBehaviour implements IHasNode {
 
     @Override
     protected void destroyComponent() {
-        RendererManager.UnregisterNode(sprite);
+        SceneManager.removeNodeFromScene(getNode(),  gameObject.getRegisteredSceneKey());
         sprite = null;
         pivot = null;
         imageSize = null;

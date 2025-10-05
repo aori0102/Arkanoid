@@ -20,6 +20,8 @@ public class GameObject {
     private String name;
     private Layer layer;
 
+    private String registeredSceneKey = null;
+
     /**
      * Only access within {@link GameObject} or {@link GameObjectManager}.
      */
@@ -271,6 +273,9 @@ public class GameObject {
         }
         transform = addComponent(Transform.class);
         layer = Layer.Default;
+
+        SceneManager.addGameObjectToScene(gameObject, SceneManager.getCurrentSceneKey());
+
     }
 
     /**
@@ -337,6 +342,10 @@ public class GameObject {
                 comp = type.getDeclaredConstructor(GameObject.class).newInstance(this);
                 preAwakeMonoBehaviourQueue.offer(comp);
                 monoBehaviourSet.add(comp);
+
+                if (comp instanceof IHasNode hasNode && registeredSceneKey != null) {
+                    SceneManager.addNodeToScene(hasNode.getNode(), registeredSceneKey);
+                }
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException("No such method");
             } catch (IllegalAccessException e) {
@@ -372,6 +381,7 @@ public class GameObject {
         }
 
     }
+
     /**
      * Get all components attached to this GameObject.
      *
@@ -381,6 +391,7 @@ public class GameObject {
         ValidateObjectLife();
         return new HashSet<>(monoBehaviourSet); // return a copy to avoid external modification
     }
+
     /**
      * Get all children of this GameObject.
      *
@@ -389,5 +400,12 @@ public class GameObject {
     public HashSet<GameObject> getChildren() {
         ValidateObjectLife();
         return new HashSet<>(childSet); // return a copy
+    }
+
+    public void setRegisteredSceneKey(String registeredSceneKey) {
+        this.registeredSceneKey = registeredSceneKey;
+    }
+    public String getRegisteredSceneKey() {
+        return registeredSceneKey;
     }
 }
