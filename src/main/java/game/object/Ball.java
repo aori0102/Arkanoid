@@ -34,8 +34,8 @@ public class Ball extends MonoBehaviour {
         });
 
         // Add listener to paddle event
-        paddle.onMouseReleased.addListener((e) -> {
-            setDirection(e);
+        paddle.onMouseReleased.addListener((e, vector2) -> {
+            setDirection(vector2);
             isMoving = true;
             paddle.isFired = true;
         });

@@ -226,4 +226,10 @@ public class Vector2 {
         return x == other.x && y == other.y;
     }
 
+    public static double distance(Vector2 a, Vector2 b) {
+        double x = (a.x - b.x) * (a.x - b.x);
+        double y = (a.y - b.y) * (a.y - b.y);
+        return Math.sqrt(x + y );
+    }
+
 }

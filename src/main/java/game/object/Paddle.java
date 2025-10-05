@@ -1,24 +1,23 @@
 package game.object;
 
+import game.PowerUp.PowerUp;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import org.*;
 import utils.Time;
 import utils.Vector2;
-import javafx.scene.shape.Rectangle;
 
 
 import javafx.scene.input.MouseEvent;
-
-import java.awt.*;
 
 public class Paddle extends MonoBehaviour {
     private final double paddleSpeed = 1000;
     private final double dotLimitAngle = 60;
     private final double stunnedTime = 2d;
 
-    public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>();
+    public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(this);
+    public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(this);
 
     private ActionMap actionMap;
     private PlayerInput playerInput;
@@ -38,6 +37,7 @@ public class Paddle extends MonoBehaviour {
 
     public Paddle(GameObject owner) {
         super(owner);
+        owner.setLayer(Layer.Paddle);
     }
 
     /**
@@ -59,7 +59,7 @@ public class Paddle extends MonoBehaviour {
         line.setStrokeWidth(2);
         playerInput.getRoot().getChildren().add(line);
 
-        ObstacleManager.onPaddleCollidedWithObstacles.addListener((obstacleCollided) -> {
+        ObstacleManager.instance.onPaddleCollidedWithObstacle.addListener((e, voi) -> {
             canStartStunnedCounter = true;
             handleInteractWithObstacle();
         });
@@ -103,7 +103,7 @@ public class Paddle extends MonoBehaviour {
                 if (playerInput.isMouseReleased) {
                     if (isDirectionValid(fireDirection)) {
                         if (canInvoke) {
-                            onMouseReleased.invoke(fireDirection);
+                            onMouseReleased.invoke(this, fireDirection);
                             playerInput.isMouseReleased = false;
                         }
                     }
@@ -180,6 +180,16 @@ public class Paddle extends MonoBehaviour {
         double angle = Vector2.angle(direction.normalize(), normalVector);
         return Math.toDegrees(angle) <= dotLimitAngle;
     }
+
+    private void onTriggerEnter(CollisionData collisionData) {
+
+        var powerUp = collisionData.otherCollider.getComponent(PowerUp.class);
+        if (powerUp != null) {
+            onPowerUpConsumed.invoke(this, powerUp);
+        }
+
+    }
+
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {

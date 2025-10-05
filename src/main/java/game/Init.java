@@ -1,5 +1,7 @@
 package game;
 
+import game.Obstacle.Laser;
+import game.Obstacle.Obstacle;
 import game.object.Ball;
 import game.object.Paddle;
 import org.*;
@@ -35,6 +37,23 @@ public class Init {
         var ballVisual = GameObjectManager.instantiate("ballVisual");
         ballVisual.getTransform().setParent(ball.getTransform());
         ballVisual.addComponent(SpriteRenderer.class).setImage("/ball.png");
+
+        var laser = GameObjectManager.instantiate("laser");
+        laser.addComponent(BoxCollider.class);
+        laser.addComponent(Laser.class);
+        laser.getComponent(Laser.class).getGameObject().setActive(false);
+        laser.getTransform().setGlobalPosition(new Vector2(300, 300));
+
+        var laserVisual = GameObjectManager.instantiate("laserVisual");
+        laserVisual.getTransform().setParent(laser.getTransform());
+        laserVisual.addComponent(SpriteRenderer.class).setImage("/laser.png");
+        laserVisual.getTransform().setLocalPosition(new Vector2(-15, -45));
+
+        var obstacleManager = GameObjectManager.instantiate("obstacleManager");
+        obstacleManager.addComponent(ObstacleManager.class);
+
+        ObstacleManager.instance.setPaddle(paddle.getComponent(Paddle.class));
+        ObstacleManager.instance.addObstacle(laser.getComponent(Laser.class));
     }
 
     public static void Init_Dui() {
@@ -47,8 +66,6 @@ public class Init {
 
     public static void Init_Aori() {
 
-        var kita = GameObjectManager.instantiate("Kita");
-        kita.addComponent(Kita.class);
 
         var borderLeft = GameObjectManager.instantiate("Border_Left");
         borderLeft.getTransform().setLocalPosition(new Vector2(5.0, 0));
