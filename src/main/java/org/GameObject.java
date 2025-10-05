@@ -128,7 +128,9 @@ public class GameObject {
 
         ValidateObjectLife();
 
-        return isActive;
+        var parent = transform.getParent();
+        boolean parentActive = parent == null || parent.gameObject.isActive;
+        return isActive && parentActive;
 
     }
 
@@ -372,6 +374,7 @@ public class GameObject {
         }
 
     }
+
     /**
      * Get all components attached to this GameObject.
      *
@@ -381,6 +384,7 @@ public class GameObject {
         ValidateObjectLife();
         return new HashSet<>(monoBehaviourSet); // return a copy to avoid external modification
     }
+
     /**
      * Get all children of this GameObject.
      *
