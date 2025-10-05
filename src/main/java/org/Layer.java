@@ -5,8 +5,8 @@ public enum Layer {
     None(0),
     Default(1),
     PowerUp(2),
-    _3(3),
-    _4(4),
+    Boss(3),
+    Player(4),
     _5(5),
     _6(6),
     _7(7),
@@ -39,12 +39,12 @@ public enum Layer {
     private final int underlyingValue;
     public static final int EVERYTHING = 0xFFFFFFFF;
 
-    Layer(int index_) {
-        if (index_ < 0 || index_ > 31) {
+    Layer(int index) {
+        if (index < 0 || index > 31) {
             throw new IllegalArgumentException("Enum value must be between 0 and 31");
         }
-        layerIndex = index_;
-        underlyingValue = 1 << index_;
+        layerIndex = index;
+        underlyingValue = 1 << index;
     }
 
     public int getLayerIndex() {
