@@ -4,9 +4,6 @@ public abstract class MonoBehaviour {
 
     protected transient GameObject gameObject = null;
 
-    protected MonoBehaviour() {
-    }
-
     /**
      * Clone this MonoBehaviour.
      *
