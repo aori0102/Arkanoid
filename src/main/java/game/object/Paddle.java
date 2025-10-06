@@ -12,9 +12,8 @@ import utils.Vector2;
 import javafx.scene.input.MouseEvent;
 
 public class Paddle extends MonoBehaviour {
-    private final double paddleSpeed = 1000;
     private final double dotLimitAngle = 60;
-    private final double stunnedTime = 2d;
+    private final double stunnedTime = 3.6;
 
     public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(this);
     public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(this);
@@ -28,7 +27,10 @@ public class Paddle extends MonoBehaviour {
     private boolean canInvoke;
     private boolean isMoving = true;
     private boolean canStartStunnedCounter = false;
+    private boolean canReduceSpeed = true;
     private double stunnedCounter = 0;
+    private double basePaddleSpeed = 1000;
+    private double currentSpeed = 1000;
 
     public boolean isFired = false;
 
@@ -38,7 +40,6 @@ public class Paddle extends MonoBehaviour {
     public Paddle(GameObject owner) {
         super(owner);
         owner.setLayer(Layer.Paddle);
-        System.out.println(owner.getLayerMask());
     }
 
     /**
@@ -81,13 +82,14 @@ public class Paddle extends MonoBehaviour {
         if (!isMoving) {
             return;
         }
+
         getTransform().translate(movementVector);
         // Current action
         switch (actionMap.currentAction) {
             // Go left
-            case GoLeft -> movementVector = new Vector2(-paddleSpeed * Time.deltaTime, 0);
+            case GoLeft -> movementVector = new Vector2(-currentSpeed * Time.deltaTime, 0);
             // Go Right
-            case GoRight -> movementVector = new Vector2(paddleSpeed * Time.deltaTime, 0);
+            case GoRight -> movementVector = new Vector2(currentSpeed * Time.deltaTime, 0);
             // Adjust ray direction by pressing left mouse button
             case MousePressed -> {
                 HandleRayDirection();
@@ -157,13 +159,16 @@ public class Paddle extends MonoBehaviour {
 
     private void handleCollisionWithObstacles() {
         if (!canStartStunnedCounter) return;
-
-        isMoving = false;
         stunnedCounter += Time.deltaTime;
 
+        if (canReduceSpeed) {
+            currentSpeed /= 10;
+            canReduceSpeed = false;
+        }
+
         if (stunnedCounter >= stunnedTime) {
-            System.out.println("YEs");
-            isMoving = true;
+            currentSpeed = basePaddleSpeed;
+            canReduceSpeed = true;
             stunnedCounter = 0;
             canStartStunnedCounter = false;
         }

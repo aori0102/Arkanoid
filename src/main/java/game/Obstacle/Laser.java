@@ -21,11 +21,12 @@ public class Laser extends Obstacle {
         handleMovement();
     }
 
+
     public void awake() {
         collider = getComponent(BoxCollider.class);
         collider.setLocalCenter(new Vector2(0, 0));
         collider.setLocalSize(new Vector2(30, 90));
-        collider.setIncludeLayer((int) Math.pow(2, Layer.Paddle.getLayerIndex()));
+        collider.setIncludeLayer(Layer.Paddle.getUnderlyingValue());
 
         collider.setOnCollisionEnterCallback(collider -> {
             isDestroyed = true;
