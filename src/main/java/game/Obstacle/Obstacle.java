@@ -3,6 +3,8 @@ package game.Obstacle;
 import game.object.Ball;
 import org.*;
 
+import java.util.TreeMap;
+
 /**
  * Base class of call obstacles appearing in game.
  */
@@ -19,6 +21,8 @@ public abstract class Obstacle extends MonoBehaviour {
     public EventHandler<Void> onObstacleCollided = new EventHandler(this);
 
     protected BoxCollider collider;
+
+    protected boolean isDestroyed = false;
 
     /**
      * Create this MonoBehaviour.

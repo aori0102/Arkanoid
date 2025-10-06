@@ -91,6 +91,14 @@ public class ObstacleManager extends MonoBehaviour{
     }
 
     /**
+     * Disable a
+     * @param obstacle
+     */
+    public void disableObstacle(Obstacle obstacle) {
+        obstacles.get(obstacles.indexOf(obstacle)).gameObject.setActive(false);
+    }
+
+    /**
      * Handle spawning status by using Poisson process. The formular of this process is
      * p = lambda * timeDelta
      * Lambda is the expected spawn obstacles number and is calculated by the density per minutes multiplies with
@@ -164,6 +172,8 @@ public class ObstacleManager extends MonoBehaviour{
      * @param pos : the spawn position
      */
     private void spawnAt(Vector2 pos) {
+        if (obstacles.isEmpty()) return;
+
         Obstacle chosen = obstacles.get(random.nextInt(obstacles.size()));
         chosen.gameObject.setActive(true);
         chosen.getTransform().setGlobalPosition(pos);
@@ -200,11 +210,20 @@ public class ObstacleManager extends MonoBehaviour{
      */
     private int countActiveObstacles() {
         int count = 0;
-        for (Obstacle o : obstacles) {
-            if (o.gameObject.isActive()) { // hoặc o.isActive()
+        var iterator = obstacles.iterator();
+        while (iterator.hasNext()) {
+            Obstacle obstacle = iterator.next();
+
+            if (obstacle == null || obstacle.gameObject == null || obstacle.gameObject.isDestroyed()) {
+                iterator.remove();
+                continue;
+            }
+
+            if (obstacle.gameObject.isActive()) {
                 count++;
             }
         }
+
         return count;
     }
 

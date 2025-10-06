@@ -25,9 +25,10 @@ public class Laser extends Obstacle {
         collider = getComponent(BoxCollider.class);
         collider.setLocalCenter(new Vector2(0, 0));
         collider.setLocalSize(new Vector2(30, 90));
-        collider.setIncludeLayer(8);
+        collider.setIncludeLayer((int) Math.pow(2, Layer.Paddle.getLayerIndex()));
 
         collider.setOnCollisionEnterCallback(collider -> {
+            isDestroyed = true;
             handleInteraction();
         });
 
@@ -36,7 +37,7 @@ public class Laser extends Obstacle {
     @Override
     protected void handleMovement() {
         getTransform().translate(Vector2.up().multiply(laserSpeed * Time.deltaTime));
-        if (getTransform().getGlobalPosition().x < 0) {
+        if (getTransform().getGlobalPosition().x < 0 || isDestroyed) {
             GameObjectManager.destroy(gameObject);
         }
     }

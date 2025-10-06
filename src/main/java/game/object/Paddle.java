@@ -38,6 +38,7 @@ public class Paddle extends MonoBehaviour {
     public Paddle(GameObject owner) {
         super(owner);
         owner.setLayer(Layer.Paddle);
+        System.out.println(owner.getLayerMask());
     }
 
     /**
@@ -61,7 +62,6 @@ public class Paddle extends MonoBehaviour {
 
         ObstacleManager.instance.onPaddleCollidedWithObstacle.addListener((e, voi) -> {
             canStartStunnedCounter = true;
-            handleInteractWithObstacle();
         });
 
 
@@ -69,7 +69,7 @@ public class Paddle extends MonoBehaviour {
 
     public void update() {
         handleMovement();
-        handleStunnedCounter();
+        handleCollisionWithObstacles();
     }
 
 
@@ -155,20 +155,20 @@ public class Paddle extends MonoBehaviour {
         }
     }
 
-    private void handleInteractWithObstacle() {
+    private void handleCollisionWithObstacles() {
+        if (!canStartStunnedCounter) return;
+
         isMoving = false;
+        stunnedCounter += Time.deltaTime;
+
         if (stunnedCounter >= stunnedTime) {
+            System.out.println("YEs");
             isMoving = true;
             stunnedCounter = 0;
             canStartStunnedCounter = false;
         }
     }
 
-    private void handleStunnedCounter() {
-        if (canStartStunnedCounter) {
-            stunnedCounter += Time.deltaTime;
-        }
-    }
 
     /**
      * Check if the direction is in the valid range.
