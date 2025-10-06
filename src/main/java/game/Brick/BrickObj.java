@@ -1,24 +1,27 @@
 package game.Brick;
 
-import org.GameObject;
-import org.MonoBehaviour;
-
 public final class BrickObj {
 
     private int health;
     private final Type objType;
 
     private final int maxHealth;
-    private final double width, height;
-
-    public enum Type {Normal, Steel, Rock, Nuclear, Gift}
+    private boolean isNewDeath = false;
+    private boolean isDamaged = false;
+    public enum Type {Normal, Steel, Rock, Bomb, Gift, Diamond, Ball, Rocket, Reborn, Angel}
     public enum typeBrick {
 
         Normal ( 50, 10,32,  64, Type.Normal),
         Steel (1000, 1000,32, 64, Type.Steel),
+        Diamond(1000000000, 1000000000, 32, 64, Type.Diamond),
+        Rocket(50, 10, 32, 64, Type.Rocket),
         Rock (50, 30,32, 64, Type.Rock),
-        Nuclear(50, 30, 32, 64, Type.Nuclear),
-        Gift (10, 10, 32, 64, Type.Gift);
+        Bomb(50, 30, 32, 64, Type.Bomb),
+        Gift (10, 10, 32, 64, Type.Gift),
+        Ball (10, 10, 32, 64, Type.Ball),
+        Reborn(10, 10, 32, 64, Type.Reborn),
+        Angel(10, 10, 32, 64, Type.Angel);
+
 
         private final int maxHealth;
         private final Type type;
@@ -61,24 +64,20 @@ public final class BrickObj {
         }
     }
 
-    public double getWidth() {
-        return this.width;
-    }
-
-    public double getHeight() {
-        return this.height;
-    }
 
     public BrickObj(typeBrick brick) {
         this.health = brick.getHealth();
         this.maxHealth =  brick.getMaxHealth();
-        this.width = brick.getWidth();
-        this.height = brick.getHeight();
         this.objType = brick.getType();
+    }
+
+    public int getHealth() {
+        return this.health;
     }
 
     public void hitDamage(int damge) {
         this.health -= damge;
+        this.isDamaged = true;
         
         if (this.health < 0) {
             this.health = 0;
@@ -86,25 +85,58 @@ public final class BrickObj {
     }
 
     public void incHealth(int inc) {
+        if(this.health <= 0) {
+            return;
+        }
+
         this.health += inc;
         if(this.health > this.maxHealth) {
             this.health = this.maxHealth;
         }
     }
 
-    public boolean isDestroyed() {
-        return this.health <= 0;
+    public void decHealth(int inc) {
+        if(this.health <= 0) {
+            return;
+        }
+
+        this.health -= inc;
+        if(this.health < 0) {
+            this.health = 0;
+        }
     }
 
-    public void autoDestroy() {
+    public void beDestroy() {
         this.health = 0;
+
+    }
+
+    public boolean isDestroyed() {
+        return this.health <= 0;
     }
 
     public Type getObjType() {
         return this.objType;
     }
 
-    public int getHealth() {
-        return this.health;
+    public boolean isObjNewDeath() {
+        return this.isNewDeath;
     }
+
+    public void setObjDeathState() {
+        if(this.isNewDeath && this.isDestroyed()) {
+            this.isNewDeath = false;
+            return;
+        }
+        this.isNewDeath = true;
+    }
+
+    public boolean isJustDamaged() {
+        return this.isDamaged;
+    }
+
+    public void resetIsDamaged() {
+        this.isDamaged = false;
+    }
+
 }
