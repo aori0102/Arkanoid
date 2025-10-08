@@ -1,18 +1,27 @@
 package org;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import utils.Time;
 import utils.Vector2;
 
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class SpriteAnimator extends MonoBehaviour {
 
+    private static final Gson animationClipLoader = new GsonBuilder()
+            .registerTypeAdapter(SpriteAnimationClip.class, new AnimationClipAdapter())
+            .create();
+
     private SpriteRenderer spriteRenderer;
-    private HashMap<String, SpriteAnimationClip> animationClipMap;
-    private SpriteAnimationClip.AnimationNode currentAnimationClipFrame;
-    private double lastFramePlayingTick;
-    private double currentFrameDuration;
+    private HashMap<AnimationClipData, SpriteAnimationClip> animationClipMap;
+    private SpriteAnimationClip.AnimationNode currentAnimationNode;
 
     /**
      * Create this MonoBehaviour.
@@ -20,49 +29,11 @@ public class SpriteAnimator extends MonoBehaviour {
      * @param owner The owner of this component.
      */
     public SpriteAnimator(GameObject owner) {
-
         super(owner);
 
         animationClipMap = new HashMap<>();
-        currentAnimationClipFrame = null;
-        currentFrameDuration = 0.0;
-        lastFramePlayingTick = 0.0;
+        currentAnimationNode = null;
         spriteRenderer = addComponent(SpriteRenderer.class);
-
-    }
-
-    /**
-     * Set the loop for an animation clip.
-     *
-     * @param clipKey The animation key to set.
-     * @param loop    Whether to loop this animation or not.
-     */
-    public void setLoop(String clipKey, boolean loop) {
-
-        if (!animationClipMap.containsKey(clipKey)) {
-            throw new RuntimeException("Animation clip doesn't exist");
-        }
-
-        animationClipMap.get(clipKey).setLoop(loop);
-
-    }
-
-    /**
-     * Set the sprite sheet for an animation clip.
-     *
-     * @param clipKey The animation key to set.
-     * @param path    The path pointing to the sprite sheet. The file
-     *                should be within the {@code resources folder}, and
-     *                the path begins with a {@code /}.
-     */
-    public void setSprite(String clipKey, String path) {
-
-        if (!animationClipMap.containsKey(clipKey)) {
-            animationClipMap.put(clipKey, new SpriteAnimationClip());
-        }
-
-        animationClipMap.get(clipKey).setSpriteSheet(path);
-
     }
 
     /**
@@ -70,33 +41,22 @@ public class SpriteAnimator extends MonoBehaviour {
      *
      * @param clipKey The key of the animation clip.
      */
-    public void addAnimationClip(String clipKey) {
+    public void addAnimationClip(AnimationClipData clipKey) {
 
         if (animationClipMap.containsKey(clipKey)) {
-            throw new RuntimeException("Animation clip doesn't exist. Use addAnimationClip() to create an animation clip");
+            throw new RuntimeException("Animation already exists");
         }
 
-        animationClipMap.put(clipKey, new SpriteAnimationClip());
-
-    }
-
-    /**
-     * Add a frame to an animation clip.
-     *
-     * @param clipKey       The key of the animation to set.
-     * @param clipAnchor    The anchor point (top left) of the sprite clip.
-     * @param clipSize      The size from the {@code clipAnchor} of the sprite clip.
-     * @param renderSize    The size to render the clip.
-     * @param duration      The duration of the frame in seconds.
-     * @param rotationAngle The angle of rotation in degrees.
-     */
-    public void addFrame(String clipKey, Vector2 clipAnchor, Vector2 clipSize, Vector2 renderSize, double duration, double rotationAngle) {
-
-        if (!animationClipMap.containsKey(clipKey)) {
-            throw new RuntimeException("Animation clip doesn't exist. Use addAnimationClip() to create an animation clip");
+        try {
+            Reader reader = new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream(clipKey.getAnimationClipDataPath())));
+            var clip = animationClipLoader
+                    .fromJson(reader, SpriteAnimationClip.class);
+            animationClipMap.put(clipKey, clip);
+        } catch (JsonSyntaxException e) {
+            System.err.println(SpriteAnimator.class.getSimpleName() + " | Error while loading animation clip: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println(SpriteAnimator.class.getSimpleName() + " | Unknown error while loading animation clip: " + e.getMessage());
         }
-
-        animationClipMap.get(clipKey).addFrame(clipAnchor, clipSize, renderSize, duration, rotationAngle);
 
     }
 
@@ -105,19 +65,21 @@ public class SpriteAnimator extends MonoBehaviour {
      *
      * @param clipKey The animation key to play.
      */
-    public void playAnimation(String clipKey) {
+    public void playAnimation(AnimationClipData clipKey) {
 
         if (!animationClipMap.containsKey(clipKey)) {
             throw new RuntimeException("Animation clip doesn't exist. Use addAnimationClip() to create an animation clip");
         }
 
-        currentAnimationClipFrame = animationClipMap.get(clipKey).head;
-        if (currentAnimationClipFrame == null) {
-            throw new RuntimeException("Animation clip of key \"" + clipKey + "\" is empty!");
+        var clip = animationClipMap.get(clipKey);
+        currentAnimationNode = clip.head;
+        if (currentAnimationNode == null) {
+            System.err.println(SpriteAnimator.class.getSimpleName() + " | Animation clip of key \"" + clipKey + "\" is empty!");
         }
 
-        lastFramePlayingTick = Time.time;
-        currentFrameDuration = currentAnimationClipFrame.duration;
+        spriteRenderer.setImage(clip.getSpriteSheet());
+        updateCurrentFrame();
+        Time.addCoroutine(this::progressFrame, Time.time + currentAnimationNode.frame.getDuration());
 
     }
 
@@ -125,29 +87,32 @@ public class SpriteAnimator extends MonoBehaviour {
      * Stop the current animation.
      */
     public void stopAnimation() {
-        currentAnimationClipFrame = null;
+        currentAnimationNode = null;
     }
 
-    public void update() {
-
-        if (currentAnimationClipFrame != null) {
-
-            if (Time.time > lastFramePlayingTick + currentFrameDuration) {
-
-                currentAnimationClipFrame = currentAnimationClipFrame.next;
-                if (currentAnimationClipFrame != null) {
-                    currentFrameDuration = currentAnimationClipFrame.duration;
-                    spriteRenderer.overrideImage(currentAnimationClipFrame.image);
-                    spriteRenderer.overrideClip(currentAnimationClipFrame.clipAnchor, currentAnimationClipFrame.clipSize);
-                    spriteRenderer.overrideRenderSize(currentAnimationClipFrame.renderSize);
-                    spriteRenderer.overrideRotation(currentAnimationClipFrame.rotationAngle);
-                    lastFramePlayingTick = Time.time;
-                }
-
-            }
-
+    /**
+     * Progress to the next frame in the animation clip.
+     */
+    private void progressFrame() {
+        if (currentAnimationNode != null) {
+            currentAnimationNode = currentAnimationNode.next;
+            updateCurrentFrame();
         }
+    }
 
+    /**
+     * Render the current animation frame.
+     */
+    private void updateCurrentFrame() {
+        if (currentAnimationNode != null) {
+            spriteRenderer.setSpriteClip(
+                    currentAnimationNode.frame.getClipAnchor(), currentAnimationNode.frame.getClipSize()
+            );
+            spriteRenderer.setSize(currentAnimationNode.frame.getRenderSize());
+            spriteRenderer.setImageRotation(currentAnimationNode.frame.getRotationAngle());
+            spriteRenderer.setPivot(new Vector2(0.5, 0.5));
+            Time.addCoroutine(this::progressFrame, Time.time + currentAnimationNode.frame.getDuration());
+        }
     }
 
     @Override
@@ -163,9 +128,7 @@ public class SpriteAnimator extends MonoBehaviour {
         }
         animationClipMap.clear();
         animationClipMap = null;
-        currentAnimationClipFrame = null;
-        currentFrameDuration = 0.0;
-        lastFramePlayingTick = 0.0;
+        currentAnimationNode = null;
     }
 
 }

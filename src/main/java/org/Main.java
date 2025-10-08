@@ -18,10 +18,8 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 
         Random.init();
-        RendererManager.initializeMain(stage, scene, root);
         root = new Group();
         scene = new Scene(root, 1200, 800);
-
         RendererManager.initializeMain(stage, scene, root);
         Init.Init_Aori();
         Init.Init_Duc();
