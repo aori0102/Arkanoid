@@ -1,5 +1,8 @@
 package org;
 
+/**
+ * Logical layers for collision detection use.
+ */
 public enum Layer {
 
     None(0),
@@ -33,31 +36,49 @@ public enum Layer {
     _28(28),
     _29(29),
     _30(30),
-    _31(31);
+    _31(31),
+    _32(32);
 
+    private static final int MAX_LAYER = 32;
     private final int layerIndex;
     private final int underlyingValue;
     public static final int EVERYTHING = 0xFFFFFFFF;
 
     Layer(int index) {
-        if (index < 0 || index > 31) {
-            throw new IllegalArgumentException("Enum value must be between 0 and 31");
+        if (index < 0 || index > MAX_LAYER) {
+            throw new IllegalArgumentException("Enum value must be between 0 and " + MAX_LAYER);
         }
         layerIndex = index;
-        underlyingValue = 1 << index;
+        underlyingValue = index == 0 ? 0 : 1 << (index - 1);
     }
 
+    /**
+     * Get the enum index of the layer.
+     *
+     * @return The enum index of the layer.
+     */
     public int getLayerIndex() {
         return layerIndex;
     }
 
+    /**
+     * Get the bit mask of the layer in 32-bit.
+     *
+     * @return The bit mask of the layer.
+     */
     public int getUnderlyingValue() {
         return underlyingValue;
     }
 
+    /**
+     * Combines all layers provided to a layer mask.
+     *
+     * @param layers The layers to be included.
+     * @return An integer represent the layers included in bit mask.
+     */
     public static int combineLayerMask(Layer[] layers) {
         int layerMask = 0;
-        for (Layer layer : layers) {
+        for (var layer : layers) {
             layerMask |= layer.underlyingValue;
         }
         return layerMask;
