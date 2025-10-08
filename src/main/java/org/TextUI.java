@@ -1,24 +1,39 @@
 package org;
 
-import javafx.scene.Node;
-import org.UI.UI;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
+import utils.Vector2;
 
-public class TextUI extends UI implements IHasNode {
+public class TextUI extends Renderable {
+
+    private static final String DEFAULT_FONT_FACE = "System";
+    private static final double DEFAULT_FONT_SIZE = 12.0;
 
     private Text text = new Text();
+    private double fontSize = DEFAULT_FONT_SIZE;
+    private String fontName = DEFAULT_FONT_FACE;
+    private TextVerticalAlignment verticalAlignment = TextVerticalAlignment.Top;
+    private TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment.Left;
 
     public TextUI(GameObject owner) {
         super(owner);
 
-        RendererManager.registerNode(text);
+        onRenderPositionChanged.addListener(this::renderer_onRenderPositionChanged);
+        text.setTextOrigin(VPos.TOP);
     }
 
-    @Override
-    protected void destroyComponent() {
-
+    /**
+     * Called from {@link #onRenderPositionChanged} when this UI's render
+     * position is modified. This function update the render position
+     * of the text component.
+     *
+     * @param sender {@link  Renderable}.
+     * @param e      Empty event argument.
+     */
+    private void renderer_onRenderPositionChanged(Object sender, Void e) {
+        updateRenderPosition();
     }
 
     @Override
@@ -26,63 +41,140 @@ public class TextUI extends UI implements IHasNode {
         return new TextUI(newOwner);
     }
 
-
-
-    @Override
-    public void update() {
-        var transform = getTransform();
-        var position = transform.getGlobalPosition();
-
-        if(text.getTextOrigin() != VPos.TOP){
-            text.setTextOrigin(VPos.TOP); //Set the box of text's pivot to the top left corner
-        }
-
-
-        text.setX(position.x);   // position on X
-        text.setY(position.y);  // position on Y
-
-
+    /**
+     * Update the current font based on the set name and size.
+     */
+    private void updateFont() {
+        text.setFont(Font.font(fontName, fontSize));
     }
 
+    /**
+     * Get the display text.
+     *
+     * @return The display text.
+     */
     public Text getText() {
         return text;
     }
 
-    public void setText(Text text) {
-        RendererManager.unregisterNode(this.text); // remove old one if needed
-        this.text = text;
-        RendererManager.registerNode(this.text);   // add new one
-    }
-
+    /**
+     * Set the display text.
+     *
+     * @param text The text to be displayed.
+     */
     public void setText(String text) {
         this.text.setText(text);
     }
 
+    /**
+     * Get the display text.
+     *
+     * @return The display text.
+     */
     public String getTextString() {
         return text.getText();
     }
 
+    /**
+     * Get the text bounding box dimension.
+     *
+     * @return The text bounding box dimension.
+     */
+    public Vector2 getTextDimension() {
+        return new Vector2(getTextWidth(), getTextHeight());
+    }
+
+    /**
+     * Get the text bounding box width.
+     *
+     * @return The text bounding box width.
+     */
     public double getTextWidth() {
         return text.getBoundsInLocal().getWidth();
     }
 
+    /**
+     * Get the text bounding box height.
+     *
+     * @return The text bounding box height.
+     */
     public double getTextHeight() {
         return text.getBoundsInLocal().getHeight();
     }
 
-    @Override
-    public double getWidth() {
-        return text.getLayoutBounds().getWidth();
+    /**
+     * Set the font for this text.
+     *
+     * @param fontDataIndex The font index to be displayed.
+     */
+    public void setFont(FontDataIndex fontDataIndex) {
+        fontName = fontDataIndex.getFontName();
+        updateFont();
+    }
+
+    /**
+     * Set the font size for this text.
+     *
+     * @param size The size of the displayed font.
+     */
+    public void setFontSize(double size) {
+        fontSize = size;
+        updateFont();
+    }
+
+    /**
+     * Set text vertical alignment.
+     *
+     * @param alignment The vertical alignment of the displayed text.
+     */
+    public void setVerticalAlignment(TextVerticalAlignment alignment) {
+        verticalAlignment = alignment;
+        updateRenderPosition();
+    }
+
+    /**
+     * Set text horizontal alignment.
+     *
+     * @param alignment The horizontal alignment of the displayed text.
+     */
+    public void setHorizontalAlignment(TextHorizontalAlignment alignment) {
+        horizontalAlignment = alignment;
+        updateRenderPosition();
+    }
+
+    /**
+     * Utility function to update true render position
+     * of the text after pivoting by alignments.
+     */
+    private void updateRenderPosition() {
+
+        var pivot = new Vector2();
+        pivot.x = switch (horizontalAlignment) {
+            case Left -> 0.0;
+            case Center -> 0.5;
+            case Right -> 1.0;
+        };
+        pivot.y = switch (verticalAlignment) {
+            case Top -> 0.0;
+            case Middle -> 0.5;
+            case Bottom -> 1.0;
+        };
+        var renderPosition
+                = getRenderPosition().subtract(pivot.scaleUp(getTextDimension()));
+        text.setX(renderPosition.x);
+        text.setY(renderPosition.y);
+
     }
 
     @Override
-    public double getHeight() {
-        return text.getLayoutBounds().getHeight();
-    }
-
-    @Override
-    public Node getNode(){
+    public Node getNode() {
         return text;
+    }
+
+    @Override
+    protected void onComponentDestroyed() {
+        text = null;
+        fontName = null;
     }
 
 }
