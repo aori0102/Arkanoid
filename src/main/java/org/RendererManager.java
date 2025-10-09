@@ -8,8 +8,13 @@ import java.util.EnumMap;
 
 public class RendererManager {
 
-    private static Group root = null;
-    private final static EnumMap<RenderLayer, Group> renderLayerGroupMap = new EnumMap<>(RenderLayer.class);
+    private static class SceneInfo {
+        public Scene scene = null;
+        public Group root = null;
+        public EnumMap<RenderLayer, Group> renderLayerGroupMap = null;
+    }
+
+    private final static EnumMap<SceneKey, SceneInfo> sceneInfoMap = new EnumMap<>(SceneKey.class);
 
     /**
      * Initialize the program windows and render graph.
@@ -17,17 +22,36 @@ public class RendererManager {
      *
      * @param stage The stage of the application.
      */
-    public static void initializeMain(Stage stage, Scene mainScene, Group mainGroup) {
-
-        // Root rendering node
-        root = mainGroup;
+    public static void initializeRenderSystem(Stage stage, Scene mainScene) {
 
         // Children rendering nodes for per-layer rendering
         var renderLayerArray = RenderLayer.values();
-        for (var renderLayer : renderLayerArray) {
-            Group childGroup = new Group();
-            root.getChildren().add(childGroup);
-            renderLayerGroupMap.put(renderLayer, childGroup);
+        var sceneArray = SceneKey.values();
+        var sceneMap = SceneManager.getSceneMap();
+        for (var sceneKey : sceneArray) {
+
+            if (!sceneMap.containsKey(sceneKey)) {
+                throw new IllegalStateException("Scene " + sceneKey + " doesn't exist");
+            }
+
+            var scene = sceneMap.get(sceneKey);
+            var root = (Group) scene.getRoot();
+            EnumMap<RenderLayer, Group> renderLayerMap = new EnumMap<>(RenderLayer.class);
+
+            for (var renderLayer : renderLayerArray) {
+
+                Group childGroup = new Group();
+                root.getChildren().add(childGroup);
+                renderLayerMap.put(renderLayer, childGroup);
+
+            }
+
+            var sceneInfo = new SceneInfo();
+            sceneInfo.scene = scene;
+            sceneInfo.root = root;
+            sceneInfo.renderLayerGroupMap = renderLayerMap;
+            sceneInfoMap.put(sceneKey, sceneInfo);
+
         }
 
         // Set window title
@@ -48,7 +72,8 @@ public class RendererManager {
      */
     protected static void registerNode(Renderable renderable) {
         renderable.onRenderLayerChanged.addListener(RendererManager::renderable_onRenderLayerChanged);
-        renderLayerGroupMap.get(renderable.getRenderLayer())
+        var sceneKey = renderable.gameObject.getRegisteredSceneKey();
+        sceneInfoMap.get(sceneKey).renderLayerGroupMap.get(renderable.getRenderLayer())
                 .getChildren().add(renderable.getNode());
     }
 
@@ -59,16 +84,18 @@ public class RendererManager {
      */
     protected static void unregisterNode(Renderable renderable) {
         renderable.onRenderLayerChanged.removeListener(RendererManager::renderable_onRenderLayerChanged);
-        renderLayerGroupMap.get(renderable.getRenderLayer())
+        var sceneKey = renderable.gameObject.getRegisteredSceneKey();
+        sceneInfoMap.get(sceneKey).renderLayerGroupMap.get(renderable.getRenderLayer())
                 .getChildren().remove(renderable.getNode());
     }
 
     private static void renderable_onRenderLayerChanged(Object sender, Renderable.OnRenderLayerChangedEventArgs e) {
 
         if (sender instanceof Renderable renderable) {
-            renderLayerGroupMap.get(e.previousLayer())
+            var sceneKey = renderable.gameObject.getRegisteredSceneKey();
+            sceneInfoMap.get(sceneKey).renderLayerGroupMap.get(e.previousLayer())
                     .getChildren().remove(renderable.getNode());
-            renderLayerGroupMap.get(e.newLayer())
+            sceneInfoMap.get(sceneKey).renderLayerGroupMap.get(e.newLayer())
                     .getChildren().add(renderable.getNode());
         }
 

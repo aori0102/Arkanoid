@@ -2,7 +2,6 @@ package org;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Arc;
@@ -352,7 +351,6 @@ public class SpriteRenderer extends Renderable {
 
     @Override
     protected void onComponentDestroyed() {
-        SceneManager.removeNodeFromScene(getNode(), gameObject.getRegisteredSceneKey());
         sprite = null;
         imageOriginalDimension = null;
         rectangularClip = null;

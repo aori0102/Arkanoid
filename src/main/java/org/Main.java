@@ -11,17 +11,16 @@ import javafx.animation.AnimationTimer;
 
 public class Main extends Application {
 
-    protected static Scene scene;
-    protected static Group root;
+    public static final double STAGE_WIDTH = 1200;
+    public static final double STAGE_HEIGHT = 800;
+
 
     @Override
     public void start(Stage stage) throws Exception {
 
         Random.init();
-        root = new Group();
-        scene = new Scene(root, 1200, 800);
-        //RendererManager.initializeMain(stage, scene, root);
-        SceneManager.initializeStage(stage);
+        var defaultScene = SceneManager.createScenes();
+        RendererManager.initializeRenderSystem(stage, defaultScene);
         Init.Init_Aori();
         Init.Init_Duc();
         Init.Init_Dui();

@@ -20,7 +20,7 @@ public class GameObject {
     private String name;
     private Layer layer;
 
-    private String registeredSceneKey = null;
+    private final SceneKey registeredSceneKey;
 
     /**
      * Only access within {@link GameObject} or {@link GameObjectManager}.
@@ -244,6 +244,7 @@ public class GameObject {
         childSet = new HashSet<>();
         transform = addComponent(Transform.class);
         layer = Layer.Default;
+        registeredSceneKey = SceneManager.getCurrentSceneKey();
     }
 
     /**
@@ -258,6 +259,7 @@ public class GameObject {
         childSet = new HashSet<>();
         transform = addComponent(Transform.class);
         layer = Layer.Default;
+        registeredSceneKey = SceneManager.getCurrentSceneKey();
     }
 
     /**
@@ -275,6 +277,7 @@ public class GameObject {
         }
         transform = addComponent(Transform.class);
         layer = Layer.Default;
+        registeredSceneKey = gameObject.registeredSceneKey;
     }
 
     /**
@@ -342,9 +345,6 @@ public class GameObject {
                 preAwakeMonoBehaviourQueue.offer(comp);
                 monoBehaviourSet.add(comp);
 
-                if (comp instanceof Renderable hasNode && registeredSceneKey != null) {
-                    SceneManager.addNodeToScene(hasNode.getNode(), registeredSceneKey);
-                }
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException("No such method");
             } catch (IllegalAccessException e) {
@@ -401,10 +401,8 @@ public class GameObject {
         return new HashSet<>(childSet); // return a copy
     }
 
-    public void setRegisteredSceneKey(String registeredSceneKey) {
-        this.registeredSceneKey = registeredSceneKey;
-    }
-    public String getRegisteredSceneKey() {
+    public SceneKey getRegisteredSceneKey() {
         return registeredSceneKey;
     }
+
 }
