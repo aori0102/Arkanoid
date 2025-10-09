@@ -17,6 +17,8 @@ import java.awt.*;
 public class Paddle extends MonoBehaviour {
 
     private final double paddleSpeed = 1000;
+    private final double dotLimitAngle = 60;
+    private final double stunnedTime = 2d;
 
     public EventHandler<Vector2> onMouseReleased = new EventHandler<>(this);
     public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(this);
@@ -24,19 +26,19 @@ public class Paddle extends MonoBehaviour {
     private ActionMap actionMap;
     private PlayerInput playerInput;
     private BoxCollider boxCollider;
-    private Vector2 fireDirection;
+    private Vector2 fireDirection = new Vector2();
     private Line line;
 
+    private boolean canInvoke;
+    private boolean isMoving = true;
+    private boolean canStartStunnedCounter = false;
+    private double stunnedCounter = 0;
+
     public boolean isFired = false;
+
     public Vector2 movementVector = new Vector2(0, 0);
+    private Vector2 normalVector = new Vector2(0, -1);
 
-    private Rectangle colliderRect;
-
-    /**
-     * Get the game object this MonoBehaviour is attached to.
-     *
-     * @param owner The owner of this component.
-     */
     public Paddle(GameObject owner) {
         super(owner);
     }
@@ -45,17 +47,29 @@ public class Paddle extends MonoBehaviour {
      * Initialize paddle specs.
      */
     public void awake() {
+        // Assign components
         actionMap = gameObject.getComponent(ActionMap.class);
         boxCollider = gameObject.getComponent(BoxCollider.class);
         playerInput = gameObject.getComponent(PlayerInput.class);
+
+        //Assign collider specs
         boxCollider.setLocalCenter(new Vector2(0, 0));
         boxCollider.setLocalSize(new Vector2(80, 20));
+
+        //Assign line specs
         boxCollider.setOnTriggerEnter(this::onTriggerEnter);
 
         line = new Line();
         line.setStroke(Color.RED);
-        line.setStrokeWidth(5);
+        line.setStrokeWidth(2);
         playerInput.getRoot().getChildren().add(line);
+
+        ObstacleManager.onPaddleCollidedWithObstacles.addListener((obstacleCollided) -> {
+            canStartStunnedCounter = true;
+            handleInteractWithObstacle();
+        });
+
+
     }
 
     private void onTriggerEnter(CollisionData collisionData) {
@@ -69,15 +83,18 @@ public class Paddle extends MonoBehaviour {
 
     public void update() {
         handleMovement();
-        drawCollider();
+        handleStunnedCounter();
     }
 
+
     /**
-     * Handle the movement of the paddle
-     * Using Action defined in Action map to decide move direction
+     * Handle the movement of the paddle.
+     * Using Action defined in Action map to decide move direction.
      */
     public void handleMovement() {
-
+        if (!isMoving) {
+            return;
+        }
         getTransform().translate(movementVector);
         // Current action
         switch (actionMap.currentAction) {
@@ -90,59 +107,94 @@ public class Paddle extends MonoBehaviour {
                 HandleRayDirection();
             }
             default -> {
+                // Set the movement vector to zero to stop the paddle
                 movementVector = new Vector2(0, 0);
+
+                // Turn off the line
                 line.setVisible(false);
+
+                //Fire the ball if the ball is not fired
                 if (playerInput.isMouseReleased) {
                     onMouseReleased.invoke(this, fireDirection);
                     playerInput.isMouseReleased = false;
+                    if (isDirectionValid(fireDirection)) {
+                        if (canInvoke) {
+                            onMouseReleased.invoke(fireDirection);
+                            playerInput.isMouseReleased = false;
+                        }
+                    }
                 }
             }
         }
     }
 
     /**
-     *
+     * Handle the direction ray.
      */
     private void HandleRayDirection() {
         if (isFired) {
             return;
         }
 
+        // If the mouse input is left button, then turn on the line and calculate the fire direction as well as the line's end point
         if (playerInput.getMouseEvent(MouseButton.PRIMARY) != null) {
             line.setVisible(true);
+            // Get mouse event
             MouseEvent mouseEvent = playerInput.getMouseEvent(MouseButton.PRIMARY);
 
+            // Get mouse position
             Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
-            fireDirection = ((getTransform().getGlobalPosition()
-                    .add(new Vector2(50, 50)))
-                    .subtract(mousePos)).normalize();
-            Vector2 direction = getTransform().getGlobalPosition()
+
+            if (mousePos.y < getTransform().getGlobalPosition().y) {
+                canInvoke = false;
+                return;
+            } else {
+                canInvoke = true;
+            }
+
+            // The direction we want the ball to follow
+            Vector2 expectedDirection = ((getTransform().getGlobalPosition()
+                    .subtract(mousePos)).normalize());
+            // If the direction is in the range, then assigning it to fire direction
+            if (isDirectionValid(expectedDirection)) {
+                fireDirection = expectedDirection;
+            }
+
+            Vector2 lineEndPoint = getTransform().getGlobalPosition()
                     .add(fireDirection.multiply(100));
 
+            // Draw the fire ray
             line.setStartX(getTransform().getGlobalPosition().x);
             line.setStartY(getTransform().getGlobalPosition().y);
-            line.setEndX(direction.x);
-            line.setEndY(direction.y);
+            line.setEndX(lineEndPoint.x);
+            line.setEndY(lineEndPoint.y);
         }
     }
 
-    public void drawCollider() {
-        if (colliderRect == null) {
-            colliderRect = new Rectangle();
-            colliderRect.setStroke(Color.BLUE);   // màu viền
-            colliderRect.setFill(Color.TRANSPARENT); // không tô màu
-            colliderRect.setStrokeWidth(2);
-            playerInput.getRoot().getChildren().add(colliderRect);
+    private void handleInteractWithObstacle() {
+        isMoving = false;
+        if (stunnedCounter >= stunnedTime) {
+            isMoving = true;
+            stunnedCounter = 0;
+            canStartStunnedCounter = false;
         }
+    }
 
-        // Lấy center và size từ BoxCollider
-        Vector2 center = getTransform().getGlobalPosition().add(boxCollider.getLocalCenter());
-        Vector2 size = boxCollider.getLocalSize();
+    private void handleStunnedCounter() {
+        if (canStartStunnedCounter) {
+            stunnedCounter += Time.deltaTime;
+        }
+    }
 
-        colliderRect.setX(center.x - size.x / 2);
-        colliderRect.setY(center.y - size.y / 2);
-        colliderRect.setWidth(size.x);
-        colliderRect.setHeight(size.y);
+    /**
+     * Check if the direction is in the valid range.
+     * @param direction : the fire direction.
+     * @return true if the direction is valid.
+     */
+    private boolean isDirectionValid(Vector2 direction) {
+        if (direction == null) return false;
+        double angle = Vector2.angle(direction.normalize(), normalVector);
+        return Math.toDegrees(angle) <= dotLimitAngle;
     }
 
     @Override

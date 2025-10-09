@@ -11,6 +11,7 @@ public class Ball extends MonoBehaviour {
     private BoxCollider ballCollider;
     private Paddle paddle;
     private Vector2 offsetVector = new Vector2(0.5, 0.5);
+    private Vector2 offsetBallPosition;
 
     private boolean isMoving = false;
 
@@ -26,7 +27,7 @@ public class Ball extends MonoBehaviour {
         // Assign collider specs and the function
         ballCollider = getComponent(BoxCollider.class);
         ballCollider.setLocalCenter(new Vector2(0, 0));
-        ballCollider.setLocalSize(new Vector2(16, 20));
+        ballCollider.setLocalSize(new Vector2(20, 16));
         ballCollider.setOnCollisionEnterCallback(e -> {
             handleAngleDirection(e);
 
@@ -38,6 +39,9 @@ public class Ball extends MonoBehaviour {
             isMoving = true;
             paddle.isFired = true;
         });
+
+        // Off set ball position when it follows the paddle in order to make it is in the surface
+        offsetBallPosition = new Vector2(-ballCollider.getLocalSize().x / 2, -20);
     }
 
     public void update() {
@@ -48,14 +52,17 @@ public class Ball extends MonoBehaviour {
      * Handle ball movement.
      */
     public void handleMovement() {
-        // If the ball cannot move, then return.
-        if (!isMoving) return;
-
         // Make the ball follow the paddle position if player haven't fired it
         if (!paddle.isFired) {
-            getTransform().setGlobalPosition(paddle.getTransform().getGlobalPosition());
-        } else {
+            getTransform().setGlobalPosition(paddle.getTransform().getGlobalPosition().add(offsetBallPosition));
+        }
+        // Moving the ball
+        else {
             getTransform().translate(direction.normalize().multiply(ballSpeed * Time.deltaTime));
+        }
+
+        if (getTransform().getGlobalPosition().y > 1000 ) {
+            GameObjectManager.destroy(getGameObject());
         }
     }
 
@@ -65,10 +72,12 @@ public class Ball extends MonoBehaviour {
      * @param collisionData : the collision data of the interacted surface.
      */
     public void handleAngleDirection(CollisionData collisionData) {
-        if (!isMoving) return;
+
+        if (direction == null) return;
 
         // Normal vector to calculate reflect direction
         var normal = collisionData.hitNormal.normalize().multiply(2.0);
+
         // Dot product of the ball's direction with the surface
         double dotCoefficient = Vector2.dot(direction.normalize(), normal.normalize());
 
@@ -86,7 +95,7 @@ public class Ball extends MonoBehaviour {
 
         // If the ball interacts with the moving paddle, the reflected direction will be different from the motionless paddle,
         // and it will be calculated by adding the moving vector to the reflected direction
-        if (isPaddleCollided(collisionData) && !paddle.movementVector.equals(Vector2.zero())) {
+        if (isCollidedWith(collisionData, Paddle.class) && !paddle.movementVector.equals(Vector2.zero())) {
             reflectDir = reflectDir.add(paddle.movementVector.normalize());
         }
 
@@ -114,16 +123,16 @@ public class Ball extends MonoBehaviour {
     }
 
     /**
-     * Check if the ball is collided with the paddle
+     * Check if the ball is collided with the expected object.
      *
-     * @param collisionData : data of the collided object.
-     * @return true if the object is the paddle.
+     * @param collisionData : the collision data of the object.
+     * @param type : the desired type.
+     * @return true if the object matches with the desired type.
      */
-    private boolean isPaddleCollided(CollisionData collisionData) {
+    private boolean isCollidedWith(CollisionData collisionData, Class type) {
         GameObject collidedObject = collisionData.otherCollider.getGameObject();
-        return collidedObject.getComponent(Paddle.class) != null;
+        return collidedObject.getComponent(type) != null;
     }
-
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
