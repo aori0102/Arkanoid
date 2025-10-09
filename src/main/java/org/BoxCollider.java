@@ -12,6 +12,7 @@ public class BoxCollider extends MonoBehaviour {
     protected Consumer<CollisionData> onTriggerEnter;
 
     public boolean isTrigger;
+    private int includeLayer;
 
     public BoxCollider(GameObject owner) {
         super(owner);
@@ -19,6 +20,25 @@ public class BoxCollider extends MonoBehaviour {
         localSize = new Vector2(1.0, 1.0);
         PhysicsManager.RegisterCollider(this);
         isTrigger = false;
+        includeLayer = Layer.EVERYTHING;
+    }
+
+    /**
+     * Set the layer mask for collision check.
+     *
+     * @param layerMask The layers to include in collision check.
+     */
+    public void setIncludeLayer(int layerMask) {
+        includeLayer = layerMask;
+    }
+
+    /**
+     * Get the included layers for collision check.
+     *
+     * @return The included layers for collision check.
+     */
+    public int getIncludeLayer() {
+        return includeLayer;
     }
 
     @Override
@@ -120,7 +140,7 @@ public class BoxCollider extends MonoBehaviour {
      * @return The extents of the bounding box.
      */
     public Vector2 getExtents() {
-        return getLocalSize().divide(2.0);
+        return getSize().divide(2.0);
     }
 
     /**
@@ -134,6 +154,7 @@ public class BoxCollider extends MonoBehaviour {
 
     /**
      * Set the callback when trigger happens.
+     *
      * @param onTriggerEnter The callback when trigger happens.
      */
     public void setOnTriggerEnter(Consumer<CollisionData> onTriggerEnter) {

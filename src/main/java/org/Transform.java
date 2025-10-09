@@ -2,20 +2,21 @@ package org;
 
 import utils.Vector2;
 
-import java.util.function.Function;
+import java.util.HashSet;
 
 public class Transform extends MonoBehaviour {
 
-    private Vector2 localPosition;
-    private Vector2 localScale;
+    private Vector2 _localPosition;
+    private Vector2 _localScale;
     private Transform parent;
 
-    protected Function<Void, Void> onPositionChanged;
+    protected EventHandler<Void> onPositionChanged = new EventHandler<>(this);
+    protected EventHandler<Void> onScaleChanged = new EventHandler<>(this);
 
     public Transform(GameObject owner) {
         super(owner);
-        localPosition = new Vector2();
-        localScale = new Vector2(1.0, 1.0);
+        _localPosition = new Vector2();
+        _localScale = new Vector2(1.0, 1.0);
         parent = null;
     }
 
@@ -25,7 +26,7 @@ public class Transform extends MonoBehaviour {
      * @return The transform position.
      */
     public Vector2 getLocalPosition() {
-        return new Vector2(localPosition);
+        return new Vector2(_localPosition);
     }
 
     /**
@@ -34,7 +35,7 @@ public class Transform extends MonoBehaviour {
      * @return The local scale.
      */
     public Vector2 getLocalScale() {
-        return new Vector2(localScale);
+        return new Vector2(_localScale);
     }
 
     /**
@@ -46,7 +47,7 @@ public class Transform extends MonoBehaviour {
         if (parent == null) {
             return getLocalPosition();
         }
-        return localPosition.add(parent.getGlobalPosition());
+        return _localPosition.add(parent.getGlobalPosition());
     }
 
     /**
@@ -58,7 +59,7 @@ public class Transform extends MonoBehaviour {
         if (parent == null) {
             return getLocalScale();
         }
-        return localScale.scaleUp(parent.getGlobalScale());
+        return _localScale.scaleUp(parent.getGlobalScale());
     }
 
     /**
@@ -68,9 +69,9 @@ public class Transform extends MonoBehaviour {
      */
     public void setGlobalPosition(Vector2 globalPosition) {
         if (parent == null) {
-            localPosition = globalPosition;
+            setLocalPosition(globalPosition);
         } else {
-            localPosition = globalPosition.subtract(parent.getGlobalPosition());
+            setLocalPosition(globalPosition.add(parent.getGlobalPosition()));
         }
     }
 
@@ -81,9 +82,9 @@ public class Transform extends MonoBehaviour {
      */
     public void setGlobalScale(Vector2 globalScale) {
         if (parent == null) {
-            localScale = globalScale;
+            setLocalScale(globalScale);
         } else {
-            localScale = globalScale.scaleDown(parent.getGlobalScale());
+            setLocalScale(globalScale.scaleUp(parent.getGlobalScale()));
         }
     }
 
@@ -91,22 +92,25 @@ public class Transform extends MonoBehaviour {
      * Set the local position for this object.
      */
     public void setLocalPosition(Vector2 localPosition) {
-        this.localPosition = new Vector2(localPosition);
+        this._localPosition = new Vector2(localPosition);
+        onPositionChanged.invoke(this, null);
     }
 
     /**
      * Set the local scale for this object.
      */
     public void setLocalScale(Vector2 localScale) {
-        this.localScale = new Vector2(localScale);
+        this._localScale = new Vector2(localScale);
+        onScaleChanged.invoke(this, null);
     }
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
 
         Transform newTransform = new Transform(newOwner);
-        newTransform.localPosition = this.localPosition;
-        newTransform.localScale = this.localScale;
+        newTransform.parent = newOwner.getTransform();
+        newTransform.setLocalPosition(this._localPosition);
+        newTransform.setLocalScale(this._localScale);
         return newTransform;
 
     }
@@ -127,19 +131,12 @@ public class Transform extends MonoBehaviour {
         if (collider != null) {
 
             var collisionData = PhysicsManager.validateMovement(collider, translation);
-            if (collisionData.collided) {
+            if (collisionData.collided && !collider.isTrigger) {
                 destination = collisionData.contactPoint.subtract(collider.getLocalCenter());
             }
 
             var movement = destination.subtract(getGlobalPosition());
-            var collisionDataWithTrigger = PhysicsManager.checkForTrigger(collider, movement);
-            if (collisionDataWithTrigger != null) {
-
-                for (var data : collisionDataWithTrigger) {
-                    System.out.println("Trigger " + data.otherCollider.gameObject.getName());
-                }
-
-            }
+            PhysicsManager.handleTriggerCollision(collider, movement);
 
         }
 
@@ -159,10 +156,22 @@ public class Transform extends MonoBehaviour {
 
         if (this.parent != null) {
             this.parent.gameObject.removeChild(gameObject);
+            this.parent.onScaleChanged.removeListener(this::parent_onScaleChanged);
+            this.parent.onPositionChanged.removeListener(this::parent_onPositionChanged);
         }
 
         this.parent = parent;
         parent.gameObject.addChild(gameObject);
+        parent.onScaleChanged.addListener(this::parent_onScaleChanged);
+        parent.onPositionChanged.addListener(this::parent_onPositionChanged);
+    }
+
+    private void parent_onPositionChanged(Object sender, Void e) {
+        onPositionChanged.invoke(this, null);
+    }
+
+    private void parent_onScaleChanged(Object sender, Void e) {
+        onScaleChanged.invoke(this, null);
     }
 
     /**
@@ -176,9 +185,25 @@ public class Transform extends MonoBehaviour {
 
     @Override
     protected void destroyComponent() {
-        localPosition = null;
-        localScale = null;
+        _localPosition = null;
+        _localScale = null;
         parent = null;
+        onPositionChanged = null;
+        onScaleChanged = null;
     }
+
+    /**
+     * Get all child transforms of this Transform.
+     *
+     * @return A copy of all children transforms.
+     */
+    public HashSet<Transform> getChildren() {
+        var children = new HashSet<Transform>();
+        for (var child : gameObject.getChildren()) {
+            children.add(child.getTransform());
+        }
+        return children;
+    }
+
 
 }

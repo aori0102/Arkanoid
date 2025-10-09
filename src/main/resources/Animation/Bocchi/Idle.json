@@ -1,0 +1,70 @@
+{
+  "imagePath": "Bocchi_Anim",
+  "frameList": [
+    {
+      "clipAnchor": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "clipSize": {
+        "x": 300.0,
+        "y": 300.0
+      },
+      "renderSize": {
+        "x": 100.0,
+        "y": 100.0
+      },
+      "duration": 0.11,
+      "rotationAngle": 0.0
+    },
+    {
+      "clipAnchor": {
+        "x": 300.0,
+        "y": 0.0
+      },
+      "clipSize": {
+        "x": 300.0,
+        "y": 300.0
+      },
+      "renderSize": {
+        "x": 100.0,
+        "y": 100.0
+      },
+      "duration": 0.12,
+      "rotationAngle": 0.0
+    },
+    {
+      "clipAnchor": {
+        "x": 0.0,
+        "y": 300.0
+      },
+      "clipSize": {
+        "x": 300.0,
+        "y": 300.0
+      },
+      "renderSize": {
+        "x": 100.0,
+        "y": 100.0
+      },
+      "duration": 0.09,
+      "rotationAngle": 0.0
+    },
+    {
+      "clipAnchor": {
+        "x": 300.0,
+        "y": 300.0
+      },
+      "clipSize": {
+        "x": 300.0,
+        "y": 300.0
+      },
+      "renderSize": {
+        "x": 100.0,
+        "y": 100.0
+      },
+      "duration": 0.19,
+      "rotationAngle": 0.0
+    }
+  ],
+  "loop": true
+}

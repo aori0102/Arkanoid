@@ -226,4 +226,9 @@ public class Vector2 {
         return x == other.x && y == other.y;
     }
 
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
+
 }

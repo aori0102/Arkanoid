@@ -1,13 +1,15 @@
 package org;
 
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.util.EnumMap;
 
 public class RendererManager {
 
     private static Group root = null;
+    private final static EnumMap<RenderLayer, Group> renderLayerGroupMap = new EnumMap<>(RenderLayer.class);
 
     /**
      * Initialize the program windows and render graph.
@@ -15,36 +17,61 @@ public class RendererManager {
      *
      * @param stage The stage of the application.
      */
-    public static void initializeMain(Stage stage) {
+    public static void initializeMain(Stage stage, Scene mainScene, Group mainGroup) {
 
-        // root node (empty container for now)
-        root = new Group();
+        // Root rendering node
+        root = mainGroup;
 
-        // scene = like your canvas
-        Scene scene = new Scene(root, 1200, 800);
+        // Children rendering nodes for per-layer rendering
+        var renderLayerArray = RenderLayer.values();
+        for (var renderLayer : renderLayerArray) {
+            Group childGroup = new Group();
+            root.getChildren().add(childGroup);
+            renderLayerGroupMap.put(renderLayer, childGroup);
+        }
 
+        // Set window title
         stage.setTitle("NigArkanoid");
-        stage.setScene(scene);
-        stage.show(); // 🚀 show the window
+
+        // Set main window
+        stage.setScene(mainScene);
+
+        // Show window
+        stage.show();
 
     }
 
     /**
      * Register {@code node} for rendering.
      *
-     * @param node The registering node.
+     * @param renderable The registering rendering object.
      */
-    protected static void RegisterNode(Node node) {
-        root.getChildren().add(node);
+    protected static void registerNode(Renderable renderable) {
+        renderable.onRenderLayerChanged.addListener(RendererManager::renderable_onRenderLayerChanged);
+        renderLayerGroupMap.get(renderable.getRenderLayer())
+                .getChildren().add(renderable.getNode());
     }
 
     /**
      * Remove {@code node} from rendering.
      *
-     * @param node The unregistering node.
+     * @param renderable The unregistering rendering object.
      */
-    protected static void UnregisterNode(Node node) {
-        root.getChildren().remove(node);
+    protected static void unregisterNode(Renderable renderable) {
+        renderable.onRenderLayerChanged.removeListener(RendererManager::renderable_onRenderLayerChanged);
+        renderLayerGroupMap.get(renderable.getRenderLayer())
+                .getChildren().remove(renderable.getNode());
+    }
+
+    private static void renderable_onRenderLayerChanged(Object sender, Renderable.OnRenderLayerChangedEventArgs e) {
+
+        if (sender instanceof Renderable renderable) {
+            renderLayerGroupMap.get(e.previousLayer())
+                    .getChildren().remove(renderable.getNode());
+            renderLayerGroupMap.get(e.newLayer())
+                    .getChildren().add(renderable.getNode());
+        }
+
     }
 
 }

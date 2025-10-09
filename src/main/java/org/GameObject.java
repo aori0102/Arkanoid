@@ -16,8 +16,9 @@ public class GameObject {
     private boolean isActive;
     private boolean isDestroyed;
 
-    private Transform transform;
+    private final Transform transform;
     private String name;
+    private Layer layer;
 
     /**
      * Only access within {@link GameObject} or {@link GameObjectManager}.
@@ -32,14 +33,42 @@ public class GameObject {
 
     }
 
-    public void setTransform(Transform transform) {
+    /**
+     * Set the game object's layer
+     *
+     * @param layer The layer to set, must be single bit.
+     */
+    public void setLayer(Layer layer) {
 
         ValidateObjectLife();
 
-        this.transform = transform;
+        var value = layer.getUnderlyingValue();
+        if (value == 0 || (value & (value - 1)) != 0) {
+            throw new IllegalStateException("Layer " + value + " must be single bit (A game object cannot be in two or more layers");
+        }
+
+        this.layer = layer;
 
     }
 
+    /**
+     * Get this game object's layer in bitmask
+     *
+     * @return The layer in bitmask.
+     */
+    public int getLayerMask() {
+
+        ValidateObjectLife();
+
+        return layer.getUnderlyingValue();
+
+    }
+
+    /**
+     * Get this game object's name.
+     *
+     * @return The game object's name.
+     */
     public String getName() {
 
         ValidateObjectLife();
@@ -48,10 +77,20 @@ public class GameObject {
 
     }
 
+    /**
+     * Check if this game object is destroyed.
+     *
+     * @return {@code true} if is destroyed, otherwise {@code false}.
+     */
     public boolean isDestroyed() {
         return isDestroyed;
     }
 
+    /**
+     * Set the name for this game object's.
+     *
+     * @param name The name to set.
+     */
     public void setName(String name) {
 
         ValidateObjectLife();
@@ -89,7 +128,9 @@ public class GameObject {
 
         ValidateObjectLife();
 
-        return isActive;
+        var parent = transform.getParent();
+        boolean parentActive = parent == null || parent.gameObject.isActive;
+        return isActive && parentActive;
 
     }
 
@@ -200,6 +241,7 @@ public class GameObject {
         isDestroyed = false;
         childSet = new HashSet<>();
         transform = addComponent(Transform.class);
+        layer = Layer.Default;
     }
 
     /**
@@ -213,6 +255,7 @@ public class GameObject {
         isDestroyed = false;
         childSet = new HashSet<>();
         transform = addComponent(Transform.class);
+        layer = Layer.Default;
     }
 
     /**
@@ -229,6 +272,7 @@ public class GameObject {
             childSet.add(new GameObject(child));
         }
         transform = addComponent(Transform.class);
+        layer = Layer.Default;
     }
 
     /**
@@ -331,4 +375,23 @@ public class GameObject {
 
     }
 
+    /**
+     * Get all components attached to this GameObject.
+     *
+     * @return A copy of all components.
+     */
+    public HashSet<MonoBehaviour> getAllComponents() {
+        ValidateObjectLife();
+        return new HashSet<>(monoBehaviourSet); // return a copy to avoid external modification
+    }
+
+    /**
+     * Get all children of this GameObject.
+     *
+     * @return A copy of all children GameObjects.
+     */
+    public HashSet<GameObject> getChildren() {
+        ValidateObjectLife();
+        return new HashSet<>(childSet); // return a copy
+    }
 }
