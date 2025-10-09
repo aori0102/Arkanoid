@@ -1,8 +1,8 @@
 package org.MouseEvent;
 
 import javafx.scene.Node;
-import org.GameObject;
-import org.IHasNode;
+import org.IRenderable;
+import org.Renderable;
 import org.Transform;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public final class PointerUtils {
         List<Node> nodes = new ArrayList<>();
 
         for (var comp : transform.getGameObject().getAllComponents()) {
-            if (comp instanceof IHasNode hasNode) {
+            if (comp instanceof Renderable hasNode) {
                 nodes.add(hasNode.getNode());
             }
         }
