@@ -1,0 +1,70 @@
+{
+  "imagePath": "Bocchi",
+  "frameList": [
+    {
+      "clipAnchor": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "clipSize": {
+        "x": 100.0,
+        "y": 100.0
+      },
+      "renderSize": {
+        "x": 200.0,
+        "y": 500.0
+      },
+      "duration": 0.5,
+      "rotationAngle": 0.0
+    },
+    {
+      "clipAnchor": {
+        "x": 100.0,
+        "y": 100.0
+      },
+      "clipSize": {
+        "x": 100.0,
+        "y": 100.0
+      },
+      "renderSize": {
+        "x": 200.0,
+        "y": 500.0
+      },
+      "duration": 0.5,
+      "rotationAngle": 0.0
+    },
+    {
+      "clipAnchor": {
+        "x": 0.0,
+        "y": 100.0
+      },
+      "clipSize": {
+        "x": 100.0,
+        "y": 100.0
+      },
+      "renderSize": {
+        "x": 200.0,
+        "y": 500.0
+      },
+      "duration": 0.5,
+      "rotationAngle": 0.0
+    },
+    {
+      "clipAnchor": {
+        "x": 100.0,
+        "y": 100.0
+      },
+      "clipSize": {
+        "x": 100.0,
+        "y": 100.0
+      },
+      "renderSize": {
+        "x": 200.0,
+        "y": 500.0
+      },
+      "duration": 0.5,
+      "rotationAngle": 0.0
+    }
+  ],
+  "loop": true
+}
