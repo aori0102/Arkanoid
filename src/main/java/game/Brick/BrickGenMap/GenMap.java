@@ -231,10 +231,10 @@ public final class GenMap extends InitBrick {
             if (rng.nextDouble() < lerp(0.8, 0.3, difficulty)) {
                 int side = rng.nextInt(4);
                 switch (side) {
-                    case 0 -> g.get(r0).set(c0 + rng.nextInt(w), new BrickObj(pickFromWeak(difficulty)));
-                    case 1 -> g.get(r0 + h - 1).set(c0 + rng.nextInt(w), new BrickObj(pickFromWeak(difficulty)));
-                    case 2 -> g.get(r0 + rng.nextInt(h)).set(c0, new BrickObj(pickFromWeak(difficulty)));
-                    default-> g.get(r0 + rng.nextInt(h)).set(c0 + w - 1, new BrickObj(pickFromWeak(difficulty)));
+                    case 0 -> g.set(r0, c0 + rng.nextInt(w), new BrickObj(pickFromWeak(difficulty)));
+                    case 1 -> g.set((r0 + h - 1), c0 + rng.nextInt(w), new BrickObj(pickFromWeak(difficulty)));
+                    case 2 -> g.set((r0 + rng.nextInt(h)), c0, new BrickObj(pickFromWeak(difficulty)));
+                    default-> g.set((r0 + rng.nextInt(h)), c0 + w - 1, new BrickObj(pickFromWeak(difficulty)));
                 }
             }
         }
@@ -282,7 +282,7 @@ public final class GenMap extends InitBrick {
             double x = (2 * Math.PI * c / COLS) * freq;
             int r0 = (int) Math.round(ROWS / 2.0 + amp * Math.sin(x));
             for (int t = -thickness; t <= thickness; t++)
-                if (inBounds(r0 + t, c)) g.get(r0 + t).set(c, new BrickObj(wall));
+                if (inBounds(r0 + t, c)) g.set((r0 + t), c, new BrickObj(wall));
         }
         sprinkleSpecialsByDifficulty(g, difficulty);
         return g;
@@ -299,10 +299,10 @@ public final class GenMap extends InitBrick {
         // dọc + ngang
         for (int r = 0; r < ROWS; r++)
             for (int t = -thick; t <= thick; t++)
-                if (inBounds(r, midC + t)) g.get(r).set(midC + t, new BrickObj(hard));
+                if (inBounds(r, midC + t)) g.set(r, midC + t, new BrickObj(hard));
         for (int c = 0; c < COLS; c++)
             for (int t = -thick; t <= thick; t++)
-                if (inBounds(midR + t, c)) g.get(midR + t).set(c, new BrickObj(hard));
+                if (inBounds(midR + t, c)) g.set((midR + t), c, new BrickObj(hard));
 
         // chéo
         for (int r = 0; r < ROWS; r++) {
@@ -331,7 +331,7 @@ public final class GenMap extends InitBrick {
         Stack<int[]> st = new Stack<>();
         st.push(new int[]{sr, sc});
         visited[sr][sc] = true;
-        g.get(sr).set(sc, new BrickObj(pickFromWeak(difficulty))); // corridor
+        g.set(sr, sc, new BrickObj(pickFromWeak(difficulty))); // corridor
 
         int[][] DIR = {{2,0},{-2,0},{0,2},{0,-2}};
         while (!st.isEmpty()) {
@@ -350,8 +350,8 @@ public final class GenMap extends InitBrick {
                 visited[nr][nc] = true;
                 // knock down wall between
                 int mr = r + d[0] / 2, mc = c + d[1] / 2;
-                g.get(mr).set(mc, new BrickObj(pickFromWeak(difficulty)));
-                g.get(nr).set(nc, new BrickObj(pickFromWeak(difficulty)));
+                g.set(mr, mc, new BrickObj(pickFromWeak(difficulty)));
+                g.set(nr, nc, new BrickObj(pickFromWeak(difficulty)));
                 st.push(new int[]{nr, nc});
                 moved = true;
                 break;
@@ -455,21 +455,17 @@ public final class GenMap extends InitBrick {
     private static final class Room { final int r0, c0, h, w; Room(int r0,int c0,int h,int w){this.r0=r0;this.c0=c0;this.h=h;this.w=w;} }
 
     private BrickMatrix emptyGrid() {
-        BrickMatrix g = new Vector<>(ROWS);
-        for (int r = 0; r < ROWS; r++) {
-            Vector<BrickObj> row = new Vector<>(COLS);
-            for (int c = 0; c < COLS; c++) row.add(null);
-            g.add(row);
-        }
-        return g;
+        return new BrickMatrix(ROWS, COLS);
     }
+
     private void fillAll(BrickMatrix g, BrickObj.typeBrick t) {
         for (int r = 0; r < ROWS; r++) for (int c = 0; c < COLS; c++) g.set(r, c, new BrickObj(t));
     }
+
     private void fillRect(BrickMatrix g, int r0, int c0, int h, int w, BrickObj.typeBrick t) {
         for (int r = 0; r < h; r++) {
             int rr = r0 + r; if (rr < 0 || rr >= ROWS) continue;
-            for (int c = 0; c < w; c++) { int cc = c0 + c; if (cc < 0 || cc >= COLS) continue; g.get(rr).set(cc, new BrickObj(t)); }
+            for (int c = 0; c < w; c++) { int cc = c0 + c; if (cc < 0 || cc >= COLS) continue; g.set(rr, cc, new BrickObj(t)); }
         }
     }
     private void fillRectSparse(BrickMatrix g, int r0, int c0, int h, int w, BrickObj.typeBrick t, double p) {
@@ -478,7 +474,7 @@ public final class GenMap extends InitBrick {
             int rr = r0 + r; if (rr < 0 || rr >= ROWS) continue;
             for (int c = 0; c < w; c++) {
                 int cc = c0 + c; if (cc < 0 || cc >= COLS) continue;
-                if (rng.nextDouble() < p) g.get(rr).set(cc, new BrickObj(t));
+                if (rng.nextDouble() < p) g.set(rr, cc, new BrickObj(t));
             }
         }
     }
@@ -495,13 +491,13 @@ public final class GenMap extends InitBrick {
     private void carveDoorLine(BrickMatrix g, int row, int cStart, int cEnd, int doorW, double difficulty) {
         int mid = (cStart + cEnd) / 2;
         for (int dc = -doorW / 2; dc <= doorW / 2; dc++) {
-            int cc = mid + dc; if (inBounds(row, cc)) g.get(row).set(cc, new BrickObj(pickFromWeak(difficulty)));
+            int cc = mid + dc; if (inBounds(row, cc)) g.set(row, cc, new BrickObj(pickFromWeak(difficulty)));
         }
     }
     private void carveDoorCol(BrickMatrix g, int col, int rStart, int rEnd, int doorW, double difficulty) {
         int mid = (rStart + rEnd) / 2;
         for (int dr = -doorW / 2; dr <= doorW / 2; dr++) {
-            int rr = mid + dr; if (inBounds(rr, col)) g.get(rr).set(col, new BrickObj(pickFromWeak(difficulty)));
+            int rr = mid + dr; if (inBounds(rr, col)) g.set(rr, col, new BrickObj(pickFromWeak(difficulty)));
         }
     }
 
@@ -532,7 +528,7 @@ public final class GenMap extends InitBrick {
         double otherP = clamp01(0.01 + 0.05 * difficulty);
         for (int r = 0; r < ROWS; r++)
             for (int c = 0; c < COLS; c++) {
-                BrickObj cur = g.get(r).get(c);
+                BrickObj cur = g.get(r, c);
                 if (cur == null) continue;
                 if (cur.getObjType() == BrickObj.Type.Steel || cur.getObjType() == BrickObj.Type.Diamond) {
                     if (rng.nextDouble() < 0.04 * difficulty) g.set(r, c, new BrickObj(BrickObj.typeBrick.Rock));

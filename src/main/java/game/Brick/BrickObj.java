@@ -1,6 +1,9 @@
 package game.Brick;
 
-public final class BrickObj {
+import org.GameObject;
+import org.MonoBehaviour;
+
+public final class BrickObj extends MonoBehaviour {
 
     private int health;
     private final Type objType;
@@ -8,6 +11,17 @@ public final class BrickObj {
     private final int maxHealth;
     private boolean isNewDeath = false;
     private boolean isDamaged = false;
+
+    @Override
+    protected MonoBehaviour clone(GameObject newOwner) {
+        return null;
+    }
+
+    @Override
+    protected void destroyComponent() {
+
+    }
+
     public enum Type {Normal, Steel, Rock, Bomb, Gift, Diamond, Ball, Rocket, Reborn, Angel}
     public enum typeBrick {
 
@@ -66,6 +80,7 @@ public final class BrickObj {
 
 
     public BrickObj(typeBrick brick) {
+        super();
         this.health = brick.getHealth();
         this.maxHealth =  brick.getMaxHealth();
         this.objType = brick.getType();
