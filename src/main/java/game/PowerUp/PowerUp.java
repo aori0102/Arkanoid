@@ -63,7 +63,7 @@ public class PowerUp extends MonoBehaviour {
     public void setPowerUpIndex(PowerUpIndex powerUpIndex) {
         this.powerUpIndex = powerUpIndex;
         getComponent(SpriteRenderer.class)
-                .setImage(PowerUpData.POWER_UP_IMAGE_PATH_MAP.get(powerUpIndex));
+                .setImage(PowerUpData.POWER_UP_IMAGE_PATH_MAP.get(powerUpIndex).getImage());
     }
 
     /**
