@@ -71,7 +71,7 @@ public class Ball extends MonoBehaviour {
      * Calculating the direction of the ball.
      * @param collisionData : the collision data of the interacted surface.
      */
-    public void handleAngleDirection(CollisionData collisionData) {
+    private void handleAngleDirection(CollisionData collisionData) {
 
         if (direction == null) return;
 
@@ -108,7 +108,7 @@ public class Ball extends MonoBehaviour {
      * Set the ball's direction.
      * @param direction : the direction we want the ball to follow.
      */
-    private void setDirection(Vector2 direction) {
+    public void setDirection(Vector2 direction) {
         this.direction = direction;
         paddle.onMouseReleased.removeAllListeners();
     }

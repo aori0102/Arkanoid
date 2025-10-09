@@ -2,8 +2,8 @@ package game.Obstacle;
 
 import game.object.Ball;
 import org.*;
-
-import java.util.TreeMap;
+import utils.Time;
+import utils.Vector2;
 
 /**
  * Base class of call obstacles appearing in game.
@@ -45,6 +45,9 @@ public abstract class Obstacle extends MonoBehaviour {
         });
     }
 
+    public void update() {
+    }
+
     protected void handleInteraction() {
         onObstacleCollided.invoke(this, null );
     }
@@ -52,6 +55,7 @@ public abstract class Obstacle extends MonoBehaviour {
     public BoxCollider getCollider() {
         return collider;
     }
+
 
     protected abstract void handleMovement();
 

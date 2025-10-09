@@ -42,6 +42,9 @@ public class ObstacleManager extends MonoBehaviour{
     private Random random = new Random();
 
     private Paddle paddle;
+    private boolean canStart = false;
+    private double warningSignExistingTime = 3;
+    private double warningSignExisitingCounter = 0;
 
 
     // Singleton
@@ -65,6 +68,7 @@ public class ObstacleManager extends MonoBehaviour{
         for (var obstacle : obstacles) {
             obstacle.gameObject.setActive(false);
         }
+
     }
 
     public void update() {
@@ -147,11 +151,6 @@ public class ObstacleManager extends MonoBehaviour{
         int tries = 10;
         for (int i = 0; i < tries; i++) {
             Vector2 pos = sampleSpawnPosition();
-
-            // Check if the position is valid
-            if (isTooCloseToObstacles(pos)) continue;
-            if (isTooCloseToPaddle(pos)) continue;
-
             spawnAt(pos);
             timeSinceLastSpawn = 0;
         }
@@ -162,17 +161,25 @@ public class ObstacleManager extends MonoBehaviour{
      * @return the spawn position
      */
     private Vector2 sampleSpawnPosition() {
-        double x = 50 + random.nextDouble() * (1200 - 100);
-        double y = 1000;
-        return new Vector2(x, y);
-    }
+        int tries = 10;
+        for (int i = 0; i < tries; i++) {
+            double x = 50 + random.nextDouble() * (1200 - 100);
+            double y = 1000;
 
+            Vector2 pos = new Vector2(x, y);
+
+            if (isTooCloseToPaddle(pos)) continue;
+            if (isTooCloseToObstacles(pos)) continue;
+
+            return new Vector2(x, y);
+        } return new Vector2(600, 1000);
+    }
     /**
      * Spawn obstacle at a chosen position
      * @param pos : the spawn position
      */
     private void spawnAt(Vector2 pos) {
-        if (obstacles.isEmpty()) return;
+        if (obstacles.isEmpty() || sampleSpawnPosition() == null) return;
 
         Obstacle chosen = obstacles.get(random.nextInt(obstacles.size()));
         chosen.gameObject.setActive(true);

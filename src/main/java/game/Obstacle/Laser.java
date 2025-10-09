@@ -17,11 +17,6 @@ public class Laser extends Obstacle {
         super(owner);
     }
 
-    public void update() {
-        handleMovement();
-    }
-
-
     public void awake() {
         collider = getComponent(BoxCollider.class);
         collider.setLocalCenter(new Vector2(0, 0));
@@ -35,13 +30,23 @@ public class Laser extends Obstacle {
 
     }
 
+    public void start() {
+    }
+
+    public void update() {
+        super.update();
+        handleMovement();
+    }
+
+
     @Override
     protected void handleMovement() {
+
         getTransform().translate(Vector2.up().multiply(laserSpeed * Time.deltaTime));
         if (getTransform().getGlobalPosition().x < 0 || isDestroyed) {
             GameObjectManager.destroy(gameObject);
         }
     }
-
-
 }
+
+

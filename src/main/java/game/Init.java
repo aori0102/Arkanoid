@@ -1,15 +1,10 @@
 package game;
 
 import game.Obstacle.Laser;
-import game.Obstacle.Obstacle;
 import game.object.Ball;
 import game.object.Paddle;
 import org.*;
 import utils.Vector2;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class Init {
 
@@ -51,6 +46,7 @@ public class Init {
 
         var obstacleManager = GameObjectManager.instantiate("obstacleManager");
         obstacleManager.addComponent(ObstacleManager.class);
+
 
         ObstacleManager.instance.setPaddle(paddle.getComponent(Paddle.class));
         ObstacleManager.instance.addObstacle(laser.getComponent(Laser.class));
