@@ -140,7 +140,7 @@ public class SpriteAnimator extends MonoBehaviour {
                     spriteRenderer.overrideImage(currentAnimationClipFrame.image);
                     spriteRenderer.overrideClip(currentAnimationClipFrame.clipAnchor, currentAnimationClipFrame.clipSize);
                     spriteRenderer.overrideRenderSize(currentAnimationClipFrame.renderSize);
-                    spriteRenderer.overrideRotation(currentAnimationClipFrame.rotationAngle);
+                    //spriteRenderer.overrideRotation(currentAnimationClipFrame.rotationAngle);
                     lastFramePlayingTick = Time.time;
                 }
 

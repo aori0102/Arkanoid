@@ -76,11 +76,16 @@ public final class BrickObj {
     }
 
     public void hitDamage(int damge) {
+        if (this.health < 0) {
+            return;
+        }
+
         this.health -= damge;
         this.isDamaged = true;
         
         if (this.health < 0) {
             this.health = 0;
+            this.isNewDeath = true;
         }
     }
 
@@ -108,7 +113,7 @@ public final class BrickObj {
 
     public void beDestroy() {
         this.health = 0;
-
+        this.isNewDeath = true;
     }
 
     public boolean isDestroyed() {
@@ -137,6 +142,9 @@ public final class BrickObj {
 
     public void resetIsDamaged() {
         this.isDamaged = false;
+    }
+    public void resetNewDeath() {
+        this.isNewDeath = false;
     }
 
 }
