@@ -1,9 +1,8 @@
-package org;
+package org.UI;
 
-import javafx.geometry.Bounds;
 import javafx.scene.input.MouseEvent;
-import org.MouseEvent.*;
-import utils.Vector2;
+import game.Interface.*;
+import org.*;
 
 
 public class ButtonUI extends MonoBehaviour

@@ -53,7 +53,6 @@ public class SpriteRenderer extends Renderable {
     protected ImageView sprite = new ImageView();
     private Rotate rotateProperty = new Rotate();
     private Arc circularClip = new Arc();
-    private GameObject gameObject = null;
 
     public SpriteRenderer(GameObject owner) {
 
@@ -163,15 +162,6 @@ public class SpriteRenderer extends Renderable {
      */
     public void resetImage() {
         sprite.setImage(null);
-    }
-
-    public SpriteRenderer(GameObject owner) {
-        super(owner);
-        sprite = new ImageView();
-        imageOriginalDimension = new Vector2();
-        imageSize = new Vector2();
-        pivot = new Vector2();
-        gameObject = owner;
     }
 
     /**

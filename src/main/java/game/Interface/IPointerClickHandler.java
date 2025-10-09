@@ -1,9 +1,8 @@
-package org.MouseEvent;
+package game.Interface;
 
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import org.GameObject;
-import org.IHasNode;
 import org.Transform;
 
 import java.util.ArrayList;

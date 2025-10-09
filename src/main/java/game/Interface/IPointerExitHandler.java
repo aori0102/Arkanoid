@@ -1,4 +1,4 @@
-package org.MouseEvent;
+package game.Interface;
 
 
 import javafx.scene.Node;

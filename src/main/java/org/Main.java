@@ -20,7 +20,8 @@ public class Main extends Application {
         Random.init();
         root = new Group();
         scene = new Scene(root, 1200, 800);
-        RendererManager.initializeMain(stage, scene, root);
+        //RendererManager.initializeMain(stage, scene, root);
+        SceneManager.initializeStage(stage);
         Init.Init_Aori();
         Init.Init_Duc();
         Init.Init_Dui();

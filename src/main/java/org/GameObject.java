@@ -342,7 +342,7 @@ public class GameObject {
                 preAwakeMonoBehaviourQueue.offer(comp);
                 monoBehaviourSet.add(comp);
 
-                if (comp instanceof IHasNode hasNode && registeredSceneKey != null) {
+                if (comp instanceof Renderable hasNode && registeredSceneKey != null) {
                     SceneManager.addNodeToScene(hasNode.getNode(), registeredSceneKey);
                 }
             } catch (NoSuchMethodException e) {

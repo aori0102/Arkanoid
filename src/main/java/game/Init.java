@@ -1,7 +1,7 @@
 package game;
 
 import org.GameObjectManager;
-import org.UI.StartButton;
+import org.UI.DuiButton;
 
 public class Init {
 
@@ -12,7 +12,7 @@ public class Init {
     public static void Init_Dui() {
         final String buttonKey = "ButtonKey";
         var menuButton = GameObjectManager.instantiate("menuButton");
-        var button = menuButton.addComponent(StartButton.class);
+        var button = menuButton.addComponent(DuiButton.class);
 //        menuButton.getTransform().setGlobalPosition(new Vector2(100, 100));
 //        button.getSpriteAnimator().addAnimationClip(buttonKey);
 //        button.getSpriteAnimator().setSprite(buttonKey,"/Frame 1.png");

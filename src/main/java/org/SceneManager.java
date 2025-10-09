@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class SceneManager {
     private static Stage mainStage;
-    private static final HashMap<String, Scene> sceneMap = new HashMap<String, Scene>();
+    private static final HashMap<String, Scene> sceneMap = new HashMap<>();
     private static final HashMap<String, Group> sceneGroups = new HashMap<>();
     private static String currentSceneKey = null;
 
@@ -107,7 +107,7 @@ public class SceneManager {
      * @throws IllegalArgumentException If the scene does not exist.
      */
     public static void addGameObjectToScene(GameObject gameObject, String sceneKey) {
-        if (!sceneMap.containsKey(sceneKey)) throw new IllegalArgumentException("Scene " + sceneKey + " not found!1");
+        if (!sceneMap.containsKey(sceneKey)) throw new IllegalArgumentException("Scene " + sceneKey + " not found!");
         if (gameObject.getRegisteredSceneKey() != null && !gameObject.getRegisteredSceneKey().equals(sceneKey)) {
             removeGameObjectFromScene(gameObject, gameObject.getRegisteredSceneKey());
         }
