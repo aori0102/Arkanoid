@@ -2,6 +2,7 @@ package org;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Arc;
@@ -52,6 +53,7 @@ public class SpriteRenderer extends Renderable {
     protected ImageView sprite = new ImageView();
     private Rotate rotateProperty = new Rotate();
     private Arc circularClip = new Arc();
+    private GameObject gameObject = null;
 
     public SpriteRenderer(GameObject owner) {
 
@@ -161,7 +163,15 @@ public class SpriteRenderer extends Renderable {
      */
     public void resetImage() {
         sprite.setImage(null);
+    }
+
+    public SpriteRenderer(GameObject owner) {
+        super(owner);
+        sprite = new ImageView();
         imageOriginalDimension = new Vector2();
+        imageSize = new Vector2();
+        pivot = new Vector2();
+        gameObject = owner;
     }
 
     /**
@@ -346,13 +356,13 @@ public class SpriteRenderer extends Renderable {
         return new SpriteRenderer(newOwner);
     }
 
-    @Override
     public Node getNode() {
         return sprite;
     }
 
     @Override
     protected void onComponentDestroyed() {
+        SceneManager.removeNodeFromScene(getNode(), gameObject.getRegisteredSceneKey());
         sprite = null;
         imageOriginalDimension = null;
         rectangularClip = null;
@@ -360,4 +370,7 @@ public class SpriteRenderer extends Renderable {
         rotateProperty = null;
     }
 
+    public ImageView getSprite() {
+        return sprite;
+    }
 }

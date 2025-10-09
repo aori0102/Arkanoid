@@ -129,6 +129,8 @@ public class GameObjectManager {
     public static GameObject instantiate() {
         var newGameObject = new GameObject();
         RegisterGameObject(newGameObject);
+        SceneManager.addGameObjectToScene(newGameObject, SceneManager.getCurrentSceneKey());
+
         return newGameObject;
     }
 
@@ -141,6 +143,8 @@ public class GameObjectManager {
     public static GameObject instantiate(String name) {
         var newGameObject = new GameObject(name);
         RegisterGameObject(newGameObject);
+        SceneManager.addGameObjectToScene(newGameObject, SceneManager.getCurrentSceneKey());
+
         return newGameObject;
     }
 
@@ -153,6 +157,8 @@ public class GameObjectManager {
     public static GameObject instantiate(GameObject source) {
         var newGameObject = new GameObject(source);
         RegisterGameObject(newGameObject);
+        SceneManager.addGameObjectToScene(newGameObject, SceneManager.getCurrentSceneKey());
+
         return newGameObject;
     }
 
@@ -169,6 +175,8 @@ public class GameObjectManager {
     public static <T extends MonoBehaviour> T instantiate(MonoBehaviour monoBehaviour, Class<T> type) {
         var newGameObject = new GameObject(monoBehaviour.gameObject);
         RegisterGameObject(newGameObject);
+        SceneManager.addGameObjectToScene(newGameObject, SceneManager.getCurrentSceneKey());
+
         return newGameObject.getComponent(type);
     }
 
@@ -181,6 +189,7 @@ public class GameObjectManager {
 
         if (gameObjectSet.contains(gameObject)) {
             gameObject.destroyObject();
+            SceneManager.removeGameObjectFromScene(gameObject, gameObject.getRegisteredSceneKey());
         }
 
     }

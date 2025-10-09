@@ -3,13 +3,13 @@ package org.MouseEvent;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import org.GameObject;
-import org.IRenderable;
+import org.IHasNode;
 import org.Transform;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.MouseEvent.PointerUtils.collectNodes;
+import static utils.NodeUtils.collectNodes;
 
 
 public interface IPointerClickHandler {

@@ -12,6 +12,8 @@ public class TextUI extends Renderable {
     private static final double DEFAULT_FONT_SIZE = 12.0;
 
     private Text text = new Text();
+    ;
+    private String registeredSceneKey;
     private double fontSize = DEFAULT_FONT_SIZE;
     private String fontName = DEFAULT_FONT_FACE;
     private TextVerticalAlignment verticalAlignment = TextVerticalAlignment.Top;
@@ -22,6 +24,7 @@ public class TextUI extends Renderable {
 
         onRenderPositionChanged.addListener(this::renderer_onRenderPositionChanged);
         text.setTextOrigin(VPos.TOP);
+
     }
 
     /**

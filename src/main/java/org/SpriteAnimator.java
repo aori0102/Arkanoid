@@ -81,6 +81,10 @@ public class SpriteAnimator extends MonoBehaviour {
         updateCurrentFrame();
         Time.addCoroutine(this::progressFrame, Time.time + currentAnimationNode.frame.getDuration());
 
+        spriteRenderer.overrideImage(currentAnimationClipFrame.image);
+        spriteRenderer.overrideClip(currentAnimationClipFrame.clipAnchor, currentAnimationClipFrame.clipSize);
+        spriteRenderer.overrideRenderSize(currentAnimationClipFrame.renderSize);
+
     }
 
     /**
@@ -130,5 +134,6 @@ public class SpriteAnimator extends MonoBehaviour {
         animationClipMap = null;
         currentAnimationNode = null;
     }
+
 
 }
