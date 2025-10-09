@@ -68,11 +68,6 @@ public class Paddle extends MonoBehaviour {
             canStartStunnedCounter = true;
         });
 
-        var powerUp = collisionData.otherCollider.getComponent(PowerUp.class);
-        if (powerUp != null) {
-            onPowerUpConsumed.invoke(this, powerUp);
-        }
-
     }
 
     public void update() {

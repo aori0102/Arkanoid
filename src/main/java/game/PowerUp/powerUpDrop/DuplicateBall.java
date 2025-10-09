@@ -6,10 +6,7 @@ import game.PowerUp.PowerUpIndex;
 import game.PowerUp.PowerUpManager;
 import game.object.Ball;
 import game.object.Paddle;
-import org.BoxCollider;
-import org.GameObject;
-import org.GameObjectManager;
-import org.SpriteRenderer;
+import org.*;
 import utils.Time;
 import utils.Vector2;
 
@@ -63,7 +60,7 @@ public class DuplicateBall extends PowerUp implements ICanDrop {
 
         var ballVisual = GameObjectManager.instantiate(ballVisualBuilder());
         ballVisual.getTransform().setParent(ball.getTransform());
-        ballVisual.addComponent(SpriteRenderer.class).setImage("/ball.png");
+        ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
 
         return ball.getComponent(Ball.class);
     }
