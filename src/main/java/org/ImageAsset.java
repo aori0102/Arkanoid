@@ -23,7 +23,12 @@ public class ImageAsset {
             try {
                 loadedImage = loadImage(path);
             } catch (RuntimeException e) {
-                System.out.println(ImageAsset.class.getSimpleName() + " | Image failed to load at index [" + this + "]: " + e.getMessage());
+                System.out.println(
+                        ImageAsset.class.getSimpleName()
+                                + " | Image failed to load at index ["
+                                + this + "]: "
+                                + e.getMessage()
+                );
             }
             image = loadedImage;
 
