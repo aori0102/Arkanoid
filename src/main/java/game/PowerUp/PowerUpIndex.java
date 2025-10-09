@@ -4,6 +4,8 @@ public enum PowerUpIndex {
     None,
     DuplicateBall,
     TriplicateBall,
+    FireBall,
+    Blizzard,
     Explosive,
     Shield,
     Expand,

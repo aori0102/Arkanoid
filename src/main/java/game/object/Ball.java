@@ -34,8 +34,8 @@ public class Ball extends MonoBehaviour {
         });
 
         // Add listener to paddle event
-        paddle.onMouseReleased.addListener((sender, e) -> {
-            setDirection(e);
+        paddle.onMouseReleased.addListener((e, vector2) -> {
+            setDirection(vector2);
             isMoving = true;
             paddle.isFired = true;
         });
@@ -47,6 +47,7 @@ public class Ball extends MonoBehaviour {
     public void update() {
         handleMovement();
     }
+
 
     /**
      * Handle ball movement.
@@ -68,10 +69,9 @@ public class Ball extends MonoBehaviour {
 
     /**
      * Calculating the direction of the ball.
-     *
      * @param collisionData : the collision data of the interacted surface.
      */
-    public void handleAngleDirection(CollisionData collisionData) {
+    private void handleAngleDirection(CollisionData collisionData) {
 
         if (direction == null) return;
 
@@ -99,23 +99,22 @@ public class Ball extends MonoBehaviour {
             reflectDir = reflectDir.add(paddle.movementVector.normalize());
         }
 
+
         direction = reflectDir;
     }
 
 
     /**
      * Set the ball's direction.
-     *
      * @param direction : the direction we want the ball to follow.
      */
-    private void setDirection(Vector2 direction) {
+    public void setDirection(Vector2 direction) {
         this.direction = direction;
         paddle.onMouseReleased.removeAllListeners();
     }
 
     /**
      * Set the paddle to listen to its event.
-     *
      * @param paddle : invoked event's position.
      */
     public void setPaddle(Paddle paddle) {
@@ -134,6 +133,8 @@ public class Ball extends MonoBehaviour {
         return collidedObject.getComponent(type) != null;
     }
 
+
+
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
         return null;
@@ -143,4 +144,6 @@ public class Ball extends MonoBehaviour {
     protected void destroyComponent() {
 
     }
+
+
 }

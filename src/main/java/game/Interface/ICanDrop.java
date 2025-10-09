@@ -5,7 +5,7 @@ package game.Interface;
  */
 public interface ICanDrop {
     /**
-     * Handle the receiving event.
+     * Handle the dropping movement
      */
-    public void onDropReceive() ;
+    public void handleDroppingMovement(double droppingSpeed);
 }

@@ -7,20 +7,15 @@ import javafx.scene.shape.Line;
 import org.*;
 import utils.Time;
 import utils.Vector2;
-import javafx.scene.shape.Rectangle;
 
 
 import javafx.scene.input.MouseEvent;
 
-import java.awt.*;
-
 public class Paddle extends MonoBehaviour {
-
-    private final double paddleSpeed = 1000;
     private final double dotLimitAngle = 60;
-    private final double stunnedTime = 2d;
+    private final double stunnedTime = 3.6;
 
-    public EventHandler<Vector2> onMouseReleased = new EventHandler<>(this);
+    public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(this);
     public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(this);
 
     private ActionMap actionMap;
@@ -32,7 +27,10 @@ public class Paddle extends MonoBehaviour {
     private boolean canInvoke;
     private boolean isMoving = true;
     private boolean canStartStunnedCounter = false;
+    private boolean canReduceSpeed = true;
     private double stunnedCounter = 0;
+    private double basePaddleSpeed = 1000;
+    private double currentSpeed = 1000;
 
     public boolean isFired = false;
 
@@ -41,6 +39,7 @@ public class Paddle extends MonoBehaviour {
 
     public Paddle(GameObject owner) {
         super(owner);
+        owner.setLayer(Layer.Paddle);
     }
 
     /**
@@ -59,20 +58,15 @@ public class Paddle extends MonoBehaviour {
         //Assign line specs
         boxCollider.setOnTriggerEnter(this::onTriggerEnter);
 
+        //Assign line specs
         line = new Line();
         line.setStroke(Color.RED);
         line.setStrokeWidth(2);
         playerInput.getRoot().getChildren().add(line);
 
-        ObstacleManager.onPaddleCollidedWithObstacles.addListener((obstacleCollided) -> {
+        ObstacleManager.instance.onPaddleCollidedWithObstacle.addListener((e, voi) -> {
             canStartStunnedCounter = true;
-            handleInteractWithObstacle();
         });
-
-
-    }
-
-    private void onTriggerEnter(CollisionData collisionData) {
 
         var powerUp = collisionData.otherCollider.getComponent(PowerUp.class);
         if (powerUp != null) {
@@ -83,7 +77,7 @@ public class Paddle extends MonoBehaviour {
 
     public void update() {
         handleMovement();
-        handleStunnedCounter();
+        handleCollisionWithObstacles();
     }
 
 
@@ -95,13 +89,14 @@ public class Paddle extends MonoBehaviour {
         if (!isMoving) {
             return;
         }
+
         getTransform().translate(movementVector);
         // Current action
         switch (actionMap.currentAction) {
             // Go left
-            case GoLeft -> movementVector = new Vector2(-paddleSpeed * Time.deltaTime, 0);
+            case GoLeft -> movementVector = new Vector2(-currentSpeed * Time.deltaTime, 0);
             // Go Right
-            case GoRight -> movementVector = new Vector2(paddleSpeed * Time.deltaTime, 0);
+            case GoRight -> movementVector = new Vector2(currentSpeed * Time.deltaTime, 0);
             // Adjust ray direction by pressing left mouse button
             case MousePressed -> {
                 HandleRayDirection();
@@ -115,11 +110,9 @@ public class Paddle extends MonoBehaviour {
 
                 //Fire the ball if the ball is not fired
                 if (playerInput.isMouseReleased) {
-                    onMouseReleased.invoke(this, fireDirection);
-                    playerInput.isMouseReleased = false;
                     if (isDirectionValid(fireDirection)) {
                         if (canInvoke) {
-                            onMouseReleased.invoke(fireDirection);
+                            onMouseReleased.invoke(this, fireDirection);
                             playerInput.isMouseReleased = false;
                         }
                     }
@@ -171,20 +164,23 @@ public class Paddle extends MonoBehaviour {
         }
     }
 
-    private void handleInteractWithObstacle() {
-        isMoving = false;
+    private void handleCollisionWithObstacles() {
+        if (!canStartStunnedCounter) return;
+        stunnedCounter += Time.deltaTime;
+
+        if (canReduceSpeed) {
+            currentSpeed /= 10;
+            canReduceSpeed = false;
+        }
+
         if (stunnedCounter >= stunnedTime) {
-            isMoving = true;
+            currentSpeed = basePaddleSpeed;
+            canReduceSpeed = true;
             stunnedCounter = 0;
             canStartStunnedCounter = false;
         }
     }
 
-    private void handleStunnedCounter() {
-        if (canStartStunnedCounter) {
-            stunnedCounter += Time.deltaTime;
-        }
-    }
 
     /**
      * Check if the direction is in the valid range.
@@ -197,6 +193,16 @@ public class Paddle extends MonoBehaviour {
         return Math.toDegrees(angle) <= dotLimitAngle;
     }
 
+    private void onTriggerEnter(CollisionData collisionData) {
+
+        var powerUp = collisionData.otherCollider.getComponent(PowerUp.class);
+        if (powerUp != null) {
+            onPowerUpConsumed.invoke(this, powerUp);
+        }
+
+    }
+
+
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
         return null;
@@ -206,5 +212,4 @@ public class Paddle extends MonoBehaviour {
     protected void destroyComponent() {
 
     }
-
 }

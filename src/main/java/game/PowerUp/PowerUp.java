@@ -9,7 +9,7 @@ import utils.Vector2;
  */
 public class PowerUp extends MonoBehaviour {
 
-    private static final double TRAVEL_SPEED = 10.265;
+    protected static final double TRAVEL_SPEED = 10.265;
 
     private PowerUpIndex powerUpIndex = PowerUpIndex.None;
 
@@ -32,6 +32,11 @@ public class PowerUp extends MonoBehaviour {
         var boxCollider = addComponent(BoxCollider.class);
         boxCollider.setLocalSize(new Vector2(100.0, 100.0));
         boxCollider.isTrigger = true;
+        boxCollider.setOnCollisionEnterCallback(e ->{
+            if (e.otherCollider.getIncludeLayer() == Layer.Paddle.getUnderlyingValue()) {
+                GameObjectManager.destroy(this.gameObject);
+            }
+        });
 
         gameObject.setLayer(Layer.PowerUp);
 
