@@ -4,7 +4,7 @@ import game.Brick.BrickEvent.BrokenEvent;
 import game.Brick.BrickEvent.CollisionEvent;
 import game.Brick.BrickEvent.EndEvent;
 import game.Brick.BrickEvent.WaveEffect;
-import game.Brick.BrickGenMap.GenMap;
+import game.Brick.BrickType;
 
 public class BrickFactory extends InitBrick {
 
@@ -29,7 +29,7 @@ public class BrickFactory extends InitBrick {
     public void setup() {
 
 
-        matrixObj = new BrickMatrix(rowData, colData, new BrickObj(BrickObj.typeBrick.Normal) );
+        matrixObj = new BrickMatrix(rowData, colData, new BrickObj(BrickObj.BrickType.Normal) );
 
         collisionEvent = new CollisionEvent();
         brokenEvent = new BrokenEvent();
@@ -42,8 +42,8 @@ public class BrickFactory extends InitBrick {
         int col = brickPosition.se();
 
         if (matrixObj.inBounds(row, col) && !matrixObj.isDestroyed(row, col)) {
-            BrickObj.Type type = matrixObj.getObjType(row, col);
-            collisionEvent.ColliEvent(row, col, type, damage);
+            BrickObj.BrickType brickType = matrixObj.getObjType(row, col);
+            collisionEvent.ColliEvent(row, col, brickType, damage);
         }
     }
 

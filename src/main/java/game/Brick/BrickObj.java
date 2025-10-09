@@ -1,16 +1,21 @@
 package game.Brick;
 
+import org.CollisionData;
+import org.EventHandler;
 import org.GameObject;
 import org.MonoBehaviour;
 
 public final class BrickObj extends MonoBehaviour {
 
     private int health;
-    private final Type objType;
+    private final BrickType objBrickType;
 
     private final int maxHealth;
     private boolean isNewDeath = false;
     private boolean isDamaged = false;
+
+    // Create a
+    public EventHandler<Void> onBrickDestroyed = new EventHandler<>(this);
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
@@ -19,36 +24,33 @@ public final class BrickObj extends MonoBehaviour {
 
     @Override
     protected void destroyComponent() {
-
+        onBrickDestroyed.invoke(this, null);
     }
 
-    public enum Type {Normal, Steel, Rock, Bomb, Gift, Diamond, Ball, Rocket, Reborn, Angel}
-    public enum typeBrick {
+    public enum BrickType {
 
-        Normal ( 50, 10,32,  64, Type.Normal),
-        Steel (1000, 1000,32, 64, Type.Steel),
-        Diamond(1000000000, 1000000000, 32, 64, Type.Diamond),
-        Rocket(50, 10, 32, 64, Type.Rocket),
-        Rock (50, 30,32, 64, Type.Rock),
-        Bomb(50, 30, 32, 64, Type.Bomb),
-        Gift (10, 10, 32, 64, Type.Gift),
-        Ball (10, 10, 32, 64, Type.Ball),
-        Reborn(10, 10, 32, 64, Type.Reborn),
-        Angel(10, 10, 32, 64, Type.Angel);
+        Normal(50, 10, 32, 64),
+        Steel(1000, 1000, 32, 64),
+        Diamond(1000000000, 1000000000, 32, 64),
+        Rocket(50, 10, 32, 64),
+        Rock(50, 30, 32, 64),
+        Bomb(50, 30, 32, 64),
+        Gift(10, 10, 32, 64),
+        Ball(10, 10, 32, 64),
+        Reborn(10, 10, 32, 64),
+        Angel(10, 10, 32, 64);
 
 
         private final int maxHealth;
-        private final Type type;
         private final double width;
         private final double height;
-        private int health;
+        private final int health;
 
-        typeBrick(int _maxHealth, int _health, double _width, double _height, Type _type) {
+        BrickType(int _maxHealth, int _health, double _width, double _height) {
             this.maxHealth = _maxHealth;
             this.health = _health;
             this.width = _width;
             this.height = _height;
-            this.type = _type;
         }
 
         public int getMaxHealth() {
@@ -67,23 +69,29 @@ public final class BrickObj extends MonoBehaviour {
             return height;
         }
 
-        public Type getType() {
-            return type;
-        }
-
-        public static typeBrick getType(int num) {
-            typeBrick[] arr= typeBrick.values();
-            if(num < 0 || num > arr.length) num = 0;
+        public static BrickType getType(int num) {
+            BrickType[] arr = BrickType.values();
+            if (num < 0 || num > arr.length) num = 0;
             return arr[num];
         }
     }
 
-
-    public BrickObj(typeBrick brick) {
+    /*
+    - Remove this constructor
+    - Add new constructor corresponding with MonoBehaviour (GameObject as argument)
+    - Add new method to change brick type.
+     */
+    public BrickObj(BrickType brick) {
         super();
         this.health = brick.getHealth();
-        this.maxHealth =  brick.getMaxHealth();
-        this.objType = brick.getType();
+        this.maxHealth = brick.getMaxHealth();
+        this.objBrickType = brick;
+    }
+
+    public BrickObj(GameObject owner){
+        super(owner);
+
+        //...
     }
 
     public int getHealth() {
@@ -97,7 +105,7 @@ public final class BrickObj extends MonoBehaviour {
 
         this.health -= damge;
         this.isDamaged = true;
-        
+
         if (this.health < 0) {
             this.health = 0;
             this.isNewDeath = true;
@@ -105,23 +113,23 @@ public final class BrickObj extends MonoBehaviour {
     }
 
     public void incHealth(int inc) {
-        if(this.health <= 0) {
+        if (this.health <= 0) {
             return;
         }
 
         this.health += inc;
-        if(this.health > this.maxHealth) {
+        if (this.health > this.maxHealth) {
             this.health = this.maxHealth;
         }
     }
 
     public void decHealth(int inc) {
-        if(this.health <= 0) {
+        if (this.health <= 0) {
             return;
         }
 
         this.health -= inc;
-        if(this.health < 0) {
+        if (this.health < 0) {
             this.health = 0;
         }
     }
@@ -135,8 +143,8 @@ public final class BrickObj extends MonoBehaviour {
         return this.health <= 0;
     }
 
-    public Type getObjType() {
-        return this.objType;
+    public BrickType getObjType() {
+        return this.objBrickType;
     }
 
     public boolean isObjNewDeath() {
@@ -144,7 +152,7 @@ public final class BrickObj extends MonoBehaviour {
     }
 
     public void setObjDeathState() {
-        if(this.isNewDeath && this.isDestroyed()) {
+        if (this.isNewDeath && this.isDestroyed()) {
             this.isNewDeath = false;
             return;
         }
@@ -158,6 +166,7 @@ public final class BrickObj extends MonoBehaviour {
     public void resetIsDamaged() {
         this.isDamaged = false;
     }
+
     public void resetNewDeath() {
         this.isNewDeath = false;
     }

@@ -8,13 +8,13 @@ import java.util.Vector;
 
 public final class CollisionEvent extends InitBrick {
 
-    public void ColliEvent(int r, int c, BrickObj.Type type, int damage) {
+    public void ColliEvent(int r, int c, BrickObj.BrickType brickType, int damage) {
         if (!matrixObj.inBounds(r, c)) return;
 
         matrixObj.hitDamage(r, c, damage);
         if(matrixObj.isDestroyed(r, c)) matrixObj.setObjDeathStatus(r, c);
 
-        switch (type) {
+        switch (brickType) {
             case Ball -> {
                 // để trống
             }
@@ -43,7 +43,7 @@ public final class CollisionEvent extends InitBrick {
                     for (int i = 0; i < revive; i++) {
                         int x = died.get(i).fi();
                         int y = died.get(i).se(); // FIX: dùng se()
-                        matrixObj.set(x, y, new BrickObj(BrickObj.typeBrick.Normal));
+                        matrixObj.set(x, y, new BrickObj(BrickObj.BrickType.Normal));
                     }
                 }
             }

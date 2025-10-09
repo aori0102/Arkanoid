@@ -1,4 +1,5 @@
 package game.Brick;
+
 import java.util.Vector;
 import java.util.function.Supplier;
 
@@ -222,7 +223,7 @@ public class InitBrick {
             return matrix.get(r).get(c).getHealth();
         }
 
-        public BrickObj.Type getObjType(int r, int c) {
+        public BrickObj.BrickType getObjType(int r, int c) {
             return matrix.get(r).get(c).getObjType();
         }
 
