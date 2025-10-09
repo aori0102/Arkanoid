@@ -10,10 +10,13 @@ import org.*;
 import utils.Time;
 import utils.Vector2;
 
+import java.util.Random;
+
 public class TripleBall extends PowerUp implements ICanDrop {
 
     private Paddle paddle;
     private int index = 1;
+    private Random random = new Random();
 
     /**
      * Create this MonoBehaviour.
@@ -44,9 +47,12 @@ public class TripleBall extends PowerUp implements ICanDrop {
         for (int i = 0; i < tries; i++) {
             var ball = spawnBall();
 
+            double x = random.nextDouble() + 0.5;
+            Vector2 direction = new Vector2(x,-1);
+
             ball.getTransform().setGlobalPosition(paddle.getTransform().getGlobalPosition());
             ball.setPaddle(paddle);
-            ball.setDirection(Vector2.up());
+            ball.setDirection(direction);
         }
     }
 
@@ -71,4 +77,6 @@ public class TripleBall extends PowerUp implements ICanDrop {
     private String ballVisualBuilder() {
         return "BallVisual" + index++;
     }
+
+
 }
