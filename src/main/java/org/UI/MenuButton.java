@@ -1,22 +1,25 @@
-package org;
+package org.UI;
 
+import org.GameObject;
+import org.MonoBehaviour;
+import org.SpriteAnimator;
 import utils.Vector2;
 
 public class MenuButton extends MonoBehaviour {
     private SpriteAnimator spriteAnimator;
     private ButtonUI buttonUI;
     final String buttonImagePath = "/Frame 1.png";
-    private double width = 418;
-    private double height = 118;
-    private double renderWidth =  width / 1.5;
-    private double renderHeight = height / 1.5;
-    final String buttonIdleKey = "ButtonIdleKey";
-    final String buttonHoverKey = "ButtonHoverKey";
-    final String buttonPressedKey = "ButtonPressedKey";
-    final String buttonReleasedKey = "ButtonReleasedKey";
+    private final double WIDTH = 418;
+    private final double HEIGHT = 118;
+    private final double RENDER_WIDTH =  WIDTH / 1.5;
+    private final double RENDER_HEIGHT = HEIGHT / 1.5;
+    final String BUTTON_IDLE_KEY = "ButtonIdleKey";
+    final String BUTTON_HOVER_KEY = "ButtonHoverKey";
+    final String BUTTON_PRESSED_KEY = "ButtonPressedKey";
+    final String BUTTON_RELEASED_KEY = "ButtonReleasedKey";
+    final String BUTTON_CLICKED_KEY = "ButtonClickKey";
 
-    final String buttonClickKey = "ButtonClickKey";
-    private double timePerFrame = 0.01;
+    private final double TIME_PER_FRAME = 0.01;
 
     enum ButtonState {
         Idle,
@@ -45,11 +48,11 @@ public class MenuButton extends MonoBehaviour {
 
             spriteAnimator.playAnimation(
                     switch (buttonState){
-                        case Idle->buttonIdleKey;
-                        case Hover->buttonHoverKey;
-                        case Pressed->buttonPressedKey;
-                        case Released->buttonReleasedKey;
-                        case Clicked->buttonClickKey;
+                        case Idle-> BUTTON_IDLE_KEY;
+                        case Hover-> BUTTON_HOVER_KEY;
+                        case Pressed-> BUTTON_PRESSED_KEY;
+                        case Released-> BUTTON_RELEASED_KEY;
+                        case Clicked-> BUTTON_CLICKED_KEY;
                     }
             );
 
@@ -82,69 +85,69 @@ public class MenuButton extends MonoBehaviour {
     }
 
     private void initHoverAnimator() {
-        spriteAnimator.addAnimationClip(buttonHoverKey);
+        spriteAnimator.addAnimationClip(BUTTON_HOVER_KEY);
         //spriteAnimator.setLoop(buttonHoverKey, true);
-        spriteAnimator.setSprite(buttonHoverKey, buttonImagePath);
+        spriteAnimator.setSprite(BUTTON_HOVER_KEY, buttonImagePath);
         spriteAnimator.addFrame(
-                buttonHoverKey,
+                BUTTON_HOVER_KEY,
                 new Vector2(1,1),
-                new Vector2(width, height),
-                new Vector2(renderWidth, renderHeight),
-                timePerFrame
+                new Vector2(WIDTH, HEIGHT),
+                new Vector2(RENDER_WIDTH, RENDER_HEIGHT),
+                TIME_PER_FRAME
         );
 
     }
 
     private void initIdleAnimator() {
-        spriteAnimator.addAnimationClip(buttonIdleKey);
-        spriteAnimator.setSprite(buttonIdleKey, buttonImagePath);
+        spriteAnimator.addAnimationClip(BUTTON_IDLE_KEY);
+        spriteAnimator.setSprite(BUTTON_IDLE_KEY, buttonImagePath);
         spriteAnimator.addFrame(
-                buttonIdleKey,
+                BUTTON_IDLE_KEY,
                 new Vector2(1, 239),
-                new Vector2(width, height),
-                new Vector2(renderWidth, renderHeight),
-                timePerFrame
+                new Vector2(WIDTH, HEIGHT),
+                new Vector2(RENDER_WIDTH, RENDER_HEIGHT),
+                TIME_PER_FRAME
         );
-        spriteAnimator.setLoop(buttonIdleKey, true);
+        spriteAnimator.setLoop(BUTTON_IDLE_KEY, true);
 
     }
 
     private void initPressedAnimation() {
-        spriteAnimator.addAnimationClip(buttonPressedKey);
-        spriteAnimator.setSprite(buttonPressedKey, buttonImagePath);
-        spriteAnimator.setLoop(buttonPressedKey, true);
+        spriteAnimator.addAnimationClip(BUTTON_PRESSED_KEY);
+        spriteAnimator.setSprite(BUTTON_PRESSED_KEY, buttonImagePath);
+        spriteAnimator.setLoop(BUTTON_PRESSED_KEY, true);
         spriteAnimator.addFrame(
-                buttonPressedKey,
+                BUTTON_PRESSED_KEY,
                 new Vector2(1, 120),
-                new Vector2(width, height),
-                new Vector2(renderWidth, renderHeight),
-                timePerFrame
+                new Vector2(WIDTH, HEIGHT),
+                new Vector2(RENDER_WIDTH, RENDER_HEIGHT),
+                TIME_PER_FRAME
         );
     }
 
     private void initReleasedAnimation() {
-        spriteAnimator.addAnimationClip(buttonReleasedKey);
-        spriteAnimator.setSprite(buttonReleasedKey, buttonImagePath);
+        spriteAnimator.addAnimationClip(BUTTON_RELEASED_KEY);
+        spriteAnimator.setSprite(BUTTON_RELEASED_KEY, buttonImagePath);
         spriteAnimator.addFrame(
-                buttonReleasedKey,
+                BUTTON_RELEASED_KEY,
                 new Vector2(1, 1),
-                new Vector2(width, height),
-                new Vector2(renderWidth, renderHeight),
-                timePerFrame);
-        spriteAnimator.setLoop(buttonReleasedKey, true);
+                new Vector2(WIDTH, HEIGHT),
+                new Vector2(RENDER_WIDTH, RENDER_HEIGHT),
+                TIME_PER_FRAME);
+        spriteAnimator.setLoop(BUTTON_RELEASED_KEY, true);
     }
 
     private void initClickAnimation() {
-        spriteAnimator.addAnimationClip(buttonClickKey);
-        spriteAnimator.setSprite(buttonClickKey, buttonImagePath);
-        spriteAnimator.setLoop(buttonClickKey, true);
+        spriteAnimator.addAnimationClip(BUTTON_CLICKED_KEY);
+        spriteAnimator.setSprite(BUTTON_CLICKED_KEY, buttonImagePath);
+        spriteAnimator.setLoop(BUTTON_CLICKED_KEY, true);
 
         spriteAnimator.addFrame(
-                buttonClickKey,
+                BUTTON_CLICKED_KEY,
                 new Vector2(1, 1),
-                new Vector2(width, height),
-                new Vector2(renderWidth, renderHeight),
-                timePerFrame
+                new Vector2(WIDTH, HEIGHT),
+                new Vector2(RENDER_WIDTH, RENDER_HEIGHT),
+                TIME_PER_FRAME
         );
     }
 

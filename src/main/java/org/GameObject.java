@@ -273,9 +273,6 @@ public class GameObject {
         }
         transform = addComponent(Transform.class);
         layer = Layer.Default;
-
-        SceneManager.addGameObjectToScene(gameObject, SceneManager.getCurrentSceneKey());
-
     }
 
     /**

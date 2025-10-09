@@ -1,13 +1,9 @@
-package org;
+package org.UI;
 
-import javafx.scene.Node;
 import org.*;
 
-import javafx.application.Platform;
 import javafx.geometry.Bounds;
-import javafx.scene.text.Text;
 import org.MouseEvent.*;
-import org.UI.UI;
 import utils.Vector2;
 
 
@@ -77,12 +73,12 @@ public class ButtonUI extends UI
 
     @Override
     public double getHeight() {
-        return image.sprite.getBoundsInParent().getHeight();
+        return image.getSprite().getBoundsInParent().getHeight();
     }
 
     @Override
     public double getWidth() {
-        return image.sprite.getBoundsInParent().getWidth();
+        return image.getSprite().getBoundsInParent().getWidth();
     }
 
     public void setTextUIPositionCenter() {

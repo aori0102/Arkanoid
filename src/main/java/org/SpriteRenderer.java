@@ -178,4 +178,7 @@ public class SpriteRenderer extends MonoBehaviour implements IHasNode {
 
     }
 
+    public ImageView getSprite() {
+        return sprite;
+    }
 }
