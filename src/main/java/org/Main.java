@@ -18,6 +18,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        HierarchyView.init();
+
         Random.init();
         var defaultScene = SceneManager.createScenes();
         RendererManager.initializeRenderSystem(stage, defaultScene);

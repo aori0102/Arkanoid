@@ -6,18 +6,38 @@ import java.util.HashSet;
 
 public class Transform extends MonoBehaviour {
 
-    private Vector2 _localPosition;
-    private Vector2 _localScale;
-    private Transform parent;
+    private Vector2 _localPosition = Vector2.zero();
+    private Vector2 _localScale = Vector2.one();
 
     protected EventHandler<Void> onPositionChanged = new EventHandler<>(this);
     protected EventHandler<Void> onScaleChanged = new EventHandler<>(this);
 
     public Transform(GameObject owner) {
         super(owner);
-        _localPosition = new Vector2();
-        _localScale = new Vector2(1.0, 1.0);
-        parent = null;
+        gameObject.onParentChanged.addListener(this::gameObject_onParentChanged);
+    }
+
+    private void gameObject_onParentChanged(Object sender, GameObject.OnParentChangedEventArgs e) {
+
+        if (e.newParent != e.previousParent) {
+
+            if (e.previousParent != null) {
+                var parentTransform = e.previousParent.getTransform();
+                parentTransform.onPositionChanged.removeListener(this::parent_onPositionChanged);
+                parentTransform.onScaleChanged.removeListener(this::parent_onScaleChanged);
+            }
+
+            if (e.newParent != null) {
+                var parentTransform = e.newParent.getTransform();
+                parentTransform.onPositionChanged.addListener(this::parent_onPositionChanged);
+                parentTransform.onScaleChanged.addListener(this::parent_onScaleChanged);
+            }
+
+        }
+
+        onPositionChanged.invoke(this, null);
+        onScaleChanged.invoke(this, null);
+
     }
 
     /**
@@ -44,10 +64,11 @@ public class Transform extends MonoBehaviour {
      * @return The global position.
      */
     public Vector2 getGlobalPosition() {
+        var parent = gameObject.getParent();
         if (parent == null) {
             return getLocalPosition();
         }
-        return _localPosition.add(parent.getGlobalPosition());
+        return _localPosition.add(parent.getTransform().getGlobalPosition());
     }
 
     /**
@@ -56,10 +77,11 @@ public class Transform extends MonoBehaviour {
      * @return The global scale.
      */
     public Vector2 getGlobalScale() {
+        var parent = gameObject.getParent();
         if (parent == null) {
             return getLocalScale();
         }
-        return _localScale.scaleUp(parent.getGlobalScale());
+        return _localScale.scaleUp(parent.getTransform().getGlobalScale());
     }
 
     /**
@@ -68,10 +90,11 @@ public class Transform extends MonoBehaviour {
      * @param globalPosition The global position.
      */
     public void setGlobalPosition(Vector2 globalPosition) {
+        var parent = gameObject.getParent();
         if (parent == null) {
             setLocalPosition(globalPosition);
         } else {
-            setLocalPosition(globalPosition.add(parent.getGlobalPosition()));
+            setLocalPosition(globalPosition.add(parent.getTransform().getGlobalPosition()));
         }
     }
 
@@ -81,10 +104,11 @@ public class Transform extends MonoBehaviour {
      * @param globalScale The global scale
      */
     public void setGlobalScale(Vector2 globalScale) {
+        var parent = gameObject.getParent();
         if (parent == null) {
             setLocalScale(globalScale);
         } else {
-            setLocalScale(globalScale.scaleUp(parent.getGlobalScale()));
+            setLocalScale(globalScale.scaleUp(parent.getTransform().getGlobalScale()));
         }
     }
 
@@ -108,7 +132,6 @@ public class Transform extends MonoBehaviour {
     protected MonoBehaviour clone(GameObject newOwner) {
 
         Transform newTransform = new Transform(newOwner);
-        newTransform.parent = newOwner.getTransform();
         newTransform.setLocalPosition(this._localPosition);
         newTransform.setLocalScale(this._localScale);
         return newTransform;
@@ -144,28 +167,6 @@ public class Transform extends MonoBehaviour {
 
     }
 
-    /**
-     * Set the parent for this object.
-     *
-     * @param parent The parent.
-     */
-    public void setParent(Transform parent) {
-        if (parent == this) {
-            throw new RuntimeException(gameObject.getName() + " cannot be its own parent!");
-        }
-
-        if (this.parent != null) {
-            this.parent.gameObject.removeChild(gameObject);
-            this.parent.onScaleChanged.removeListener(this::parent_onScaleChanged);
-            this.parent.onPositionChanged.removeListener(this::parent_onPositionChanged);
-        }
-
-        this.parent = parent;
-        parent.gameObject.addChild(gameObject);
-        parent.onScaleChanged.addListener(this::parent_onScaleChanged);
-        parent.onPositionChanged.addListener(this::parent_onPositionChanged);
-    }
-
     private void parent_onPositionChanged(Object sender, Void e) {
         onPositionChanged.invoke(this, null);
     }
@@ -174,20 +175,10 @@ public class Transform extends MonoBehaviour {
         onScaleChanged.invoke(this, null);
     }
 
-    /**
-     * Get this object's parent.
-     *
-     * @return The object's parent.
-     */
-    public Transform getParent() {
-        return parent;
-    }
-
     @Override
     protected void destroyComponent() {
         _localPosition = null;
         _localScale = null;
-        parent = null;
         onPositionChanged = null;
         onScaleChanged = null;
     }
@@ -204,6 +195,5 @@ public class Transform extends MonoBehaviour {
         }
         return children;
     }
-
 
 }

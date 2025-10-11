@@ -1,9 +1,7 @@
 package org;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class GameObject {
 
@@ -13,19 +11,27 @@ public class GameObject {
     private final Queue<MonoBehaviour> preStartMonoBehaviourQueue = new LinkedList<>();
     private final HashSet<MonoBehaviour> monoBehaviourSet = new HashSet<>();
 
-    private boolean isActive;
-    private boolean isDestroyed;
+    private boolean isActive = true;
+    private boolean isDestroyed = false;
 
     private final Transform transform;
-    private String name;
-    private Layer layer;
+    private String name = DEFAULT_NAME;
+    private Layer layer = Layer.Default;
 
     private final SceneKey registeredSceneKey;
+    protected EventHandler<Void> onObjectActivenessChanged = new EventHandler<>(this);
+    protected EventHandler<OnParentChangedEventArgs> onParentChanged = new EventHandler<>(this);
+
+    public static class OnParentChangedEventArgs {
+        public GameObject previousParent;
+        public GameObject newParent;
+    }
 
     /**
      * Only access within {@link GameObject} or {@link GameObjectManager}.
      */
-    protected HashSet<GameObject> childSet;
+    protected LinkedHashSet<GameObject> childSet = new LinkedHashSet<>();
+    protected GameObject parent = null;
 
     public Transform getTransform() {
 
@@ -130,8 +136,7 @@ public class GameObject {
 
         ValidateObjectLife();
 
-        var parent = transform.getParent();
-        boolean parentActive = parent == null || parent.gameObject.isActive;
+        boolean parentActive = parent == null || parent.isActive();
         return isActive && parentActive;
 
     }
@@ -146,7 +151,12 @@ public class GameObject {
         ValidateObjectLife();
 
         isActive = active;
+        onObjectActivenessChanged.invoke(this, null);
 
+    }
+
+    public GameObject getParent() {
+        return parent;
     }
 
     /**
@@ -234,16 +244,38 @@ public class GameObject {
 
     }
 
+    public void setParent(GameObject parent) {
+
+        if (parent == this) {
+            throw new RuntimeException(name + " cannot be its own parent!");
+        }
+
+        var eventArgs = new OnParentChangedEventArgs();
+        eventArgs.previousParent = this.parent;
+        eventArgs.newParent = parent;
+        onParentChanged.invoke(this, eventArgs);
+
+        if (this.parent != null) {
+            this.parent.removeChild(this);
+            this.parent.onParentChanged.removeListener(this::parent_onParentChanged);
+            this.parent.onObjectActivenessChanged.removeListener(this::parent_onObjectActivenessChanged);
+        }
+
+        this.parent = parent;
+
+        if (parent != null) {
+            parent.addChild(this);
+            parent.onParentChanged.addListener(this::parent_onParentChanged);
+            parent.onObjectActivenessChanged.addListener(this::parent_onObjectActivenessChanged);
+        }
+
+    }
+
     /**
      * Create a game object. This object has a {@link Transform}.
      */
     protected GameObject() {
-        name = DEFAULT_NAME;
-        isActive = true;
-        isDestroyed = false;
-        childSet = new HashSet<>();
         transform = addComponent(Transform.class);
-        layer = Layer.Default;
         registeredSceneKey = SceneManager.getCurrentSceneKey();
     }
 
@@ -254,11 +286,7 @@ public class GameObject {
      */
     protected GameObject(String name) {
         this.name = name;
-        isActive = true;
-        isDestroyed = false;
-        childSet = new HashSet<>();
         transform = addComponent(Transform.class);
-        layer = Layer.Default;
         registeredSceneKey = SceneManager.getCurrentSceneKey();
     }
 
@@ -268,20 +296,21 @@ public class GameObject {
      * @param gameObject The copied game object.
      */
     protected GameObject(GameObject gameObject) {
-        isActive = gameObject.isActive;
-        isDestroyed = gameObject.isDestroyed;
-        name = gameObject.name;
-        childSet = new HashSet<>();
-        transform = addComponent(Transform.class);
-        for (var child : gameObject.childSet) {
-            var newChild = new GameObject(child);
-            newChild.getTransform().setParent(transform);
+
+        if (gameObject.isDestroyed) {
+            throw new IllegalStateException("Trying to instantiate an object from a destroyed object!");
         }
+
+        isActive = gameObject.isActive;
+        name = gameObject.name;
+        parent = gameObject.parent;
+        transform = addComponent(Transform.class);
         for (var mono : gameObject.monoBehaviourSet) {
             addComponent(mono.getClass());
         }
         layer = Layer.Default;
         registeredSceneKey = gameObject.registeredSceneKey;
+
     }
 
     /**
@@ -306,6 +335,17 @@ public class GameObject {
         }
         childSet = null;
 
+    }
+
+    private void parent_onObjectActivenessChanged(Object sender, Void e) {
+        onObjectActivenessChanged.invoke(this, null);
+    }
+
+    private void parent_onParentChanged(Object sender, OnParentChangedEventArgs e) {
+        var eventArgs = new OnParentChangedEventArgs();
+        eventArgs.previousParent = this.parent;
+        eventArgs.newParent = this.parent;
+        onParentChanged.invoke(this, eventArgs);
     }
 
     /**

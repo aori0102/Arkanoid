@@ -31,6 +31,7 @@ public abstract class Renderable extends MonoBehaviour {
         super(owner);
         getTransform().onPositionChanged.addListener(this::transform_onPositionChanged);
         getTransform().onScaleChanged.addListener(this::transform_onScaleChanged);
+        gameObject.onObjectActivenessChanged.addListener(this::gameObject_onObjectActivenessChanged);
     }
 
     public final void setRenderLayer(RenderLayer renderLayer) {
@@ -42,7 +43,13 @@ public abstract class Renderable extends MonoBehaviour {
     @Override
     public final void awake() {
         RendererManager.registerNode(this);
+        getNode().setVisible(gameObject.isActive());
         rendererAwake();
+    }
+
+    private void gameObject_onObjectActivenessChanged(Object sender, Void e) {
+        System.out.println(gameObject.getName() + " active: " + gameObject.isActive());
+        getNode().setVisible(gameObject.isActive());
     }
 
     private void transform_onPositionChanged(Object sender, Void e) {

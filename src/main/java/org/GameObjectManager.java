@@ -5,6 +5,8 @@ import java.util.*;
 public class GameObjectManager {
 
     private static final LinkedHashSet<GameObject> gameObjectSet = new LinkedHashSet<>();
+    protected static EventHandler<GameObject> onGameObjectInstantiated = new EventHandler<>(null);
+    protected static EventHandler<GameObject> onGameObjectDestroyed = new EventHandler<>(null);
 
     /**
      * Run all update for the current frame in the
@@ -96,6 +98,7 @@ public class GameObjectManager {
 
             var destroyed = destroyedQueue.poll();
             gameObjectSet.remove(destroyed);
+            onGameObjectDestroyed.invoke(null, destroyed);
 
         }
 
@@ -106,7 +109,7 @@ public class GameObjectManager {
      *
      * @param gameObject The game object to register.
      */
-    private static void RegisterGameObject(GameObject gameObject) {
+    private static void registerGameObject(GameObject gameObject) {
         gameObjectSet.add(gameObject);
     }
 
@@ -115,7 +118,7 @@ public class GameObjectManager {
      *
      * @param gameObject The game object to unregister.
      */
-    private static void UnregisterGameObject(GameObject gameObject) {
+    private static void unregisterGameObject(GameObject gameObject) {
         gameObjectSet.remove(gameObject);
     }
 
@@ -126,7 +129,9 @@ public class GameObjectManager {
      */
     public static GameObject instantiate() {
         var newGameObject = new GameObject();
-        RegisterGameObject(newGameObject);
+        registerGameObject(newGameObject);
+
+        onGameObjectInstantiated.invoke(null, newGameObject);
 
         return newGameObject;
     }
@@ -139,7 +144,9 @@ public class GameObjectManager {
      */
     public static GameObject instantiate(String name) {
         var newGameObject = new GameObject(name);
-        RegisterGameObject(newGameObject);
+        registerGameObject(newGameObject);
+
+        onGameObjectInstantiated.invoke(null, newGameObject);
 
         return newGameObject;
     }
@@ -152,7 +159,13 @@ public class GameObjectManager {
      */
     public static GameObject instantiate(GameObject source) {
         var newGameObject = new GameObject(source);
-        RegisterGameObject(newGameObject);
+        onGameObjectInstantiated.invoke(null, newGameObject);
+        newGameObject.setName(source.getName() + " (Clone)");
+        for (var child : source.childSet) {
+            var newChild = instantiate(child);
+            newChild.setParent(newGameObject);
+        }
+        registerGameObject(newGameObject);
 
         return newGameObject;
     }
@@ -169,7 +182,7 @@ public class GameObjectManager {
      */
     public static <T extends MonoBehaviour> T instantiate(MonoBehaviour monoBehaviour, Class<T> type) {
         var newGameObject = new GameObject(monoBehaviour.gameObject);
-        RegisterGameObject(newGameObject);
+        registerGameObject(newGameObject);
 
         return newGameObject.getComponent(type);
     }
