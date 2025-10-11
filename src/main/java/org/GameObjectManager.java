@@ -1,12 +1,10 @@
 package org;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class GameObjectManager {
 
-    private static final HashSet<GameObject> gameObjectSet = new HashSet<>();
+    private static final LinkedHashSet<GameObject> gameObjectSet = new LinkedHashSet<>();
 
     /**
      * Run all update for the current frame in the
@@ -184,6 +182,7 @@ public class GameObjectManager {
     public static void destroy(GameObject gameObject) {
 
         if (gameObjectSet.contains(gameObject)) {
+            gameObjectSet.remove(gameObject);
             gameObject.destroyObject();
         }
 

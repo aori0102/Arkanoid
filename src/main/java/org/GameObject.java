@@ -272,10 +272,14 @@ public class GameObject {
         isDestroyed = gameObject.isDestroyed;
         name = gameObject.name;
         childSet = new HashSet<>();
-        for (var child : gameObject.childSet) {
-            childSet.add(new GameObject(child));
-        }
         transform = addComponent(Transform.class);
+        for (var child : gameObject.childSet) {
+            var newChild = new GameObject(child);
+            newChild.getTransform().setParent(transform);
+        }
+        for (var mono : gameObject.monoBehaviourSet) {
+            addComponent(mono.getClass());
+        }
         layer = Layer.Default;
         registeredSceneKey = gameObject.registeredSceneKey;
     }
@@ -340,25 +344,26 @@ public class GameObject {
 
         var comp = getComponent(type);
         if (comp == null) {
+
             try {
                 comp = type.getDeclaredConstructor(GameObject.class).newInstance(this);
                 preAwakeMonoBehaviourQueue.offer(comp);
                 monoBehaviourSet.add(comp);
 
             } catch (NoSuchMethodException e) {
-                throw new RuntimeException("No such method");
+                throw new RuntimeException("No such method: " + e.getMessage());
             } catch (IllegalAccessException e) {
-                throw new RuntimeException("Illegal access");
+                throw new RuntimeException("Illegal access: " + e.getMessage());
             } catch (IllegalArgumentException e) {
-                throw new RuntimeException("Illegal argument");
+                throw new RuntimeException("Illegal argument: " + e.getMessage());
             } catch (InstantiationException e) {
-                throw new RuntimeException("InstantiationException");
+                throw new RuntimeException("InstantiationException: " + e.getMessage());
             } catch (InvocationTargetException e) {
-                throw new RuntimeException("InvocationTargetException");
+                throw new RuntimeException("InvocationTargetException: " + e.getMessage());
             } catch (ExceptionInInitializerError e) {
-                throw new RuntimeException("ExceptionInInitializerError");
+                throw new RuntimeException("ExceptionInInitializerError: " + e.getMessage());
             } catch (SecurityException e) {
-                throw new RuntimeException("SecurityException");
+                throw new RuntimeException("SecurityException: " + e.getMessage());
             } catch (Exception e) {
                 throw new RuntimeException("Cannot create component of type " + type, e);
             }
