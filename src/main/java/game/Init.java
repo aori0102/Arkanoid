@@ -5,6 +5,7 @@ import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
 import game.PowerUp.PowerUpManager;
 import game.PowerUp.powerUpDrop.DuplicateBall;
+import game.PowerUp.powerUpDrop.TriplicateBall;
 import game.object.Ball;
 import game.object.Paddle;
 import org.*;
@@ -52,6 +53,11 @@ public class Init {
         duplicateBall.addComponent(DuplicateBall.class);
         duplicateBall.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.DuplicateBall.getImage());
 
+        var triplicateBall = GameObjectManager.instantiate("triplicateBall");
+        triplicateBall.addComponent(TriplicateBall.class);
+        triplicateBall.getTransform().setGlobalPosition(new Vector2(300, 200));
+        triplicateBall.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.DuplicateBall.getImage());
+
 
         var obstacleManager = GameObjectManager.instantiate("obstacleManager");
         obstacleManager.addComponent(ObstacleManager.class);
@@ -66,6 +72,7 @@ public class Init {
         var powerUpManager = GameObjectManager.instantiate("powerUpManager");
         powerUpManager.addComponent(PowerUpManager.class);
         PowerUpManager.instance.addPowerUp(duplicateBall.getComponent(DuplicateBall.class));
+        PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class));
 
 
         var player = GameObjectManager.instantiate("player");
@@ -75,6 +82,9 @@ public class Init {
 
         duplicateBall.getComponent(DuplicateBall.class).linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
         duplicateBall.getComponent(DuplicateBall.class).linkPaddle(paddle.getComponent(Paddle.class));
+
+        triplicateBall.getComponent(TriplicateBall.class).linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
+        triplicateBall.getComponent(TriplicateBall.class).linkPaddle(paddle.getComponent(Paddle.class));
 
         Player.instance.linkPaddle(paddle.getComponent(Paddle.class));
 

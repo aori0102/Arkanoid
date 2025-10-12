@@ -83,8 +83,4 @@ public class EventHandler<T> {
         return !listeners.isEmpty();
     }
 
-    public int listenersSize() {
-        return listeners.size();
-    }
-
 }

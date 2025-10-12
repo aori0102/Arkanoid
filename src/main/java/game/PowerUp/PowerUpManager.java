@@ -14,7 +14,8 @@ public class PowerUpManager extends MonoBehaviour {
     private PlayerPowerUpHandler playerPowerUpHandler;
 
 
-    public EventHandler<Integer> onMultipleRequest = new EventHandler<Integer>(this);
+    public EventHandler<Integer> onDuplicateBall = new EventHandler<Integer>(this);
+    public EventHandler<Integer> onTriplicateBall = new EventHandler<>(this);
 
     /**
      * Create this MonoBehaviour.
@@ -38,13 +39,13 @@ public class PowerUpManager extends MonoBehaviour {
         for (var x : powerUpsSet) {
             switch (x.getPowerUpIndex()) {
                 case DuplicateBall-> {
-                    playerPowerUpHandler.onBallMultiplyRequested.addListener((sender, multipleNumber) -> {
-                        onMultipleRequest.invoke(this, multipleNumber);
+                    playerPowerUpHandler.onDuplicateBallRequested.addListener((sender, multipleNumber) -> {
+                        onDuplicateBall.invoke(this, multipleNumber);
                     });
                 }
                 case TriplicateBall-> {
-                    playerPowerUpHandler.onBallMultiplyRequested.addListener((sender, multipleNumber) -> {
-                        onMultipleRequest.invoke(this, multipleNumber);
+                    playerPowerUpHandler.onTriplicateBallRequested.addListener((sender, multipleNumber) -> {
+                        onTriplicateBall.invoke(this, multipleNumber);
                     });
                 }
             }
