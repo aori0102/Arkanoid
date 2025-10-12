@@ -75,8 +75,11 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
         switch (powerUp.getPowerUpIndex()) {
 
             case None -> throw new RuntimeException("Cannot process " + PowerUpIndex.None);
-            case DuplicateBall -> onBallMultiplyRequested
+            case DuplicateBall -> {
+                System.out.println("Dui ngu");
+                onBallMultiplyRequested
                     .invoke(this, DOUBLE_MULTIPLE);
+            }
             case TriplicateBall -> onBallMultiplyRequested
                     .invoke(this, TRIPLE_MULTIPLE);
             case Explosive -> onBallToExplosiveRequested

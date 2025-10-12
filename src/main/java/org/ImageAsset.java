@@ -9,10 +9,12 @@ public class ImageAsset {
         Bocchi("/bocchi.png"),
         Bocchi_Anim("/bocchi_anim.png"),
         Mambo("/mambo.png"),
-        DuplicateBall("/duplicate_ball.png"),
+        DuplicateBall("/duplicateBall.png"),
         TriplicateBall("/triplicate_ball.png"),
         ElectricBall("/electric_ball.png"),
         Ball("/ball.png"),
+        Paddle("/paddle.png"),
+        Laser("/laser.png"),
         Explosive("/explosive.png");
 
         private final Image image;

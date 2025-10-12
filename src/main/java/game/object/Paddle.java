@@ -94,8 +94,6 @@ public class Paddle extends MonoBehaviour {
                 // Set the movement vector to zero to stop the paddle
                 movementVector = new Vector2(0, 0);
 
-                // Turn off the line
-                line.setVisible(false);
 
                 //Fire the ball if the ball is not fired
                 if (playerInput.isMouseReleased) {
@@ -120,7 +118,6 @@ public class Paddle extends MonoBehaviour {
 
         // If the mouse input is left button, then turn on the line and calculate the fire direction as well as the line's end point
         if (playerInput.getMouseEvent(MouseButton.PRIMARY) != null) {
-            line.setVisible(true);
             // Get mouse event
             MouseEvent mouseEvent = playerInput.getMouseEvent(MouseButton.PRIMARY);
 
@@ -145,11 +142,6 @@ public class Paddle extends MonoBehaviour {
             Vector2 lineEndPoint = getTransform().getGlobalPosition()
                     .add(fireDirection.multiply(100));
 
-            // Draw the fire ray
-            line.setStartX(getTransform().getGlobalPosition().x);
-            line.setStartY(getTransform().getGlobalPosition().y);
-            line.setEndX(lineEndPoint.x);
-            line.setEndY(lineEndPoint.y);
         }
     }
 

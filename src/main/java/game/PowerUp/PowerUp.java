@@ -1,5 +1,6 @@
 package game.PowerUp;
 
+import game.object.Paddle;
 import org.*;
 import utils.Time;
 import utils.Vector2;
@@ -9,9 +10,11 @@ import utils.Vector2;
  */
 public class PowerUp extends MonoBehaviour {
 
-    protected static final double TRAVEL_SPEED = 10.265;
+    protected static final double TRAVEL_SPEED = 100;
 
     private PowerUpIndex powerUpIndex = PowerUpIndex.None;
+    protected boolean isMoving = true;
+    protected boolean shouldBeDestroyed = false;
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
@@ -28,13 +31,13 @@ public class PowerUp extends MonoBehaviour {
     public PowerUp(GameObject owner) {
 
         super(owner);
-
         var boxCollider = addComponent(BoxCollider.class);
         boxCollider.setLocalSize(new Vector2(100.0, 100.0));
         boxCollider.isTrigger = true;
-        boxCollider.setOnCollisionEnterCallback(e ->{
-            if (e.otherCollider.getIncludeLayer() == Layer.Paddle.getUnderlyingValue()) {
-                GameObjectManager.destroy(this.gameObject);
+        boxCollider.setOnTriggerEnter(e ->{
+            if (e.otherCollider.getComponent(Paddle.class) != null) {
+                isMoving = false;
+                shouldBeDestroyed = true;
             }
         });
 
@@ -75,11 +78,7 @@ public class PowerUp extends MonoBehaviour {
      * Called when this power up is being applied.
      */
     public void onApplied() {
-        GameObjectManager.destroy(gameObject);
-    }
-
-    public void update() {
-        getTransform().translate(Vector2.down().multiply(TRAVEL_SPEED * Time.deltaTime));
+        shouldBeDestroyed = true;
     }
 
 }

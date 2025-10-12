@@ -17,6 +17,7 @@ public class Ball extends MonoBehaviour {
 
     public Ball(GameObject owner) {
         super(owner);
+        owner.setLayer(Layer.Ball);
     }
 
     /**
@@ -26,6 +27,7 @@ public class Ball extends MonoBehaviour {
 
         // Assign collider specs and the function
         ballCollider = getComponent(BoxCollider.class);
+        ballCollider.setExcludeLayer(Layer.Ball.getUnderlyingValue());
         ballCollider.setLocalCenter(new Vector2(0, 0));
         ballCollider.setLocalSize(new Vector2(20, 16));
         ballCollider.setOnCollisionEnterCallback(e -> {
@@ -111,6 +113,10 @@ public class Ball extends MonoBehaviour {
     public void setDirection(Vector2 direction) {
         this.direction = direction;
         paddle.onMouseReleased.removeAllListeners();
+    }
+
+    public Vector2 getDirection() {
+        return direction;
     }
 
     /**

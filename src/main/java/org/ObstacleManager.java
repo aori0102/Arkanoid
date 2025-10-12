@@ -41,7 +41,7 @@ public class ObstacleManager extends MonoBehaviour {
     /**
      * Event fired to paddle when it collides with obstacles.
      */
-    public EventHandler<Void> onPaddleCollidedWithObstacle;
+    public EventHandler<Void> onPaddleCollidedWithObstacle = new EventHandler<>(this);
 
     // List to store all the obstacles
     public List<Obstacle> obstacles = new ArrayList<>();
@@ -52,7 +52,6 @@ public class ObstacleManager extends MonoBehaviour {
     }
 
     public void awake() {
-        onPaddleCollidedWithObstacle = new EventHandler<Void>(instance);
         for (var obstacle : obstacles) {
             obstacle.gameObject.setActive(false);
         }

@@ -29,6 +29,11 @@ public class PowerUpManager extends MonoBehaviour {
         instance = this;
     }
 
+    public void awake() {
+        assignPowerUpEvent();
+    }
+
+
     public void assignPowerUpEvent() {
         for (var x : powerUpsSet) {
             switch (x.getPowerUpIndex()) {
@@ -53,6 +58,11 @@ public class PowerUpManager extends MonoBehaviour {
 
     public void removePowerUp(PowerUp powerUp) {
         powerUpsSet.remove(powerUp);
+    }
+
+    public void linkPlayerPowerUp(PlayerPowerUpHandler playerPowerUpHandler) {
+        this.playerPowerUpHandler = playerPowerUpHandler;
+        assignPowerUpEvent();
     }
 
     @Override

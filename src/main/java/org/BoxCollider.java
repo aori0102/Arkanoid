@@ -32,6 +32,10 @@ public class BoxCollider extends MonoBehaviour {
         includeLayer = layerMask;
     }
 
+    public void setExcludeLayer(int layerMask) {
+        includeLayer &= ~layerMask;
+    }
+
     /**
      * Get the included layers for collision check.
      *
