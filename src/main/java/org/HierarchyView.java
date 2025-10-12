@@ -78,6 +78,7 @@ public final class HierarchyView {
         }
 
         treeNodeMap.remove(e);
+
     }
 
 

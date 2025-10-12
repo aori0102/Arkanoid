@@ -90,15 +90,15 @@ public class GameObjectManager {
         Queue<GameObject> destroyedQueue = new LinkedList<>();
         for (var object : gameObjectSet) {
             if (object.isDestroyed()) {
-                destroyedQueue.add(object);
+                destroyedQueue.offer(object);
             }
         }
 
         while (!destroyedQueue.isEmpty()) {
 
             var destroyed = destroyedQueue.poll();
-            gameObjectSet.remove(destroyed);
             onGameObjectDestroyed.invoke(null, destroyed);
+            gameObjectSet.remove(destroyed);
 
         }
 
@@ -195,7 +195,6 @@ public class GameObjectManager {
     public static void destroy(GameObject gameObject) {
 
         if (gameObjectSet.contains(gameObject)) {
-            gameObjectSet.remove(gameObject);
             gameObject.destroyObject();
         }
 

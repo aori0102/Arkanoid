@@ -335,6 +335,10 @@ public class GameObject {
         }
         childSet = null;
 
+        if (parent != null) {
+            parent.removeChild(this);
+        }
+
     }
 
     private void parent_onObjectActivenessChanged(Object sender, Void e) {
