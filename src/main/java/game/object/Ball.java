@@ -115,6 +115,10 @@ public class Ball extends MonoBehaviour {
         paddle.onMouseReleased.removeAllListeners();
     }
 
+    /**
+     * Get the ball's direction
+     * @return the ball's direction
+     */
     public Vector2 getDirection() {
         return direction;
     }

@@ -11,6 +11,9 @@ import utils.Vector2;
 
 import java.util.function.BiConsumer;
 
+/**
+ * Base class for all the multiple ball power up
+ */
 public class MultipleBall extends PowerUp implements ICanDrop {
 
     protected PlayerPowerUpHandler playerPowerUpHandler;
@@ -29,10 +32,22 @@ public class MultipleBall extends PowerUp implements ICanDrop {
     public void start() {
     }
 
+    /**
+     * Handle the onMultipleRequest event. This will be called when the paddle
+     * collided with a power up. The child class will override this method.
+     * Will throw an exception if the child does not override it
+     */
     protected void handleOnMultipleRequest() {
-
+        throw new UnsupportedOperationException(
+                this.getClass().getSimpleName() + " must override handleOnMultipleRequest()!"
+        );
     }
 
+    /**
+     * Spawning the ball
+     * @param spawnPos : the spawn position
+     * @return the spawned ball
+     */
     protected Ball spawnBall(Transform spawnPos) {
         var ball = GameObjectManager.instantiate(BallsManager.instance.ballNameBuilder());
         ball.addComponent(Ball.class);
@@ -47,14 +62,27 @@ public class MultipleBall extends PowerUp implements ICanDrop {
         return ball.getComponent(Ball.class);
     }
 
+    /**
+     * Link the player power up
+     * @param playerPowerUpHandler : the linked playerPowerUpHandler
+     */
     public void linkPlayerPowerUp(PlayerPowerUpHandler playerPowerUpHandler) {
         this.playerPowerUpHandler = playerPowerUpHandler;
     }
 
+    /**
+     * Link the paddle
+     * @param paddle: the linked paddle
+     */
     public void linkPaddle(Paddle paddle) {
         this.paddle = paddle;
     }
 
+    /**
+     * Handle dropping movement. This method is override from
+     * the handleDroppingMovement method in ICanDrop interface
+     * @param droppingSpeed
+     */
     @Override
     public void handleDroppingMovement(double droppingSpeed) {
         if (shouldBeDestroyed) {

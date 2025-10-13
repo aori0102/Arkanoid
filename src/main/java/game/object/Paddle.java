@@ -12,9 +12,11 @@ import utils.Vector2;
 import javafx.scene.input.MouseEvent;
 
 public class Paddle extends MonoBehaviour {
+    //The constant specs of the ball
     private final double dotLimitAngle = 60;
     private final double stunnedTime = 3.6;
 
+    //Event
     public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(this);
     public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(this);
 
@@ -22,7 +24,6 @@ public class Paddle extends MonoBehaviour {
     private PlayerInput playerInput;
     private BoxCollider boxCollider;
     private Vector2 fireDirection = new Vector2();
-    private Line line;
 
     private boolean canInvoke;
     private boolean isMoving = true;
@@ -93,8 +94,6 @@ public class Paddle extends MonoBehaviour {
             default -> {
                 // Set the movement vector to zero to stop the paddle
                 movementVector = new Vector2(0, 0);
-
-
                 //Fire the ball if the ball is not fired
                 if (playerInput.isMouseReleased) {
                     if (isDirectionValid(fireDirection)) {
@@ -144,7 +143,10 @@ public class Paddle extends MonoBehaviour {
 
         }
     }
-
+    /**
+     * Handle the movement of the paddle when an obstacle hits it. Its speed will be
+     * reduced by 10 times when hit
+     */
     private void handleCollisionWithObstacles() {
         if (!canStartStunnedCounter) return;
         stunnedCounter += Time.deltaTime;
@@ -174,6 +176,11 @@ public class Paddle extends MonoBehaviour {
         return Math.toDegrees(angle) <= dotLimitAngle;
     }
 
+    /**
+     * Trigger the event when the paddle consumes a power up.
+     * It will invoke an event which is listened by player
+     * @param collisionData : the collision data of the power up
+     */
     private void onTriggerEnter(CollisionData collisionData) {
 
         var powerUp = collisionData.otherCollider.getComponent(PowerUp.class);
@@ -182,7 +189,6 @@ public class Paddle extends MonoBehaviour {
         }
 
     }
-
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {

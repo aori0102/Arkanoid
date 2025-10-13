@@ -6,6 +6,7 @@ import game.Player.PlayerPowerUpHandler;
 import game.PowerUp.PowerUpManager;
 import game.PowerUp.powerUpDrop.DuplicateBall;
 import game.PowerUp.powerUpDrop.TriplicateBall;
+import game.object.Arrow;
 import game.object.Ball;
 import game.object.Paddle;
 import org.*;
@@ -49,6 +50,9 @@ public class Init {
         laserVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Laser.getImage());
         laserVisual.getTransform().setLocalPosition(new Vector2(-15, -45));
 
+        var arrow = GameObjectManager.instantiate("arrow");
+        arrow.addComponent(Arrow.class);
+
         var duplicateBall = GameObjectManager.instantiate("duplicateBall");
         duplicateBall.addComponent(DuplicateBall.class);
         duplicateBall.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.DuplicateBall.getImage());
@@ -79,7 +83,6 @@ public class Init {
         player.addComponent(Player.class);
 
         PowerUpManager.instance.linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
-
         duplicateBall.getComponent(DuplicateBall.class).linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
         duplicateBall.getComponent(DuplicateBall.class).linkPaddle(paddle.getComponent(Paddle.class));
 
@@ -87,7 +90,6 @@ public class Init {
         triplicateBall.getComponent(TriplicateBall.class).linkPaddle(paddle.getComponent(Paddle.class));
 
         Player.instance.linkPaddle(paddle.getComponent(Paddle.class));
-
         BallsManager.instance.addBall(ball.getComponent(Ball.class));
     }
 

@@ -10,6 +10,9 @@ import utils.Vector2;
 
 import java.util.HashSet;
 
+/**
+ * Triplicate the number of the balls currently existing
+ */
 public class TriplicateBall extends MultipleBall {
 
     /**
@@ -35,6 +38,11 @@ public class TriplicateBall extends MultipleBall {
         handleDroppingMovement(TRAVEL_SPEED);
     }
 
+    /**
+     * Override the handleOnMultipleRequest method from MultipleBall base class
+     * Will spawn two balls which direction makes with the current ball direction a
+     * 45'degree angle
+     */
     @Override
     protected void handleOnMultipleRequest() {
         HashSet<Ball> ballHashSet = new HashSet<>(BallsManager.instance.getBallSet());

@@ -15,7 +15,8 @@ public class ImageAsset {
         Ball("/ball.png"),
         Paddle("/paddle.png"),
         Laser("/laser.png"),
-        Explosive("/explosive.png");
+        Explosive("/explosive.png"),
+        Arrow("/arrow.png"),;
 
         private final Image image;
 
