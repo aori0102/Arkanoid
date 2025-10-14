@@ -46,6 +46,11 @@ public abstract class Perk extends MonoBehaviour
         spriteAnimator.addAnimationClip(perkKey);
     }
 
+    @Override
+    public void start() {
+        spriteAnimator.playAnimation(perkKey);
+    }
+
     protected abstract void setUpVisual();
     protected abstract void applyEffect();
 

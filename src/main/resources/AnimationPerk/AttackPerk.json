@@ -1,0 +1,22 @@
+{
+  "imagePath": "",
+  "frameList": [
+    {
+      "clipAnchor": {
+        "x": 1,
+        "y": 1
+      },
+      "clipSize": {
+        "x": 398,
+        "y": 578
+      },
+      "renderSize": {
+        "x": 398,
+        "y": 578
+      },
+      "duration":0.1,
+      "rotationAngle":0
+    }
+  ],
+  "loop": true
+}
