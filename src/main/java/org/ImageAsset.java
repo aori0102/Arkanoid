@@ -12,6 +12,7 @@ public class ImageAsset {
         DuplicateBall("/duplicateBall.png"),
         TriplicateBall("/triplicate_ball.png"),
         Ball("/ball.png"),
+        GeneralButtons("/GeneralButtons.png"),
 
         /// Voltraxis
         Voltraxis_Anim_Idle("/Animation/Voltraxis/Idle/SpriteSheet.png"),
