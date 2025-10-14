@@ -58,7 +58,7 @@ public class TripleBall extends PowerUp implements ICanDrop {
         ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
 
         var ballVisual = GameObjectManager.instantiate(ballVisualBuilder());
-        ballVisual.getTransform().setParent(ball.getTransform());
+        ballVisual.setParent(ball);
         ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
 
         return ball.getComponent(Ball.class);

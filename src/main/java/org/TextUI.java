@@ -2,6 +2,7 @@ package org;
 
 import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import utils.Vector2;
@@ -12,12 +13,12 @@ public class TextUI extends Renderable {
     private static final double DEFAULT_FONT_SIZE = 12.0;
 
     private Text text = new Text();
-    ;
     private String registeredSceneKey;
     private double fontSize = DEFAULT_FONT_SIZE;
     private String fontName = DEFAULT_FONT_FACE;
     private TextVerticalAlignment verticalAlignment = TextVerticalAlignment.Top;
     private TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment.Left;
+    private Color textColor = Color.BLACK;
 
     public TextUI(GameObject owner) {
         super(owner);
@@ -49,6 +50,8 @@ public class TextUI extends Renderable {
      */
     private void updateFont() {
         text.setFont(Font.font(fontName, fontSize));
+        text.setFill(textColor);
+        updateRenderPosition();
     }
 
     /**
@@ -67,6 +70,7 @@ public class TextUI extends Renderable {
      */
     public void setText(String text) {
         this.text.setText(text);
+        updateRenderPosition();
     }
 
     /**
@@ -112,6 +116,16 @@ public class TextUI extends Renderable {
      */
     public void setFont(FontDataIndex fontDataIndex) {
         fontName = fontDataIndex.getFontName();
+        updateFont();
+    }
+
+    /**
+     * Set the render color for this text.
+     *
+     * @param textColor The color for the text.
+     */
+    public void setTextColor(Color textColor) {
+        this.textColor = textColor;
         updateFont();
     }
 

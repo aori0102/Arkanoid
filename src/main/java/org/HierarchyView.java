@@ -74,7 +74,9 @@ public final class HierarchyView {
             treeRoot.getChildren().remove(node);
         } else {
             var parentNode = treeNodeMap.get(e.parent);
-            parentNode.getChildren().remove(node);
+            if(parentNode != null) {
+                parentNode.getChildren().remove(node);
+            }
         }
 
         treeNodeMap.remove(e);
