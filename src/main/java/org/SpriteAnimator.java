@@ -46,6 +46,9 @@ public class SpriteAnimator extends MonoBehaviour {
         if (animationClipMap.containsKey(clipKey)) {
             throw new RuntimeException("Animation already exists");
         }
+        System.out.println("Loading animation clip: " + clipKey);
+        System.out.println("Path: " + clipKey.getAnimationClipDataPath());
+        System.out.println("Resource: " + getClass().getResourceAsStream(clipKey.getAnimationClipDataPath()));
 
         try {
             Reader reader = new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream(clipKey.getAnimationClipDataPath())));

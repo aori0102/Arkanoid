@@ -18,7 +18,7 @@ public class Test extends MonoBehaviour {
         super(owner);
 
         animator = addComponent(SpriteAnimator.class);
-        animator.addAnimationClip(AnimationClipData.Dui_Button_Idle);
+        animator.addAnimationClip(AnimationClipData.Start_Button_Idle);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class Test extends MonoBehaviour {
 
     @Override
     public void awake() {
-        animator.playAnimation(AnimationClipData.Dui_Button_Idle);
+        animator.playAnimation(AnimationClipData.Start_Button_Idle);
     }
 
 }

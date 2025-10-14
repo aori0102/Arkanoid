@@ -13,7 +13,8 @@ public class ImageAsset {
         TriplicateBall("/triplicate_ball.png"),
         ElectricBall("/electric_ball.png"),
         Ball("/ball.png"),
-        Explosive("/explosive.png");
+        Explosive("/explosive.png"),
+        GeneralButtons("/GeneralButtons.png");
 
         private final Image image;
 
