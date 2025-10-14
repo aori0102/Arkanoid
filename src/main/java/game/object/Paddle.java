@@ -23,6 +23,7 @@ public class Paddle extends MonoBehaviour {
     private ActionMap actionMap;
     private PlayerInput playerInput;
     private BoxCollider boxCollider;
+    private Arrow arrow;
     private Vector2 fireDirection = new Vector2();
 
     private boolean canInvoke;
@@ -188,6 +189,14 @@ public class Paddle extends MonoBehaviour {
             onPowerUpConsumed.invoke(this, powerUp);
         }
 
+    }
+
+    /**
+     * Link the arrow
+     * @param arrow: linked arrow
+     */
+    public void linkArrow(Arrow arrow) {
+        this.arrow = arrow;
     }
 
     @Override

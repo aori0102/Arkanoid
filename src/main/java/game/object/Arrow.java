@@ -10,6 +10,7 @@ public class Arrow extends MonoBehaviour {
      *
      * @param owner The owner of this component.
      */
+
     public Arrow(GameObject owner) {
         super(owner);
         addComponent(SpriteRenderer.class);
