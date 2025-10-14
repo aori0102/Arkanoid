@@ -1,21 +1,25 @@
 package game.Brick;
 
-import org.CollisionData;
-import org.EventHandler;
-import org.GameObject;
-import org.MonoBehaviour;
+import game.object.Ball;
+import org.*;
+import utils.Vector2;
 
 public final class BrickObj extends MonoBehaviour {
 
     private int health;
-    private final BrickType objBrickType;
+    private BrickType objBrickType;
+    private int rowID = 0, colID = 0;
 
-    private final int maxHealth;
+    private int maxHealth;
     private boolean isNewDeath = false;
     private boolean isDamaged = false;
 
+    private final int width = 64;
+    private final int height = 32;
+
     // Create a
     public EventHandler<Void> onBrickDestroyed = new EventHandler<>(this);
+    public EventHandler<Void> onBrickCollision = new EventHandler<>(this);
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
@@ -29,28 +33,24 @@ public final class BrickObj extends MonoBehaviour {
 
     public enum BrickType {
 
-        Normal(50, 10, 32, 64),
-        Steel(1000, 1000, 32, 64),
-        Diamond(1000000000, 1000000000, 32, 64),
-        Rocket(50, 10, 32, 64),
-        Rock(50, 30, 32, 64),
-        Bomb(50, 30, 32, 64),
-        Gift(10, 10, 32, 64),
-        Ball(10, 10, 32, 64),
-        Reborn(10, 10, 32, 64),
-        Angel(10, 10, 32, 64);
+        Normal(50, 10),
+        Steel(1000, 1000),
+        Diamond(1000000000, 1000000000),
+        Rocket(50, 10),
+        Rock(50, 30),
+        Bomb(50, 30),
+        Gift(10, 10),
+        Ball(10, 10),
+        Reborn(10, 10),
+        Angel(10, 10);
 
 
         private final int maxHealth;
-        private final double width;
-        private final double height;
         private final int health;
 
-        BrickType(int _maxHealth, int _health, double _width, double _height) {
+        BrickType(int _maxHealth, int _health) {
             this.maxHealth = _maxHealth;
             this.health = _health;
-            this.width = _width;
-            this.height = _height;
         }
 
         public int getMaxHealth() {
@@ -59,14 +59,6 @@ public final class BrickObj extends MonoBehaviour {
 
         public int getHealth() {
             return health;
-        }
-
-        public double getWidth() {
-            return width;
-        }
-
-        public double getHeight() {
-            return height;
         }
 
         public static BrickType getType(int num) {
@@ -81,17 +73,24 @@ public final class BrickObj extends MonoBehaviour {
     - Add new constructor corresponding with MonoBehaviour (GameObject as argument)
     - Add new method to change brick type.
      */
-    public BrickObj(BrickType brick) {
-        super();
-        this.health = brick.getHealth();
-        this.maxHealth = brick.getMaxHealth();
-        this.objBrickType = brick;
-    }
 
     public BrickObj(GameObject owner){
         super(owner);
+        var collider = addComponent(BoxCollider.class);
+        collider.setLocalSize(new Vector2(width, height));
+        collider.setOnCollisionEnterCallback(this::onCollisionEnter);
+    }
 
-        //...
+    private void onCollisionEnter(CollisionData data) {
+        if(data.collided && data.otherCollider.getComponent(Ball.class ) != null) {
+            onBrickCollision.invoke(this, null);
+        }
+    }
+
+    public void setType(BrickObj.BrickType _brickType){
+        this.maxHealth = _brickType.getMaxHealth();
+        this.health = _brickType.getHealth();
+        this.objBrickType = _brickType;
     }
 
     public int getHealth() {
@@ -171,4 +170,19 @@ public final class BrickObj extends MonoBehaviour {
         this.isNewDeath = false;
     }
 
+    public void setRowId(int id) {
+        this.rowID = id;
+    }
+
+    public void setColID(int id) {
+        this.colID = id;
+    }
+
+    public int getRowID() {
+        return this.rowID;
+    }
+
+    public int getColID() {
+        return this.colID;
+    }
 }

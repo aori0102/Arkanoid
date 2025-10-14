@@ -8,7 +8,9 @@ import java.util.Vector;
 
 public final class CollisionEvent extends InitBrick {
 
-    public void ColliEvent(int r, int c, BrickObj.BrickType brickType, int damage) {
+    private final static int damage = 10;
+
+    public static void ColliEvent(int r, int c, BrickObj.BrickType brickType) {
         if (!matrixObj.inBounds(r, c)) return;
 
         matrixObj.hitDamage(r, c, damage);

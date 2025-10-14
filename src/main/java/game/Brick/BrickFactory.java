@@ -4,7 +4,7 @@ import game.Brick.BrickEvent.BrokenEvent;
 import game.Brick.BrickEvent.CollisionEvent;
 import game.Brick.BrickEvent.EndEvent;
 import game.Brick.BrickEvent.WaveEffect;
-import game.Brick.BrickType;
+import org.GameObjectManager;
 
 public class BrickFactory extends InitBrick {
 
@@ -27,9 +27,10 @@ public class BrickFactory extends InitBrick {
     }
 
     public void setup() {
-
-
-        matrixObj = new BrickMatrix(rowData, colData, new BrickObj(BrickObj.BrickType.Normal) );
+        var brickObject = GameObjectManager.instantiate("Brick");
+        var brickComponent = brickObject.addComponent(BrickObj.class);
+        brickComponent.setType(BrickObj.BrickType.Normal);
+        matrixObj = new BrickMatrix(rowData, colData, brickComponent);
 
         collisionEvent = new CollisionEvent();
         brokenEvent = new BrokenEvent();
@@ -43,7 +44,7 @@ public class BrickFactory extends InitBrick {
 
         if (matrixObj.inBounds(row, col) && !matrixObj.isDestroyed(row, col)) {
             BrickObj.BrickType brickType = matrixObj.getObjType(row, col);
-            collisionEvent.ColliEvent(row, col, brickType, damage);
+            collisionEvent.ColliEvent(row, col, brickType);
         }
     }
 

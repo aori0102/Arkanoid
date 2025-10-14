@@ -1,5 +1,9 @@
 package game.Brick;
 
+import game.Brick.BrickEvent.CollisionEvent;
+import game.object.Ball;
+import org.GameObjectManager;
+
 import java.util.Vector;
 import java.util.function.Supplier;
 
@@ -7,8 +11,8 @@ public class InitBrick {
 
     public static record IntPair(int fi, int se) {}
 
-    protected final int[] fx = {-1, 1, 0, 0, 1, 1, -1, -1};
-    protected final int[] fy = {0, 0, 1, -1, 1, -1, 1, -1};
+    protected final static int[] fx = {-1, 1, 0, 0, 1, 1, -1, -1};
+    protected final static int[] fy = {0, 0, 1, -1, 1, -1, 1, -1};
 
     public static class Matrix implements Cloneable {
         private int rows;
@@ -121,9 +125,20 @@ public class InitBrick {
             for (int r = 0; r < rows; r++) {
                 Vector<BrickObj> row = new Vector<>(columns);
                 for (int c = 0; c < columns; c++) {
-                    row.add(val);
+                    var curr = GameObjectManager.instantiate(val.getGameObject());
+                    var tmp = curr.getComponent(BrickObj.class);
+                    tmp.onBrickCollision.addListener(this::onBrickCollision);
+                    tmp.setRowId(r);
+                    tmp.setColID(c);
+                    row.add(tmp);
                 }
                 matrix.add(row);
+            }
+        }
+
+        private void onBrickCollision(Object curr, Void E) {
+            if(curr instanceof BrickObj brickobj) {
+                CollisionEvent.ColliEvent(brickobj.getRowID(), brickobj.getColID(), brickobj.getObjType());
             }
         }
 
@@ -152,6 +167,8 @@ public class InitBrick {
         }
 
         public void set(int r, int c, BrickObj value) {
+            value.setRowId(r);
+            value.setColID(c);
             matrix.get(r).set(c, value);
         }
 
@@ -159,17 +176,9 @@ public class InitBrick {
             for (int r = 0; r < rows; r++) {
                 Vector<BrickObj> row = matrix.get(r);
                 for (int c = 0; c < columns; c++) {
+                    value.setColID(c);
+                    value.setRowId(r);
                     row.set(c, value);
-                }
-            }
-        }
-
-        // Mỗi ô gọi supplier.get() → mỗi ô một instance riêng
-        public void fillWith(Supplier<? extends BrickObj> supplier) {
-            for (int r = 0; r < rows; r++) {
-                Vector<BrickObj> row = matrix.get(r);
-                for (int c = 0; c < columns; c++) {
-                    row.set(c, supplier.get());
                 }
             }
         }
@@ -194,11 +203,12 @@ public class InitBrick {
                 assignFromResize(other);
                 return;
             }
+
             for (int r = 0; r < rows; r++) {
                 Vector<BrickObj> dstRow = this.matrix.get(r);
                 Vector<BrickObj> srcRow = other.matrix.get(r);
                 for (int c = 0; c < columns; c++) {
-                    dstRow.set(c, srcRow.get(c)); // shallow phần tử
+                    dstRow.set(c, srcRow.get(c));
                 }
             }
         }

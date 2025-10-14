@@ -1,6 +1,7 @@
 package game.Brick.BrickGenMap;
 import game.Brick.BrickObj;
 import game.Brick.InitBrick;
+import org.GameObjectManager;
 
 import java.util.Random;
 import java.util.Stack;
@@ -62,8 +63,12 @@ public final class GenMap extends InitBrick {
         BrickMatrix g = emptyGrid();
         for (int r = 0; r < ROWS; r++)
             for (int c = 0; c < COLS; c++)
-                if (rng.nextDouble() < density)
-                    g.set(r, c, new BrickObj(pickByBias(hardnessBias)));
+                if (rng.nextDouble() < density) {
+                    var brickObject = GameObjectManager.instantiate("Brick");
+                    var brickComponent = brickObject.addComponent(BrickObj.class);
+                    brickComponent.setType(pickByBias(hardnessBias));
+                    g.set(r, c, brickComponent);
+                }
         sprinkleSpecialsByDifficulty(g, hardnessBias);
         return g;
     }
@@ -74,7 +79,12 @@ public final class GenMap extends InitBrick {
             double rowBias = (double) r / Math.max(1, ROWS - 1);
             double bias = clamp01(0.15 + 0.85 * Math.pow(rowBias, 0.75 + 0.5 * difficulty));
             BrickObj.BrickType ty = pickByBias(bias);
-            for (int c = 0; c < COLS; c++) g.set(r, c, new BrickObj(ty));
+            for (int c = 0; c < COLS; c++) {
+                var brickObject = GameObjectManager.instantiate("Brick");
+                var brickComponent = brickObject.addComponent(BrickObj.class);
+                brickComponent.setType(ty);
+                g.set(r, c, brickComponent);
+            }
         }
         sprinkleSpecialsByDifficulty(g, difficulty);
         return g;
@@ -86,7 +96,12 @@ public final class GenMap extends InitBrick {
         BrickMatrix g = emptyGrid();
         for (int r = 0; r < ROWS; r++) {
             BrickObj.BrickType ty = palette[(r / stripeH) % palette.length];
-            for (int c = 0; c < COLS; c++) g.set(r, c, new BrickObj(ty));
+            for (int c = 0; c < COLS; c++) {
+                var brickObject = GameObjectManager.instantiate("Brick");
+                var brickComponent = brickObject.addComponent(BrickObj.class);
+                brickComponent.setType(ty);
+                g.set(r, c, brickComponent);
+            }
         }
         sprinkleSpecialsByDifficulty(g, difficulty);
         return g;
@@ -98,8 +113,12 @@ public final class GenMap extends InitBrick {
         if (cellW <= 0) cellW = 1;
         BrickMatrix g = emptyGrid();
         for (int r = 0; r < ROWS; r++)
-            for (int c = 0; c < COLS; c++)
-                g.set(r, c, new BrickObj((((r / cellH) + (c / cellW)) & 1) == 0 ? a : b));
+            for (int c = 0; c < COLS; c++) {
+                var brickObject = GameObjectManager.instantiate("Brick");
+                var brickComponent = brickObject.addComponent(BrickObj.class);
+                brickComponent.setType((((r / cellH) + (c / cellW)) & 1) == 0 ? a : b);
+                g.set(r, c, brickComponent);
+            }
         sprinkleSpecialsByDifficulty(g, difficulty);
         return g;
     }
@@ -111,6 +130,7 @@ public final class GenMap extends InitBrick {
             for (int c = 0; c < half; c++)
                 if (rng.nextDouble() < density) {
                     BrickObj.BrickType t = pickByBias(hardnessBias);
+
                     g.set(r, c, new BrickObj(t));
                     int m = COLS - 1 - c;
                     if (m != c) g.set(r, m, new BrickObj(t));
