@@ -31,9 +31,8 @@ public abstract class Perk extends MonoBehaviour
         textUI.setFont(FontDataIndex.Jersey_25);
         spriteAnimator = owner.addComponent(SpriteAnimator.class);
 
-
         childGameObject = GameObjectManager.instantiate("Text");
-        childGameObject.getTransform().setParent(childGameObject.getTransform());
+        childGameObject.setParent(childGameObject);
         //attach pointer
         attachPointerClick(getTransform());
         attachPointerEnter(getTransform());

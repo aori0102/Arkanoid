@@ -128,7 +128,6 @@ public class Voltraxis extends MonoBehaviour {
 
     @Override
     public void awake() {
-        Time.addCoroutine(() -> damage(23), Time.time + 3);
         Time.addCoroutine(this::spawnEffect, Time.time + 5);
     }
 
@@ -217,7 +216,6 @@ public class Voltraxis extends MonoBehaviour {
 
         onHealthChanged.invoke(this, null);
         onDamaged.invoke(this, null);
-        Time.addCoroutine(() -> damage(23), Time.time + 3);
 
     }
 

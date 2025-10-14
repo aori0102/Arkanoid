@@ -1,5 +1,6 @@
 package game.object;
 
+import game.Voltraxis.Voltraxis;
 import org.*;
 import utils.Vector2;
 import utils.Time;
@@ -32,7 +33,7 @@ public class Ball extends MonoBehaviour {
         ballCollider.setLocalSize(new Vector2(20, 16));
         ballCollider.setOnCollisionEnterCallback(e -> {
             handleAngleDirection(e);
-
+            handleCollision(e);
         });
 
         // Add listener to paddle event
@@ -64,13 +65,21 @@ public class Ball extends MonoBehaviour {
             getTransform().translate(direction.normalize().multiply(ballSpeed * Time.deltaTime));
         }
 
-        if (getTransform().getGlobalPosition().y > 1000 ) {
+        if (getTransform().getGlobalPosition().y > 1000) {
             GameObjectManager.destroy(getGameObject());
+        }
+    }
+
+    private void handleCollision(CollisionData collisionData) {
+        var boss = collisionData.otherCollider.getComponent(Voltraxis.class);
+        if (boss != null) {
+            boss.damage(36);
         }
     }
 
     /**
      * Calculating the direction of the ball.
+     *
      * @param collisionData : the collision data of the interacted surface.
      */
     private void handleAngleDirection(CollisionData collisionData) {
@@ -108,6 +117,7 @@ public class Ball extends MonoBehaviour {
 
     /**
      * Set the ball's direction.
+     *
      * @param direction : the direction we want the ball to follow.
      */
     public void setDirection(Vector2 direction) {
@@ -117,6 +127,7 @@ public class Ball extends MonoBehaviour {
 
     /**
      * Get the ball's direction
+     *
      * @return the ball's direction
      */
     public Vector2 getDirection() {
@@ -125,6 +136,7 @@ public class Ball extends MonoBehaviour {
 
     /**
      * Set the paddle to listen to its event.
+     *
      * @param paddle : invoked event's position.
      */
     public void setPaddle(Paddle paddle) {
@@ -135,14 +147,13 @@ public class Ball extends MonoBehaviour {
      * Check if the ball is collided with the expected object.
      *
      * @param collisionData : the collision data of the object.
-     * @param type : the desired type.
+     * @param type          : the desired type.
      * @return true if the object matches with the desired type.
      */
     private boolean isCollidedWith(CollisionData collisionData, Class type) {
         GameObject collidedObject = collisionData.otherCollider.getGameObject();
         return collidedObject.getComponent(type) != null;
     }
-
 
 
     @Override

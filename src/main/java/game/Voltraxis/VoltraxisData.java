@@ -11,7 +11,7 @@ public final class VoltraxisData {
 
     /// Stat
     static final int BASE_ATTACK = 42;
-    static final int BASE_MAX_HEALTH = 125;
+    static final int BASE_MAX_HEALTH = 6125;
     static final int BASE_DEFENSE = 36;
 
     /// Basic skill
