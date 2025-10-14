@@ -26,7 +26,7 @@ public class Init {
         paddle.getTransform().setGlobalPosition(new Vector2(600, 550));
 
         var paddleVisual = GameObjectManager.instantiate("paddleVisual");
-        paddleVisual.getTransform().setParent(paddle.getTransform());
+        paddleVisual.setParent(paddle);
         paddleVisual.getTransform().setLocalPosition(new Vector2(-47, 0));
         paddleVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Paddle.getImage());
 
@@ -38,7 +38,7 @@ public class Init {
         ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
 
         var ballVisual = GameObjectManager.instantiate("ballVisual");
-        ballVisual.getTransform().setParent(ball.getTransform());
+        ballVisual.setParent(ball);
         ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
 
         var laser = GameObjectManager.instantiate("laser");
@@ -48,7 +48,7 @@ public class Init {
         laser.getTransform().setGlobalPosition(new Vector2(300, 300));
 
         var laserVisual = GameObjectManager.instantiate("laserVisual");
-        laserVisual.getTransform().setParent(laser.getTransform());
+        laserVisual.setParent(laser);
         laserVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Laser.getImage());
         laserVisual.getTransform().setLocalPosition(new Vector2(-15, -45));
 
@@ -110,28 +110,28 @@ public class Init {
         borderLeft.getTransform().setLocalPosition(new Vector2(5.0, 0));
         borderLeft.addComponent(BoxCollider.class).setLocalSize(new Vector2(1.0, 20000.0));
         var borderLeftVisual = GameObjectManager.instantiate();
-        borderLeftVisual.getTransform().setParent(borderLeft.getTransform());
+        borderLeftVisual.setParent(borderLeft);
         //borderLeftVisual.addComponent(SpriteRenderer.class).setImage("/bocchi.png");
 
         var borderRight = GameObjectManager.instantiate("Border_Right");
         borderRight.getTransform().setLocalPosition(new Vector2(1190.0, 0));
         borderRight.addComponent(BoxCollider.class).setLocalSize(new Vector2(1.0, 20000.0));
         var borderRightVisual = GameObjectManager.instantiate();
-        borderRightVisual.getTransform().setParent(borderRight.getTransform());
+        borderRightVisual.setParent(borderRight);
         //borderRightVisual.addComponent(SpriteRenderer.class).setImage("/bocchi.png");
 
         var borderTop = GameObjectManager.instantiate("Border_Top");
         borderTop.getTransform().setLocalPosition(new Vector2(0, 5.0));
         borderTop.addComponent(BoxCollider.class).setLocalSize(new Vector2(20000.0, 1.0));
         var borderTopVisual = GameObjectManager.instantiate();
-        borderTopVisual.getTransform().setParent(borderTop.getTransform());
+        borderTopVisual.setParent(borderTop);
         //borderTopVisual.addComponent(SpriteRenderer.class).setImage("/bocchi.png");
 
         var borderBottom = GameObjectManager.instantiate("Border_Bottom");
         borderBottom.getTransform().setLocalPosition(new Vector2(1190, 750));
         borderBottom.addComponent(BoxCollider.class).setLocalSize(new Vector2(20000.0, 1.0));
         var borderBottomVisual = GameObjectManager.instantiate();
-        borderBottomVisual.getTransform().setParent(borderBottom.getTransform());
+        borderBottomVisual.setParent(borderBottom);
         //borderBottomVisual.addComponent(SpriteRenderer.class).setImage("/bocchi.png");
     }
 
