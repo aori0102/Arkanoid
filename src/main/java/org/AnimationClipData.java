@@ -8,6 +8,7 @@ public enum AnimationClipData {
     Dui_Button_Pressed("/Duiooooooo.json"),
     Dui_Button_Released("/Duiooooooo.json"),
     Dui_Button_Clicked("/Duiooooooo.json"),
+    Voltraxis_Idle("/Animation/Voltraxis/Idle/AnimationData.json"),
     _None("/");
 
     private final String animationClipDataPath;

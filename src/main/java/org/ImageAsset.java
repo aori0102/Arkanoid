@@ -11,8 +11,24 @@ public class ImageAsset {
         Mambo("/mambo.png"),
         DuplicateBall("/duplicate_ball.png"),
         TriplicateBall("/triplicate_ball.png"),
-        ElectricBall("/electric_ball.png"),
         Ball("/ball.png"),
+
+        /// Voltraxis
+        Voltraxis_Anim_Idle("/Animation/Voltraxis/Idle/SpriteSheet.png"),
+        Voltraxis_ElectricBall("/electric_ball.png"),
+        Voltraxis_UI_HealthBar_Background("/UI/Voltraxis/HealthBar/Background.png"),
+        Voltraxis_UI_HealthBar_Lost("/UI/Voltraxis/HealthBar/FillLost.png"),
+        Remain("/UI/Voltraxis/HealthBar/FillRemain.png"),
+        Voltraxis_UI_HealthBar_Outline("/UI/Voltraxis/HealthBar/Outline.png"),
+        Voltraxis_UI_EffectIcon_Offensive("/UI/Voltraxis/EffectIcons/OffensiveSkill.png"),
+        Voltraxis_UI_EffectIcon_Defensive("/UI/Voltraxis/EffectIcons/DefensiveSkill.png"),
+        Voltraxis_UI_EffectIcon_Special("/UI/Voltraxis/EffectIcons/SpecialSkill.png"),
+        Voltraxis_UI_EffectIcon_Charging("/UI/Voltraxis/EffectIcons/Charging.png"),
+        Voltraxis_UI_Groggy_Background("/UI/Voltraxis/Groggy/Background.png"),
+        Voltraxis_UI_Groggy_Fill("/UI/Voltraxis/Groggy/Fill.png"),
+        Voltraxis_UI_Groggy_Outline("/UI/Voltraxis/Groggy/Outline.png"),
+
+
         Explosive("/explosive.png");
 
         private final Image image;
@@ -23,7 +39,7 @@ public class ImageAsset {
             try {
                 loadedImage = loadImage(path);
             } catch (RuntimeException e) {
-                System.out.println(
+                System.err.println(
                         ImageAsset.class.getSimpleName()
                                 + " | Image failed to load at index ["
                                 + this + "]: "

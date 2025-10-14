@@ -1,6 +1,7 @@
 package game;
 
-import org.*;
+import game.Voltraxis.VoltraxisPrefab;
+import org.GameObjectManager;
 
 public class Init {
 
@@ -17,7 +18,8 @@ public class Init {
     }
 
     public static void Init_Aori() {
-
+        System.out.println("Making instance of prefab");
+        VoltraxisPrefab.instantiate();
     }
 
 }

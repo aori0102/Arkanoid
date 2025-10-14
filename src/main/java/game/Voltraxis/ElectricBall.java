@@ -1,13 +1,15 @@
 package game.Voltraxis;
 
+import game.object.Paddle;
 import org.*;
 import utils.Time;
 import utils.Vector2;
 
 public class ElectricBall extends MonoBehaviour {
 
-    private static final double MOVEMENT_SPEED = 12.423;
+    private static final double MOVEMENT_SPEED = 412.423;
     private static final Vector2 BALL_SIZE = new Vector2(64.0, 64.0);
+    private static final double BALL_LIFESPAN = 12.0;
 
     private Vector2 direction;
     private int damage;
@@ -24,18 +26,33 @@ public class ElectricBall extends MonoBehaviour {
         var boxCollider = addComponent(BoxCollider.class);
         boxCollider.setLocalSize(BALL_SIZE);
         boxCollider.setIncludeLayer(Layer.Player.getUnderlyingValue());
+        boxCollider.setOnCollisionEnterCallback(this::onCollided);
 
         var spriteRenderer = addComponent(SpriteRenderer.class);
-        spriteRenderer.setImage(ImageAsset.ImageIndex.ElectricBall.getImage());
+        spriteRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_ElectricBall.getImage());
+        spriteRenderer.setSize(BALL_SIZE);
         spriteRenderer.setPivot(new Vector2(0.5, 0.5));
+
+        Time.addCoroutine(this::onBallLifespanReached, Time.time + BALL_LIFESPAN);
 
         direction = new Vector2();
 
     }
 
+    private void onBallLifespanReached() {
+        GameObjectManager.destroy(gameObject);
+    }
+
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
+        return new ElectricBall(newOwner);
+    }
+
+    private void onCollided(CollisionData data) {
+        var paddle = data.otherCollider.getComponent(Paddle.class);
+        if (paddle != null) {
+            System.out.println("Damage " + paddle);
+        }
     }
 
     @Override
@@ -51,6 +68,7 @@ public class ElectricBall extends MonoBehaviour {
         this.damage = damage;
     }
 
+    @Override
     public void update() {
         getTransform().translate(direction.normalize().multiply(MOVEMENT_SPEED * Time.deltaTime));
     }

@@ -1,23 +1,25 @@
 package game.Voltraxis;
 
-import org.GameObject;
-import org.GameObjectManager;
-import org.MonoBehaviour;
+import org.*;
 import utils.Time;
 import utils.Vector2;
 
 public class Voltraxis extends MonoBehaviour {
 
     private double basicCooldownMultiplier;
-    private GameObject electricBallPrefab;
     private PowerCore leftCore;
     private PowerCore rightCore;
 
     /// Stats
+    private final int maxHealth;
     private int health;
     private double attackMultiplier;
     private double defenseMultiplier;
     private double damageTakenProportion;
+
+    public EventHandler<Void> onHealthChanged = new EventHandler<>(this);
+    public EventHandler<Void> onDamaged = new EventHandler<>(this);
+    public EventHandler<Void> onEffectAdded = new EventHandler<>(this);
 
     public Voltraxis(GameObject owner) {
 
@@ -25,20 +27,19 @@ public class Voltraxis extends MonoBehaviour {
 
         basicCooldownMultiplier = 1.0;
 
-        Time.addCoroutine(this::enhanceSkill, Data.ENHANCE_SKILL_COOLDOWN);
-        Time.addCoroutine(this::basicSkill, Data.BASIC_SKILL_COOLDOWN * basicCooldownMultiplier);
+        Time.addCoroutine(this::enhanceSkill, VoltraxisData.ENHANCE_SKILL_COOLDOWN);
+        Time.addCoroutine(this::basicSkill, VoltraxisData.BASIC_SKILL_COOLDOWN * basicCooldownMultiplier);
 
-        electricBallPrefab = GameObjectManager.instantiate("Electric ball");
-        electricBallPrefab.addComponent(ElectricBall.class);
-        electricBallPrefab.setActive(false);
-
-        health = Data.BASE_MAX_HEALTH;
+        health = VoltraxisData.BASE_MAX_HEALTH;
+        maxHealth = health;
         attackMultiplier = 1.0;
         defenseMultiplier = 1.0;
         damageTakenProportion = 1.0;
 
         leftCore = null;
         rightCore = null;
+
+        addComponent(BoxCollider.class).setLocalSize(VoltraxisData.BOSS_SIZE);
 
     }
 
@@ -58,15 +59,15 @@ public class Voltraxis extends MonoBehaviour {
                 new Vector2(0.4, 1.0),
         };
         for (Vector2 direction : directionArray) {
-            var electricBallObject = GameObjectManager.instantiate(electricBallPrefab);
-            var electricBall = electricBallObject.getComponent(ElectricBall.class);
+            var electricBall = VoltraxisPrefab.instantiateElectricBall();
             electricBall.setDamage(
-                    (int) (Data.BASE_ATTACK * attackMultiplier * Data.ELECTRIC_BALL_ATTACK_PROPORTION)
+                    (int) (VoltraxisData.BASE_ATTACK * attackMultiplier * VoltraxisData.ELECTRIC_BALL_ATTACK_PROPORTION)
             );
+            electricBall.getTransform().setGlobalPosition(getTransform().getGlobalPosition());
             electricBall.setDirection(direction);
         }
 
-        Time.addCoroutine(this::basicSkill, Data.BASIC_SKILL_COOLDOWN * basicCooldownMultiplier);
+        Time.addCoroutine(this::basicSkill, Time.time + VoltraxisData.BASIC_SKILL_COOLDOWN * basicCooldownMultiplier);
 
     }
 
@@ -76,10 +77,10 @@ public class Voltraxis extends MonoBehaviour {
      */
     private void enhanceSkill() {
 
-        attackMultiplier += Data.ENHANCE_ATTACK_INCREMENT;
+        attackMultiplier += VoltraxisData.ENHANCE_ATTACK_INCREMENT;
 
-        Time.addCoroutine(this::onEnhanceSkillEnd, Time.time + Data.ENHANCE_SKILL_DURATION);
-        Time.addCoroutine(this::enhanceSkill, Time.time + Data.ENHANCE_SKILL_COOLDOWN);
+        Time.addCoroutine(this::onEnhanceSkillEnd, Time.time + VoltraxisData.ENHANCE_SKILL_DURATION);
+        Time.addCoroutine(this::enhanceSkill, Time.time + VoltraxisData.ENHANCE_SKILL_COOLDOWN);
 
     }
 
@@ -87,7 +88,7 @@ public class Voltraxis extends MonoBehaviour {
      * Called upon enhance skill duration ends.
      */
     private void onEnhanceSkillEnd() {
-        attackMultiplier -= Data.ENHANCE_ATTACK_INCREMENT;
+        attackMultiplier -= VoltraxisData.ENHANCE_ATTACK_INCREMENT;
     }
 
     /**
@@ -100,10 +101,10 @@ public class Voltraxis extends MonoBehaviour {
      */
     private void groggySkill() {
 
-        basicCooldownMultiplier -= Data.GROGGY_BASIC_COOLDOWN_REDUCTION;
-        attackMultiplier += Data.GROGGY_ATTACK_INCREMENT;
+        basicCooldownMultiplier -= VoltraxisData.GROGGY_BASIC_COOLDOWN_REDUCTION;
+        attackMultiplier += VoltraxisData.GROGGY_ATTACK_INCREMENT;
 
-        Time.addCoroutine(this::exSkill, Data.GROGGY_TO_EX_CHARGE_TIME);
+        Time.addCoroutine(this::exSkill, VoltraxisData.GROGGY_TO_EX_CHARGE_TIME);
 
     }
 
@@ -126,14 +127,23 @@ public class Voltraxis extends MonoBehaviour {
     }
 
     @Override
+    public void awake() {
+        Time.addCoroutine(() -> damage(23), Time.time + 3);
+        Time.addCoroutine(this::spawnEffect, Time.time + 5);
+    }
+
+    private void spawnEffect() {
+        Time.addCoroutine(this::spawnEffect, Time.time + 5);
+        onEffectAdded.invoke(this, null);
+    }
+
+    @Override
     protected MonoBehaviour clone(GameObject newOwner) {
         return new Voltraxis(newOwner);
     }
 
     @Override
     protected void destroyComponent() {
-        GameObjectManager.destroy(electricBallPrefab);
-        electricBallPrefab = null;
         GameObjectManager.destroy(leftCore.getGameObject());
         leftCore = null;
         GameObjectManager.destroy(rightCore.getGameObject());
@@ -149,16 +159,16 @@ public class Voltraxis extends MonoBehaviour {
         var leftCoreObject = GameObjectManager.instantiate("LeftCore");
         var leftCore = leftCoreObject.addComponent(PowerCore.class);
         leftCore.onPowerCoreDestroyed.addListener(this::powerCore_onPowerCoreDestroyed);
-        leftCore.setHealth((int) (Data.BASE_MAX_HEALTH * Data.POWER_CORE_PROPORTIONAL_HEALTH));
-        damageTakenProportion -= Data.POWER_CORE_DAMAGE_TAKEN_REDUCTION;
+        leftCore.setHealth((int) (VoltraxisData.BASE_MAX_HEALTH * VoltraxisData.POWER_CORE_PROPORTIONAL_HEALTH));
+        damageTakenProportion -= VoltraxisData.POWER_CORE_DAMAGE_TAKEN_REDUCTION;
         this.leftCore = leftCore;
 
         // Right
         var rightCoreObject = GameObjectManager.instantiate("RightCore");
         var rightCore = rightCoreObject.addComponent(PowerCore.class);
         rightCore.onPowerCoreDestroyed.addListener(this::powerCore_onPowerCoreDestroyed);
-        rightCore.setHealth((int) (Data.BASE_MAX_HEALTH * Data.POWER_CORE_PROPORTIONAL_HEALTH));
-        damageTakenProportion -= Data.POWER_CORE_DAMAGE_TAKEN_REDUCTION;
+        rightCore.setHealth((int) (VoltraxisData.BASE_MAX_HEALTH * VoltraxisData.POWER_CORE_PROPORTIONAL_HEALTH));
+        damageTakenProportion -= VoltraxisData.POWER_CORE_DAMAGE_TAKEN_REDUCTION;
         this.rightCore = rightCore;
 
     }
@@ -184,9 +194,30 @@ public class Voltraxis extends MonoBehaviour {
             }
 
             core.onPowerCoreDestroyed.removeListener(this::powerCore_onPowerCoreDestroyed);
-            damageTakenProportion += Data.POWER_CORE_DAMAGE_TAKEN_REDUCTION;
+            damageTakenProportion += VoltraxisData.POWER_CORE_DAMAGE_TAKEN_REDUCTION;
 
         }
+
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public void damage(int amount) {
+
+        health -= amount;
+        if (health <= 0) {
+            System.out.println("Boss ded");
+        }
+
+        onHealthChanged.invoke(this, null);
+        onDamaged.invoke(this, null);
+        Time.addCoroutine(() -> damage(23), Time.time + 3);
 
     }
 
