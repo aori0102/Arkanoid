@@ -19,10 +19,16 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
     private static final double SHIELD_MAX_DURATION = 7.0;
 
     /**
-     * Upon called, all {@link game.object.Ball} multiply itself
+     * Upon called, all {@link game.object.Ball} duplicate itself
      * by the multiple provided within the event argument.
      */
-    public EventHandler<Integer> onBallMultiplyRequested = new EventHandler<>(this);
+    public EventHandler<Integer> onDuplicateBallRequested = new EventHandler<>(this);
+
+    /**
+     * Upon called, all {@link game.object.Ball} triplicate itself
+     * by the multiple provided within the event argument.
+     */
+    public EventHandler<Integer> onTriplicateBallRequested = new EventHandler<>(this);
 
     /**
      * Upon called, all {@link game.object.Ball} turns into explosive
@@ -67,7 +73,7 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
 
     @Override
     protected void destroyComponent() {
-        onBallMultiplyRequested = null;
+        onDuplicateBallRequested = null;
     }
 
     protected void apply(PowerUp powerUp) {
@@ -75,9 +81,9 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
         switch (powerUp.getPowerUpIndex()) {
 
             case None -> throw new RuntimeException("Cannot process " + PowerUpIndex.None);
-            case DuplicateBall -> onBallMultiplyRequested
+            case DuplicateBall -> onDuplicateBallRequested
                     .invoke(this, DOUBLE_MULTIPLE);
-            case TriplicateBall -> onBallMultiplyRequested
+            case TriplicateBall -> onTriplicateBallRequested
                     .invoke(this, TRIPLE_MULTIPLE);
             case Explosive -> onBallToExplosiveRequested
                     .invoke(this, new OnBallToExplosiveEventArgs(EXPLOSION_MAX_DURATION, EXPLOSION_MAX_HIT));

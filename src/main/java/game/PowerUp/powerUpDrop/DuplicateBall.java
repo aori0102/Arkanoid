@@ -1,20 +1,20 @@
 package game.PowerUp.powerUpDrop;
 
-import game.Interface.ICanDrop;
-import game.PowerUp.PowerUp;
 import game.PowerUp.PowerUpIndex;
 import game.PowerUp.PowerUpManager;
 import game.object.Ball;
 import game.object.Paddle;
 import org.*;
-import utils.Time;
+import utils.Random;
 import utils.Vector2;
 
-public class DuplicateBall extends PowerUp implements ICanDrop {
+import java.util.HashSet;
 
-    private Paddle paddle;
-    private int index = 1;
-    private boolean isMoving = false;
+/**
+ * Duplicate the number of the balls currently existing
+ */
+public class DuplicateBall extends MultipleBall {
+
 
     /**
      * Create this MonoBehaviour.
@@ -23,6 +23,7 @@ public class DuplicateBall extends PowerUp implements ICanDrop {
      */
     public DuplicateBall(GameObject owner) {
         super(owner);
+
     }
 
     public void awake() {
@@ -30,8 +31,8 @@ public class DuplicateBall extends PowerUp implements ICanDrop {
     }
 
     public void start() {
-        PowerUpManager.instance.onMultipleRequest.addListener((sender, multipleNumber) -> {
-            handleOnMultipleRequest(multipleNumber);
+        PowerUpManager.instance.onDuplicateBall.addListener((sender, args) -> {
+            handleOnMultipleRequest();
         });
     }
 
@@ -39,48 +40,24 @@ public class DuplicateBall extends PowerUp implements ICanDrop {
         handleDroppingMovement(TRAVEL_SPEED);
     }
 
+    /**
+     * Override the handleOnMultipleRequest method from MultipleBall base class
+     * Will spawn a ball which direction makes with the current ball direction a
+     * 45'degree angle
+     */
+    @Override
+    protected void handleOnMultipleRequest() {
+        HashSet<Ball> ballHashSet = new HashSet<>(BallsManager.instance.getBallSet());
 
-    private void handleOnMultipleRequest(int multipleNumber) {
-        int tries = multipleNumber - 1;
-        for (int i = 0; i < tries; i++) {
-            var ball = spawnBall();
+        for (var ball : ballHashSet) {
+            Vector2 normalVector = new Vector2(-ball.getDirection().y, ball.getDirection().x).normalize();
+            Vector2 direction = ball.getDirection().add(normalVector).normalize();
 
-            ball.getTransform().setGlobalPosition(paddle.getTransform().getGlobalPosition());
-            ball.setPaddle(paddle);
-            ball.setDirection(Vector2.up());
+            var newBall = spawnBall(ball.getTransform());
+            newBall.setPaddle(paddle.getComponent(Paddle.class));
+            BallsManager.instance.addBall(newBall);
+            newBall.setDirection(direction);
         }
     }
 
-    private Ball spawnBall() {
-        var ball = GameObjectManager.instantiate(ballNameBuilder());
-        ball.addComponent(Ball.class);
-        ball.addComponent(BoxCollider.class);
-        ball.getComponent(Ball.class).setPaddle(paddle.getComponent(Paddle.class));
-        ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
-
-        var ballVisual = GameObjectManager.instantiate(ballVisualBuilder());
-        ballVisual.setParent(ball);
-        ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
-
-        return ball.getComponent(Ball.class);
-    }
-
-    private String ballNameBuilder() {
-        return "Ball" + index;
-    }
-
-    private String ballVisualBuilder() {
-        return "BallVisual" + index++;
-    }
-
-    public void setPaddle(Paddle paddle) {
-        this.paddle = paddle;
-    }
-
-    @Override
-    public void handleDroppingMovement(double droppingSpeed) {
-        if (!isMoving) return;
-
-        getTransform().translate(Vector2.down().multiply(TRAVEL_SPEED * Time.deltaTime));
-    }
 }

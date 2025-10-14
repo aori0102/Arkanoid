@@ -18,7 +18,6 @@ public class PlayerInput extends MonoBehaviour {
         super(owner);
     }
 
-    @Override
     public void awake() {
         handlePlayerInput();
     }

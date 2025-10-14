@@ -6,7 +6,7 @@ import org.*;
 
 public class Player extends MonoBehaviour {
 
-    private static Player instance = null;
+    public static Player instance = null;
 
     private PlayerPowerUpHandler playerPowerUpHandler;
 

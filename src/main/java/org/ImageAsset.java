@@ -9,7 +9,7 @@ public class ImageAsset {
         Bocchi("/bocchi.png"),
         Bocchi_Anim("/bocchi_anim.png"),
         Mambo("/mambo.png"),
-        DuplicateBall("/duplicate_ball.png"),
+        DuplicateBall("/duplicateBall.png"),
         TriplicateBall("/triplicate_ball.png"),
         Ball("/ball.png"),
 
@@ -28,6 +28,9 @@ public class ImageAsset {
         Voltraxis_UI_Groggy_Fill("/UI/Voltraxis/Groggy/Fill.png"),
         Voltraxis_UI_Groggy_Outline("/UI/Voltraxis/Groggy/Outline.png"),
 
+        Paddle("/paddle.png"),
+        Laser("/laser.png"),
+        Arrow("/arrow.png"),
 
         Explosive("/explosive.png");
 

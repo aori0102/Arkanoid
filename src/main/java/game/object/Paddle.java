@@ -12,17 +12,19 @@ import utils.Vector2;
 import javafx.scene.input.MouseEvent;
 
 public class Paddle extends MonoBehaviour {
+    //The constant specs of the ball
     private final double dotLimitAngle = 60;
     private final double stunnedTime = 3.6;
 
+    //Event
     public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(this);
     public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(this);
 
     private ActionMap actionMap;
     private PlayerInput playerInput;
     private BoxCollider boxCollider;
+    private Arrow arrow;
     private Vector2 fireDirection = new Vector2();
-    private Line line;
 
     private boolean canInvoke;
     private boolean isMoving = true;
@@ -93,10 +95,6 @@ public class Paddle extends MonoBehaviour {
             default -> {
                 // Set the movement vector to zero to stop the paddle
                 movementVector = new Vector2(0, 0);
-
-                // Turn off the line
-                line.setVisible(false);
-
                 //Fire the ball if the ball is not fired
                 if (playerInput.isMouseReleased) {
                     if (isDirectionValid(fireDirection)) {
@@ -120,7 +118,6 @@ public class Paddle extends MonoBehaviour {
 
         // If the mouse input is left button, then turn on the line and calculate the fire direction as well as the line's end point
         if (playerInput.getMouseEvent(MouseButton.PRIMARY) != null) {
-            line.setVisible(true);
             // Get mouse event
             MouseEvent mouseEvent = playerInput.getMouseEvent(MouseButton.PRIMARY);
 
@@ -145,14 +142,12 @@ public class Paddle extends MonoBehaviour {
             Vector2 lineEndPoint = getTransform().getGlobalPosition()
                     .add(fireDirection.multiply(100));
 
-            // Draw the fire ray
-            line.setStartX(getTransform().getGlobalPosition().x);
-            line.setStartY(getTransform().getGlobalPosition().y);
-            line.setEndX(lineEndPoint.x);
-            line.setEndY(lineEndPoint.y);
         }
     }
-
+    /**
+     * Handle the movement of the paddle when an obstacle hits it. Its speed will be
+     * reduced by 10 times when hit
+     */
     private void handleCollisionWithObstacles() {
         if (!canStartStunnedCounter) return;
         stunnedCounter += Time.deltaTime;
@@ -182,6 +177,11 @@ public class Paddle extends MonoBehaviour {
         return Math.toDegrees(angle) <= dotLimitAngle;
     }
 
+    /**
+     * Trigger the event when the paddle consumes a power up.
+     * It will invoke an event which is listened by player
+     * @param collisionData : the collision data of the power up
+     */
     private void onTriggerEnter(CollisionData collisionData) {
 
         var powerUp = collisionData.otherCollider.getComponent(PowerUp.class);
@@ -191,6 +191,13 @@ public class Paddle extends MonoBehaviour {
 
     }
 
+    /**
+     * Link the arrow
+     * @param arrow: linked arrow
+     */
+    public void linkArrow(Arrow arrow) {
+        this.arrow = arrow;
+    }
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
