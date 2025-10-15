@@ -164,12 +164,16 @@ public class PhysicsManager {
                 collider.onCollisionEnter.accept(result);
             }
 
-            // Call collision on the second collider
-            var inverseResult = result.getInverseData();
-            inverseResult.contactPoint = hitCollider.getCenter();
+            if (!hitCollider.getGameObject().isDestroyed()) {
 
-            if (hitCollider.onCollisionEnter != null) {
-                hitCollider.onCollisionEnter.accept(inverseResult);
+                // Call collision on the second collider
+                var inverseResult = result.getInverseData();
+                inverseResult.contactPoint = hitCollider.getCenter();
+
+                if (hitCollider.onCollisionEnter != null) {
+                    hitCollider.onCollisionEnter.accept(inverseResult);
+                }
+
             }
 
         }
@@ -296,7 +300,7 @@ public class PhysicsManager {
                 collider.onTriggerEnter.accept(data);
             }
 
-            if (data.otherCollider.onTriggerEnter != null) {
+            if (data.otherCollider.onTriggerEnter != null && !data.otherCollider.gameObject.isDestroyed()) {
                 data.otherCollider.onTriggerEnter.accept(inverseData);
             }
 
