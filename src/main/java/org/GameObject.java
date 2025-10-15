@@ -355,13 +355,17 @@ public class GameObject {
     /**
      * Get a component of type {@linkplain T} from this game object.
      *
-     * @param type Class type of {@linkplain T}. Use .class().
-     * @param <T>  Component type, must derive from {@link MonoBehaviour}.
+     * @param type Class type of {@linkplain T}. Use .class.
+     * @param <T>  Component type, must derive from {@link MonoBehaviour} or an {@code interface}.
      * @return A component, or {@code null} if not found any.
      */
-    public <T extends MonoBehaviour> T getComponent(Class<T> type) {
+    public <T> T getComponent(Class<T> type) {
 
         ValidateObjectLife();
+
+        if (!type.isInterface() && !MonoBehaviour.class.isAssignableFrom(type)) {
+            throw new IllegalArgumentException("Cannot get component. " + type + " is not MonoBehaviour nor an interface!");
+        }
 
         for (var component : monoBehaviourSet) {
 

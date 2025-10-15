@@ -90,7 +90,7 @@ public abstract class MonoBehaviour {
      * @param <T>  The type of the component.
      * @return The component, or {@code null} if not found.
      */
-    public <T extends MonoBehaviour> T getComponent(Class<T> type) {
+    public <T> T getComponent(Class<T> type) {
         return gameObject.getComponent(type);
     }
 
