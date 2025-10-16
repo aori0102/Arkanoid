@@ -1,10 +1,10 @@
 package game.Brick.BrickEvent;
-import game.Brick.InitBrick;
 
 import java.util.HashSet;
 import java.util.Vector;
+import static game.Brick.InitMatrix.*;
 
-public final class WaveEffect extends InitBrick {
+public final class WaveEffect {
 
     record Wave(Vector<IntPair> list) {}
     record LayerWave(Wave layer3, Wave layer2, Wave layer1) {}

@@ -1,20 +1,18 @@
 package game.Brick;
 
-import game.Brick.BrickEvent.BrokenEvent;
 import game.Brick.BrickEvent.CollisionEvent;
 import game.Brick.BrickEvent.EndEvent;
 import game.Brick.BrickEvent.WaveEffect;
 import org.GameObjectManager;
+import static game.Brick.InitMatrix.*;
 
-public class BrickFactory extends InitBrick {
+public class BrickFactory {
 
     final int incHealthConst = 5;
 
     private int level;
     private String kindMap;
 
-    private CollisionEvent collisionEvent;
-    private BrokenEvent brokenEvent;
     private EndEvent endEvent;
     private WaveEffect waveEffect;
 
@@ -32,8 +30,6 @@ public class BrickFactory extends InitBrick {
         brickComponent.setType(BrickObj.BrickType.Normal);
         matrixObj = new BrickMatrix(rowData, colData, brickComponent);
 
-        collisionEvent = new CollisionEvent();
-        brokenEvent = new BrokenEvent();
         endEvent = new EndEvent();
         waveEffect = new WaveEffect();
     }
@@ -44,12 +40,10 @@ public class BrickFactory extends InitBrick {
 
         if (matrixObj.inBounds(row, col) && !matrixObj.isDestroyed(row, col)) {
             BrickObj.BrickType brickType = matrixObj.getObjType(row, col);
-            collisionEvent.ColliEvent(row, col, brickType);
         }
     }
 
     public void runProgress() {
-        brokenEvent.runProgcess();
         waveEffect.getListObjHitDamage();
         waveEffect.runAllWave();
     }

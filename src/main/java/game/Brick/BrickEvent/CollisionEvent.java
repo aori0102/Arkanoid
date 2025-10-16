@@ -1,12 +1,14 @@
 package game.Brick.BrickEvent;
 
 import game.Brick.BrickObj;
-import game.Brick.InitBrick;
+import org.GameObjectManager;
 
 import java.util.Collections;
 import java.util.Vector;
 
-public final class CollisionEvent extends InitBrick {
+import static game.Brick.InitMatrix.*;
+
+public final class CollisionEvent {
 
     private final static int damage = 10;
 
@@ -44,8 +46,12 @@ public final class CollisionEvent extends InitBrick {
                     int revive = died.size() / 2;
                     for (int i = 0; i < revive; i++) {
                         int x = died.get(i).fi();
-                        int y = died.get(i).se(); // FIX: dùng se()
-                        matrixObj.set(x, y, new BrickObj(BrickObj.BrickType.Normal));
+                        int y = died.get(i).se();
+
+                        var brickObject = GameObjectManager.instantiate("Brick");
+                        var brickComponent = brickObject.addComponent(BrickObj.class);
+
+                        matrixObj.set(x, y, getNewBrick(BrickObj.BrickType.Normal));
                     }
                 }
             }

@@ -1,18 +1,23 @@
 package game.Brick;
 
 import game.Brick.BrickEvent.CollisionEvent;
-import game.object.Ball;
 import org.GameObjectManager;
 
 import java.util.Vector;
-import java.util.function.Supplier;
+public class InitMatrix {
 
-public class InitBrick {
-
+    private InitMatrix() {}
     public static record IntPair(int fi, int se) {}
 
-    protected final static int[] fx = {-1, 1, 0, 0, 1, 1, -1, -1};
-    protected final static int[] fy = {0, 0, 1, -1, 1, -1, 1, -1};
+    public final static int[] fx = {-1, 1, 0, 0, 1, 1, -1, -1};
+    public final static int[] fy = {0, 0, 1, -1, 1, -1, 1, -1};
+
+    public static BrickObj getNewBrick(BrickObj.BrickType brickType) {
+        var brickObject = GameObjectManager.instantiate("Brick");
+        var brickComponent = brickObject.addComponent(BrickObj.class);
+        brickComponent.setType(brickType);
+        return brickComponent;
+    }
 
     public static class Matrix implements Cloneable {
         private int rows;
@@ -266,7 +271,7 @@ public class InitBrick {
         }
     }
 
-    protected static BrickMatrix matrixObj;
-    protected static int rowData = 0;
-    protected static int colData = 0;
+    public static BrickMatrix matrixObj;
+    public static int rowData = 0;
+    public static int colData = 0;
 }
