@@ -1,11 +1,14 @@
 package game.object;
 
+import game.Brick.Brick;
 import game.Voltraxis.Voltraxis;
 import org.*;
 import utils.Vector2;
 import utils.Time;
 
 public class Ball extends MonoBehaviour {
+
+    private static final int BALL_DAMAGE = 360;
 
     private Vector2 direction;
     private double ballSpeed = 500;
@@ -34,6 +37,7 @@ public class Ball extends MonoBehaviour {
         ballCollider.setOnCollisionEnterCallback(e -> {
             handleAngleDirection(e);
             handleCollision(e);
+            handleBrickCollision(e);
         });
 
         // Add listener to paddle event
@@ -73,7 +77,7 @@ public class Ball extends MonoBehaviour {
     private void handleCollision(CollisionData collisionData) {
         var boss = collisionData.otherCollider.getComponent(Voltraxis.class);
         if (boss != null) {
-            boss.damage(36);
+            boss.damage(BALL_DAMAGE);
         }
     }
 
@@ -112,6 +116,13 @@ public class Ball extends MonoBehaviour {
 
 
         direction = reflectDir;
+    }
+
+    private void handleBrickCollision(CollisionData collisionData) {
+        var brick = collisionData.otherCollider.getComponent(Brick.class);
+        if (brick != null) {
+            brick.decreaseHealth(BALL_DAMAGE);
+        }
     }
 
 

@@ -48,7 +48,6 @@ public abstract class Renderable extends MonoBehaviour {
     }
 
     private void gameObject_onObjectActivenessChanged(Object sender, Void e) {
-        System.out.println(gameObject.getName() + " active: " + gameObject.isActive());
         getNode().setVisible(gameObject.isActive());
     }
 

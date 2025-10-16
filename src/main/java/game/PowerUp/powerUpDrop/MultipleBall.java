@@ -85,14 +85,7 @@ public class MultipleBall extends PowerUp implements ICanDrop {
      */
     @Override
     public void handleDroppingMovement(double droppingSpeed) {
-        if (shouldBeDestroyed) {
-            GameObjectManager.destroy(gameObject);
-            return;
-        } else
-        {
-            getTransform().translate(Vector2.down().multiply(TRAVEL_SPEED * Time.deltaTime));
-        }
-
+        getTransform().translate(Vector2.down().multiply(TRAVEL_SPEED * Time.deltaTime));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package game;
 
+import game.Brick.Brick;
 import game.Obstacle.Laser;
 import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
@@ -60,6 +61,16 @@ public class Init {
 
         var arrow = GameObjectManager.instantiate("arrow");
         arrow.addComponent(Arrow.class);
+        arrow.setParent(paddle);
+        arrow.getTransform().setLocalPosition(new Vector2(0, 0));
+        arrow.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Arrow.getImage());
+        paddle.getComponent(Paddle.class).linkArrow(arrow.getComponent(Arrow.class));
+
+        var brick = GameObjectManager.instantiate("brick");
+        brick.addComponent(Brick.class);
+        brick.getTransform().setGlobalPosition(new Vector2(300 , 300));
+        brick.getTransform().setGlobalScale(new Vector2(2, 2));
+        brick.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
 
         var duplicateBall = GameObjectManager.instantiate("duplicateBall");
         duplicateBall.addComponent(DuplicateBall.class);
