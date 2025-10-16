@@ -1,7 +1,7 @@
 package game.Voltraxis;
 
 import game.Voltraxis.Interface.IBossTarget;
-import game.Voltraxis.PowerCore.PowerCore;
+import game.Voltraxis.Object.PowerCore;
 import org.*;
 import utils.Time;
 import utils.Vector2;
@@ -24,6 +24,7 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
 
     public EventHandler<Void> onHealthChanged = new EventHandler<>(this);
     public EventHandler<Void> onDamaged = new EventHandler<>(this);
+    private boolean powerCoreDeployed = false;
 
     public Voltraxis(GameObject owner) {
         super(owner);
@@ -168,8 +169,14 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
      * Spawn two power cores on either side of the board.
      */
     private void spawnPowerCores() {
-        spawnCore(leftCore, LEFT_CORE_POSITION);
-        spawnCore(rightCore, RIGHT_CORE_POSITION);
+        if (powerCoreDeployed) {
+            return;
+        }
+        powerCoreDeployed = true;
+        leftCore = spawnCore(LEFT_CORE_POSITION);
+        System.out.println(leftCore);
+        rightCore = spawnCore(RIGHT_CORE_POSITION);
+        System.out.println(rightCore);
     }
 
     /**
@@ -180,42 +187,35 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
      * {@link PowerCore#onPowerCoreDestroyed} will be listened to and
      * Voltraxis will gain the pre-determined effects.
      *
-     * @param target   The object to hold the new power core. Has to be
-     *                 {@code null} beforehand.
      * @param position The position to spawn the power core
      */
-    private void spawnCore(PowerCore target, Vector2 position) {
-
-        // Check if target is valid (does not exist a power core beforehand)
-        if (target != null) {
-            throw new IllegalArgumentException("Power core to be assigned must be destroyed first to create new one!");
-        }
+    private PowerCore spawnCore(Vector2 position) {
 
         // Instantiate the power core
-        target = VoltraxisPrefab.instantiatePowerCore();
-        target.getTransform().setGlobalPosition(position);
+        PowerCore newCore = VoltraxisPrefab.instantiatePowerCore();
+        System.out.println("a:" + newCore);
+        newCore.getTransform().setGlobalPosition(position);
         int powerCoreHealth = (int) (VoltraxisData.BASE_MAX_HEALTH * VoltraxisData.POWER_CORE_PROPORTIONAL_HEALTH);
-        target.setHealth(powerCoreHealth);
-
-        // Final variable for lambda
-        PowerCore finalTarget = target;
+        newCore.setHealth(powerCoreHealth);
 
         // Add power core effect
         voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
                 VoltraxisData.EffectIndex.PowerCore,
                 0.0,
-                (_) -> finalTarget.getGameObject().isDestroyed()
+                (_) -> newCore.getGameObject().isDestroyed()
         ));
 
         // Add effect on damage taken decrement
         voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
                 VoltraxisData.EffectIndex.DamageTakenDecrement,
                 VoltraxisData.POWER_CORE_DAMAGE_TAKEN_REDUCTION,
-                (_) -> finalTarget.getGameObject().isDestroyed()
+                (_) -> newCore.getGameObject().isDestroyed()
         ));
 
         // Link destroyed event
-        target.onPowerCoreDestroyed.addListener(this::powerCore_onPowerCoreDestroyed);
+        newCore.onPowerCoreDestroyed.addListener(this::powerCore_onPowerCoreDestroyed);
+
+        return newCore;
 
     }
 

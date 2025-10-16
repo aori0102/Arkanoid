@@ -2,6 +2,7 @@ package game.GameManager;
 
 import org.*;
 
+/// dit me dui
 public class GameManager extends MonoBehaviour {
     public static GameManager instance;
     private static GameState gameState = GameState.MainMenu;

@@ -45,7 +45,9 @@ public class ImageAsset {
 
         Explosive("/explosive.png"),
 
-        GreenBrick("/Brick/GreenBrick.png"),;
+        GreenBrick("/Brick/GreenBrick.png"),
+
+        None("");
 
         private final Image image;
 

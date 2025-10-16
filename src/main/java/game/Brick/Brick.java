@@ -1,6 +1,6 @@
 package game.Brick;
 
-import game.object.Ball;
+import game.GameObject.Ball;
 import org.*;
 import utils.Vector2;
 

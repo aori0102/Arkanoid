@@ -1,14 +1,21 @@
 package game.Player;
 
-import game.PowerUp.PowerUp;
-import game.object.Paddle;
+import game.PowerUp.Index.PowerUp;
+import game.GameObject.Paddle;
 import org.*;
 
+/**
+ * Central logic for player. Control {@link PowerUp}'s effects
+ * and {@link Paddle} behaviour.
+ */
 public class Player extends MonoBehaviour {
+
+    private static final int MAX_HEALTH = 100;
 
     public static Player instance = null;
 
-    private PlayerPowerUpHandler playerPowerUpHandler;
+    private PlayerPowerUpHandler playerPowerUpHandler = null;
+    private int health = MAX_HEALTH;
 
     /**
      * Create this MonoBehaviour.
@@ -59,6 +66,10 @@ public class Player extends MonoBehaviour {
     protected void destroyComponent() {
         playerPowerUpHandler = null;
         instance = null;
+    }
+
+    public static Player getInstance() {
+        return instance;
     }
 
 }

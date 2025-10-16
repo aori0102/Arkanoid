@@ -1,20 +1,20 @@
 package game;
 
 import game.Brick.Brick;
-import game.Obstacle.Laser;
-import game.Perks.CooldownPerk;
-import game.PowerUp.PowerUpManager;
-import game.PowerUp.powerUpDrop.DuplicateBall;
-import game.PowerUp.powerUpDrop.TriplicateBall;
-import game.Voltraxis.Voltraxis;
+import game.GameObject.BallsManager;
+import game.Obstacle.Object.Laser;
+import game.Obstacle.Index.ObstacleManager;
+import game.Perks.Object.CooldownPerk;
+import game.PowerUp.Index.PowerUpManager;
+import game.PowerUp.DuplicateBall;
+import game.PowerUp.TriplicateBall;
 import game.Voltraxis.VoltraxisPrefab;
-import game.object.Arrow;
-import game.object.Ball;
-import game.object.Paddle;
+import game.GameObject.Arrow;
+import game.GameObject.Ball;
+import game.GameObject.Paddle;
 import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
 import org.*;
-import utils.Time;
 import utils.Vector2;
 import org.GameObjectManager;
 
@@ -77,7 +77,7 @@ public class Init {
         var triplicateBall = GameObjectManager.instantiate("triplicateBall");
         triplicateBall.addComponent(TriplicateBall.class);
         triplicateBall.getTransform().setGlobalPosition(new Vector2(300, 200));
-        triplicateBall.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.DuplicateBall.getImage());
+        triplicateBall.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Bocchi.getImage());
 
 
         var obstacleManager = GameObjectManager.instantiate("obstacleManager");

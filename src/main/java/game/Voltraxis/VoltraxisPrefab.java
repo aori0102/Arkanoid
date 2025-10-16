@@ -1,7 +1,8 @@
 package game.Voltraxis;
 
-import game.Voltraxis.PowerCore.PowerCore;
-import game.Voltraxis.PowerCore.PowerCoreHealthBar;
+import game.Voltraxis.Object.ElectricBall;
+import game.Voltraxis.Object.PowerCore;
+import game.Voltraxis.Object.PowerCoreHealthBar;
 import javafx.scene.paint.Color;
 import org.*;
 import utils.Vector2;

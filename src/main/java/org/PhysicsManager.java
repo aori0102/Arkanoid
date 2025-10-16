@@ -44,7 +44,7 @@ public class PhysicsManager {
         var result = new CollisionData();
 
         // Only proceed if collider is valid
-        if (collider == null) {
+        if (collider == null || collider.gameObject.isDestroyed()) {
             return result;
         }
 
@@ -152,7 +152,7 @@ public class PhysicsManager {
         }
 
         // Finalize collision data if a collision happens
-        if (collided) {
+        if (collided && !hitCollider.gameObject.isDestroyed()) {
 
             // Call collision on the first collider
             result.collided = true;
@@ -164,7 +164,7 @@ public class PhysicsManager {
                 collider.onCollisionEnter.accept(result);
             }
 
-            if (!hitCollider.getGameObject().isDestroyed()) {
+            if (!hitCollider.getGameObject().isDestroyed() && !collider.getGameObject().isDestroyed()) {
 
                 // Call collision on the second collider
                 var inverseResult = result.getInverseData();
@@ -298,6 +298,10 @@ public class PhysicsManager {
 
             if (collider.onTriggerEnter != null) {
                 collider.onTriggerEnter.accept(data);
+            }
+
+            if (collider.gameObject.isDestroyed()) {
+                break;
             }
 
             if (data.otherCollider.onTriggerEnter != null && !data.otherCollider.gameObject.isDestroyed()) {

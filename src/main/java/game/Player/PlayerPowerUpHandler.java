@@ -1,7 +1,7 @@
 package game.Player;
 
-import game.PowerUp.PowerUp;
-import game.PowerUp.PowerUpIndex;
+import game.PowerUp.Index.PowerUp;
+import game.PowerUp.Index.PowerUpIndex;
 import org.EventHandler;
 import org.GameObject;
 import org.MonoBehaviour;
@@ -19,19 +19,19 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
     private static final double SHIELD_MAX_DURATION = 7.0;
 
     /**
-     * Upon called, all {@link game.object.Ball} duplicate itself
+     * Upon called, all {@link game.GameObject.Ball} duplicate itself
      * by the multiple provided within the event argument.
      */
     public EventHandler<Integer> onDuplicateBallRequested = new EventHandler<>(this);
 
     /**
-     * Upon called, all {@link game.object.Ball} triplicate itself
+     * Upon called, all {@link game.GameObject.Ball} triplicate itself
      * by the multiple provided within the event argument.
      */
     public EventHandler<Integer> onTriplicateBallRequested = new EventHandler<>(this);
 
     /**
-     * Upon called, all {@link game.object.Ball} turns into explosive
+     * Upon called, all {@link game.GameObject.Ball} turns into explosive
      * with the constraints provided.
      */
     public EventHandler<OnBallToExplosiveEventArgs> onBallToExplosiveRequested = new EventHandler<>(this);
@@ -46,7 +46,7 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
     }
 
     /**
-     * Upon called, the {@link game.object.Paddle} modify its scale
+     * Upon called, the {@link game.GameObject.Paddle} modify its scale
      * by the amount provided within the event argument.
      */
     public EventHandler<Double> onPaddleScaleChangeRequested = new EventHandler<>(this);

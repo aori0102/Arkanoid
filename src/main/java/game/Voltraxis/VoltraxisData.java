@@ -5,7 +5,7 @@ import org.ImageAsset;
 public final class VoltraxisData {
 
     /// Stat
-    static final int BASE_ATTACK = 42;
+    static final int BASE_ATTACK = 18;
     static final int BASE_MAX_HEALTH = 3125;
     static final int BASE_DEFENSE = 36;
     static final int DEFENSE_STRENGTH_SCALE = 67;

@@ -9,6 +9,8 @@ public class GameObject {
 
     private final Queue<MonoBehaviour> preAwakeMonoBehaviourQueue = new LinkedList<>();
     private final Queue<MonoBehaviour> preStartMonoBehaviourQueue = new LinkedList<>();
+    private final Queue<GameObject> childRemovalQueue = new LinkedList<>();
+    private final Queue<GameObject> childAdditionQueue = new LinkedList<>();
     private final HashSet<MonoBehaviour> monoBehaviourSet = new HashSet<>();
 
     private boolean isActive = true;
@@ -114,7 +116,7 @@ public class GameObject {
      * @param child The child to add.
      */
     protected void addChild(GameObject child) {
-        childSet.add(child);
+        childAdditionQueue.offer(child);
     }
 
     /**
@@ -124,7 +126,7 @@ public class GameObject {
      * @param child The child to remove.
      */
     protected void removeChild(GameObject child) {
-        childSet.remove(child);
+        childRemovalQueue.offer(child);
     }
 
     /**
@@ -242,6 +244,15 @@ public class GameObject {
 
         }
 
+    }
+
+    protected void cleanUp() {
+        while (!childRemovalQueue.isEmpty()) {
+            childSet.remove(childRemovalQueue.poll());
+        }
+        while (!childAdditionQueue.isEmpty()) {
+            childSet.add(childAdditionQueue.poll());
+        }
     }
 
     public void setParent(GameObject parent) {

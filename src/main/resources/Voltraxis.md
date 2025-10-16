@@ -11,7 +11,7 @@
 
 
 * **Health**:	3125
-* **Attack**:	42
+* **Attack**:	18
 * **Defense**:	36
 
 

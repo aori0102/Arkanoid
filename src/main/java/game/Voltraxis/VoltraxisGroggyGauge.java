@@ -62,10 +62,17 @@ public class VoltraxisGroggyGauge extends MonoBehaviour {
         }
 
         groggy += VoltraxisData.GROGGY_DELTA;
+        if (isGroggyToDeployPowerCore()) {
+            onGroggyToDeployPowerCore.invoke(this, null);
+        }
         if (isMaxGroggy()) {
             onGroggyReachedMax.invoke(this, null);
         }
 
+    }
+
+    private boolean isGroggyToDeployPowerCore() {
+        return groggy >= VoltraxisData.MIN_GROGGY_ON_POWER_CORE_DEPLOY;
     }
 
     private boolean isMaxGroggy() {
