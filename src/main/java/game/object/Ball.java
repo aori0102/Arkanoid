@@ -1,5 +1,6 @@
 package game.object;
 
+import game.Voltraxis.Interface.IBossTarget;
 import game.Voltraxis.Voltraxis;
 import org.*;
 import utils.Vector2;
@@ -71,9 +72,9 @@ public class Ball extends MonoBehaviour {
     }
 
     private void handleCollision(CollisionData collisionData) {
-        var boss = collisionData.otherCollider.getComponent(Voltraxis.class);
-        if (boss != null) {
-            boss.damage(36);
+        var bossTarget = collisionData.otherCollider.getComponent(IBossTarget.class);
+        if (bossTarget != null) {
+            bossTarget.damage(36);
         }
     }
 
