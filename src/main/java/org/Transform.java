@@ -90,6 +90,9 @@ public class Transform extends MonoBehaviour {
      * @param globalPosition The global position.
      */
     public void setGlobalPosition(Vector2 globalPosition) {
+        if (gameObject.isDestroyed()) {
+            return;
+        }
         var parent = gameObject.getParent();
         if (parent == null) {
             setLocalPosition(globalPosition);
@@ -104,6 +107,9 @@ public class Transform extends MonoBehaviour {
      * @param globalScale The global scale
      */
     public void setGlobalScale(Vector2 globalScale) {
+        if (gameObject.isDestroyed()) {
+            return;
+        }
         var parent = gameObject.getParent();
         if (parent == null) {
             setLocalScale(globalScale);
@@ -116,6 +122,9 @@ public class Transform extends MonoBehaviour {
      * Set the local position for this object.
      */
     public void setLocalPosition(Vector2 localPosition) {
+        if (gameObject.isDestroyed()) {
+            return;
+        }
         this._localPosition = new Vector2(localPosition);
         onPositionChanged.invoke(this, null);
     }
@@ -124,6 +133,9 @@ public class Transform extends MonoBehaviour {
      * Set the local scale for this object.
      */
     public void setLocalScale(Vector2 localScale) {
+        if (gameObject.isDestroyed()) {
+            return;
+        }
         this._localScale = new Vector2(localScale);
         onScaleChanged.invoke(this, null);
     }

@@ -14,7 +14,6 @@ public class PowerUp extends MonoBehaviour {
 
     private PowerUpIndex powerUpIndex = PowerUpIndex.None;
     protected boolean isMoving = true;
-    protected boolean shouldBeDestroyed = false;
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
@@ -38,7 +37,6 @@ public class PowerUp extends MonoBehaviour {
         boxCollider.setOnTriggerEnter(e ->{
             if (e.otherCollider.getComponent(Paddle.class) != null) {
                 isMoving = false;
-                shouldBeDestroyed = true;
             }
         });
 
@@ -79,7 +77,7 @@ public class PowerUp extends MonoBehaviour {
      * Called when this power up is being applied.
      */
     public void onApplied() {
-        shouldBeDestroyed = true;
+        GameObjectManager.destroy(gameObject);
     }
 
 }

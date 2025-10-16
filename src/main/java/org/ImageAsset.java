@@ -41,7 +41,9 @@ public class ImageAsset {
         Laser("/laser.png"),
         Arrow("/arrow.png"),
 
-        Explosive("/explosive.png");
+        Explosive("/explosive.png"),
+
+        GreenBrick("/Brick/GreenBrick.png"),;
 
         private final Image image;
 

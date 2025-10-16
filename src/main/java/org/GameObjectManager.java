@@ -5,6 +5,7 @@ import java.util.*;
 public class GameObjectManager {
 
     private static final LinkedHashSet<GameObject> gameObjectSet = new LinkedHashSet<>();
+    private static final Queue<GameObject> addedGameObjectQueue = new LinkedList<>();
     protected static EventHandler<GameObject> onGameObjectInstantiated = new EventHandler<>(null);
     protected static EventHandler<GameObject> onGameObjectDestroyed = new EventHandler<>(null);
 
@@ -98,7 +99,14 @@ public class GameObjectManager {
 
             var destroyed = destroyedQueue.poll();
             onGameObjectDestroyed.invoke(null, destroyed);
-            gameObjectSet.remove(destroyed);
+            unregisterGameObject(destroyed);
+
+        }
+
+        while (!addedGameObjectQueue.isEmpty()) {
+
+            var added = addedGameObjectQueue.poll();
+            registerGameObject(added);
 
         }
 
@@ -129,7 +137,7 @@ public class GameObjectManager {
      */
     public static GameObject instantiate() {
         var newGameObject = new GameObject();
-        registerGameObject(newGameObject);
+        addedGameObjectQueue.add(newGameObject);
 
         onGameObjectInstantiated.invoke(null, newGameObject);
 
@@ -144,7 +152,7 @@ public class GameObjectManager {
      */
     public static GameObject instantiate(String name) {
         var newGameObject = new GameObject(name);
-        registerGameObject(newGameObject);
+        addedGameObjectQueue.add(newGameObject);
 
         onGameObjectInstantiated.invoke(null, newGameObject);
 
@@ -165,7 +173,7 @@ public class GameObjectManager {
             var newChild = instantiate(child);
             newChild.setParent(newGameObject);
         }
-        registerGameObject(newGameObject);
+        addedGameObjectQueue.add(newGameObject);
 
         return newGameObject;
     }
@@ -182,7 +190,7 @@ public class GameObjectManager {
      */
     public static <T extends MonoBehaviour> T instantiate(MonoBehaviour monoBehaviour, Class<T> type) {
         var newGameObject = new GameObject(monoBehaviour.gameObject);
-        registerGameObject(newGameObject);
+        addedGameObjectQueue.add(newGameObject);
 
         return newGameObject.getComponent(type);
     }

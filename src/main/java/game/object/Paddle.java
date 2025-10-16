@@ -2,8 +2,6 @@ package game.object;
 
 import game.PowerUp.PowerUp;
 import javafx.scene.input.MouseButton;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import org.*;
 import utils.Time;
 import utils.Vector2;
@@ -13,8 +11,9 @@ import javafx.scene.input.MouseEvent;
 
 public class Paddle extends MonoBehaviour {
     //The constant specs of the ball
-    private final double dotLimitAngle = 60;
-    private final double stunnedTime = 3.6;
+    private final double DOT_LIMIT_ANGLE_RIGHT = 30;
+    private final double DOT_LIMIT_ANGLE_LEFT = 150;
+    private final double STUNNED_TIME = 3.6;
 
     //Event
     public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(this);
@@ -37,7 +36,7 @@ public class Paddle extends MonoBehaviour {
     public boolean isFired = false;
 
     public Vector2 movementVector = new Vector2(0, 0);
-    private Vector2 normalVector = new Vector2(0, -1);
+    private Vector2 directionVector = new Vector2(1, 0);
 
     public Paddle(GameObject owner) {
         super(owner);
@@ -95,6 +94,7 @@ public class Paddle extends MonoBehaviour {
             default -> {
                 // Set the movement vector to zero to stop the paddle
                 movementVector = new Vector2(0, 0);
+                arrow.turnOff();
                 //Fire the ball if the ball is not fired
                 if (playerInput.isMouseReleased) {
                     if (isDirectionValid(fireDirection)) {
@@ -137,10 +137,10 @@ public class Paddle extends MonoBehaviour {
             // If the direction is in the range, then assigning it to fire direction
             if (isDirectionValid(expectedDirection)) {
                 fireDirection = expectedDirection;
+                arrow.turnOn();
+                double angle = Math.toDegrees(Vector2.angle(fireDirection.normalize(), directionVector));
+                arrow.handleArrowDirection(angle);
             }
-
-            Vector2 lineEndPoint = getTransform().getGlobalPosition()
-                    .add(fireDirection.multiply(100));
 
         }
     }
@@ -157,7 +157,7 @@ public class Paddle extends MonoBehaviour {
             canReduceSpeed = false;
         }
 
-        if (stunnedCounter >= stunnedTime) {
+        if (stunnedCounter >= STUNNED_TIME) {
             currentSpeed = basePaddleSpeed;
             canReduceSpeed = true;
             stunnedCounter = 0;
@@ -173,8 +173,8 @@ public class Paddle extends MonoBehaviour {
      */
     private boolean isDirectionValid(Vector2 direction) {
         if (direction == null) return false;
-        double angle = Vector2.angle(direction.normalize(), normalVector);
-        return Math.toDegrees(angle) <= dotLimitAngle;
+        double angle = Math.toDegrees(Vector2.angle(direction.normalize(), directionVector.normalize()));
+        return angle >= DOT_LIMIT_ANGLE_RIGHT &&  angle <= DOT_LIMIT_ANGLE_LEFT;
     }
 
     /**
