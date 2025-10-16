@@ -2,8 +2,7 @@ package game;
 
 import game.Brick.Brick;
 import game.Obstacle.Laser;
-import game.Player.Player;
-import game.Player.PlayerPowerUpHandler;
+import game.Perks.CooldownPerk;
 import game.PowerUp.PowerUpManager;
 import game.PowerUp.powerUpDrop.DuplicateBall;
 import game.PowerUp.powerUpDrop.TriplicateBall;
@@ -13,14 +12,7 @@ import game.object.Paddle;
 import org.*;
 import utils.Time;
 import utils.Vector2;
-import game.Voltraxis.VoltraxisPrefab;
 import org.GameObjectManager;
-import org.UI.ContinueButton;
-import org.UI.StartButton;
-import utils.Vector2;
-
-
-import java.sql.Statement;
 
 public class Init {
 
@@ -86,37 +78,21 @@ public class Init {
         var obstacleManager = GameObjectManager.instantiate("obstacleManager");
         obstacleManager.addComponent(ObstacleManager.class);
 
-
-        ObstacleManager.instance.setPaddle(paddle.getComponent(Paddle.class));
-        ObstacleManager.instance.addObstacle(laser.getComponent(Laser.class));
-
-        var ballsManager = GameObjectManager.instantiate("ballManager");
-        ballsManager.addComponent(BallsManager.class);
-
-        var powerUpManager = GameObjectManager.instantiate("powerUpManager");
-        powerUpManager.addComponent(PowerUpManager.class);
-        PowerUpManager.instance.addPowerUp(duplicateBall.getComponent(DuplicateBall.class));
-        PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class));
-
-
-        var player = GameObjectManager.instantiate("player");
-        player.addComponent(Player.class);
-
-        PowerUpManager.instance.linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
-        duplicateBall.getComponent(DuplicateBall.class).linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
-        duplicateBall.getComponent(DuplicateBall.class).linkPaddle(paddle.getComponent(Paddle.class));
-
-        triplicateBall.getComponent(TriplicateBall.class).linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
-        triplicateBall.getComponent(TriplicateBall.class).linkPaddle(paddle.getComponent(Paddle.class));
-
-        Player.instance.linkPaddle(paddle.getComponent(Paddle.class));
-        BallsManager.instance.addBall(ball.getComponent(Ball.class));
     }
 
     public static void Init_Dui() {
-        var startButton = GameObjectManager.instantiate("startButton");
-        startButton.addComponent(StartButton.class);
-        startButton.getTransform().setGlobalPosition(new Vector2(200, 200));
+
+//        var healthPerk = GameObjectManager.instantiate("healthPerk");
+//        healthPerk.addComponent(HealthPerk.class);
+//        healthPerk.getTransform().setGlobalPosition(new Vector2(400, 400));
+//
+        var coolDownPerk = GameObjectManager.instantiate("coolDownPerk");
+        coolDownPerk.addComponent(CooldownPerk.class);
+        coolDownPerk.getTransform().setGlobalPosition(new Vector2(300, 300));
+//
+//        var startButton = GameObjectManager.instantiate("StartButton");
+//        startButton.addComponent(StartButton.class);
+//        startButton.getTransform().setGlobalPosition(new Vector2(100,100));
     }
 
     public static void Init_Duc() {
@@ -124,21 +100,6 @@ public class Init {
     }
 
     public static void Init_Aori() {
-        System.out.println("Making instance of prefab");
-        VoltraxisPrefab.instantiate();
-        var borderLeft = GameObjectManager.instantiate("Border_Left");
-        borderLeft.getTransform().setLocalPosition(new Vector2(5.0, 0));
-        borderLeft.addComponent(BoxCollider.class).setLocalSize(new Vector2(1.0, 20000.0));
-        var borderLeftVisual = GameObjectManager.instantiate();
-        borderLeftVisual.setParent(borderLeft);
-        //borderLeftVisual.addComponent(SpriteRenderer.class).setImage("/bocchi.png");
-
-        var borderRight = GameObjectManager.instantiate("Border_Right");
-        borderRight.getTransform().setLocalPosition(new Vector2(1190.0, 0));
-        borderRight.addComponent(BoxCollider.class).setLocalSize(new Vector2(1.0, 20000.0));
-        var borderRightVisual = GameObjectManager.instantiate();
-        borderRightVisual.setParent(borderRight);
-        //borderRightVisual.addComponent(SpriteRenderer.class).setImage("/bocchi.png");
 
         var borderTop = GameObjectManager.instantiate("Border_Top");
         borderTop.getTransform().setLocalPosition(new Vector2(0, 5.0));

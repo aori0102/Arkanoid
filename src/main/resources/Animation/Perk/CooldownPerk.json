@@ -1,18 +1,18 @@
 {
-  "imagePath": "",
+  "imagePath": "Perks",
   "frameList": [
     {
       "clipAnchor": {
-        "x": 799,
-        "y": 1
+        "x": 800,
+        "y": 2
       },
       "clipSize": {
-        "x": 398,
-        "y": 578
+        "x": 396,
+        "y": 576
       },
       "renderSize": {
-        "x": 398,
-        "y": 578
+        "x": 198,
+        "y": 288
       },
       "duration":0.1,
       "rotationAngle":0

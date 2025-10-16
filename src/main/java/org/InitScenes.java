@@ -1,24 +1,15 @@
-package game.Perks;
+package org;
 
-import org.GameObject;
-import org.MonoBehaviour;
+public class InitScenes extends MonoBehaviour {
 
-public class PerkManager extends MonoBehaviour {
-
-    public static PerkManager instance;
     /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
-    public PerkManager(GameObject owner) {
+    public InitScenes(GameObject owner) {
         super(owner);
-        if(instance == null) {
-            instance = this;
-        }
     }
-
-
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
@@ -29,4 +20,6 @@ public class PerkManager extends MonoBehaviour {
     protected void destroyComponent() {
 
     }
+
+
 }

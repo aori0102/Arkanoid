@@ -1,5 +1,6 @@
 package org.UI;
 
+import javafx.scene.input.MouseEvent;
 import org.AnimationClipData;
 import org.GameObject;
 
@@ -15,5 +16,10 @@ public class QuitButton extends BaseButton {
         pressedKey = AnimationClipData.Quit_Button_Pressed;
         releasedKey = AnimationClipData.Quit_Button_Released;
         clickedKey = AnimationClipData.Quit_Button_Clicked;
+    }
+
+    @Override
+    protected void baseButton_onPointerClicked(Object sender, MouseEvent e) {
+
     }
 }

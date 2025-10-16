@@ -1,5 +1,6 @@
 package org.UI;
 
+import javafx.scene.input.MouseEvent;
 import org.AnimationClipData;
 import org.GameObject;
 import org.MonoBehaviour;
@@ -38,6 +39,8 @@ public abstract class BaseButton extends MonoBehaviour {
         spriteAnimator.addAnimationClip(releasedKey);
         spriteAnimator.addAnimationClip(clickedKey);
         setupStateHandlers();
+
+        buttonUI.onPointerClick.addListener(this::baseButton_onPointerClicked);
 
     }
 
@@ -85,6 +88,8 @@ public abstract class BaseButton extends MonoBehaviour {
 
         System.out.println("[ButtonUI] State handlers initialized successfully for " + gameObject.getName());
     }
+
+    protected abstract void baseButton_onPointerClicked(Object sender, MouseEvent e);
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
