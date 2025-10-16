@@ -10,6 +10,7 @@ import game.object.Arrow;
 import game.object.Ball;
 import game.object.Paddle;
 import org.*;
+import utils.Time;
 import utils.Vector2;
 import game.Voltraxis.VoltraxisPrefab;
 import org.GameObjectManager;
@@ -141,6 +142,18 @@ public class Init {
         var borderBottomVisual = GameObjectManager.instantiate();
         borderBottomVisual.setParent(borderBottom);
         //borderBottomVisual.addComponent(SpriteRenderer.class).setImage("/bocchi.png");
+
+
+        var triplicateBall = GameObjectManager.instantiate("triplicateBall");
+        triplicateBall.addComponent(TriplicateBall.class);
+        triplicateBall.getTransform().setGlobalPosition(new Vector2(300, 200));
+        triplicateBall.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.DuplicateBall.getImage());
+        Time.addCoroutine(()->PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class)),10);
+        Time.addCoroutine(()->PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class)),20);
+        Time.addCoroutine(()->PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class)),30);
+        Time.addCoroutine(()->PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class)),40);
+        Time.addCoroutine(()->PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class)),50);
+
     }
 
 }

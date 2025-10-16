@@ -8,7 +8,7 @@ public enum AnimationClipData {
     Dui_Button_Pressed("/Duiooooooo.json"),
     Dui_Button_Released("/Duiooooooo.json"),
     Dui_Button_Clicked("/Duiooooooo.json"),
-    Voltraxis_Idle("/Animation/Voltraxis/Idle/AnimationData.json"),
+    Voltraxis_Idle("/Voltraxis/AnimationData/Idle/AnimationData.json"),
     Start_Button_Idle("/AnimationButton/StartButton/Idle.json"),
     Start_Button_Hovered("/AnimationButton/StartButton/Hovered.json"),
     Start_Button_Pressed("/AnimationButton/StartButton/Pressed.json"),

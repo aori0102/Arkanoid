@@ -30,7 +30,7 @@ public class VoltraxisHealthBar extends MonoBehaviour {
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
-        return new VoltraxisHealthBar(newOwner);
+        return null;
     }
 
     @Override
@@ -80,13 +80,13 @@ public class VoltraxisHealthBar extends MonoBehaviour {
 
     public void setVoltraxis(Voltraxis voltraxis) {
         this.voltraxis = voltraxis;
-        healthText.setText(voltraxis.getHealth() + " / " + voltraxis.getMaxHealth());
+        healthText.setText(voltraxis.getHealth() + " / " + VoltraxisData.BASE_MAX_HEALTH);
         voltraxis.onHealthChanged.addListener(this::voltraxis_onHealthChanged);
     }
 
     private void voltraxis_onHealthChanged(Object sender, Void e) {
-        ratio = (double) voltraxis.getHealth() / voltraxis.getMaxHealth();
-        healthText.setText(voltraxis.getHealth() + " / " + voltraxis.getMaxHealth());
+        ratio = (double) voltraxis.getHealth() / VoltraxisData.BASE_MAX_HEALTH;
+        healthText.setText(voltraxis.getHealth() + " / " + VoltraxisData.BASE_MAX_HEALTH);
         lastHealthChangeTick = Time.time;
     }
 

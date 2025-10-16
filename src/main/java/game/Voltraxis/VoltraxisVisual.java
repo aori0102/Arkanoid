@@ -20,7 +20,6 @@ public final class VoltraxisVisual extends MonoBehaviour {
         animator.addAnimationClip(AnimationClipData.Voltraxis_Idle);
         var renderer = addComponent(SpriteRenderer.class);
         renderer.setPivot(new Vector2(0.5, 0.5));
-        renderer.setSize(VoltraxisData.BOSS_SIZE);
     }
 
     @Override

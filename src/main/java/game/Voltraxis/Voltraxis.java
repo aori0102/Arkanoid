@@ -1,139 +1,32 @@
 package game.Voltraxis;
 
+import game.Voltraxis.Interface.IBossTarget;
+import game.Voltraxis.PowerCore.PowerCore;
 import org.*;
 import utils.Time;
 import utils.Vector2;
 
-public class Voltraxis extends MonoBehaviour {
+/**
+ * Main class of the Voltraxis boss. Handle central logic
+ * (damage, health, status...) and skills.
+ */
+public class Voltraxis extends MonoBehaviour implements IBossTarget {
 
-    private double basicCooldownMultiplier;
-    private PowerCore leftCore;
-    private PowerCore rightCore;
+    private static final Vector2 LEFT_CORE_POSITION = new Vector2(200.0, 400.0);
+    private static final Vector2 RIGHT_CORE_POSITION = new Vector2(800.0, 400.0);
+
+    private PowerCore leftCore = null;
+    private PowerCore rightCore = null;
+    private VoltraxisEffectManager voltraxisEffectManager = null;
 
     /// Stats
-    private final int maxHealth;
-    private int health;
-    private double attackMultiplier;
-    private double defenseMultiplier;
-    private double damageTakenProportion;
+    private int health = VoltraxisData.BASE_MAX_HEALTH;
 
     public EventHandler<Void> onHealthChanged = new EventHandler<>(this);
     public EventHandler<Void> onDamaged = new EventHandler<>(this);
-    public EventHandler<Void> onEffectAdded = new EventHandler<>(this);
 
     public Voltraxis(GameObject owner) {
-
         super(owner);
-
-        basicCooldownMultiplier = 1.0;
-
-        Time.addCoroutine(this::enhanceSkill, VoltraxisData.ENHANCE_SKILL_COOLDOWN);
-        Time.addCoroutine(this::basicSkill, VoltraxisData.BASIC_SKILL_COOLDOWN * basicCooldownMultiplier);
-
-        health = VoltraxisData.BASE_MAX_HEALTH;
-        maxHealth = health;
-        attackMultiplier = 1.0;
-        defenseMultiplier = 1.0;
-        damageTakenProportion = 1.0;
-
-        leftCore = null;
-        rightCore = null;
-
-        addComponent(BoxCollider.class).setLocalSize(VoltraxisData.BOSS_SIZE);
-
-    }
-
-    /**
-     * <b>Voltraxis' basic skill: Arc Discharge</b><br>
-     * Fires up to <b>5</b> electric orbs at varying angles
-     * toward the player, each dealing <b>63.2%</b> ATK. If hit,
-     * the player is stunned for <b>3s</b>.
-     */
-    private void basicSkill() {
-
-        Vector2[] directionArray = {
-                new Vector2(0.0, 1.0),
-                new Vector2(-0.2, 1.0),
-                new Vector2(-0.4, 1.0),
-                new Vector2(0.2, 1.0),
-                new Vector2(0.4, 1.0),
-        };
-        for (Vector2 direction : directionArray) {
-            var electricBall = VoltraxisPrefab.instantiateElectricBall();
-            electricBall.setDamage(
-                    (int) (VoltraxisData.BASE_ATTACK * attackMultiplier * VoltraxisData.ELECTRIC_BALL_ATTACK_PROPORTION)
-            );
-            electricBall.getTransform().setGlobalPosition(getTransform().getGlobalPosition());
-            electricBall.setDirection(direction);
-        }
-
-        Time.addCoroutine(this::basicSkill, Time.time + VoltraxisData.BASIC_SKILL_COOLDOWN * basicCooldownMultiplier);
-
-    }
-
-    /**
-     * <b>Voltraxis' enhance skill: Power Surge</b><br>
-     * Increases ATK by <b>10%</b> every <b>30s</b> for <b>20s</b>.
-     */
-    private void enhanceSkill() {
-
-        attackMultiplier += VoltraxisData.ENHANCE_ATTACK_INCREMENT;
-
-        Time.addCoroutine(this::onEnhanceSkillEnd, Time.time + VoltraxisData.ENHANCE_SKILL_DURATION);
-        Time.addCoroutine(this::enhanceSkill, Time.time + VoltraxisData.ENHANCE_SKILL_COOLDOWN);
-
-    }
-
-    /**
-     * Called upon enhance skill duration ends.
-     */
-    private void onEnhanceSkillEnd() {
-        attackMultiplier -= VoltraxisData.ENHANCE_ATTACK_INCREMENT;
-    }
-
-    /**
-     * <b>Voltraxis' groggy skill: Overhaul</b><br>
-     * When the Groggy Gauge is filled, Voltraxis enters the
-     * <b>Overhaul</b> state. In this mode, Arc Discharge cooldown
-     * is reduced by <b>35%</b> and ATK is increased by <b>20%</b>.
-     * When entering <b>Overhaul</b> state, Voltraxis begins charging
-     * toward <b>Super Nova</b>.
-     */
-    private void groggySkill() {
-
-        basicCooldownMultiplier -= VoltraxisData.GROGGY_BASIC_COOLDOWN_REDUCTION;
-        attackMultiplier += VoltraxisData.GROGGY_ATTACK_INCREMENT;
-
-        Time.addCoroutine(this::exSkill, VoltraxisData.GROGGY_TO_EX_CHARGE_TIME);
-
-    }
-
-    /**
-     * <b>Voltraxis' EX skill: Sword of Light, Super Nova</b><br>
-     * Voltraxis unleashes a devastating electric slash, dealing <b>247%</b> ATK.
-     */
-    protected void exSkill() {
-
-        /*
-        EX Skill - Sword of Light, Super Nova
-
-        */
-
-        // Check if EX is disrupted (both core destroyed)
-        if (leftCore != null || rightCore != null) {
-            System.out.println("Slash!!!!");
-        }
-
-    }
-
-    @Override
-    public void awake() {
-        Time.addCoroutine(this::spawnEffect, Time.time + 5);
-    }
-
-    private void spawnEffect() {
-        Time.addCoroutine(this::spawnEffect, Time.time + 5);
-        onEffectAdded.invoke(this, null);
     }
 
     @Override
@@ -149,26 +42,180 @@ public class Voltraxis extends MonoBehaviour {
         rightCore = null;
     }
 
+    @Override
+    public void awake() {
+        Time.addCoroutine(this::enhanceSkill, VoltraxisData.ENHANCE_SKILL_COOLDOWN);
+        Time.addCoroutine(this::basicSkill, VoltraxisData.BASIC_SKILL_COOLDOWN * voltraxisEffectManager.getBasicCooldownMultiplier());
+    }
+
+    @Override
+    public void damage(int amount) {
+
+        int finalDamage = (int) (amount * ((double) getDefence() / (getDefence() + VoltraxisData.DEFENSE_STRENGTH_SCALE)));
+        health -= finalDamage;
+        if (health <= 0) {
+            health = 0;
+            System.out.println("Boss ded");
+        }
+
+        onHealthChanged.invoke(this, null);
+        onDamaged.invoke(this, null);
+
+    }
+
+    /**
+     * <b>Voltraxis' basic skill: Arc Discharge</b><br>
+     * Fires up to <b>5</b> electric orbs at varying angles
+     * toward the player, each dealing <b>63.2%</b> ATK. If hit,
+     * the player is stunned for <b>3s</b>.
+     */
+    private void basicSkill() {
+
+        // Sample directions for every electric ball
+        Vector2[] directionArray = {
+                new Vector2(0.0, 1.0),
+                new Vector2(-0.2, 1.0),
+                new Vector2(-0.4, 1.0),
+                new Vector2(0.2, 1.0),
+                new Vector2(0.4, 1.0),
+        };
+
+        for (Vector2 direction : directionArray) {
+
+            // Instantiate electric ball
+            var electricBall = VoltraxisPrefab.instantiateElectricBall();
+
+            // Modify value
+            electricBall.setDamage(
+                    (int) (getAttack() * VoltraxisData.ELECTRIC_BALL_ATTACK_PROPORTION)
+            );
+            electricBall.getTransform().setGlobalPosition(getTransform().getGlobalPosition());
+            electricBall.setDirection(direction);
+
+        }
+
+        // Repeat basic skill after cooldown
+        Time.addCoroutine(this::basicSkill, Time.time + getBasicSkillCooldown());
+
+    }
+
+    /**
+     * <b>Voltraxis' enhance skill: Power Surge</b><br>
+     * Increases ATK by <b>10%</b> every <b>30s</b> for <b>20s</b>.
+     */
+    private void enhanceSkill() {
+
+        // Add attack increment effect
+        voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
+                VoltraxisData.EffectIndex.AttackIncrement,
+                VoltraxisData.ENHANCE_ATTACK_INCREMENT,
+                (delta) -> delta >= VoltraxisData.ENHANCE_SKILL_DURATION
+        ));
+
+        // Repeat enhance skill
+        Time.addCoroutine(this::enhanceSkill, Time.time + VoltraxisData.ENHANCE_SKILL_COOLDOWN);
+
+    }
+
+    /**
+     * <b>Voltraxis' groggy skill: Overhaul</b><br>
+     * When the Groggy Gauge is filled, Voltraxis enters the
+     * <b>Overhaul</b> state. In this mode, Arc Discharge cooldown
+     * is reduced by <b>35%</b> and ATK is increased by <b>20%</b>.
+     * When entering <b>Overhaul</b> state, Voltraxis begins charging
+     * toward <b>Super Nova</b>.
+     */
+    private void groggySkill() {
+
+        // Add attack increment effect
+        voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
+                VoltraxisData.EffectIndex.AttackIncrement,
+                VoltraxisData.GROGGY_ATTACK_INCREMENT,
+                (delta) -> delta >= VoltraxisData.GROGGY_DURATION
+        ));
+        // Add skill cooldown reduction effect
+        voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
+                VoltraxisData.EffectIndex.SkillCooldownDecrement,
+                VoltraxisData.GROGGY_BASIC_COOLDOWN_REDUCTION,
+                (delta) -> delta >= VoltraxisData.GROGGY_DURATION
+        ));
+        // Add charging effect
+        voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
+                VoltraxisData.EffectIndex.ChargingEX,
+                0.0,
+                (delta) -> delta >= VoltraxisData.GROGGY_TO_EX_CHARGE_TIME
+        ));
+
+        // Charge towards EX Skill
+        Time.addCoroutine(this::exSkill, VoltraxisData.GROGGY_TO_EX_CHARGE_TIME);
+
+    }
+
+    /**
+     * <b>Voltraxis' EX skill: Sword of Light, Super Nova</b><br>
+     * Voltraxis unleashes a devastating electric slash, dealing <b>247%</b> ATK.
+     */
+    protected void exSkill() {
+
+        // Check if EX is disrupted (both core destroyed)
+        if (leftCore != null || rightCore != null) {
+            System.out.println("Slash!!!!");
+        }
+
+    }
+
     /**
      * Spawn two power cores on either side of the board.
      */
     private void spawnPowerCores() {
+        spawnCore(leftCore, LEFT_CORE_POSITION);
+        spawnCore(rightCore, RIGHT_CORE_POSITION);
+    }
 
-        // Left
-        var leftCoreObject = GameObjectManager.instantiate("LeftCore");
-        var leftCore = leftCoreObject.addComponent(PowerCore.class);
-        leftCore.onPowerCoreDestroyed.addListener(this::powerCore_onPowerCoreDestroyed);
-        leftCore.setHealth((int) (VoltraxisData.BASE_MAX_HEALTH * VoltraxisData.POWER_CORE_PROPORTIONAL_HEALTH));
-        damageTakenProportion -= VoltraxisData.POWER_CORE_DAMAGE_TAKEN_REDUCTION;
-        this.leftCore = leftCore;
+    /**
+     * Power core spawning utility. Spawn a new power core and attach
+     * to {@code target}. {@code target} must be {@code null}, which means
+     * that the power core to be spawned to should not exist. The power
+     * core will be placed at {@code position}, the event
+     * {@link PowerCore#onPowerCoreDestroyed} will be listened to and
+     * Voltraxis will gain the pre-determined effects.
+     *
+     * @param target   The object to hold the new power core. Has to be
+     *                 {@code null} beforehand.
+     * @param position The position to spawn the power core
+     */
+    private void spawnCore(PowerCore target, Vector2 position) {
 
-        // Right
-        var rightCoreObject = GameObjectManager.instantiate("RightCore");
-        var rightCore = rightCoreObject.addComponent(PowerCore.class);
-        rightCore.onPowerCoreDestroyed.addListener(this::powerCore_onPowerCoreDestroyed);
-        rightCore.setHealth((int) (VoltraxisData.BASE_MAX_HEALTH * VoltraxisData.POWER_CORE_PROPORTIONAL_HEALTH));
-        damageTakenProportion -= VoltraxisData.POWER_CORE_DAMAGE_TAKEN_REDUCTION;
-        this.rightCore = rightCore;
+        // Check if target is valid (does not exist a power core beforehand)
+        if (target != null) {
+            throw new IllegalArgumentException("Power core to be assigned must be destroyed first to create new one!");
+        }
+
+        // Instantiate the power core
+        target = VoltraxisPrefab.instantiatePowerCore();
+        target.getTransform().setGlobalPosition(position);
+        int powerCoreHealth = (int) (VoltraxisData.BASE_MAX_HEALTH * VoltraxisData.POWER_CORE_PROPORTIONAL_HEALTH);
+        target.setHealth(powerCoreHealth);
+
+        // Final variable for lambda
+        PowerCore finalTarget = target;
+
+        // Add power core effect
+        voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
+                VoltraxisData.EffectIndex.PowerCore,
+                0.0,
+                (_) -> finalTarget.getGameObject().isDestroyed()
+        ));
+
+        // Add effect on damage taken decrement
+        voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
+                VoltraxisData.EffectIndex.DamageTakenDecrement,
+                VoltraxisData.POWER_CORE_DAMAGE_TAKEN_REDUCTION,
+                (_) -> finalTarget.getGameObject().isDestroyed()
+        ));
+
+        // Link destroyed event
+        target.onPowerCoreDestroyed.addListener(this::powerCore_onPowerCoreDestroyed);
 
     }
 
@@ -193,30 +240,96 @@ public class Voltraxis extends MonoBehaviour {
             }
 
             core.onPowerCoreDestroyed.removeListener(this::powerCore_onPowerCoreDestroyed);
-            damageTakenProportion += VoltraxisData.POWER_CORE_DAMAGE_TAKEN_REDUCTION;
 
         }
 
     }
 
+    /**
+     * Get Voltraxis' current HP.
+     *
+     * @return Voltraxis' currentHP.
+     */
     public int getHealth() {
         return health;
     }
 
-    public int getMaxHealth() {
-        return maxHealth;
+    /**
+     * Get Voltraxis' current DEF, with modifier included.
+     *
+     * @return Voltraxis' current DEF.
+     */
+    public int getDefence() {
+        return (int) (voltraxisEffectManager.getDefenseMultiplier() * VoltraxisData.BASE_DEFENSE);
     }
 
-    public void damage(int amount) {
+    /**
+     * Get Voltraxis' current ATK, with modifier included.
+     *
+     * @return Voltraxis' current DEF.
+     */
+    public int getAttack() {
+        return (int) (voltraxisEffectManager.getAttackMultiplier() * VoltraxisData.BASE_ATTACK);
+    }
 
-        health -= amount;
-        if (health <= 0) {
-            System.out.println("Boss ded");
-        }
+    /**
+     * Get Voltraxis' basic skill cooldown, with modifier included.
+     *
+     * @return Voltraxis' basic skill cooldown.
+     */
+    public double getBasicSkillCooldown() {
+        return VoltraxisData.BASIC_SKILL_COOLDOWN * voltraxisEffectManager.getBasicCooldownMultiplier();
+    }
 
-        onHealthChanged.invoke(this, null);
-        onDamaged.invoke(this, null);
+    /**
+     * Attach {@link VoltraxisEffectManager} to this
+     * object.<br>
+     * <b>This function can only be called within
+     * {@link VoltraxisPrefab} as part of initialization.</b>
+     *
+     * @param voltraxisEffectManager The {@link VoltraxisEffectManager}
+     *                               object to attach.
+     */
+    public void attachVoltraxisEffectManager(VoltraxisEffectManager voltraxisEffectManager) {
+        this.voltraxisEffectManager = voltraxisEffectManager;
+    }
 
+    /**
+     * Attach {@link VoltraxisGroggyGauge} to this object.<br>
+     * <b>This function can only be called within
+     * {@link VoltraxisPrefab} as part of initialization.</b>
+     *
+     * @param voltraxisGroggyGauge The {@link VoltraxisGroggyGauge}
+     *                             object to attach.
+     */
+    public void attachVoltraxisGroggyGauge(VoltraxisGroggyGauge voltraxisGroggyGauge) {
+        voltraxisGroggyGauge.onGroggyReachedMax.addListener(this::groggyGauge_onGroggyReachedMax);
+        voltraxisGroggyGauge.onGroggyToDeployPowerCore.addListener(this::groggyGauge_onGroggyToDeployPowerCore);
+    }
+
+    /**
+     * Called from {@link VoltraxisGroggyGauge#onGroggyReachedMax}
+     * when Voltraxis' groggy gauge has reached is maximum value. Thus,
+     * Voltraxis will activate {@link #groggySkill()}.
+     *
+     * @param sender {@link VoltraxisGroggyGauge}.
+     * @param e      Empty event argument.
+     */
+    private void groggyGauge_onGroggyReachedMax(Object sender, Void e) {
+        groggySkill();
+    }
+
+    /**
+     * Called from {@link VoltraxisGroggyGauge#onGroggyToDeployPowerCore}
+     * when Voltraxis' groggy gauge surpasses the minimum amount to deploy
+     * {@link PowerCore}s. This value is indicated through
+     * {@link VoltraxisData#MIN_GROGGY_ON_POWER_CORE_DEPLOY}.
+     *
+     * @param sender {@link VoltraxisGroggyGauge}.
+     * @param e      Empty event argument.
+     */
+    private void groggyGauge_onGroggyToDeployPowerCore(Object sender, Void e) {
+        spawnPowerCores();
     }
 
 }

@@ -10,7 +10,7 @@
 
 
 
-* **Health**:	125
+* **Health**:	3125
 * **Attack**:	42
 * **Defense**:	36
 
@@ -61,7 +61,7 @@ Deploys two Power Cores on either side of the arena, each protected by bricks an
 
 
 
-Destroying both cores forces Voltraxis into the Lockdown state for **10s**. This also disrupt its way to Super Nova. Power Cores can only be deployed after each Groggy phase.
+Destroying both cores forces Voltraxis into the Lockdown state for **10s**. This also disrupt its way to Super Nova. Power Cores are deployed when groggy surpasses **50%**
 
 
 

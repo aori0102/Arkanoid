@@ -8,17 +8,27 @@ import utils.Time;
 import utils.Vector2;
 
 import java.util.LinkedList;
+import java.util.function.Function;
 
 public final class VoltraxisEffectManager extends MonoBehaviour {
 
-    private static final double TIME_BEFORE_REMOVAL = 3.2;
     private static final Vector2 ICON_OFFSET = new Vector2(30.0, 0.0);
 
-    private Voltraxis voltraxis = null;
+    private double attackMultiplier = 1.0;
+    private double defenseMultiplier = 1.0;
+    private double basicCooldownMultiplier = 1.0;
+    private double damageTakenProportion = 1.0;
 
-    private record EffectUILinker(
+    public record EffectInfo(
             VoltraxisData.EffectIndex index,
             double value,
+            Function<Double, Boolean> skillEndConstraint
+    ) {
+    }
+
+    private record EffectUILinker(
+            double skillStartTick,
+            EffectInfo info,
             VoltraxisEffectIcon icon
     ) {
     }
@@ -44,16 +54,82 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
         effectUILinkerList.clear();
     }
 
-    void addEffect(VoltraxisData.EffectIndex index, double value, double duration) {
+    @Override
+    public void update() {
 
-        var iconUI = VoltraxisPrefab.instantiateVoltraxisEffectIcon(index);
+        var iterator = effectUILinkerList.listIterator();
+        while (iterator.hasNext()) {
+
+            var uiLinker = iterator.next();
+            var index = iterator.nextIndex();
+
+            if (uiLinker.info.skillEndConstraint.apply(Time.time - uiLinker.skillStartTick)) {
+
+                iterator.remove();
+                GameObjectManager.destroy(uiLinker.icon.getGameObject());
+
+                switch (uiLinker.info.index) {
+
+                    case VoltraxisData.EffectIndex.AttackIncrement:
+                        attackMultiplier -= uiLinker.info.value;
+                        break;
+
+                    case VoltraxisData.EffectIndex.DefenceReduction:
+                        defenseMultiplier += uiLinker.info.value;
+                        break;
+
+                    case VoltraxisData.EffectIndex.DamageTakenDecrement:
+                        damageTakenProportion += uiLinker.info.value;
+                        break;
+
+                    case VoltraxisData.EffectIndex.DamageTakenIncrement:
+                        damageTakenProportion -= uiLinker.info.value;
+                        break;
+
+                    case VoltraxisData.EffectIndex.SkillCooldownDecrement:
+                        basicCooldownMultiplier += uiLinker.info.value;
+                        break;
+
+                }
+            } else {
+                uiLinker.icon.setTargetPosition(ICON_OFFSET.multiply(index));
+            }
+
+        }
+
+    }
+
+    public void addEffect(EffectInfo info) {
+
+        switch (info.index) {
+
+            case VoltraxisData.EffectIndex.AttackIncrement:
+                attackMultiplier += info.value;
+                break;
+
+            case VoltraxisData.EffectIndex.DefenceReduction:
+                defenseMultiplier -= info.value;
+                break;
+
+            case VoltraxisData.EffectIndex.DamageTakenDecrement:
+                damageTakenProportion -= info.value;
+                break;
+
+            case VoltraxisData.EffectIndex.DamageTakenIncrement:
+                damageTakenProportion += info.value;
+                break;
+
+            case VoltraxisData.EffectIndex.SkillCooldownDecrement:
+                basicCooldownMultiplier -= info.value;
+                break;
+
+        }
+
+        var iconUI = VoltraxisPrefab.instantiateVoltraxisEffectIcon(info.index);
         iconUI.getGameObject().setParent(getGameObject());
-        var uiLinker = new EffectUILinker(index, value, iconUI);
         iconUI.setEntry(ICON_OFFSET.multiply(effectUILinkerList.size()));
+        var uiLinker = new EffectUILinker(Time.time, info, iconUI);
         effectUILinkerList.add(uiLinker);
-
-        Time.addCoroutine(() -> onEffectReachingRemoval(uiLinker), Time.time + TIME_BEFORE_REMOVAL);
-        Time.addCoroutine(() -> removeEffect(uiLinker), Time.time + duration);
 
     }
 
@@ -61,32 +137,7 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
         uiLinker.icon.setPulse();
     }
 
-    private void removeEffect(EffectUILinker uiLinker) {
-
-        var temp = effectUILinkerList.listIterator();
-        boolean removed = false;
-        while (temp.hasNext()) {
-
-            var index = temp.nextIndex();
-            var value = temp.next();
-            if (removed) {
-                value.icon.setTargetPosition(ICON_OFFSET.multiply(index));
-            } else if (value == uiLinker) {
-                temp.remove();
-                removed = true;
-                GameObjectManager.destroy(value.icon.getGameObject());
-            }
-
-        }
-
-    }
-
-    void setVoltraxis(Voltraxis voltraxis) {
-        this.voltraxis = voltraxis;
-        voltraxis.onEffectAdded.addListener(this::onEffectSpawned);
-    }
-
-    private void onEffectSpawned(Object sender, Void e) {
+    private void onEffectSpawned(Object sender, EffectInfo e) {
         VoltraxisData.EffectIndex index = switch (Random.Range(0, 4)) {
             case 0 -> VoltraxisData.EffectIndex.PowerCore;
             case 1 -> VoltraxisData.EffectIndex.AttackIncrement;
@@ -94,7 +145,23 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
             case 3 -> VoltraxisData.EffectIndex.DefenceReduction;
             default -> null;
         };
-        addEffect(index, 2.5, Random.Range(3.9, 6.8));
+        addEffect(e);
+    }
+
+    public double getAttackMultiplier() {
+        return attackMultiplier;
+    }
+
+    public double getDefenseMultiplier() {
+        return defenseMultiplier;
+    }
+
+    public double getDamageTakenProportion() {
+        return damageTakenProportion;
+    }
+
+    public double getBasicCooldownMultiplier() {
+        return basicCooldownMultiplier;
     }
 
 }

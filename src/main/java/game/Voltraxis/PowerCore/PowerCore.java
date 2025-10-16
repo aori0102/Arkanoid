@@ -1,16 +1,18 @@
-package game.Voltraxis;
+package game.Voltraxis.PowerCore;
 
+import game.Voltraxis.Interface.IBossTarget;
 import org.EventHandler;
 import org.GameObject;
 import org.GameObjectManager;
 import org.MonoBehaviour;
 
-public class PowerCore extends MonoBehaviour {
+public class PowerCore extends MonoBehaviour implements IBossTarget {
 
     private int health;
     private int maxHealth;
 
     public EventHandler<Void> onPowerCoreDestroyed = new EventHandler<>(this);
+    public EventHandler<Void> onHealthChanged = new EventHandler<>(this);
 
     public int getHealth() {
         return health;
@@ -41,11 +43,14 @@ public class PowerCore extends MonoBehaviour {
 
     @Override
     protected void destroyComponent() {
-
+        onPowerCoreDestroyed = null;
+        onHealthChanged = null;
     }
 
-    private void damage(int amount) {
+    @Override
+    public void damage(int amount) {
         health -= amount;
+        onHealthChanged.invoke(this, null);
         if (health <= 0) {
             onPowerCoreDestroyed.invoke(this, null);
             GameObjectManager.destroy(gameObject);

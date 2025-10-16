@@ -18,6 +18,7 @@ public class VoltraxisGroggyGauge extends MonoBehaviour {
     private double ratio = 0.0;
 
     public EventHandler<Void> onGroggyReachedMax = new EventHandler<>(this);
+    public EventHandler<Void> onGroggyToDeployPowerCore = new EventHandler<>(this);
 
     /**
      * Create this MonoBehaviour.

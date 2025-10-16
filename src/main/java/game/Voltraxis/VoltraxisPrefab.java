@@ -1,5 +1,7 @@
 package game.Voltraxis;
 
+import game.Voltraxis.PowerCore.PowerCore;
+import game.Voltraxis.PowerCore.PowerCoreHealthBar;
 import javafx.scene.paint.Color;
 import org.*;
 import utils.Vector2;
@@ -24,15 +26,45 @@ public final class VoltraxisPrefab {
 
     /// Boss position
     private static final Vector2 BOSS_POSITION = new Vector2(600.0, 300.0);
+    private static final Vector2 BOSS_RENDER_SIZE = new Vector2(300.0, 300.0);
+    private static final Vector2 BOSS_COLLIDER_SIZE = new Vector2(230.0, 230.0);
+
+    /// Power core
+    private static final Vector2 POWER_CORE_COLLIDER_SIZE = new Vector2(80.0, 80.0);
+    private static final Vector2 POWER_CORE_RENDER_SIZE = new Vector2(128.0, 128.0);
+    private static final Vector2 POWER_CORE_UI_OFFSET = new Vector2(0.0, -60.0);
+    private static final Vector2 POWER_CORE_HEALTH_BAR_RENDER_SIZE = new Vector2(146.0, 14.29);
 
     public static GameObject instantiate() {
+
+        var voltraxisObject = GameObjectManager.instantiate("Boss");
+
+        // Create components
         var voltraxis = instantiateVoltraxis();
-        var voltraxisObject = voltraxis.getGameObject();
-        var voltraxisBossObject = GameObjectManager.instantiate("Voltraxis");
-        instantiateUI(voltraxis).setParent(voltraxisBossObject);
-        instantiateVisual(voltraxis).getGameObject().setParent(voltraxisObject);
-        voltraxisObject.getTransform().setGlobalPosition(BOSS_POSITION);
+        var groggyGauge = instantiateGroggyGauge();
+        var effectManager = instantiateEffectManager();
+        var healthBar = instantiateHealthBar();
+        var visual = instantiateVisual();
+
+        // Link components
+        voltraxis.attachVoltraxisEffectManager(effectManager);
+        voltraxis.attachVoltraxisGroggyGauge(groggyGauge);
+        groggyGauge.setVoltraxis(voltraxis);
+        healthBar.setVoltraxis(voltraxis);
+        visual.setVoltraxis(voltraxis);
+
+        // Parent components
+        voltraxis.getGameObject().setParent(voltraxisObject);
+        groggyGauge.getGameObject().setParent(voltraxisObject);
+        healthBar.getGameObject().setParent(voltraxisObject);
+        visual.getGameObject().setParent(voltraxis.getGameObject());
+        effectManager.getGameObject().setParent(voltraxisObject);
+
+        // Starting position
+        voltraxis.getTransform().setGlobalPosition(BOSS_POSITION);
+
         return voltraxisObject;
+
     }
 
     static ElectricBall instantiateElectricBall() {
@@ -61,43 +93,110 @@ public final class VoltraxisPrefab {
 
     }
 
+    static PowerCore instantiatePowerCore() {
+
+        var centerPivot = new Vector2(0.5, 0.5);
+
+        // Core object
+        var powerCoreObject = GameObjectManager.instantiate("PowerCore");
+        var powerCore = powerCoreObject.addComponent(PowerCore.class);
+        var powerCoreCollider = powerCoreObject.addComponent(BoxCollider.class);
+        powerCoreCollider.setLocalSize(POWER_CORE_COLLIDER_SIZE);
+
+        // Visual object
+        var powerCoreVisualObject = GameObjectManager.instantiate("Visual");
+        powerCoreVisualObject.setParent(powerCoreObject);
+        var powerCoreVisualRenderer = powerCoreVisualObject.addComponent(SpriteRenderer.class);
+        powerCoreVisualRenderer.setPivot(centerPivot);
+        powerCoreVisualRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_PowerCore.getImage());
+        powerCoreVisualRenderer.setSize(POWER_CORE_RENDER_SIZE);
+
+        // UI object
+        var powerCoreUIObject = GameObjectManager.instantiate("PowerCoreUI");
+        powerCoreUIObject.setParent(powerCoreObject);
+        powerCoreUIObject.getTransform().setLocalPosition(POWER_CORE_UI_OFFSET);
+
+        // Health bar object
+        var healthBarObject = GameObjectManager.instantiate("HealthBar");
+        var healthBar = healthBarObject.addComponent(PowerCoreHealthBar.class);
+        healthBarObject.setParent(powerCoreUIObject);
+
+        // Background
+        var backgroundObject = GameObjectManager.instantiate("Background");
+        var backgroundRenderer = backgroundObject.addComponent(SpriteRenderer.class);
+        backgroundRenderer.setPivot(centerPivot);
+        backgroundRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_PowerCore_UI_HealthBar_Background.getImage());
+        backgroundRenderer.setSize(POWER_CORE_HEALTH_BAR_RENDER_SIZE);
+        backgroundRenderer.setRenderLayer(RenderLayer.UI);
+        backgroundObject.setParent(healthBarObject);
+
+        // Fill lost
+        var fillLostObject = GameObjectManager.instantiate("FillLost");
+        var fillLostRenderer = fillLostObject.addComponent(SpriteRenderer.class);
+        fillLostRenderer.setPivot(centerPivot);
+        fillLostRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_PowerCore_UI_HealthBar_Lost.getImage());
+        fillLostRenderer.setSize(POWER_CORE_HEALTH_BAR_RENDER_SIZE);
+        fillLostRenderer.setRenderLayer(RenderLayer.UI);
+        fillLostRenderer.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);
+        fillLostObject.setParent(healthBarObject);
+
+        // Fill remain
+        var fillRemainObject = GameObjectManager.instantiate("FillRemain");
+        var fillRemainRenderer = fillRemainObject.addComponent(SpriteRenderer.class);
+        fillRemainRenderer.setPivot(centerPivot);
+        fillRemainRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_PowerCore_UI_HealthBar_Remain.getImage());
+        fillRemainRenderer.setSize(POWER_CORE_HEALTH_BAR_RENDER_SIZE);
+        fillRemainRenderer.setRenderLayer(RenderLayer.UI);
+        fillRemainRenderer.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);
+        fillRemainObject.setParent(healthBarObject);
+
+        // Outline
+        var outlineObject = GameObjectManager.instantiate("Outline");
+        var outlineRenderer = outlineObject.addComponent(SpriteRenderer.class);
+        outlineRenderer.setPivot(centerPivot);
+        outlineRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_PowerCore_UI_HealthBar_Outline.getImage());
+        outlineRenderer.setSize(POWER_CORE_HEALTH_BAR_RENDER_SIZE);
+        outlineRenderer.setRenderLayer(RenderLayer.UI);
+        outlineObject.setParent(healthBarObject);
+
+        // Link components
+        healthBar.setFillLost(fillLostRenderer);
+        healthBar.setFillRemain(fillRemainRenderer);
+        healthBar.setPowerCore(powerCore);
+
+        return powerCore;
+
+    }
+
     private static Voltraxis instantiateVoltraxis() {
 
         // Main object
         var voltraxisObject = GameObjectManager.instantiate("Voltraxis");
-        return voltraxisObject.addComponent(Voltraxis.class);
+        var voltraxis = voltraxisObject.addComponent(Voltraxis.class);
+        voltraxisObject.addComponent(BoxCollider.class).setLocalSize(BOSS_COLLIDER_SIZE);
+        return voltraxis;
 
     }
 
-    private static VoltraxisVisual instantiateVisual(Voltraxis voltraxis) {
+    private static VoltraxisVisual instantiateVisual() {
 
         var visualObject = GameObjectManager.instantiate("Visual");
         var visual = visualObject.addComponent(VoltraxisVisual.class);
-        visual.setVoltraxis(voltraxis);
+        visual.addComponent(SpriteRenderer.class).setSize(BOSS_RENDER_SIZE);
         return visual;
 
     }
 
-    private static GameObject instantiateUI(Voltraxis voltraxis) {
-        var uiObject = GameObjectManager.instantiate("Voltraxis UI");
-        instantiateHealthBar(voltraxis).setParent(uiObject);
-        instantiateGroggyGauge(voltraxis).setParent(uiObject);
-        instantiateEffectManager(voltraxis).setParent(uiObject);
-        return uiObject;
-    }
-
-    private static GameObject instantiateEffectManager(Voltraxis voltraxis) {
+    private static VoltraxisEffectManager instantiateEffectManager() {
 
         var effectManagerObject = GameObjectManager.instantiate("Effect Manager");
         effectManagerObject.getTransform().setGlobalPosition(EFFECT_BAR_ANCHOR);
-        var effectManager = effectManagerObject.addComponent(VoltraxisEffectManager.class);
-        effectManager.setVoltraxis(voltraxis);
 
-        return effectManagerObject;
+        return effectManagerObject.addComponent(VoltraxisEffectManager.class);
 
     }
 
-    private static GameObject instantiateGroggyGauge(Voltraxis voltraxis) {
+    private static VoltraxisGroggyGauge instantiateGroggyGauge() {
 
         var centerPivot = new Vector2(0.5, 0.5);
 
@@ -136,13 +235,12 @@ public final class VoltraxisPrefab {
 
         // Link component
         groggyGauge.setFill(fillRenderer);
-        groggyGauge.setVoltraxis(voltraxis);
 
-        return groggyObject;
+        return groggyGauge;
 
     }
 
-    private static GameObject instantiateHealthBar(Voltraxis voltraxis) {
+    private static VoltraxisHealthBar instantiateHealthBar() {
 
         var centerPivot = new Vector2(0.5, 0.5);
 
@@ -172,7 +270,7 @@ public final class VoltraxisPrefab {
         // Fill remain
         var remainObject = GameObjectManager.instantiate("Remain Health");
         var remainSpriteRenderer = remainObject.addComponent(SpriteRenderer.class);
-        remainSpriteRenderer.setImage(ImageAsset.ImageIndex.Remain.getImage());
+        remainSpriteRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_HealthBar_Remain.getImage());
         remainSpriteRenderer.setPivot(centerPivot);
         remainSpriteRenderer.setRenderLayer(RenderLayer.UI);
         remainSpriteRenderer.setSize(HEALTH_BAR_SIZE);
@@ -214,9 +312,8 @@ public final class VoltraxisPrefab {
         healthBar.setHealthText(healthText);
         healthBar.setHealthLostImage(lostSpriteRenderer);
         healthBar.setHealthRemainImage(remainSpriteRenderer);
-        healthBar.setVoltraxis(voltraxis);
 
-        return healthBarObject;
+        return healthBar;
 
     }
 
