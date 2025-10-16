@@ -10,6 +10,7 @@ public enum BrickType {
     Bomb(50, 30),
     Gift(10, 10),
     Reborn(10, 10),
+    Ball(10, 10),
     Angel(10, 10);
 
 

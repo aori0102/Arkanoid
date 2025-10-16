@@ -1,6 +1,7 @@
 package game.Brick.BrickEvent;
 
-import game.Brick.BrickObj;
+import game.Brick.Brick;
+import game.Brick.BrickType;
 import org.GameObjectManager;
 
 import java.util.Collections;
@@ -12,7 +13,7 @@ public final class CollisionEvent {
 
     private final static int damage = 10;
 
-    public static void ColliEvent(int r, int c, BrickObj.BrickType brickType) {
+    public static void ColliEvent(int r, int c, BrickType brickType) {
         if (!matrixObj.inBounds(r, c)) return;
 
         matrixObj.hitDamage(r, c, damage);
@@ -49,9 +50,9 @@ public final class CollisionEvent {
                         int y = died.get(i).se();
 
                         var brickObject = GameObjectManager.instantiate("Brick");
-                        var brickComponent = brickObject.addComponent(BrickObj.class);
+                        var brickComponent = brickObject.addComponent(Brick.class);
 
-                        matrixObj.set(x, y, getNewBrick(BrickObj.BrickType.Normal));
+                        matrixObj.set(x, y, getNewBrick(BrickType.Normal));
                     }
                 }
             }

@@ -1,6 +1,8 @@
 package game;
 
 import game.Brick.Brick;
+import game.Brick.BrickFactory;
+import game.GameManager.GameManager;
 import game.GameObject.BallsManager;
 import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
@@ -8,6 +10,7 @@ import game.Perks.Object.CooldownPerk;
 import game.PowerUp.Index.PowerUpManager;
 import game.PowerUp.DuplicateBall;
 import game.PowerUp.TriplicateBall;
+import game.UI.StartButton;
 import game.Voltraxis.VoltraxisPrefab;
 import game.GameObject.Arrow;
 import game.GameObject.Ball;
@@ -120,14 +123,15 @@ public class Init {
         var coolDownPerk = GameObjectManager.instantiate("coolDownPerk");
         coolDownPerk.addComponent(CooldownPerk.class);
         coolDownPerk.getTransform().setGlobalPosition(new Vector2(300, 300));
-//
-//        var startButton = GameObjectManager.instantiate("StartButton");
-//        startButton.addComponent(StartButton.class);
-//        startButton.getTransform().setGlobalPosition(new Vector2(100,100));
+
+
+
+        var startButton = GameObjectManager.instantiate("StartButton");
+        startButton.addComponent(StartButton.class);
+        startButton.getTransform().setGlobalPosition(new Vector2(100,100));
     }
 
     public static void Init_Duc() {
-
     }
 
     public static void Init_Aori() {

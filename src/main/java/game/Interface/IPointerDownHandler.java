@@ -4,7 +4,6 @@ package game.Interface;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import org.GameObject;
-import org.IRenderable;
 import org.Transform;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public interface IPointerDownHandler {
     /**
      * Attach this click handler to a {@link GameObject} and all of its children.
      * <p>
-     * This will collect every component in the GameObject hierarchy that implements {@link IRenderable},
+     * This will collect every component in the GameObject hierarchy that implements {@link org.Renderable},
      * retrieve its underlying JavaFX {@link Node}, and register a mouse pressed event listener on it.
      * </p>
      *

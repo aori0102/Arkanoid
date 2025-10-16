@@ -26,8 +26,8 @@ public class BrickFactory {
 
     public void setup() {
         var brickObject = GameObjectManager.instantiate("Brick");
-        var brickComponent = brickObject.addComponent(BrickObj.class);
-        brickComponent.setType(BrickObj.BrickType.Normal);
+        var brickComponent = brickObject.addComponent(Brick.class);
+        brickComponent.setType(BrickType.Normal);
         matrixObj = new BrickMatrix(rowData, colData, brickComponent);
 
         endEvent = new EndEvent();
@@ -39,7 +39,7 @@ public class BrickFactory {
         int col = brickPosition.se();
 
         if (matrixObj.inBounds(row, col) && !matrixObj.isDestroyed(row, col)) {
-            BrickObj.BrickType brickType = matrixObj.getObjType(row, col);
+            BrickType brickType = matrixObj.getObjType(row, col);
         }
     }
 

@@ -1,14 +1,12 @@
 package org;
 
 public enum AnimationClipData {
-    Bocchi_Idle("/Animation/Bocchi/Idle.json"),
     _Placeholder("/something.json"),
-    Dui_Button_Idle("/Duiooooooo.json"),
-    Dui_Button_Hovered("/Duiooooooo.json"),
-    Dui_Button_Pressed("/Duiooooooo.json"),
-    Dui_Button_Released("/Duiooooooo.json"),
-    Dui_Button_Clicked("/Duiooooooo.json"),
+
+    /// Voltraxis
     Voltraxis_Idle("/Voltraxis/AnimationData/Idle/AnimationData.json"),
+
+    /// Button
     Start_Button_Idle("/Animation/Button/StartButton/Idle.json"),
     Start_Button_Hovered("/Animation/Button/StartButton/Hovered.json"),
     Start_Button_Pressed("/Animation/Button/StartButton/Pressed.json"),
@@ -40,11 +38,11 @@ public enum AnimationClipData {
     Menu_Button_Released("/Animation/Button/MenuButton/Released.json"),
     Menu_Button_Clicked("/Animation/Button/MenuButton/Clicked.json"),
 
+    /// Perk
     Health_Perk("/Animation/Perk/HealthPerk.json"),
     Attach_Perk("/Animation/Perk/AttachPerk.json"),
     Cooldown_Perk("/Animation/Perk/CooldownPerk.json"),
     Speed_Perk("/Animation/Perk/SpeedPerk.json"),
-
 
     _None("/");
 

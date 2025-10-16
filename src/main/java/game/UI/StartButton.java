@@ -22,7 +22,8 @@ public class StartButton extends BaseButton {
 
     @Override
     protected void baseButton_onPointerClicked(Object sender, MouseEvent e) {
-        GameManager.instance.startGame();
+        System.out.println("BaseButton_onPointerClicked");
+        //GameManager.instance.startGame();
     }
 
 
