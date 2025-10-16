@@ -12,8 +12,10 @@ public class ImageAsset {
         DuplicateBall("/duplicateBall.png"),
         TriplicateBall("/triplicate_ball.png"),
         Ball("/ball.png"),
+        //Buttons
         GeneralButtons("/GeneralButtons.png"),
-
+        //Perks
+        Perks("/Perks.png"),
         /// Voltraxis
         Voltraxis_Anim_Idle("/Animation/Voltraxis/Idle/SpriteSheet.png"),
         Voltraxis_ElectricBall("/electric_ball.png"),
@@ -28,7 +30,7 @@ public class ImageAsset {
         Voltraxis_UI_Groggy_Background("/UI/Voltraxis/Groggy/Background.png"),
         Voltraxis_UI_Groggy_Fill("/UI/Voltraxis/Groggy/Fill.png"),
         Voltraxis_UI_Groggy_Outline("/UI/Voltraxis/Groggy/Outline.png"),
-
+        //PlayerObject
         Paddle("/paddle.png"),
         Laser("/laser.png"),
         Arrow("/arrow.png"),

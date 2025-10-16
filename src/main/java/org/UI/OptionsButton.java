@@ -1,5 +1,6 @@
 package org.UI;
 
+import javafx.scene.input.MouseEvent;
 import org.AnimationClipData;
 import org.GameObject;
 
@@ -15,5 +16,10 @@ public class OptionsButton extends BaseButton {
         pressedKey = AnimationClipData.Options_Button_Pressed;
         releasedKey = AnimationClipData.Options_Button_Released;
         clickedKey = AnimationClipData.Options_Button_Clicked;
+    }
+
+    @Override
+    protected void baseButton_onPointerClicked(Object sender, MouseEvent e) {
+
     }
 }

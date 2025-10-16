@@ -2,17 +2,19 @@ package game.Perks;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import org.*;
+import org.AnimationClipData;
+import org.GameObject;
+import org.TextHorizontalAlignment;
+import org.TextVerticalAlignment;
 import utils.Vector2;
 
-public class HealthPerk extends Perk {
-
+public class AttackPerk extends Perk {
     /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
-    public HealthPerk(GameObject owner) {
+    public AttackPerk(GameObject owner) {
         super(owner);
     }
 
@@ -24,14 +26,13 @@ public class HealthPerk extends Perk {
 
     @Override
     protected void setUpVisual() {
-        textUI.setText("Increase health!");
-        perkKey = AnimationClipData.Health_Perk;
+        textUI.setText("Increase attack!");
+        perkKey = AnimationClipData.Attach_Perk;
 
     }
 
     @Override
     protected void perk_onPointerClicked(Object sender, MouseEvent e) {
-        System.out.println("Increase health!");
+        System.out.println("Increase attack!");
     }
-
 }

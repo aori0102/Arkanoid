@@ -2,36 +2,31 @@ package game.Perks;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import org.*;
+import org.AnimationClipData;
+import org.GameObject;
+import org.TextHorizontalAlignment;
+import org.TextVerticalAlignment;
 import utils.Vector2;
 
-public class HealthPerk extends Perk {
-
+public class SpeedPerk extends Perk {
     /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
-    public HealthPerk(GameObject owner) {
+    public SpeedPerk(GameObject owner) {
         super(owner);
     }
 
     @Override
-    public void awake() {
-        super.awake();
-        this.onPointerClicked.addListener(this::perk_onPointerClicked);
-    }
-
-    @Override
     protected void setUpVisual() {
-        textUI.setText("Increase health!");
-        perkKey = AnimationClipData.Health_Perk;
+        textUI.setText("Increase speed!");
 
+        perkKey = AnimationClipData.Speed_Perk;
     }
 
     @Override
     protected void perk_onPointerClicked(Object sender, MouseEvent e) {
-        System.out.println("Increase health!");
+        System.out.println("Increase speed!");
     }
-
 }
