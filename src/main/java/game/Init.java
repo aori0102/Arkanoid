@@ -6,9 +6,13 @@ import game.Perks.CooldownPerk;
 import game.PowerUp.PowerUpManager;
 import game.PowerUp.powerUpDrop.DuplicateBall;
 import game.PowerUp.powerUpDrop.TriplicateBall;
+import game.Voltraxis.Voltraxis;
+import game.Voltraxis.VoltraxisPrefab;
 import game.object.Arrow;
 import game.object.Ball;
 import game.object.Paddle;
+import game.Player.Player;
+import game.Player.PlayerPowerUpHandler;
 import org.*;
 import utils.Time;
 import utils.Vector2;
@@ -18,6 +22,7 @@ public class Init {
 
     public static void Init_Kine() {
         var paddle = GameObjectManager.instantiate("paddle");
+        GameObjectManager.instantiate("paddle");
         paddle.addComponent(Paddle.class);
         paddle.addComponent(PlayerInput.class);
         paddle.addComponent(ActionMap.class);
@@ -34,7 +39,7 @@ public class Init {
         ball.addComponent(Ball.class);
         ball.addComponent(BoxCollider.class);
         ball.getComponent(Ball.class).setPaddle(paddle.getComponent(Paddle.class));
-        ball.getTransform().setGlobalPosition(new Vector2(584,530 ));
+        ball.getTransform().setGlobalPosition(new Vector2(584, 530));
         ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
 
         var ballVisual = GameObjectManager.instantiate("ballVisual");
@@ -61,7 +66,7 @@ public class Init {
 
         var brick = GameObjectManager.instantiate("brick");
         brick.addComponent(Brick.class);
-        brick.getTransform().setGlobalPosition(new Vector2(300 , 300));
+        brick.getTransform().setGlobalPosition(new Vector2(300, 300));
         brick.getTransform().setGlobalScale(new Vector2(2, 2));
         brick.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
 
@@ -77,6 +82,32 @@ public class Init {
 
         var obstacleManager = GameObjectManager.instantiate("obstacleManager");
         obstacleManager.addComponent(ObstacleManager.class);
+
+
+        ObstacleManager.instance.setPaddle(paddle.getComponent(Paddle.class));
+        ObstacleManager.instance.addObstacle(laser.getComponent(Laser.class));
+
+        var ballsManager = GameObjectManager.instantiate("ballManager");
+        ballsManager.addComponent(BallsManager.class);
+
+        var powerUpManager = GameObjectManager.instantiate("powerUpManager");
+        powerUpManager.addComponent(PowerUpManager.class);
+        PowerUpManager.instance.addPowerUp(duplicateBall.getComponent(DuplicateBall.class));
+        PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class));
+
+
+        var player = GameObjectManager.instantiate("player");
+        player.addComponent(Player.class);
+
+        PowerUpManager.instance.linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
+        duplicateBall.getComponent(DuplicateBall.class).linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
+        duplicateBall.getComponent(DuplicateBall.class).linkPaddle(paddle.getComponent(Paddle.class));
+
+        triplicateBall.getComponent(TriplicateBall.class).linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
+        triplicateBall.getComponent(TriplicateBall.class).linkPaddle(paddle.getComponent(Paddle.class));
+
+        Player.instance.linkPaddle(paddle.getComponent(Paddle.class));
+        BallsManager.instance.addBall(ball.getComponent(Ball.class));
 
     }
 
@@ -101,6 +132,22 @@ public class Init {
 
     public static void Init_Aori() {
 
+        VoltraxisPrefab.instantiate();
+
+        var borderLeft = GameObjectManager.instantiate("Border_Left");
+        borderLeft.getTransform().setLocalPosition(new Vector2(5.0, 0));
+        borderLeft.addComponent(BoxCollider.class).setLocalSize(new Vector2(1.0, 20000.0));
+        var borderLeftVisual = GameObjectManager.instantiate();
+        borderLeftVisual.setParent(borderLeft);
+        //borderLeftVisual.addComponent(SpriteRenderer.class).setImage("/bocchi.png");
+
+        var borderRight = GameObjectManager.instantiate("Border_Right");
+        borderRight.getTransform().setLocalPosition(new Vector2(1190.0, 0));
+        borderRight.addComponent(BoxCollider.class).setLocalSize(new Vector2(1.0, 20000.0));
+        var borderRightVisual = GameObjectManager.instantiate();
+        borderRightVisual.setParent(borderRight);
+        //borderRightVisual.addComponent(SpriteRenderer.class).setImage("/bocchi.png");
+
         var borderTop = GameObjectManager.instantiate("Border_Top");
         borderTop.getTransform().setLocalPosition(new Vector2(0, 5.0));
         borderTop.addComponent(BoxCollider.class).setLocalSize(new Vector2(20000.0, 1.0));
@@ -115,16 +162,6 @@ public class Init {
         borderBottomVisual.setParent(borderBottom);
         //borderBottomVisual.addComponent(SpriteRenderer.class).setImage("/bocchi.png");
 
-
-        var triplicateBall = GameObjectManager.instantiate("triplicateBall");
-        triplicateBall.addComponent(TriplicateBall.class);
-        triplicateBall.getTransform().setGlobalPosition(new Vector2(300, 200));
-        triplicateBall.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.DuplicateBall.getImage());
-        Time.addCoroutine(()->PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class)),10);
-        Time.addCoroutine(()->PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class)),20);
-        Time.addCoroutine(()->PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class)),30);
-        Time.addCoroutine(()->PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class)),40);
-        Time.addCoroutine(()->PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class)),50);
 
     }
 
