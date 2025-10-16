@@ -1,9 +1,9 @@
 package game.PowerUp.Index;
 
 import game.Player.PlayerPowerUpHandler;
-import org.EventHandler;
-import org.GameObject;
-import org.MonoBehaviour;
+import org.Event.EventHandler;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
 
 import java.util.HashSet;
 

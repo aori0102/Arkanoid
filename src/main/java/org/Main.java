@@ -1,9 +1,11 @@
 package org;
 
 import game.Init;
+import org.GameObject.GameObjectManager;
+import org.Rendering.RendererManager;
+import org.Scene.SceneManager;
+import org.Utils.HierarchyView;
 import utils.Random;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import utils.Time;
 import javafx.application.Application;
 import javafx.stage.Stage;

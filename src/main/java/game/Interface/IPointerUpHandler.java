@@ -2,8 +2,9 @@ package game.Interface;
 
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import org.GameObject;
-import org.Transform;
+import org.GameObject.GameObject;
+import org.GameObject.Transform;
+import org.Rendering.Renderable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public interface IPointerUpHandler {
     /**
      * Attach this click handler to a {@link GameObject} and all of its children.
      * <p>
-     * This will collect every component in the GameObject hierarchy that implements {@link org.Renderable},
+     * This will collect every component in the GameObject hierarchy that implements {@link Renderable},
      * retrieve its underlying JavaFX {@link Node}, and register a mouse released event listener on it.
      * </p>
      *

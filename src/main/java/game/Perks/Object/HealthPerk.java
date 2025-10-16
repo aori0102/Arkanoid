@@ -2,7 +2,8 @@ package game.Perks.Object;
 
 import game.Perks.Index.Perk;
 import javafx.scene.input.MouseEvent;
-import org.*;
+import org.Animation.AnimationClipData;
+import org.GameObject.GameObject;
 
 public class HealthPerk extends Perk {
 

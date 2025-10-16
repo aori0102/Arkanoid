@@ -1,7 +1,10 @@
 package game.Obstacle.Object;
 
 import game.Obstacle.Index.Obstacle;
-import org.*;
+import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
+import org.Layer.Layer;
+import org.Physics.BoxCollider;
 import utils.Time;
 import utils.Vector2;
 

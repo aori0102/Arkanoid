@@ -4,7 +4,16 @@ import game.Voltraxis.Object.ElectricBall;
 import game.Voltraxis.Object.PowerCore;
 import game.Voltraxis.Object.PowerCoreHealthBar;
 import javafx.scene.paint.Color;
-import org.*;
+import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
+import org.Layer.RenderLayer;
+import org.Physics.BoxCollider;
+import org.Rendering.ImageAsset;
+import org.Rendering.SpriteRenderer;
+import org.Text.FontDataIndex;
+import org.Text.TextHorizontalAlignment;
+import org.Text.TextUI;
+import org.Text.TextVerticalAlignment;
 import utils.Vector2;
 
 public final class VoltraxisPrefab {

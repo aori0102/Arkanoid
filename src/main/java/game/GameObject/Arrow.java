@@ -1,9 +1,9 @@
 package game.GameObject;
 
 import game.Brick.Brick;
-import org.GameObject;
-import org.MonoBehaviour;
-import org.SpriteRenderer;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
+import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
 public class Arrow extends MonoBehaviour {

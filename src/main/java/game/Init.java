@@ -1,8 +1,6 @@
 package game;
 
 import game.Brick.Brick;
-import game.Brick.BrickFactory;
-import game.GameManager.GameManager;
 import game.GameObject.BallsManager;
 import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
@@ -17,9 +15,13 @@ import game.GameObject.Ball;
 import game.GameObject.Paddle;
 import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
-import org.*;
+import org.InputAction.ActionMap;
+import org.InputAction.PlayerInput;
+import org.Physics.BoxCollider;
+import org.Rendering.ImageAsset;
+import org.Rendering.SpriteRenderer;
 import utils.Vector2;
-import org.GameObjectManager;
+import org.GameObject.GameObjectManager;
 
 public class Init {
 

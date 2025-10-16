@@ -5,7 +5,13 @@ import game.Player.PlayerPowerUpHandler;
 import game.PowerUp.Index.PowerUp;
 import game.GameObject.Ball;
 import game.GameObject.Paddle;
-import org.*;
+import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
+import org.GameObject.MonoBehaviour;
+import org.GameObject.Transform;
+import org.Physics.BoxCollider;
+import org.Rendering.ImageAsset;
+import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
 /**

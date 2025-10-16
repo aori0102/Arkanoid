@@ -1,7 +1,7 @@
 package game.Brick;
 
 import game.Brick.BrickEvent.CollisionEvent;
-import org.GameObjectManager;
+import org.GameObject.GameObjectManager;
 
 import java.util.Vector;
 public class InitMatrix {

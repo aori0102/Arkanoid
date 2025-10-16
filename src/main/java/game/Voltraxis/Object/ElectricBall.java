@@ -1,7 +1,14 @@
 package game.Voltraxis.Object;
 
 import game.GameObject.Paddle;
-import org.*;
+import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
+import org.GameObject.MonoBehaviour;
+import org.Layer.Layer;
+import org.Physics.BoxCollider;
+import org.Physics.CollisionData;
+import org.Rendering.ImageAsset;
+import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
 

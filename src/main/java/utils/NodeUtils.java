@@ -1,8 +1,8 @@
 package utils;
 
 import javafx.scene.Node;
-import org.Renderable;
-import org.Transform;
+import org.Rendering.Renderable;
+import org.GameObject.Transform;
 
 import java.util.ArrayList;
 import java.util.List;

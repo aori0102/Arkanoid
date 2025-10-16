@@ -1,8 +1,8 @@
 package game.UI;
 
 import javafx.scene.input.MouseEvent;
-import org.AnimationClipData;
-import org.GameObject;
+import org.Animation.AnimationClipData;
+import org.GameObject.GameObject;
 
 public class ContinueButton extends BaseButton {
     public ContinueButton(GameObject owner) {

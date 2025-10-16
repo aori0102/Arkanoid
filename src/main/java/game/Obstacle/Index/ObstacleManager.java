@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import game.GameObject.Paddle;
-import org.EventHandler;
-import org.GameObject;
-import org.MonoBehaviour;
+import org.Event.EventHandler;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
 import utils.Random;
 import utils.Time;
 import utils.Vector2;

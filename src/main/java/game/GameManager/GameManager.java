@@ -1,6 +1,10 @@
 package game.GameManager;
 
-import org.*;
+import org.Event.EventHandler;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
+import org.Scene.SceneKey;
+import org.Scene.SceneManager;
 
 /// dit me dui
 public class GameManager extends MonoBehaviour {

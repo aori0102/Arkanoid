@@ -2,7 +2,10 @@ package game.UI;
 
 import javafx.scene.input.MouseEvent;
 import game.Interface.*;
-import org.*;
+import org.Event.EventHandler;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
+import org.Rendering.SpriteRenderer;
 
 
 public class ButtonUI extends MonoBehaviour

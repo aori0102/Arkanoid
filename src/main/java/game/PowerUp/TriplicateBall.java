@@ -5,7 +5,7 @@ import game.PowerUp.Index.PowerUpIndex;
 import game.PowerUp.Index.PowerUpManager;
 import game.GameObject.Ball;
 import game.GameObject.Paddle;
-import org.*;
+import org.GameObject.GameObject;
 import utils.Vector2;
 
 import java.util.HashSet;

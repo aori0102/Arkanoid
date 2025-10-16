@@ -2,9 +2,9 @@ package game.Player;
 
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpIndex;
-import org.EventHandler;
-import org.GameObject;
-import org.MonoBehaviour;
+import org.Event.EventHandler;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
 
 /**
  * The player's handler for power ups.

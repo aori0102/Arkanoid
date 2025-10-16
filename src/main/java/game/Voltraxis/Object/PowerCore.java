@@ -1,10 +1,10 @@
 package game.Voltraxis.Object;
 
 import game.Voltraxis.Interface.IBossTarget;
-import org.EventHandler;
-import org.GameObject;
-import org.GameObjectManager;
-import org.MonoBehaviour;
+import org.Event.EventHandler;
+import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
+import org.GameObject.MonoBehaviour;
 
 public class PowerCore extends MonoBehaviour implements IBossTarget {
 

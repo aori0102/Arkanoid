@@ -1,7 +1,12 @@
 package game.PowerUp.Index;
 
 import game.GameObject.Paddle;
-import org.*;
+import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
+import org.GameObject.MonoBehaviour;
+import org.Layer.Layer;
+import org.Physics.BoxCollider;
+import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
 

@@ -2,8 +2,8 @@ package game.Perks.Object;
 
 import game.Perks.Index.Perk;
 import javafx.scene.input.MouseEvent;
-import org.AnimationClipData;
-import org.GameObject;
+import org.Animation.AnimationClipData;
+import org.GameObject.GameObject;
 
 public class SpeedPerk extends Perk {
     /**

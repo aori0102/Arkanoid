@@ -2,7 +2,10 @@ package game.Voltraxis;
 
 import game.Voltraxis.Interface.IBossTarget;
 import game.Voltraxis.Object.PowerCore;
-import org.*;
+import org.Event.EventHandler;
+import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
+import org.GameObject.MonoBehaviour;
 import utils.Time;
 import utils.Vector2;
 

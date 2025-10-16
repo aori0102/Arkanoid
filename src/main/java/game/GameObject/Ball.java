@@ -2,7 +2,12 @@ package game.GameObject;
 
 import game.Brick.Brick;
 import game.Voltraxis.Interface.IBossTarget;
-import org.*;
+import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
+import org.GameObject.MonoBehaviour;
+import org.Layer.Layer;
+import org.Physics.BoxCollider;
+import org.Physics.CollisionData;
 import utils.Vector2;
 import utils.Time;
 

@@ -1,7 +1,7 @@
 package game.Perks.Index;
 
-import org.GameObject;
-import org.MonoBehaviour;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
 
 public class PerkManager extends MonoBehaviour {
 

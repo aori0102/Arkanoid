@@ -1,6 +1,6 @@
 package game.PowerUp.Index;
 
-import org.ImageAsset;
+import org.Rendering.ImageAsset;
 
 public enum PowerUpIndex {
 

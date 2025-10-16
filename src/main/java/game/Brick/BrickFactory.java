@@ -1,9 +1,8 @@
 package game.Brick;
 
-import game.Brick.BrickEvent.CollisionEvent;
 import game.Brick.BrickEvent.EndEvent;
 import game.Brick.BrickEvent.WaveEffect;
-import org.GameObjectManager;
+import org.GameObject.GameObjectManager;
 import static game.Brick.InitMatrix.*;
 
 public class BrickFactory {

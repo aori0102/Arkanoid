@@ -1,6 +1,9 @@
 package game.Voltraxis;
 
-import org.*;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
+import org.Rendering.SpriteRenderer;
+import org.Text.TextUI;
 import utils.MathUtils;
 import utils.Time;
 

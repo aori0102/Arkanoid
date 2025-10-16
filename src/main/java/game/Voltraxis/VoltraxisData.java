@@ -1,6 +1,6 @@
 package game.Voltraxis;
 
-import org.ImageAsset;
+import org.Rendering.ImageAsset;
 
 public final class VoltraxisData {
 

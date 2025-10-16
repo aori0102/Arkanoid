@@ -2,7 +2,7 @@ package game.Brick.BrickEvent;
 
 import game.Brick.Brick;
 import game.Brick.BrickType;
-import org.GameObjectManager;
+import org.GameObject.GameObjectManager;
 
 import java.util.Collections;
 import java.util.Vector;

@@ -1,0 +1,108 @@
+package org.Rendering;
+
+import javafx.scene.image.Image;
+
+public class ImageAsset {
+
+    public enum ImageIndex {
+
+        Bocchi("/bocchi.png"),
+        Bocchi_Anim("/bocchi_anim.png"),
+        Mambo("/mambo.png"),
+        DuplicateBall("/duplicateBall.png"),
+        TriplicateBall("/triplicate_ball.png"),
+        Ball("/ball.png"),
+        //Buttons
+        GeneralButtons("/GeneralButtons.png"),
+        //Perks
+        Perks("/Perks.png"),
+        /// Voltraxis
+        Voltraxis_Anim_Idle("/Voltraxis/AnimationData/Idle/SpriteSheet.png"),
+        Voltraxis_ElectricBall("/Voltraxis/Object/ElectricBall.png"),
+        Voltraxis_PowerCore("/Voltraxis/Object/PowerCore.png"),
+        Voltraxis_PowerCore_UI_HealthBar_Background("/Voltraxis/UI/PowerCore/Background.png"),
+        Voltraxis_PowerCore_UI_HealthBar_Lost("/Voltraxis/UI/PowerCore/FillLost.png"),
+        Voltraxis_PowerCore_UI_HealthBar_Remain("/Voltraxis/UI/PowerCore/FillRemain.png"),
+        Voltraxis_PowerCore_UI_HealthBar_Outline("/Voltraxis/UI/PowerCore/Outline.png"),
+        Voltraxis_UI_HealthBar_Background("/Voltraxis/UI/HealthBar/Background.png"),
+        Voltraxis_UI_HealthBar_Lost("/Voltraxis/UI/HealthBar/FillLost.png"),
+        Voltraxis_UI_HealthBar_Remain("/Voltraxis/UI/HealthBar/FillRemain.png"),
+        Voltraxis_UI_HealthBar_Outline("/Voltraxis/UI/HealthBar/Outline.png"),
+        Voltraxis_UI_EffectIcon_AttackIncrement("/Voltraxis/UI/EffectIcons/AttackIncrement.png"),
+        Voltraxis_UI_EffectIcon_DefenseIncrement("/Voltraxis/UI/EffectIcons/DefenseIncrement.png"),
+        Voltraxis_UI_EffectIcon_SkillCooldownDecrement("/Voltraxis/UI/EffectIcons/SkillCooldownDecrement.png"),
+        Voltraxis_UI_EffectIcon_PowerCore("/Voltraxis/UI/EffectIcons/SpecialSkill.png"),
+        Voltraxis_UI_EffectIcon_Charging("/Voltraxis/UI/EffectIcons/Charging.png"),
+        Voltraxis_UI_EffectIcon_DamageTakenIncrement("/Voltraxis/UI/EffectIcons/DamageTakenIncrement.png"),
+        Voltraxis_UI_EffectIcon_DamageTakenDecrement("/Voltraxis/UI/EffectIcons/DamageTakenDecrement.png"),
+        Voltraxis_UI_Groggy_Background("/Voltraxis/UI/Groggy/Background.png"),
+        Voltraxis_UI_Groggy_Fill("/Voltraxis/UI/Groggy/Fill.png"),
+        Voltraxis_UI_Groggy_Outline("/Voltraxis/UI/Groggy/Outline.png"),
+
+        Paddle("/paddle.png"),
+        Laser("/laser.png"),
+        Arrow("/arrow.png"),
+
+        Explosive("/explosive.png"),
+
+        GreenBrick("/Brick/GreenBrick.png"),
+
+        None("");
+
+        private final Image image;
+
+        ImageIndex(String path) {
+
+            Image loadedImage = null;
+            try {
+                loadedImage = loadImage(path);
+            } catch (RuntimeException e) {
+                System.err.println(
+                        ImageAsset.class.getSimpleName()
+                                + " | Image failed to load at index ["
+                                + this + "]: "
+                                + e.getMessage()
+                );
+            }
+            image = loadedImage;
+
+        }
+
+        public Image getImage() {
+            return image;
+        }
+
+    }
+
+    /**
+     * Load an image with the specified relative path within
+     * {@code resource} folder.
+     *
+     * @param path The path of the image. All image will be
+     *             within the folder 'resources', so {@code path} should
+     *             begin with a {@code \}, meaning from the root
+     *             of 'resources' folder.
+     * @return The loaded image, or {@link Exception} if there is an
+     * error.
+     */
+    private static Image loadImage(String path) throws RuntimeException {
+
+        System.out.println(ImageAsset.class.getSimpleName() + " | Loading image " + path);
+
+        try {
+
+            // Get the resource folder
+            java.io.InputStream stream = ImageAsset.class.getResourceAsStream(path);
+            if (stream == null) {
+                throw new Exception("Path stream is null");
+            }
+            // Set image and sprite
+            return new Image(stream);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Image not found: " + e);
+        }
+
+    }
+
+}

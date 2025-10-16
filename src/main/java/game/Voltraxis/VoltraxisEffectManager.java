@@ -1,8 +1,8 @@
 package game.Voltraxis;
 
-import org.GameObject;
-import org.GameObjectManager;
-import org.MonoBehaviour;
+import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
+import org.GameObject.MonoBehaviour;
 import utils.Random;
 import utils.Time;
 import utils.Vector2;

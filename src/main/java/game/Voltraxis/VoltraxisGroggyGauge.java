@@ -1,9 +1,9 @@
 package game.Voltraxis;
 
-import org.EventHandler;
-import org.GameObject;
-import org.MonoBehaviour;
-import org.SpriteRenderer;
+import org.Event.EventHandler;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
+import org.Rendering.SpriteRenderer;
 import utils.MathUtils;
 import utils.Time;
 

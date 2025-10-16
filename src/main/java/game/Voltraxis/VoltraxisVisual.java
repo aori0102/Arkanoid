@@ -1,6 +1,10 @@
 package game.Voltraxis;
 
-import org.*;
+import org.Animation.AnimationClipData;
+import org.Animation.SpriteAnimator;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
+import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
 public final class VoltraxisVisual extends MonoBehaviour {

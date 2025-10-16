@@ -1,9 +1,9 @@
 package game;
 
-import org.AnimationClipData;
-import org.GameObject;
-import org.MonoBehaviour;
-import org.SpriteAnimator;
+import org.Animation.AnimationClipData;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
+import org.Animation.SpriteAnimator;
 
 public class Test extends MonoBehaviour {
 

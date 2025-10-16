@@ -1,7 +1,7 @@
 package game.GameObject;
 
-import org.GameObject;
-import org.MonoBehaviour;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
 
 import java.util.HashSet;
 

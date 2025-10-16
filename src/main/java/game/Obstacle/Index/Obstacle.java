@@ -1,7 +1,10 @@
 package game.Obstacle.Index;
 
 import game.GameObject.Ball;
-import org.*;
+import org.Event.EventHandler;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
+import org.Physics.BoxCollider;
 
 /**
  * Base class of call obstacles appearing in game.

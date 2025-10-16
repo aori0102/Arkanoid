@@ -1,0 +1,171 @@
+package org.Physics;
+
+import org.GameObject.GameObject;
+import org.Layer.Layer;
+import org.GameObject.MonoBehaviour;
+import utils.Vector2;
+
+import java.util.function.Consumer;
+
+public class BoxCollider extends MonoBehaviour {
+
+    private Vector2 localCenter;
+    private Vector2 localSize;
+    protected Consumer<CollisionData> onCollisionEnter;
+    protected Consumer<CollisionData> onTriggerEnter;
+
+    public boolean isTrigger;
+    private int includeLayer;
+
+    public BoxCollider(GameObject owner) {
+        super(owner);
+        localCenter = new Vector2(0.0, 0.0);
+        localSize = new Vector2(1.0, 1.0);
+        PhysicsManager.RegisterCollider(this);
+        isTrigger = false;
+        includeLayer = Layer.EVERYTHING;
+    }
+
+    /**
+     * Set the layer mask for collision check.
+     *
+     * @param layerMask The layers to include in collision check.
+     */
+    public void setIncludeLayer(int layerMask) {
+        includeLayer = layerMask;
+    }
+
+    public void setExcludeLayer(int layerMask) {
+        includeLayer &= ~layerMask;
+    }
+
+    /**
+     * Get the included layers for collision check.
+     *
+     * @return The included layers for collision check.
+     */
+    public int getIncludeLayer() {
+        return includeLayer;
+    }
+
+    @Override
+    protected MonoBehaviour clone(GameObject newOwner) {
+        BoxCollider newBoxCollider = new BoxCollider(newOwner);
+        newBoxCollider.localCenter = this.localCenter;
+        newBoxCollider.localSize = this.localSize;
+        newBoxCollider.isTrigger = this.isTrigger;
+        newBoxCollider.onCollisionEnter = this.onCollisionEnter;
+        return newBoxCollider;
+    }
+
+    @Override
+    protected void destroyComponent() {
+        PhysicsManager.UnregisterCollider(this);
+        localCenter = null;
+        localSize = null;
+        onCollisionEnter = null;
+    }
+
+    /**
+     * Get the center of the bounding box in local space.
+     *
+     * @return The center of the bounding box in local space
+     */
+    public Vector2 getLocalCenter() {
+        return new Vector2(localCenter);
+    }
+
+    /**
+     * Get the center of the bounding box in world space.
+     *
+     * @return The center of the bounding box in world space.
+     */
+    public Vector2 getCenter() {
+        return getTransform().getGlobalPosition().add(localCenter);
+    }
+
+    /**
+     * Get the size of the bounding box in local space.
+     *
+     * @return The size of the bounding box in local space.
+     */
+    public Vector2 getLocalSize() {
+        return new Vector2(localSize);
+    }
+
+    /**
+     * Get the size of the bounding box in world space.
+     *
+     * @return The size of the bounding box in world space.
+     */
+    public Vector2 getSize() {
+        return localSize.scaleUp(getTransform().getGlobalScale());
+    }
+
+    /**
+     * Set the center for the bounding box in local space.
+     *
+     * @param center The center in local space.
+     */
+    public void setLocalCenter(Vector2 center) {
+        this.localCenter = center;
+    }
+
+    /**
+     * Set the size for the bounding box in local space.
+     *
+     * @param size The size in local space.
+     */
+    public void setLocalSize(Vector2 size) {
+        this.localSize = size;
+    }
+
+    /**
+     * Get the min bound of the bounding box. This is
+     * always equal to {@code center} - {@code extents}.
+     *
+     * @return The min bound of the bounding box.
+     */
+    public Vector2 getMinBound() {
+        return getCenter().subtract(getExtents());
+    }
+
+    /**
+     * Get the max bound of the bounding box. This is
+     * always equal to {@code center} + {@code extents}.
+     *
+     * @return The max bound of the bounding box.
+     */
+    public Vector2 getMaxBound() {
+        return getCenter().add(getExtents());
+    }
+
+    /**
+     * Get the extents of the bounding box. This is
+     * always equal to twice the {@code size}.
+     *
+     * @return The extents of the bounding box.
+     */
+    public Vector2 getExtents() {
+        return getSize().divide(2.0);
+    }
+
+    /**
+     * Set the callback when collision happens.
+     *
+     * @param onCollisionEnter The callback when collision happens.
+     */
+    public void setOnCollisionEnterCallback(Consumer<CollisionData> onCollisionEnter) {
+        this.onCollisionEnter = onCollisionEnter;
+    }
+
+    /**
+     * Set the callback when trigger happens.
+     *
+     * @param onTriggerEnter The callback when trigger happens.
+     */
+    public void setOnTriggerEnter(Consumer<CollisionData> onTriggerEnter) {
+        this.onTriggerEnter = onTriggerEnter;
+    }
+
+}

@@ -1,9 +1,8 @@
 package game.UI;
 
-import game.GameManager.GameManager;
 import javafx.scene.input.MouseEvent;
-import org.AnimationClipData;
-import org.GameObject;
+import org.Animation.AnimationClipData;
+import org.GameObject.GameObject;
 
 public class StartButton extends BaseButton {
 
