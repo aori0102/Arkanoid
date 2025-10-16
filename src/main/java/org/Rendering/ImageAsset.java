@@ -6,16 +6,24 @@ public class ImageAsset {
 
     public enum ImageIndex {
 
-        Bocchi("/bocchi.png"),
-        Bocchi_Anim("/bocchi_anim.png"),
-        Mambo("/mambo.png"),
+        /// Power ups
         DuplicateBall("/duplicateBall.png"),
         TriplicateBall("/triplicate_ball.png"),
+        Explosive("/explosive.png"),
+
+        /// Player object
         Ball("/ball.png"),
-        //Buttons
+        Paddle("/paddle.png"),
+
+        /// Obstacle
+        Laser("/laser.png"),
+        Arrow("/arrow.png"),
+
+        /// Buttons
         GeneralButtons("/GeneralButtons.png"),
-        //Perks
+        /// Perks
         Perks("/Perks.png"),
+
         /// Voltraxis
         Voltraxis_Anim_Idle("/Voltraxis/AnimationData/Idle/SpriteSheet.png"),
         Voltraxis_ElectricBall("/Voltraxis/Object/ElectricBall.png"),
@@ -39,12 +47,7 @@ public class ImageAsset {
         Voltraxis_UI_Groggy_Fill("/Voltraxis/UI/Groggy/Fill.png"),
         Voltraxis_UI_Groggy_Outline("/Voltraxis/UI/Groggy/Outline.png"),
 
-        Paddle("/paddle.png"),
-        Laser("/laser.png"),
-        Arrow("/arrow.png"),
-
-        Explosive("/explosive.png"),
-
+        /// Bricks
         GreenBrick("/Brick/GreenBrick.png"),
 
         None("");

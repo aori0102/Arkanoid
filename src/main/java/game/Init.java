@@ -82,7 +82,7 @@ public class Init {
         var triplicateBall = GameObjectManager.instantiate("triplicateBall");
         triplicateBall.addComponent(TriplicateBall.class);
         triplicateBall.getTransform().setGlobalPosition(new Vector2(300, 200));
-        triplicateBall.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Bocchi.getImage());
+        triplicateBall.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.DuplicateBall.getImage());
 
 
         var obstacleManager = GameObjectManager.instantiate("obstacleManager");
