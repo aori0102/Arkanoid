@@ -1,6 +1,7 @@
 package game.Voltraxis;
 
 import game.Voltraxis.Interface.IBossTarget;
+import game.Voltraxis.Object.ElectricBall;
 import game.Voltraxis.Object.PowerCore;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -53,7 +54,7 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
     }
 
     @Override
-    public void damage(int amount) {
+    public void takeDamage(int amount) {
 
         int finalDamage = (int) (amount * ((double) getDefence() / (getDefence() + VoltraxisData.DEFENSE_STRENGTH_SCALE)));
         health -= finalDamage;
@@ -90,9 +91,7 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
             var electricBall = VoltraxisPrefab.instantiateElectricBall();
 
             // Modify value
-            electricBall.setDamage(
-                    (int) (getAttack() * VoltraxisData.ELECTRIC_BALL_ATTACK_PROPORTION)
-            );
+            electricBall.onPaddleHit.addListener(this::electricBall_onPaddleHit);
             electricBall.getTransform().setGlobalPosition(getTransform().getGlobalPosition());
             electricBall.setDirection(direction);
 
@@ -113,7 +112,8 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
         voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
                 VoltraxisData.EffectIndex.AttackIncrement,
                 VoltraxisData.ENHANCE_ATTACK_INCREMENT,
-                (delta) -> delta >= VoltraxisData.ENHANCE_SKILL_DURATION
+                (delta) -> delta >= VoltraxisData.ENHANCE_SKILL_DURATION,
+                null
         ));
 
         // Repeat enhance skill
@@ -135,19 +135,22 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
         voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
                 VoltraxisData.EffectIndex.AttackIncrement,
                 VoltraxisData.GROGGY_ATTACK_INCREMENT,
-                (delta) -> delta >= VoltraxisData.GROGGY_DURATION
+                (delta) -> delta >= VoltraxisData.GROGGY_DURATION,
+                null
         ));
         // Add skill cooldown reduction effect
         voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
                 VoltraxisData.EffectIndex.SkillCooldownDecrement,
                 VoltraxisData.GROGGY_BASIC_COOLDOWN_REDUCTION,
-                (delta) -> delta >= VoltraxisData.GROGGY_DURATION
+                (delta) -> delta >= VoltraxisData.GROGGY_DURATION,
+                null
         ));
         // Add charging effect
         voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
                 VoltraxisData.EffectIndex.ChargingEX,
                 0.0,
-                (delta) -> delta >= VoltraxisData.GROGGY_TO_EX_CHARGE_TIME
+                (delta) -> delta >= VoltraxisData.GROGGY_TO_EX_CHARGE_TIME,
+                null
         ));
 
         // Charge towards EX Skill
@@ -205,14 +208,16 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
         voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
                 VoltraxisData.EffectIndex.PowerCore,
                 0.0,
-                (_) -> newCore.getGameObject().isDestroyed()
+                (_) -> newCore.getGameObject().isDestroyed(),
+                null
         ));
 
         // Add effect on damage taken decrement
         voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
                 VoltraxisData.EffectIndex.DamageTakenDecrement,
                 VoltraxisData.POWER_CORE_DAMAGE_TAKEN_REDUCTION,
-                (_) -> newCore.getGameObject().isDestroyed()
+                (_) -> newCore.getGameObject().isDestroyed(),
+                null
         ));
 
         // Link destroyed event
@@ -333,6 +338,21 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
      */
     private void groggyGauge_onGroggyToDeployPowerCore(Object sender, Void e) {
         spawnPowerCores();
+    }
+
+    /**
+     * Called when {@link game.Voltraxis.Object.ElectricBall#onPaddleHit}
+     * is invoked. This function deals damage to {@link game.Player.Player}
+     * based on Voltraxis' current stat.
+     *
+     * @param sender {@link game.Voltraxis.Object.ElectricBall}.
+     * @param e      Empty event argument.
+     */
+    private void electricBall_onPaddleHit(Object sender, Void e) {
+        if (sender instanceof ElectricBall electricBall) {
+            electricBall.onPaddleHit.removeListener(this::electricBall_onPaddleHit);
+            // TODO: damage player
+        }
     }
 
 }

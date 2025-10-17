@@ -6,6 +6,9 @@ import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 
+/**
+ * Voltraxis' power core.
+ */
 public class PowerCore extends MonoBehaviour implements IBossTarget {
 
     private int health;
@@ -13,19 +16,6 @@ public class PowerCore extends MonoBehaviour implements IBossTarget {
 
     public EventHandler<Void> onPowerCoreDestroyed = new EventHandler<>(this);
     public EventHandler<Void> onHealthChanged = new EventHandler<>(this);
-
-    public int getHealth() {
-        return health;
-    }
-
-    public int getMaxHealth() {
-        return maxHealth;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-        this.maxHealth = health;
-    }
 
     /**
      * Create this MonoBehaviour.
@@ -48,13 +38,43 @@ public class PowerCore extends MonoBehaviour implements IBossTarget {
     }
 
     @Override
-    public void damage(int amount) {
+    public void takeDamage(int amount) {
         health -= amount;
         onHealthChanged.invoke(this, null);
         if (health <= 0) {
             onPowerCoreDestroyed.invoke(this, null);
             GameObjectManager.destroy(gameObject);
         }
+    }
+
+    /**
+     * Get the current HP of the power core.
+     *
+     * @return The current HP of the power core.
+     */
+    public int getHealth() {
+        return health;
+    }
+
+    /**
+     * Get the power core's max HP.
+     *
+     * @return The power core's max HP.
+     */
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    /**
+     * Set the health for this power core. Only
+     * do this upon spawning. This function sets
+     * both health and max health.
+     *
+     * @param health The health of the power core.
+     */
+    public void setHealth(int health) {
+        this.health = health;
+        this.maxHealth = health;
     }
 
 }

@@ -4,8 +4,11 @@ import game.Voltraxis.Object.ElectricBall;
 import game.Voltraxis.Object.PowerCore;
 import game.Voltraxis.Object.PowerCoreHealthBar;
 import javafx.scene.paint.Color;
+import org.Animation.AnimationClipData;
+import org.Animation.SpriteAnimator;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.Layer.Layer;
 import org.Layer.RenderLayer;
 import org.Physics.BoxCollider;
 import org.Rendering.ImageAsset;
@@ -16,6 +19,9 @@ import org.Text.TextUI;
 import org.Text.TextVerticalAlignment;
 import utils.Vector2;
 
+/**
+ * Central class for generate Voltraxis' prefabs.
+ */
 public final class VoltraxisPrefab {
 
     /// Boss name
@@ -45,6 +51,14 @@ public final class VoltraxisPrefab {
     private static final Vector2 POWER_CORE_UI_OFFSET = new Vector2(0.0, -60.0);
     private static final Vector2 POWER_CORE_HEALTH_BAR_RENDER_SIZE = new Vector2(146.0, 14.29);
 
+    /// Electric ball
+    private static final Vector2 BALL_SIZE = new Vector2(64.0, 64.0);
+
+    /**
+     * Instantiate the entirety of Voltraxis.
+     *
+     * @return The game object for the entirety of Voltraxis.
+     */
     public static GameObject instantiate() {
 
         var voltraxisObject = GameObjectManager.instantiate("Boss");
@@ -77,14 +91,41 @@ public final class VoltraxisPrefab {
 
     }
 
+    /**
+     * Instantiate Voltraxis' {@link ElectricBall}. The resulting
+     * object includes its {@link SpriteRenderer} and
+     * {@link BoxCollider} with preset settings.
+     *
+     * @return Voltraxis' electric ball.
+     */
     static ElectricBall instantiateElectricBall() {
 
         // Main object
-        var electricBall = GameObjectManager.instantiate("Electric Ball");
-        return electricBall.addComponent(ElectricBall.class);
+        var electricBallObject = GameObjectManager.instantiate("Electric Ball");
+
+        var boxCollider = electricBallObject.addComponent(BoxCollider.class);
+        boxCollider.setLocalSize(BALL_SIZE);
+        boxCollider.setIncludeLayer(Layer.Player.getUnderlyingValue());
+
+        var spriteRenderer = electricBallObject.addComponent(SpriteRenderer.class);
+        spriteRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_ElectricBall.getImage());
+        spriteRenderer.setSize(BALL_SIZE);
+        spriteRenderer.setPivot(new Vector2(0.5, 0.5));
+
+        return electricBallObject.addComponent(ElectricBall.class);
 
     }
 
+    /**
+     * Instantiate an effect icon UI corresponding to the
+     * {@code index} that is provided. The resulting object
+     * has a {@link SpriteRenderer} and {@link VoltraxisEffectIcon}
+     * with preset settings.
+     *
+     * @param index The effect index.
+     * @return The component {@link VoltraxisEffectIcon} attached
+     * to the icon UI's game object.
+     */
     static VoltraxisEffectIcon instantiateVoltraxisEffectIcon(VoltraxisData.EffectIndex index) {
 
         var centerPivot = new Vector2(0.5, 0.5);
@@ -103,6 +144,14 @@ public final class VoltraxisPrefab {
 
     }
 
+    /**
+     * Instantiate Voltraxis' power core. The resulting object
+     * includes both logical and visual object of the power core,
+     * with each already has the preset components and settings.
+     *
+     * @return The game object including both power core's logical
+     * brain and visual.
+     */
     static PowerCore instantiatePowerCore() {
 
         var centerPivot = new Vector2(0.5, 0.5);
@@ -178,6 +227,14 @@ public final class VoltraxisPrefab {
 
     }
 
+    /**
+     * Instantiate the base boss object with central class
+     * {@link Voltraxis}. This object includes the component
+     * {@link BoxCollider} with preset settings.
+     *
+     * @return The central class {@link Voltraxis} attached
+     * to the base object.
+     */
     private static Voltraxis instantiateVoltraxis() {
 
         // Main object
@@ -188,15 +245,28 @@ public final class VoltraxisPrefab {
 
     }
 
+    /**
+     * Instantiate the visual object of voltraxis.
+     *
+     * @return The visual class {@link VoltraxisVisual}
+     * of Voltraxis.
+     */
     private static VoltraxisVisual instantiateVisual() {
 
         var visualObject = GameObjectManager.instantiate("Visual");
         var visual = visualObject.addComponent(VoltraxisVisual.class);
-        visual.addComponent(SpriteRenderer.class).setSize(BOSS_RENDER_SIZE);
+        var animator = visual.addComponent(SpriteAnimator.class);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_Idle);
         return visual;
 
     }
 
+    /**
+     * Instantiate the base object of {@link VoltraxisEffectManager}.
+     *
+     * @return The component {@link VoltraxisEffectManager} attached
+     * to its base object.
+     */
     private static VoltraxisEffectManager instantiateEffectManager() {
 
         var effectManagerObject = GameObjectManager.instantiate("Effect Manager");
@@ -206,6 +276,12 @@ public final class VoltraxisPrefab {
 
     }
 
+    /**
+     * Instantiate the base object of {@link VoltraxisGroggyGauge}.
+     *
+     * @return The component {@link VoltraxisGroggyGauge} attached to
+     * its base object.
+     */
     private static VoltraxisGroggyGauge instantiateGroggyGauge() {
 
         var centerPivot = new Vector2(0.5, 0.5);
@@ -250,6 +326,12 @@ public final class VoltraxisPrefab {
 
     }
 
+    /**
+     * Instantiate the base health bar UI object.
+     *
+     * @return The component {@link VoltraxisHealthBar} attached to
+     * the health bar UI object.
+     */
     private static VoltraxisHealthBar instantiateHealthBar() {
 
         var centerPivot = new Vector2(0.5, 0.5);

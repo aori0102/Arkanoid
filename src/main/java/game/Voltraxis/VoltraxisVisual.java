@@ -4,13 +4,14 @@ import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
-import org.Rendering.SpriteRenderer;
-import utils.Vector2;
 
+/**
+ * Visual component of Voltraxis.
+ */
 public final class VoltraxisVisual extends MonoBehaviour {
 
     private Voltraxis voltraxis = null;
-    private SpriteAnimator animator = null;
+    private SpriteAnimator animator;
 
     /**
      * Create this MonoBehaviour.
@@ -19,11 +20,7 @@ public final class VoltraxisVisual extends MonoBehaviour {
      */
     public VoltraxisVisual(GameObject owner) {
         super(owner);
-
-        animator = addComponent(SpriteAnimator.class);
-        animator.addAnimationClip(AnimationClipData.Voltraxis_Idle);
-        var renderer = addComponent(SpriteRenderer.class);
-        renderer.setPivot(new Vector2(0.5, 0.5));
+        animator = getComponent(SpriteAnimator.class);
     }
 
     @Override
@@ -42,6 +39,11 @@ public final class VoltraxisVisual extends MonoBehaviour {
         animator = null;
     }
 
+    /**
+     * Set the central boss class {@link Voltraxis}.
+     *
+     * @param voltraxis The central boss class.
+     */
     void setVoltraxis(Voltraxis voltraxis) {
         this.voltraxis = voltraxis;
     }

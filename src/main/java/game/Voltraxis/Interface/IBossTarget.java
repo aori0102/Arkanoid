@@ -1,5 +1,5 @@
 package game.Voltraxis.Interface;
 
 public interface IBossTarget {
-    void damage(int amount);
+    void takeDamage(int amount);
 }

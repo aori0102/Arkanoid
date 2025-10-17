@@ -80,7 +80,7 @@ public class Ball extends MonoBehaviour {
     private void handleCollision(CollisionData collisionData) {
         var boss = collisionData.otherCollider.getComponent(IBossTarget.class);
         if (boss != null) {
-            boss.damage(BALL_DAMAGE);
+            boss.takeDamage(BALL_DAMAGE);
             return;
         }
         var brick = collisionData.otherCollider.getComponent(Brick.class);
