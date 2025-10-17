@@ -66,23 +66,36 @@ public class SpriteRenderer extends Renderable {
         onRenderSizeChanged.addListener(this::renderable_onRenderSizeChanged);
         onPivotChanged.addListener(this::renderable_onPivotChanged);
 
+        updateRenderPosition();
+        updateRenderSize();
+        updateRotationPivot();
+
     }
 
-    private void renderable_onRenderPositionChanged(Object sender, Void e) {
+    private void updateRenderPosition() {
         var renderPosition = getRenderPosition();
         sprite.setX(renderPosition.x);
         sprite.setY(renderPosition.y);
+    }
+
+    private void updateRenderSize() {
+        var renderSize = getRenderSize();
+        sprite.setFitWidth(renderSize.x);
+        sprite.setFitHeight(renderSize.y);
+    }
+
+    private void renderable_onRenderPositionChanged(Object sender, Void e) {
+        updateRenderPosition();
         updateRotationPivot();
     }
 
     private void renderable_onRenderSizeChanged(Object sender, Void e) {
-        var renderSize = getRenderSize();
-        sprite.setFitWidth(renderSize.x);
-        sprite.setFitHeight(renderSize.y);
+        updateRenderSize();
         updateRotationPivot();
     }
 
     private void renderable_onPivotChanged(Object sender, Void e) {
+        updateRenderPosition();
         updateRotationPivot();
     }
 
