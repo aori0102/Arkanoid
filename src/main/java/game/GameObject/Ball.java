@@ -13,7 +13,7 @@ import utils.Time;
 
 public class Ball extends MonoBehaviour {
 
-    private static final int BALL_DAMAGE = 360;
+    private static final int BALL_DAMAGE = 80;
 
     private Vector2 direction;
     private double ballSpeed = 500;

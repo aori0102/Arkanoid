@@ -25,9 +25,9 @@ public class ImageAsset {
         Perks("/Perks.png"),
 
         /// Voltraxis
-        Voltraxis_Anim_Idle("/Voltraxis/AnimationData/Idle/SpriteSheet.png"),
+        Voltraxis_Anim_Idle("/Voltraxis/Main/Idle/SpriteSheet.png"),
         Voltraxis_ElectricBall("/Voltraxis/Object/ElectricBall.png"),
-        Voltraxis_PowerCore("/Voltraxis/Object/PowerCore.png"),
+        Voltraxis_PowerCore_Anim_Idle("/Voltraxis/Object/PowerCore/Idle/SpriteSheet.png"),
         Voltraxis_PowerCore_UI_HealthBar_Background("/Voltraxis/UI/PowerCore/Background.png"),
         Voltraxis_PowerCore_UI_HealthBar_Lost("/Voltraxis/UI/PowerCore/FillLost.png"),
         Voltraxis_PowerCore_UI_HealthBar_Remain("/Voltraxis/UI/PowerCore/FillRemain.png"),

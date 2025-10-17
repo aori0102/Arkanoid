@@ -28,6 +28,9 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
 
     public EventHandler<Void> onHealthChanged = new EventHandler<>(this);
     public EventHandler<Void> onDamaged = new EventHandler<>(this);
+    public EventHandler<Void> onChargingLow = new EventHandler<>(this);
+    public EventHandler<Void> onChargingMedium = new EventHandler<>(this);
+    public EventHandler<Void> onChargingHigh = new EventHandler<>(this);
     private boolean powerCoreDeployed = false;
 
     public Voltraxis(GameObject owner) {
@@ -151,12 +154,31 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
         chargingEffectInfo.index = VoltraxisData.EffectIndex.ChargingEX;
         chargingEffectInfo.value = 0.0;
         chargingEffectInfo.effectEndingConstraint
-                = (delta) -> delta >= VoltraxisData.GROGGY_TO_EX_CHARGE_TIME;
+                = (_) -> hasPowerCore();
         voltraxisEffectManager.addEffect(chargingEffectInfo, null);
 
         // Charge towards EX Skill
-        Time.addCoroutine(this::exSkill, VoltraxisData.GROGGY_TO_EX_CHARGE_TIME);
+        exSkillLowCharge();
 
+    }
+
+    private boolean hasPowerCore() {
+        return leftCore != null || rightCore != null;
+    }
+
+    private void exSkillLowCharge() {
+        onChargingLow.invoke(this, null);
+        Time.addCoroutine(this::exSkillMediumCharge, VoltraxisData.EX_LOW_CHARGE_TIME);
+    }
+
+    private void exSkillMediumCharge() {
+        onChargingMedium.invoke(this, null);
+        Time.addCoroutine(this::exSkillHighCharge, VoltraxisData.EX_MEDIUM_CHARGE_TIME);
+    }
+
+    private void exSkillHighCharge() {
+        onChargingHigh.invoke(this, null);
+        Time.addCoroutine(this::exSkill, VoltraxisData.EX_HIGH_CHARGE_TIME);
     }
 
     /**
@@ -181,9 +203,7 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
         }
         powerCoreDeployed = true;
         leftCore = spawnCore(LEFT_CORE_POSITION);
-        System.out.println(leftCore);
         rightCore = spawnCore(RIGHT_CORE_POSITION);
-        System.out.println(rightCore);
     }
 
     /**
@@ -222,6 +242,7 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
 
         // Link destroyed event
         newCore.onPowerCoreDestroyed.addListener(this::powerCore_onPowerCoreDestroyed);
+        newCore.setVoltraxis(this);
 
         return newCore;
 

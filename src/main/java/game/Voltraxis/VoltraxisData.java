@@ -24,10 +24,15 @@ public final class VoltraxisData {
 
     /// Groggy skill
     public static final double GROGGY_BASIC_COOLDOWN_REDUCTION = 0.35;
-    public static final double GROGGY_TO_EX_CHARGE_TIME = 15.0;
     public static final double GROGGY_ATTACK_INCREMENT = 0.2;
     public static final double GROGGY_DELTA = 0.03;
     public static final double GROGGY_DURATION = 18.0;
+
+    /// EX skill
+    public static final double EX_LOW_CHARGE_TIME = 7.0;
+    public static final double EX_MEDIUM_CHARGE_TIME = 16.0;
+    public static final double EX_HIGH_CHARGE_TIME = 20.0;
+
 
     /// Power core
     public static final double POWER_CORE_PROPORTIONAL_HEALTH = 0.36;

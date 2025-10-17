@@ -3,6 +3,7 @@ package game.Voltraxis;
 import game.Voltraxis.Object.ElectricBall;
 import game.Voltraxis.Object.PowerCore;
 import game.Voltraxis.Object.PowerCoreHealthBar;
+import game.Voltraxis.Object.PowerCoreVisual;
 import javafx.scene.paint.Color;
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
@@ -165,10 +166,14 @@ public final class VoltraxisPrefab {
         // Visual object
         var powerCoreVisualObject = GameObjectManager.instantiate("Visual");
         powerCoreVisualObject.setParent(powerCoreObject);
+        var powerCoreVisual = powerCoreVisualObject.addComponent(PowerCoreVisual.class);
         var powerCoreVisualRenderer = powerCoreVisualObject.addComponent(SpriteRenderer.class);
         powerCoreVisualRenderer.setPivot(centerPivot);
-        powerCoreVisualRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_PowerCore.getImage());
-        powerCoreVisualRenderer.setSize(POWER_CORE_RENDER_SIZE);
+        var powerCoreVisualAnimator = powerCoreVisualObject.addComponent(SpriteAnimator.class);
+        powerCoreVisualAnimator.addAnimationClip(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingHigh);
+        powerCoreVisualAnimator.addAnimationClip(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingLow);
+        powerCoreVisualAnimator.addAnimationClip(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingMedium);
+        powerCoreVisualAnimator.addAnimationClip(AnimationClipData.Voltraxis_PowerCore_Idle);
 
         // UI object
         var powerCoreUIObject = GameObjectManager.instantiate("PowerCoreUI");
@@ -219,6 +224,7 @@ public final class VoltraxisPrefab {
         outlineObject.setParent(healthBarObject);
 
         // Link components
+        powerCore.setPowerCoreVisual(powerCoreVisual);
         healthBar.setFillLost(fillLostRenderer);
         healthBar.setFillRemain(fillRemainRenderer);
         healthBar.setPowerCore(powerCore);

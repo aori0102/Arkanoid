@@ -4,7 +4,11 @@ public enum AnimationClipData {
     _Placeholder("/something.json"),
 
     /// Voltraxis
-    Voltraxis_Idle("/Voltraxis/AnimationData/Idle/AnimationData.json"),
+    Voltraxis_Idle("/Voltraxis/Main/Idle/AnimationData.json"),
+    Voltraxis_PowerCore_Idle("/Voltraxis/Object/PowerCore/Idle/AnimationData_Idle.json"),
+    Voltraxis_PowerCore_Idle_ChargingLow("/Voltraxis/Object/PowerCore/Idle/AnimationData_Low.json"),
+    Voltraxis_PowerCore_Idle_ChargingMedium("/Voltraxis/Object/PowerCore/Idle/AnimationData_Medium.json"),
+    Voltraxis_PowerCore_Idle_ChargingHigh("/Voltraxis/Object/PowerCore/Idle/AnimationData_High.json"),
 
     /// Button
     Start_Button_Idle("/Animation/Button/StartButton/Idle.json"),

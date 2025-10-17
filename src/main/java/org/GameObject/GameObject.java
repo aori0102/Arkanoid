@@ -143,7 +143,7 @@ public class GameObject {
 
         ValidateObjectLife();
 
-        boolean parentActive = parent == null || parent.isActive();
+        boolean parentActive = parent == null || (!parent.isDestroyed() && parent.isActive());
         return isActive && parentActive;
 
     }
