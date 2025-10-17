@@ -398,7 +398,7 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
      */
     private void electricBall_onPaddleHit(Object sender, Void e) {
         if (sender instanceof ElectricBall electricBall) {
-            // TODO: caution when removing listener.
+            // TODO: caution when removing listener. - Aori
             electricBall.onPaddleHit
                     .removeListener(electricBallEventActionIDMap.get(electricBall));
             // TODO: damage player - Aori

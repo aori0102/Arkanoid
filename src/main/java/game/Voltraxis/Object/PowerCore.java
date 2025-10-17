@@ -45,7 +45,7 @@ public class PowerCore extends MonoBehaviour implements IBossTarget {
         onPowerCoreDestroyed = null;
         powerCoreVisual = null;
         onHealthChanged = null;
-        // TODO: caution when removing listener.
+        // TODO: caution when removing listener. - Aori
         voltraxis.onChargingMedium.removeListener(chargingMediumEventActionID);
         voltraxis.onChargingLow.removeListener(chargingLowEventActionID);
         voltraxis.onChargingHigh.removeListener(chargingHighEventActionID);
