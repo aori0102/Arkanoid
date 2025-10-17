@@ -253,10 +253,12 @@ public final class VoltraxisPrefab {
      */
     private static VoltraxisVisual instantiateVisual() {
 
-        var visualObject = GameObjectManager.instantiate("Visual");
+        var visualObject = GameObjectManager.instantiate("VoltraxisVisual");
         var visual = visualObject.addComponent(VoltraxisVisual.class);
-        var animator = visual.addComponent(SpriteAnimator.class);
+        var animator = visualObject.addComponent(SpriteAnimator.class);
         animator.addAnimationClip(AnimationClipData.Voltraxis_Idle);
+        var renderer = visualObject.addComponent(SpriteRenderer.class);
+        renderer.setPivot(new Vector2(0.5, 0.5));
         return visual;
 
     }

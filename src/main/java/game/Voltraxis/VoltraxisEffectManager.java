@@ -24,39 +24,56 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
 
     /**
      * Utility class to hold effect information.
-     *
-     * @param index                  The index of the effect.<br>
-     * @param value                  The value this effect applies.<br>
-     * @param effectEndingConstraint The constraint upon which to
-     *                               terminate the effect. This is
-     *                               a function which accepts a {@code double}
-     *                               as the parameter representing the delta time
-     *                               from the moment this effect starts and returns
-     *                               a {@code bool}. Most common way to use this is
-     *                               by {@code (delta) -> return delta > cooldown},
-     *                               which means this effect will last for {@code cooldown}
-     *                               second(s).
      */
-    public record EffectInfo(
-            VoltraxisData.EffectIndex index,
-            double value,
-            Function<Double, Boolean> effectEndingConstraint
-    ) {
+    public static class EffectInfo {
+
+        /**
+         * The index of the effect.
+         */
+        public VoltraxisData.EffectIndex index;
+
+        /**
+         * The value this effect applies.
+         */
+        public double value;
+
+        /**
+         * The constraint upon which to terminate the effect. This is
+         * a function which accepts a {@code double} as the parameter
+         * representing the delta time from the moment this effect starts
+         * and returns a {@code bool}. Most common way to use this is
+         * by {@code (delta) -> return delta > cooldown}, which means this
+         * effect will last for {@code cooldown} second(s).
+         */
+        public Function<Double, Boolean> effectEndingConstraint;
+
     }
 
     /**
      * Linker class that links UI with their info.
-     *
-     * @param skillStartTick The time when the effect starts.
-     * @param info           The overall info of the effect.
-     * @param icon           The icon UI of the effect.
      */
-    private record EffectUILinker(
-            double skillStartTick,
-            EffectInfo info,
-            VoltraxisEffectIcon icon,
-            Runnable effectEndedCallback
-    ) {
+    private static class EffectUILinker {
+
+        /**
+         * The time when the effect starts.
+         */
+        public double effectStartTick;
+
+        /**
+         * The overall info of the effect.
+         */
+        public EffectInfo info;
+
+        /**
+         * The icon UI of the effect.
+         */
+        public VoltraxisEffectIcon icon;
+
+        /**
+         * The function to run when this effect ends.
+         */
+        public Runnable effectEndedCallback;
+
     }
 
     private final LinkedList<EffectUILinker> effectUILinkerList = new LinkedList<>();
@@ -89,7 +106,7 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
             var uiLinker = iterator.next();
             var index = iterator.nextIndex();
 
-            if (uiLinker.info.effectEndingConstraint.apply(Time.time - uiLinker.skillStartTick)) {
+            if (uiLinker.info.effectEndingConstraint.apply(Time.time - uiLinker.effectStartTick)) {
 
                 modifyStatOnEffectRemoved(uiLinker.info);
                 if (uiLinker.effectEndedCallback != null) {
@@ -118,7 +135,11 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
         var iconUI = VoltraxisPrefab.instantiateVoltraxisEffectIcon(info.index);
         iconUI.getGameObject().setParent(getGameObject());
         iconUI.setEntry(ICON_OFFSET.multiply(effectUILinkerList.size()));
-        var uiLinker = new EffectUILinker(Time.time, info, iconUI, onEffectEndedCallback);
+        var uiLinker = new EffectUILinker();
+        uiLinker.effectStartTick = Time.time;
+        uiLinker.effectEndedCallback = onEffectEndedCallback;
+        uiLinker.icon = iconUI;
+        uiLinker.info = info;
         effectUILinkerList.add(uiLinker);
 
         modifyStatOnEffectAdded(info);
@@ -166,11 +187,12 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
                 break;
 
             case VoltraxisData.EffectIndex.Frostbite:
-                addEffect(new EffectInfo(
-                        VoltraxisData.EffectIndex.DamageTakenIncrement,
-                        VoltraxisData.FROST_BITE_DAMAGE_TAKEN_INCREMENT,
-                        (_) -> hasEffect(VoltraxisData.EffectIndex.Frostbite)
-                ), null);
+                var damageTakenIncrementEffectInfo = new EffectInfo();
+                damageTakenIncrementEffectInfo.index = VoltraxisData.EffectIndex.DamageTakenIncrement;
+                damageTakenIncrementEffectInfo.value = VoltraxisData.FROST_BITE_DAMAGE_TAKEN_INCREMENT;
+                damageTakenIncrementEffectInfo.effectEndingConstraint
+                        = (_) -> hasEffect(VoltraxisData.EffectIndex.Frostbite);
+                addEffect(damageTakenIncrementEffectInfo, null);
 
         }
 

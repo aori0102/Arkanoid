@@ -35,13 +35,13 @@ public final class VoltraxisData {
     public static final double MIN_GROGGY_ON_POWER_CORE_DEPLOY = 0.5;
 
     /// Additional effects
-    // TODO: can change this value
+    // TODO: can change this value - Aori to Kine
     public static final double FROST_BITE_DAMAGE_TAKEN_INCREMENT = 0.35;
 
     /// Effects
     public enum EffectIndex {
 
-        // TODO: update image index
+        // TODO: update image index - Aori to Kine
         AttackIncrement(ImageAsset.ImageIndex.Voltraxis_UI_EffectIcon_AttackIncrement),
         DamageTakenIncrement(ImageAsset.ImageIndex.Voltraxis_UI_EffectIcon_DamageTakenIncrement),
         DefenceReduction(ImageAsset.ImageIndex.Voltraxis_UI_EffectIcon_DefenseIncrement),

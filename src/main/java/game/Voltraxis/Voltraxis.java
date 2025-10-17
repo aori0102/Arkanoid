@@ -109,12 +109,11 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
     private void enhanceSkill() {
 
         // Add attack increment effect
-        voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
-                VoltraxisData.EffectIndex.AttackIncrement,
-                VoltraxisData.ENHANCE_ATTACK_INCREMENT,
-                (delta) -> delta >= VoltraxisData.ENHANCE_SKILL_DURATION,
-                null
-        ));
+        var effectInfo = new VoltraxisEffectManager.EffectInfo();
+        effectInfo.index = VoltraxisData.EffectIndex.AttackIncrement;
+        effectInfo.value = VoltraxisData.ENHANCE_ATTACK_INCREMENT;
+        effectInfo.effectEndingConstraint = (delta) -> delta >= VoltraxisData.ENHANCE_SKILL_DURATION;
+        voltraxisEffectManager.addEffect(effectInfo, null);
 
         // Repeat enhance skill
         Time.addCoroutine(this::enhanceSkill, Time.time + VoltraxisData.ENHANCE_SKILL_COOLDOWN);
@@ -132,26 +131,28 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
     private void groggySkill() {
 
         // Add attack increment effect
-        voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
-                VoltraxisData.EffectIndex.AttackIncrement,
-                VoltraxisData.GROGGY_ATTACK_INCREMENT,
-                (delta) -> delta >= VoltraxisData.GROGGY_DURATION,
-                null
-        ));
+        var attackIncrementEffectInfo = new VoltraxisEffectManager.EffectInfo();
+        attackIncrementEffectInfo.index = VoltraxisData.EffectIndex.AttackIncrement;
+        attackIncrementEffectInfo.value = VoltraxisData.GROGGY_ATTACK_INCREMENT;
+        attackIncrementEffectInfo.effectEndingConstraint
+                = (delta) -> delta >= VoltraxisData.GROGGY_DURATION;
+        voltraxisEffectManager.addEffect(attackIncrementEffectInfo, null);
+
         // Add skill cooldown reduction effect
-        voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
-                VoltraxisData.EffectIndex.SkillCooldownDecrement,
-                VoltraxisData.GROGGY_BASIC_COOLDOWN_REDUCTION,
-                (delta) -> delta >= VoltraxisData.GROGGY_DURATION,
-                null
-        ));
+        var skillCooldownEffectInfo = new VoltraxisEffectManager.EffectInfo();
+        skillCooldownEffectInfo.index = VoltraxisData.EffectIndex.SkillCooldownDecrement;
+        skillCooldownEffectInfo.value = VoltraxisData.GROGGY_BASIC_COOLDOWN_REDUCTION;
+        skillCooldownEffectInfo.effectEndingConstraint
+                = (delta) -> delta >= VoltraxisData.GROGGY_DURATION;
+        voltraxisEffectManager.addEffect(skillCooldownEffectInfo, null);
+
         // Add charging effect
-        voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
-                VoltraxisData.EffectIndex.ChargingEX,
-                0.0,
-                (delta) -> delta >= VoltraxisData.GROGGY_TO_EX_CHARGE_TIME,
-                null
-        ));
+        var chargingEffectInfo = new VoltraxisEffectManager.EffectInfo();
+        chargingEffectInfo.index = VoltraxisData.EffectIndex.ChargingEX;
+        chargingEffectInfo.value = 0.0;
+        chargingEffectInfo.effectEndingConstraint
+                = (delta) -> delta >= VoltraxisData.GROGGY_TO_EX_CHARGE_TIME;
+        voltraxisEffectManager.addEffect(chargingEffectInfo, null);
 
         // Charge towards EX Skill
         Time.addCoroutine(this::exSkill, VoltraxisData.GROGGY_TO_EX_CHARGE_TIME);
@@ -199,26 +200,25 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
 
         // Instantiate the power core
         PowerCore newCore = VoltraxisPrefab.instantiatePowerCore();
-        System.out.println("a:" + newCore);
         newCore.getTransform().setGlobalPosition(position);
         int powerCoreHealth = (int) (VoltraxisData.BASE_MAX_HEALTH * VoltraxisData.POWER_CORE_PROPORTIONAL_HEALTH);
         newCore.setHealth(powerCoreHealth);
 
         // Add power core effect
-        voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
-                VoltraxisData.EffectIndex.PowerCore,
-                0.0,
-                (_) -> newCore.getGameObject().isDestroyed(),
-                null
-        ));
+        var powerCoreEffectInfo = new VoltraxisEffectManager.EffectInfo();
+        powerCoreEffectInfo.index = VoltraxisData.EffectIndex.PowerCore;
+        powerCoreEffectInfo.value = 0.0;
+        powerCoreEffectInfo.effectEndingConstraint
+                = (_) -> newCore.getGameObject().isDestroyed();
+        voltraxisEffectManager.addEffect(powerCoreEffectInfo, null);
 
         // Add effect on damage taken decrement
-        voltraxisEffectManager.addEffect(new VoltraxisEffectManager.EffectInfo(
-                VoltraxisData.EffectIndex.DamageTakenDecrement,
-                VoltraxisData.POWER_CORE_DAMAGE_TAKEN_REDUCTION,
-                (_) -> newCore.getGameObject().isDestroyed(),
-                null
-        ));
+        var damageTakenDecrementEffectInfo = new VoltraxisEffectManager.EffectInfo();
+        damageTakenDecrementEffectInfo.index = VoltraxisData.EffectIndex.DamageTakenDecrement;
+        damageTakenDecrementEffectInfo.value = VoltraxisData.POWER_CORE_DAMAGE_TAKEN_REDUCTION;
+        damageTakenDecrementEffectInfo.effectEndingConstraint
+                = (_) -> newCore.getGameObject().isDestroyed();
+        voltraxisEffectManager.addEffect(damageTakenDecrementEffectInfo, null);
 
         // Link destroyed event
         newCore.onPowerCoreDestroyed.addListener(this::powerCore_onPowerCoreDestroyed);
@@ -351,7 +351,7 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
     private void electricBall_onPaddleHit(Object sender, Void e) {
         if (sender instanceof ElectricBall electricBall) {
             electricBall.onPaddleHit.removeListener(this::electricBall_onPaddleHit);
-            // TODO: damage player
+            // TODO: damage player - Aori
         }
     }
 

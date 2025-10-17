@@ -4,6 +4,8 @@ import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
+import org.Rendering.SpriteRenderer;
+import utils.Vector2;
 
 /**
  * Visual component of Voltraxis.
@@ -11,7 +13,7 @@ import org.GameObject.MonoBehaviour;
 public final class VoltraxisVisual extends MonoBehaviour {
 
     private Voltraxis voltraxis = null;
-    private SpriteAnimator animator;
+    private SpriteAnimator animator = null;
 
     /**
      * Create this MonoBehaviour.
@@ -20,7 +22,6 @@ public final class VoltraxisVisual extends MonoBehaviour {
      */
     public VoltraxisVisual(GameObject owner) {
         super(owner);
-        animator = getComponent(SpriteAnimator.class);
     }
 
     @Override
@@ -30,6 +31,7 @@ public final class VoltraxisVisual extends MonoBehaviour {
 
     @Override
     public void awake() {
+        animator = getComponent(SpriteAnimator.class);
         animator.playAnimation(AnimationClipData.Voltraxis_Idle);
     }
 
