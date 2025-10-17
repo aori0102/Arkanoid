@@ -24,6 +24,7 @@ public class SpriteAnimator extends MonoBehaviour {
     private SpriteRenderer spriteRenderer;
     private HashMap<AnimationClipData, SpriteAnimationClip> animationClipMap;
     private SpriteAnimationClip.AnimationNode currentAnimationNode;
+    private Time.CoroutineID currentFrameCoroutineID = null;
 
     /**
      * Create this MonoBehaviour.
@@ -116,7 +117,9 @@ public class SpriteAnimator extends MonoBehaviour {
             spriteRenderer.setSize(currentAnimationNode.frame.getRenderSize());
             spriteRenderer.setImageRotation(currentAnimationNode.frame.getRotationAngle());
             spriteRenderer.setPivot(new Vector2(0.5, 0.5));
-            Time.addCoroutine(this::progressFrame, Time.time + currentAnimationNode.frame.getDuration());
+            currentFrameCoroutineID = Time.addCoroutine(this::progressFrame, Time.time + currentAnimationNode.frame.getDuration());
+        } else {
+            currentFrameCoroutineID = null;
         }
     }
 
@@ -134,7 +137,10 @@ public class SpriteAnimator extends MonoBehaviour {
         animationClipMap.clear();
         animationClipMap = null;
         currentAnimationNode = null;
+        if (currentFrameCoroutineID != null) {
+            Time.removeCoroutine(currentFrameCoroutineID);
+            currentAnimationNode = null;
+        }
     }
-
 
 }
