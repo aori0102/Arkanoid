@@ -1,5 +1,6 @@
 package org.Event;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.BiConsumer;
 
@@ -15,7 +16,7 @@ public class EventHandler<T> {
     /**
      * A list to store all of callbacks
      */
-    private final HashSet<BiConsumer<Object, T>> listeners = new HashSet<>();
+    private final HashMap<EventActionID, BiConsumer<Object, T>> listeners = new HashMap<>();
 
     public EventHandler(Object sender) {
         this.sender = sender;
@@ -25,18 +26,21 @@ public class EventHandler<T> {
      * Add the callback to the list. Corresponding to += in C#.
      *
      * @param listener : The action that we want to execute.
+     * @return An ID attach to this method. Can be used for removing later.
      */
-    public void addListener(BiConsumer<Object, T> listener) {
-        listeners.add(listener);
+    public EventActionID addListener(BiConsumer<Object, T> listener) {
+        var id = new EventActionID();
+        listeners.put(id, listener);
+        return id;
     }
 
     /**
      * Remove the callback from the list.Corresponding to -= in C#.
      *
-     * @param listener : the action that we want to remove.
+     * @param id The ID of the event action to be removed.
      */
-    public void removeListener(BiConsumer<Object, T> listener) {
-        listeners.remove(listener);
+    public void removeListener(EventActionID id) {
+        listeners.remove(id);
     }
 
     /**
@@ -61,8 +65,8 @@ public class EventHandler<T> {
 
         if (!listeners.isEmpty()) {
 
-            HashSet<BiConsumer<Object, T>> newListeners = new HashSet<>(listeners);
-            for (BiConsumer<Object, T> listener : newListeners) {
+            var newListenerSet = new HashSet<>(listeners.values());
+            for (var listener : newListenerSet) {
                 if (listener != null) {
                     listener.accept(sender, argument);
                 }

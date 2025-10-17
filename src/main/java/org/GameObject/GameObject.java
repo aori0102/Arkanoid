@@ -1,5 +1,6 @@
 package org.GameObject;
 
+import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Layer.Layer;
 import org.Scene.SceneKey;
@@ -28,6 +29,9 @@ public class GameObject {
     private final SceneKey registeredSceneKey;
     public EventHandler<Void> onObjectActivenessChanged = new EventHandler<>(this);
     public EventHandler<OnParentChangedEventArgs> onParentChanged = new EventHandler<>(this);
+
+    private EventActionID parentOnActivenessChangedActionID = null;
+    private EventActionID parentOnParentChangedActionID = null;
 
     public static class OnParentChangedEventArgs {
         public GameObject previousParent;
@@ -271,18 +275,23 @@ public class GameObject {
         eventArgs.newParent = parent;
         onParentChanged.invoke(this, eventArgs);
 
+        // TODO: caution here with removing event listeners, maybe other place can
+        //  have parent ref, event invocation listener method - Aori
         if (this.parent != null) {
             this.parent.removeChild(this);
-            this.parent.onParentChanged.removeListener(this::parent_onParentChanged);
-            this.parent.onObjectActivenessChanged.removeListener(this::parent_onObjectActivenessChanged);
+            this.parent.onParentChanged.removeListener(parentOnParentChangedActionID);
+            this.parent.onObjectActivenessChanged.removeListener(parentOnActivenessChangedActionID);
         }
 
         this.parent = parent;
 
         if (parent != null) {
             parent.addChild(this);
-            parent.onParentChanged.addListener(this::parent_onParentChanged);
-            parent.onObjectActivenessChanged.addListener(this::parent_onObjectActivenessChanged);
+            parentOnParentChangedActionID = parent.onParentChanged.addListener(this::parent_onParentChanged);
+            parentOnActivenessChangedActionID = parent.onObjectActivenessChanged.addListener(this::parent_onObjectActivenessChanged);
+        } else {
+            parentOnActivenessChangedActionID = null;
+            parentOnParentChangedActionID = null;
         }
 
     }

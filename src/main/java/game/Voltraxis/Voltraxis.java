@@ -3,12 +3,15 @@ package game.Voltraxis;
 import game.Voltraxis.Interface.IBossTarget;
 import game.Voltraxis.Object.ElectricBall;
 import game.Voltraxis.Object.PowerCore;
+import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import utils.Time;
 import utils.Vector2;
+
+import java.util.HashMap;
 
 /**
  * Main class of the Voltraxis boss. Handle central logic
@@ -31,7 +34,11 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
     public EventHandler<Void> onChargingLow = new EventHandler<>(this);
     public EventHandler<Void> onChargingMedium = new EventHandler<>(this);
     public EventHandler<Void> onChargingHigh = new EventHandler<>(this);
+    private Time.CoroutineID chargingCoroutineID = null;
     private boolean powerCoreDeployed = false;
+    private EventActionID leftCoreEventActionID = null;
+    private EventActionID rightCoreEventActionID = null;
+    private final HashMap<ElectricBall, EventActionID> electricBallEventActionIDMap = new HashMap<>();
 
     public Voltraxis(GameObject owner) {
         super(owner);
@@ -48,6 +55,7 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
         leftCore = null;
         GameObjectManager.destroy(rightCore.getGameObject());
         rightCore = null;
+        chargingCoroutineID = null;
     }
 
     @Override
@@ -94,7 +102,10 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
             var electricBall = VoltraxisPrefab.instantiateElectricBall();
 
             // Modify value
-            electricBall.onPaddleHit.addListener(this::electricBall_onPaddleHit);
+            electricBallEventActionIDMap.put(
+                    electricBall,
+                    electricBall.onPaddleHit.addListener(this::electricBall_onPaddleHit)
+            );
             electricBall.getTransform().setGlobalPosition(getTransform().getGlobalPosition());
             electricBall.setDirection(direction);
 
@@ -155,11 +166,21 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
         chargingEffectInfo.value = 0.0;
         chargingEffectInfo.effectEndingConstraint
                 = (_) -> hasPowerCore();
-        voltraxisEffectManager.addEffect(chargingEffectInfo, null);
+        voltraxisEffectManager.addEffect(
+                chargingEffectInfo,
+                this::terminateCurrentCharging
+        );
 
         // Charge towards EX Skill
         exSkillLowCharge();
 
+    }
+
+    private void terminateCurrentCharging() {
+        if (chargingCoroutineID != null) {
+            Time.removeCoroutine(chargingCoroutineID);
+            chargingCoroutineID = null;
+        }
     }
 
     private boolean hasPowerCore() {
@@ -168,17 +189,17 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
 
     private void exSkillLowCharge() {
         onChargingLow.invoke(this, null);
-        Time.addCoroutine(this::exSkillMediumCharge, VoltraxisData.EX_LOW_CHARGE_TIME);
+        chargingCoroutineID = Time.addCoroutine(this::exSkillMediumCharge, Time.time + VoltraxisData.EX_LOW_CHARGE_TIME);
     }
 
     private void exSkillMediumCharge() {
         onChargingMedium.invoke(this, null);
-        Time.addCoroutine(this::exSkillHighCharge, VoltraxisData.EX_MEDIUM_CHARGE_TIME);
+        chargingCoroutineID = Time.addCoroutine(this::exSkillHighCharge, Time.time + VoltraxisData.EX_MEDIUM_CHARGE_TIME);
     }
 
     private void exSkillHighCharge() {
         onChargingHigh.invoke(this, null);
-        Time.addCoroutine(this::exSkill, VoltraxisData.EX_HIGH_CHARGE_TIME);
+        chargingCoroutineID = Time.addCoroutine(this::exSkill, Time.time + VoltraxisData.EX_HIGH_CHARGE_TIME);
     }
 
     /**
@@ -186,6 +207,8 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
      * Voltraxis unleashes a devastating electric slash, dealing <b>247%</b> ATK.
      */
     protected void exSkill() {
+
+        chargingCoroutineID = null;
 
         // Check if EX is disrupted (both core destroyed)
         if (leftCore != null || rightCore != null) {
@@ -203,7 +226,9 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
         }
         powerCoreDeployed = true;
         leftCore = spawnCore(LEFT_CORE_POSITION);
+        leftCoreEventActionID = leftCore.onPowerCoreDestroyed.addListener(this::powerCore_onPowerCoreDestroyed);
         rightCore = spawnCore(RIGHT_CORE_POSITION);
+        rightCoreEventActionID = rightCore.onPowerCoreDestroyed.addListener(this::powerCore_onPowerCoreDestroyed);
     }
 
     /**
@@ -241,7 +266,6 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
         voltraxisEffectManager.addEffect(damageTakenDecrementEffectInfo, null);
 
         // Link destroyed event
-        newCore.onPowerCoreDestroyed.addListener(this::powerCore_onPowerCoreDestroyed);
         newCore.setVoltraxis(this);
 
         return newCore;
@@ -262,13 +286,16 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
 
             if (core == leftCore) {
                 leftCore = null;
+                core.onPowerCoreDestroyed.removeListener(leftCoreEventActionID);
+                leftCoreEventActionID = null;
             } else if (core == rightCore) {
                 rightCore = null;
+                core.onPowerCoreDestroyed.removeListener(rightCoreEventActionID);
+                rightCoreEventActionID = null;
             } else {
                 throw new RuntimeException("Invalid power core");
             }
 
-            core.onPowerCoreDestroyed.removeListener(this::powerCore_onPowerCoreDestroyed);
 
         }
 
@@ -371,7 +398,9 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
      */
     private void electricBall_onPaddleHit(Object sender, Void e) {
         if (sender instanceof ElectricBall electricBall) {
-            electricBall.onPaddleHit.removeListener(this::electricBall_onPaddleHit);
+            // TODO: caution when removing listener.
+            electricBall.onPaddleHit
+                    .removeListener(electricBallEventActionIDMap.get(electricBall));
             // TODO: damage player - Aori
         }
     }

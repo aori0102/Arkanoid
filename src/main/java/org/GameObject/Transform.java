@@ -1,5 +1,6 @@
 package org.GameObject;
 
+import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Physics.BoxCollider;
 import org.Physics.PhysicsManager;
@@ -15,6 +16,9 @@ public class Transform extends MonoBehaviour {
     public EventHandler<Void> onPositionChanged = new EventHandler<>(this);
     public EventHandler<Void> onScaleChanged = new EventHandler<>(this);
 
+    private EventActionID parentPositionChangedEventActionID = null;
+    private EventActionID parentScaleChangedEventActionID = null;
+
     public Transform(GameObject owner) {
         super(owner);
         gameObject.onParentChanged.addListener(this::gameObject_onParentChanged);
@@ -26,8 +30,9 @@ public class Transform extends MonoBehaviour {
 
             if (e.previousParent != null) {
                 var parentTransform = e.previousParent.getTransform();
-                parentTransform.onPositionChanged.removeListener(this::parent_onPositionChanged);
-                parentTransform.onScaleChanged.removeListener(this::parent_onScaleChanged);
+                // TODO: caution when removing listener. maybe other place can have more ref - Aori
+                parentTransform.onPositionChanged.removeListener(parentPositionChangedEventActionID);
+                parentTransform.onScaleChanged.removeListener(parentScaleChangedEventActionID);
             }
 
             if (e.newParent != null) {

@@ -2,6 +2,7 @@ package game.Voltraxis.Object;
 
 import game.Voltraxis.Interface.IBossTarget;
 import game.Voltraxis.Voltraxis;
+import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -20,6 +21,10 @@ public class PowerCore extends MonoBehaviour implements IBossTarget {
     public EventHandler<Void> onPowerCoreDestroyed = new EventHandler<>(this);
     public EventHandler<Void> onHealthChanged = new EventHandler<>(this);
 
+    private EventActionID chargingLowEventActionID = null;
+    private EventActionID chargingMediumEventActionID = null;
+    private EventActionID chargingHighEventActionID = null;
+
     /**
      * Create this MonoBehaviour.
      *
@@ -36,12 +41,18 @@ public class PowerCore extends MonoBehaviour implements IBossTarget {
 
     @Override
     protected void destroyComponent() {
+        System.out.println("Destroying PowerCore");
         onPowerCoreDestroyed = null;
-        powerCoreVisual=null;
+        powerCoreVisual = null;
         onHealthChanged = null;
-        voltraxis.onChargingMedium.removeListener(this::voltraxis_onChargingMedium);
-        voltraxis.onChargingLow.removeListener(this::voltraxis_onChargingLow);
-        voltraxis.onChargingHigh.removeListener(this::voltraxis_onChargingHigh);
+        // TODO: caution when removing listener.
+        voltraxis.onChargingMedium.removeListener(chargingMediumEventActionID);
+        voltraxis.onChargingLow.removeListener(chargingLowEventActionID);
+        voltraxis.onChargingHigh.removeListener(chargingHighEventActionID);
+        chargingLowEventActionID = null;
+        chargingMediumEventActionID = null;
+        chargingHighEventActionID = null;
+        voltraxis = null;
     }
 
     @Override
@@ -104,7 +115,7 @@ public class PowerCore extends MonoBehaviour implements IBossTarget {
     }
 
     public void setPowerCoreVisual(PowerCoreVisual powerCoreVisual) {
-        this.powerCoreVisual=powerCoreVisual;
+        this.powerCoreVisual = powerCoreVisual;
     }
 
 }

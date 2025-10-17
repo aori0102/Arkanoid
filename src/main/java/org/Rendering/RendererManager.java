@@ -3,11 +3,13 @@ package org.Rendering;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.Event.EventActionID;
 import org.Layer.RenderLayer;
 import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 
 public class RendererManager {
 
@@ -18,6 +20,7 @@ public class RendererManager {
     }
 
     private final static EnumMap<SceneKey, SceneInfo> sceneInfoMap = new EnumMap<>(SceneKey.class);
+    private final static HashMap<Renderable, EventActionID> renderableLayerChangeEventIDMap = new HashMap<>();
 
     /**
      * Initialize the program windows and render graph.
@@ -74,7 +77,10 @@ public class RendererManager {
      * @param renderable The registering rendering object.
      */
     protected static void registerNode(Renderable renderable) {
-        renderable.onRenderLayerChanged.addListener(RendererManager::renderable_onRenderLayerChanged);
+        renderableLayerChangeEventIDMap.put(
+                renderable,
+                renderable.onRenderLayerChanged.addListener(RendererManager::renderable_onRenderLayerChanged)
+        );
         var sceneKey = renderable.getGameObject().getRegisteredSceneKey();
         sceneInfoMap.get(sceneKey).renderLayerGroupMap.get(renderable.getRenderLayer())
                 .getChildren().add(renderable.getNode());
@@ -86,7 +92,7 @@ public class RendererManager {
      * @param renderable The unregistering rendering object.
      */
     protected static void unregisterNode(Renderable renderable) {
-        renderable.onRenderLayerChanged.removeListener(RendererManager::renderable_onRenderLayerChanged);
+        renderable.onRenderLayerChanged.removeListener(renderableLayerChangeEventIDMap.get(renderable));
         var sceneKey = renderable.getGameObject().getRegisteredSceneKey();
         sceneInfoMap.get(sceneKey).renderLayerGroupMap.get(renderable.getRenderLayer())
                 .getChildren().remove(renderable.getNode());
