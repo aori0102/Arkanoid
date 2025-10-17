@@ -49,7 +49,7 @@ public class Main extends Application {
      * Update of every frame
      */
     private void update() {
-        Time.updateTime();
+        Time.update();
         GameObjectManager.runUpdate();
     }
 

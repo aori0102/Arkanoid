@@ -1,10 +1,15 @@
 package utils;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 
+/**
+ * Utility for getting information on application time.
+ */
 public class Time {
+
+    public final static class CoroutineID {
+    }
 
     /**
      * Coroutine, meaning scheduled action.
@@ -16,7 +21,7 @@ public class Time {
     }
 
     private static final double offset = System.nanoTime() / 1000000000.0;
-    private static final Set<Coroutine> coroutineSet = new HashSet<>();
+    private static final HashMap<CoroutineID, Coroutine> coroutineMap = new HashMap<>();
 
     /**
      * The current time in seconds from the start of the application.
@@ -32,19 +37,29 @@ public class Time {
      * Update time for this frame. Should only be
      * called within {@code main} once.
      */
-    public static void updateTime() {
+    public static void update() {
+
+        updateTime();
+        updateCoroutines();
+
+    }
+
+    private static void updateTime() {
 
         var prev = time;
         time = System.nanoTime() / 1000000000.0 - offset;
         deltaTime = time - prev;
 
-        var currentCoroutineSet = new HashSet<>(coroutineSet);
-        coroutineSet.clear();
-        for (var coroutine : currentCoroutineSet) {
-            if (time >= coroutine.tick) {
+    }
+
+    private static void updateCoroutines() {
+
+        var idSet = new HashSet<>(coroutineMap.keySet());
+        for (var id : idSet) {
+            var coroutine = coroutineMap.get(id);
+            if (coroutine != null && time >= coroutine.tick) {
                 coroutine.action.run();
-            } else {
-                coroutineSet.add(coroutine);
+                coroutineMap.remove(id);
             }
         }
 
@@ -57,9 +72,25 @@ public class Time {
      * @param action The action to be executed.
      * @param tick   The time in seconds after upon
      *               when the action will be executed.
+     * @return A coroutine ID of the created coroutine. It
+     * can be used via {@link #removeCoroutine} to
+     * manually terminate the coroutine if needed.
      */
-    public static void addCoroutine(Runnable action, double tick) {
-        coroutineSet.add(new Coroutine(action, tick));
+    public static CoroutineID addCoroutine(Runnable action, double tick) {
+        var id = new CoroutineID();
+        var coroutine = new Coroutine(action, tick);
+        coroutineMap.put(id, coroutine);
+        return id;
+    }
+
+    /**
+     * Immediately remove the coroutine with the given ID.
+     *
+     * @param id The id of the coroutine given when added with
+     *           {@link #addCoroutine}.
+     */
+    public static void removeCoroutine(CoroutineID id) {
+        coroutineMap.remove(id);
     }
 
 }
