@@ -4,7 +4,7 @@ import game.Init;
 import org.GameObject.GameObjectManager;
 import org.Rendering.RendererManager;
 import org.Scene.SceneManager;
-import org.Utils.HierarchyView;
+import org.Utils.EditorView;
 import utils.Random;
 import utils.Time;
 import javafx.application.Application;
@@ -20,15 +20,15 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        HierarchyView.init();
-
         Random.init();
         var defaultScene = SceneManager.createScenes();
         RendererManager.initializeRenderSystem(stage, defaultScene);
+        EditorView.init();
         Init.Init_Aori();
         Init.Init_Duc();
         Init.Init_Dui();
         Init.Init_Kine();
+        EditorView.wakeHierarchy();
 
         // --- Game/render loop ---
         AnimationTimer loop = new AnimationTimer() {
