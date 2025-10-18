@@ -169,6 +169,7 @@ public class GameObjectManager {
      * @param source The source game object to copy from.
      * @return The copied game object.
      */
+    @Deprecated
     public static GameObject instantiate(GameObject source) {
         var newGameObject = new GameObject(source);
         onGameObjectInstantiated.invoke(null, newGameObject);
@@ -192,6 +193,7 @@ public class GameObjectManager {
      * @param <T>           The type of the MonoBehaviour.
      * @return The copied game object.
      */
+    @Deprecated
     public static <T extends MonoBehaviour> T instantiate(MonoBehaviour monoBehaviour, Class<T> type) {
         var newGameObject = new GameObject(monoBehaviour.gameObject);
         addedGameObjectQueue.add(newGameObject);

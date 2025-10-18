@@ -320,6 +320,7 @@ public class GameObject {
      *
      * @param gameObject The copied game object.
      */
+    @Deprecated
     protected GameObject(GameObject gameObject) {
 
         if (gameObject.isDestroyed) {

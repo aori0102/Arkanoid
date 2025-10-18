@@ -10,6 +10,7 @@ public abstract class MonoBehaviour {
      * @param newOwner The new owner of the cloned MonoBehaviour.
      * @return The cloned version of this MonoBehaviour from source.
      */
+    @Deprecated
     protected abstract MonoBehaviour clone(GameObject newOwner);
 
     /**
