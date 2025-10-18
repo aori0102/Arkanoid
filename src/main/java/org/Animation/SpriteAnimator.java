@@ -77,6 +77,11 @@ public class SpriteAnimator extends MonoBehaviour {
             throw new RuntimeException("Animation clip doesn't exist. Use addAnimationClip() to create an animation clip");
         }
 
+        if (currentFrameCoroutineID != null) {
+            Time.removeCoroutine(currentFrameCoroutineID);
+            currentFrameCoroutineID = null;
+        }
+
         var clip = animationClipMap.get(clipKey);
         currentAnimationNode = clip.head;
         if (currentAnimationNode == null) {
@@ -85,7 +90,6 @@ public class SpriteAnimator extends MonoBehaviour {
 
         spriteRenderer.setImage(clip.getSpriteSheet());
         updateCurrentFrame();
-        Time.addCoroutine(this::progressFrame, Time.time + currentAnimationNode.frame.getDuration());
 
     }
 
