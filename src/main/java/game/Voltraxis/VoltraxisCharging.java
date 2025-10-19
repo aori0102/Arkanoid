@@ -46,11 +46,6 @@ public class VoltraxisCharging extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
-    @Override
     protected void destroyComponent() {
     }
 

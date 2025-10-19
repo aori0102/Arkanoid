@@ -113,11 +113,6 @@ public class PowerUpManager extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
-    @Override
     protected void destroyComponent() {
 
     }

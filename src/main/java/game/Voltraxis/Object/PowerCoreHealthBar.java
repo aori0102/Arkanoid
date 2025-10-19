@@ -34,11 +34,6 @@ public class PowerCoreHealthBar extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
-    @Override
     public void awake() {
 
         fillLost.setFillAmount(healthLostRatio);

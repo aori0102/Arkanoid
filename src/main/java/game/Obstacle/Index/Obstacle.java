@@ -61,11 +61,6 @@ public abstract class Obstacle extends MonoBehaviour {
     protected abstract void handleMovement();
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
-    @Override
     protected void destroyComponent() {
 
     }

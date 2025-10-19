@@ -76,11 +76,6 @@ public abstract class MultipleBall extends PowerUp {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
-    @Override
     protected void destroyComponent() {
         playerPowerUpHandler = null;
         paddle = null;

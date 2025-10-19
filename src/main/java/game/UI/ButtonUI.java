@@ -53,11 +53,6 @@ public class ButtonUI extends MonoBehaviour
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return new ButtonUI(newOwner);
-    }
-
-    @Override
     public void onPointerClicked(MouseEvent event) {
         onPointerClick.invoke(this, event);
     }

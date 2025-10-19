@@ -49,16 +49,6 @@ public class BoxCollider extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        BoxCollider newBoxCollider = new BoxCollider(newOwner);
-        newBoxCollider.localCenter = this.localCenter;
-        newBoxCollider.localSize = this.localSize;
-        newBoxCollider.isTrigger = this.isTrigger;
-        newBoxCollider.onCollisionEnter = this.onCollisionEnter;
-        return newBoxCollider;
-    }
-
-    @Override
     protected void destroyComponent() {
         PhysicsManager.UnregisterCollider(this);
         localCenter = null;

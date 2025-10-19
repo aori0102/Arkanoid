@@ -25,11 +25,6 @@ public final class VoltraxisVisual extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
-    @Override
     public void awake() {
         animator = getComponent(SpriteAnimator.class);
         animator.playAnimation(AnimationClipData.Voltraxis_Idle);

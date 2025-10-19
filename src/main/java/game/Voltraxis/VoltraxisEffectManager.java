@@ -88,11 +88,6 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
-    @Override
     protected void destroyComponent() {
         effectUILinkerList.clear();
     }

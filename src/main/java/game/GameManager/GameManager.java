@@ -50,15 +50,6 @@ public class GameManager extends MonoBehaviour {
         OnGameResumed.invoke(this, null);
     }
 
-
-
-
-
-    @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
     @Override
     protected void destroyComponent() {
 

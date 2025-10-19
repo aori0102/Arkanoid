@@ -37,11 +37,6 @@ public class PowerCore extends MonoBehaviour implements IBossTarget {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
-    @Override
     protected void destroyComponent() {
         onPowerCoreDestroyed = null;
         powerCoreVisual = null;

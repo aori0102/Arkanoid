@@ -41,11 +41,6 @@ public class VoltraxisGroggy extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return new VoltraxisGroggy(newOwner);
-    }
-
-    @Override
     protected void destroyComponent() {
         voltraxisGroggyUI = null;
     }

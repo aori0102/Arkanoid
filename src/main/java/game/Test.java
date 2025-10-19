@@ -22,11 +22,6 @@ public class Test extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return new Test(newOwner);
-    }
-
-    @Override
     protected void destroyComponent() {
         animator = null;
     }

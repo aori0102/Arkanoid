@@ -148,16 +148,6 @@ public class Transform extends MonoBehaviour {
         onScaleChanged.invoke(this, null);
     }
 
-    @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-
-        Transform newTransform = new Transform(newOwner);
-        newTransform.setLocalPosition(this._localPosition);
-        newTransform.setLocalScale(this._localScale);
-        return newTransform;
-
-    }
-
     /**
      * Translate this transform by {@code translation}.
      *

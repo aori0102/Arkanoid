@@ -92,11 +92,6 @@ public abstract class BaseButton extends MonoBehaviour {
     protected abstract void baseButton_onPointerClicked(Object sender, MouseEvent e);
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
-    @Override
     protected void destroyComponent() { }
 }
 

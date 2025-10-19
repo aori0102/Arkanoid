@@ -35,11 +35,6 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return new Voltraxis(newOwner);
-    }
-
-    @Override
     protected void destroyComponent() {
         chargingCoroutineID = null;
     }

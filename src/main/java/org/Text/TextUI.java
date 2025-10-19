@@ -43,11 +43,6 @@ public class TextUI extends Renderable {
         updateRenderPosition();
     }
 
-    @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return new TextUI(newOwner);
-    }
-
     /**
      * Update the current font based on the set name and size.
      */

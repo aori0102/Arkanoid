@@ -32,11 +32,6 @@ public class FireBall extends PowerUp {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
-    @Override
     protected void destroyComponent() {
 
     }

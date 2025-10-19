@@ -51,13 +51,6 @@ public class PowerUp extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        var clone = new PowerUp(newOwner);
-        clone.powerUpIndex = powerUpIndex;
-        return clone;
-    }
-
-    @Override
     public void update() {
         handleDroppingMotion();
     }

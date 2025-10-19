@@ -355,11 +355,6 @@ public class SpriteRenderer extends Renderable {
 
     }
 
-    @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return new SpriteRenderer(newOwner);
-    }
-
     public Node getNode() {
         return sprite;
     }

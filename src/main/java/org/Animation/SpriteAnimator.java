@@ -128,11 +128,6 @@ public class SpriteAnimator extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return new SpriteAnimator(newOwner);
-    }
-
-    @Override
     protected void destroyComponent() {
         spriteRenderer = null;
         for (var key : animationClipMap.keySet()) {

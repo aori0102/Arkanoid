@@ -5,15 +5,6 @@ public abstract class MonoBehaviour {
     protected transient GameObject gameObject = null;
 
     /**
-     * Clone this MonoBehaviour.
-     *
-     * @param newOwner The new owner of the cloned MonoBehaviour.
-     * @return The cloned version of this MonoBehaviour from source.
-     */
-    @Deprecated
-    protected abstract MonoBehaviour clone(GameObject newOwner);
-
-    /**
      * Get the {@link Transform} for this game object.
      *
      * @return The {@link Transform} for this game object.

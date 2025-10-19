@@ -59,11 +59,6 @@ public class Player extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        throw new RuntimeException("Cannot clone Player, which is a singleton!");
-    }
-
-    @Override
     protected void destroyComponent() {
         playerPowerUpHandler = null;
         instance = null;

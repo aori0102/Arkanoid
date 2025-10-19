@@ -42,11 +42,6 @@ public class ElectricBall extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return new ElectricBall(newOwner);
-    }
-
-    @Override
     protected void destroyComponent() {
         direction = null;
     }

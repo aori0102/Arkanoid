@@ -35,11 +35,6 @@ public class VoltraxisHealthBar extends MonoBehaviour {
     }
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
-    @Override
     public void awake() {
 
         healthLostImage.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);

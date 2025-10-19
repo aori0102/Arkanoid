@@ -29,11 +29,6 @@ public final class Brick extends MonoBehaviour {
     public EventHandler<Void> onBrickCollision = new EventHandler<>(this);
 
     @Override
-    protected MonoBehaviour clone(GameObject newOwner) {
-        return null;
-    }
-
-    @Override
     protected void destroyComponent() {
         onBrickDestroyed.invoke(this, null);
     }

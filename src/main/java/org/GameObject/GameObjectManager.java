@@ -164,44 +164,6 @@ public class GameObjectManager {
     }
 
     /**
-     * Copy a game object along with all of its component.
-     *
-     * @param source The source game object to copy from.
-     * @return The copied game object.
-     */
-    @Deprecated
-    public static GameObject instantiate(GameObject source) {
-        var newGameObject = new GameObject(source);
-        onGameObjectInstantiated.invoke(null, newGameObject);
-        newGameObject.setName(source.getName() + " (Clone)");
-        for (var child : source.childSet) {
-            var newChild = instantiate(child);
-            newChild.setParent(newGameObject);
-        }
-        addedGameObjectQueue.add(newGameObject);
-
-        return newGameObject;
-    }
-
-    /**
-     * Create a copy of the game object that the MonoBehaviour
-     * is attached to. All the MonoBehaviour attached to the
-     * source will be cloned.
-     *
-     * @param monoBehaviour The source MonoBehaviour.
-     * @param type          The type of the MonoBehaviour.
-     * @param <T>           The type of the MonoBehaviour.
-     * @return The copied game object.
-     */
-    @Deprecated
-    public static <T extends MonoBehaviour> T instantiate(MonoBehaviour monoBehaviour, Class<T> type) {
-        var newGameObject = new GameObject(monoBehaviour.gameObject);
-        addedGameObjectQueue.add(newGameObject);
-
-        return newGameObject.getComponent(type);
-    }
-
-    /**
      * Destroy a game object and all of its components.
      *
      * @param gameObject The game object to destroy.
