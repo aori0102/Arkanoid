@@ -18,7 +18,7 @@ public class Random {
      * @param max The maximum value (exclusive).
      * @return A random integer within [{@code min}, {@code max}).
      */
-    public static int Range(int min, int max) {
+    public static int range(int min, int max) {
         return random.nextInt(min, max);
     }
 
@@ -29,7 +29,7 @@ public class Random {
      * @param max The maximum value (exclusive).
      * @return A random decimal number within [{@code min}, {@code max}).
      */
-    public static double Range(double min, double max) {
+    public static double range(double min, double max) {
         return random.nextDouble(min, max);
     }
 

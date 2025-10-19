@@ -45,7 +45,7 @@ public class Init {
         ball.addComponent(Ball.class);
         ball.addComponent(BoxCollider.class);
         ball.getComponent(Ball.class).setPaddle(paddle.getComponent(Paddle.class));
-        ball.getTransform().setGlobalPosition(new Vector2(584,530 ));
+        ball.getTransform().setGlobalPosition(new Vector2(584, 530));
         ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
 
         var ballVisual = GameObjectManager.instantiate("ballVisual");
@@ -72,7 +72,7 @@ public class Init {
 
         var brick = GameObjectManager.instantiate("brick");
         brick.addComponent(Brick.class);
-        brick.getTransform().setGlobalPosition(new Vector2(300 , 300));
+        brick.getTransform().setGlobalPosition(new Vector2(300, 300));
         brick.getTransform().setGlobalScale(new Vector2(2, 2));
         brick.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
 
@@ -177,6 +177,18 @@ public class Init {
         borderBottomVisual.setParent(borderBottom);
         //borderBottomVisual.addComponent(SpriteRenderer.class).setImage("/bocchi.png");
 
+
+    }
+
+    public static void initMenu() {
+
+    }
+
+    public static void initGame() {
+
+    }
+
+    public static void initRecord() {
 
     }
 

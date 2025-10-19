@@ -65,8 +65,6 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
      */
     public EventHandler<StatusEffect> onFireBallRequested = new EventHandler<>(this);
 
-    public
-
     /**
      * Create this MonoBehaviour.
      *

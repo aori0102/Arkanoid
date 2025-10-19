@@ -28,6 +28,9 @@ public class Main extends Application {
         Init.Init_Duc();
         Init.Init_Dui();
         Init.Init_Kine();
+        Init.initMenu();
+        Init.initGame();
+        Init.initRecord();
         EditorView.wakeHierarchy();
 
         // --- Game/render loop ---

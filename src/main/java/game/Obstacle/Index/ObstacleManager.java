@@ -120,7 +120,7 @@ public class ObstacleManager extends MonoBehaviour {
 
         // The poisson process result
         double poissonProcess = effectiveLambda * Time.deltaTime;
-        return Random.Range(0.0, 1.0) < poissonProcess;
+        return Random.range(0.0, 1.0) < poissonProcess;
 
     }
 
@@ -152,7 +152,7 @@ public class ObstacleManager extends MonoBehaviour {
     private Vector2 sampleSpawnPosition() {
         int tries = 10;
         for (int i = 0; i < tries; i++) {
-            double x = 50 + Random.Range(0.0, 1.0) * (1200 - 100);
+            double x = 50 + Random.range(0.0, 1.0) * (1200 - 100);
             double y = 1000;
 
             Vector2 pos = new Vector2(x, y);
@@ -173,7 +173,7 @@ public class ObstacleManager extends MonoBehaviour {
     private void spawnAt(Vector2 pos) {
         if (obstacles.isEmpty()) return;
 
-        Obstacle chosen = obstacles.get(Random.Range(0, obstacles.size()));
+        Obstacle chosen = obstacles.get(Random.range(0, obstacles.size()));
         chosen.getGameObject().setActive(true);
         chosen.getTransform().setGlobalPosition(pos);
     }
