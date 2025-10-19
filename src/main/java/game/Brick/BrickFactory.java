@@ -42,6 +42,10 @@ public class BrickFactory {
         }
     }
 
+    public void setupNewBrick(int x, int y, BrickObj.BrickType brickType) {
+        matrixObj.set(x, y, getNewBrick(brickType));
+    }
+
     public void runProgress() {
         waveEffect.getListObjHitDamage();
         waveEffect.runAllWave();
