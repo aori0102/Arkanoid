@@ -7,23 +7,25 @@ import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import utils.Time;
+import utils.Vector2;
 
 /**
  * Voltraxis' power core.
  */
 public class PowerCore extends MonoBehaviour implements IBossTarget {
 
+    private static final double MAX_CORE_FLUCTUATION_DISTANCE = 3.2;
+    private static final double CORE_FLUCTUATION_RATE = 0.49;
+
     private int health;
     private int maxHealth;
     private Voltraxis voltraxis = null;
     private PowerCoreVisual powerCoreVisual = null;
+    private Vector2 defaultPosition = Vector2.zero();
 
     public EventHandler<Void> onPowerCoreDestroyed = new EventHandler<>(this);
     public EventHandler<Void> onHealthChanged = new EventHandler<>(this);
-
-    private EventActionID chargingLowEventActionID = null;
-    private EventActionID chargingMediumEventActionID = null;
-    private EventActionID chargingHighEventActionID = null;
 
     /**
      * Create this MonoBehaviour.
@@ -41,17 +43,9 @@ public class PowerCore extends MonoBehaviour implements IBossTarget {
 
     @Override
     protected void destroyComponent() {
-        System.out.println("Destroying PowerCore");
         onPowerCoreDestroyed = null;
         powerCoreVisual = null;
         onHealthChanged = null;
-        // TODO: caution when removing listener. - Aori
-        voltraxis.onChargingMedium.removeListener(chargingMediumEventActionID);
-        voltraxis.onChargingLow.removeListener(chargingLowEventActionID);
-        voltraxis.onChargingHigh.removeListener(chargingHighEventActionID);
-        chargingLowEventActionID = null;
-        chargingMediumEventActionID = null;
-        chargingHighEventActionID = null;
         voltraxis = null;
     }
 
@@ -63,6 +57,18 @@ public class PowerCore extends MonoBehaviour implements IBossTarget {
             onPowerCoreDestroyed.invoke(this, null);
             GameObjectManager.destroy(gameObject);
         }
+    }
+
+    @Override
+    public void awake() {
+        defaultPosition = getTransform().getGlobalPosition();
+    }
+
+    @Override
+    public void update() {
+        var delta = Math.sin(CORE_FLUCTUATION_RATE * Time.time * Math.PI) * MAX_CORE_FLUCTUATION_DISTANCE;
+        var deltaVector = new Vector2(0.0, delta);
+        getTransform().setGlobalPosition(defaultPosition.add(deltaVector));
     }
 
     /**
@@ -97,20 +103,17 @@ public class PowerCore extends MonoBehaviour implements IBossTarget {
 
     public void setVoltraxis(Voltraxis voltraxis) {
         this.voltraxis = voltraxis;
-        voltraxis.onChargingLow.addListener(this::voltraxis_onChargingLow);
-        voltraxis.onChargingHigh.addListener(this::voltraxis_onChargingHigh);
-        voltraxis.onChargingMedium.addListener(this::voltraxis_onChargingMedium);
     }
 
-    private void voltraxis_onChargingLow(Object sender, Void e) {
+    public void onChargingLow(Object sender, Void e) {
         powerCoreVisual.animateLowCharging();
     }
 
-    private void voltraxis_onChargingMedium(Object sender, Void e) {
+    public void onChargingMedium(Object sender, Void e) {
         powerCoreVisual.animateMediumCharging();
     }
 
-    private void voltraxis_onChargingHigh(Object sender, Void e) {
+    public void onChargingHigh(Object sender, Void e) {
         powerCoreVisual.animateHighCharging();
     }
 

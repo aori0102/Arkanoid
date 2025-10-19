@@ -3,22 +3,17 @@ package game.Voltraxis;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
-import org.Rendering.SpriteRenderer;
-import utils.MathUtils;
-import utils.Time;
 
 /**
- * Central class to handle Voltraxis' groggy status and
- * its UI.
+ * Central class to handle Voltraxis' groggy status.
  */
-public class VoltraxisGroggyGauge extends MonoBehaviour {
+public class VoltraxisGroggy extends MonoBehaviour {
 
     private static final double MAX_GROGGY = 1.0;
-    private static final double GROGGY_BAR_CHANGE_RATE = 5.962;
 
-    private SpriteRenderer fill = null;
+    private boolean isGroggyLocked = false;
     private double groggy = 0.0;
-    private double ratio = 0.0;
+    private VoltraxisGroggyUI voltraxisGroggyUI = null;
 
     /**
      * Fired when Voltraxis' groggy is full<br><br>
@@ -41,35 +36,18 @@ public class VoltraxisGroggyGauge extends MonoBehaviour {
      *
      * @param owner The owner of this component.
      */
-    public VoltraxisGroggyGauge(GameObject owner) {
+    public VoltraxisGroggy(GameObject owner) {
         super(owner);
     }
 
     @Override
     protected MonoBehaviour clone(GameObject newOwner) {
-        return new VoltraxisGroggyGauge(newOwner);
+        return new VoltraxisGroggy(newOwner);
     }
 
     @Override
     protected void destroyComponent() {
-        fill = null;
-    }
-
-    @Override
-    public void update() {
-        ratio = MathUtils.lerp(ratio, groggy / MAX_GROGGY, Time.deltaTime * GROGGY_BAR_CHANGE_RATE);
-        fill.setFillAmount(ratio);
-    }
-
-    /**
-     * Set the fill bar renderer for the groggy gauge UI.<br><br>
-     * <b><i><u>NOTE: </u> Only use within {@link VoltraxisPrefab}
-     * as a component linking process.</i></b>
-     *
-     * @param fill The fill bar renderer to set.
-     */
-    protected void setFill(SpriteRenderer fill) {
-        this.fill = fill;
+        voltraxisGroggyUI = null;
     }
 
     /**
@@ -91,7 +69,7 @@ public class VoltraxisGroggyGauge extends MonoBehaviour {
      */
     private void voltraxis_onDamaged(Object sender, Void e) {
 
-        if (isMaxGroggy()) {
+        if (isGroggyLocked) {
             return;
         }
 
@@ -102,6 +80,7 @@ public class VoltraxisGroggyGauge extends MonoBehaviour {
         if (isMaxGroggy()) {
             onGroggyReachedMax.invoke(this, null);
         }
+        voltraxisGroggyUI.setTargetRatio(groggy / MAX_GROGGY);
 
     }
 
@@ -127,6 +106,34 @@ public class VoltraxisGroggyGauge extends MonoBehaviour {
      */
     private boolean isMaxGroggy() {
         return groggy >= MAX_GROGGY;
+    }
+
+    /**
+     * Lock the ability to modify groggy.<br><br>
+     * <b>Control within {@link Voltraxis}.</b>
+     */
+    public void lockGroggy() {
+        isGroggyLocked = true;
+    }
+
+    /**
+     * Unlock the ability to modify groggy.<br><br>
+     * <b>Control within {@link Voltraxis}.</b>
+     */
+    public void unlockGroggy() {
+        isGroggyLocked = false;
+    }
+
+    /**
+     * Attach the object with {@link VoltraxisGroggyUI} to enable
+     * groggy UI update.<br><br>
+     * <b><i><u>NOTE:</u> Only use within {@link VoltraxisPrefab}
+     * as a component linking process.</i></b>
+     *
+     * @param voltraxisGroggyUI The UI component of the groggy.
+     */
+    public void attachVoltraxisGroggyUI(VoltraxisGroggyUI voltraxisGroggyUI) {
+        this.voltraxisGroggyUI = voltraxisGroggyUI;
     }
 
 }

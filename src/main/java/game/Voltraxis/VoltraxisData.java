@@ -1,6 +1,7 @@
 package game.Voltraxis;
 
 import org.Rendering.ImageAsset;
+import utils.Vector2;
 
 /**
  * Data for Voltraxis.
@@ -33,11 +34,31 @@ public final class VoltraxisData {
     public static final double EX_MEDIUM_CHARGE_TIME = 16.0;
     public static final double EX_HIGH_CHARGE_TIME = 20.0;
 
-
     /// Power core
     public static final double POWER_CORE_PROPORTIONAL_HEALTH = 0.36;
     public static final double POWER_CORE_DAMAGE_TAKEN_REDUCTION = 0.1;
     public static final double MIN_GROGGY_ON_POWER_CORE_DEPLOY = 0.5;
+    public static final Vector2 LEFT_CORE_POSITION = new Vector2(200.0, 400.0);
+    public static final Vector2 RIGHT_CORE_POSITION = new Vector2(800.0, 400.0);
+
+    /// Charging
+    public static final double CHARGING_RATE = 3.1;
+    public static final double CHARGING_HALT_DELAY = 1.2;
+    public static final double CHARGING_HALT_AMOUNT = 42;
+    public static final double CHARGING_MAX = ChargingState.High.chargePoint;
+
+    public enum ChargingState {
+        None(0),
+        Low(30),
+        Medium(75),
+        High(108);
+
+        public final double chargePoint;
+
+        ChargingState(double chargePoint) {
+            this.chargePoint = chargePoint;
+        }
+    }
 
     /// Additional effects
     // TODO: can change this value - Aori to Kine

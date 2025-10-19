@@ -34,7 +34,7 @@ public final class VoltraxisPrefab {
     private static final Vector2 HEALTH_BAR_SIZE = new Vector2(670.33, 29.79);
 
     /// Groggy gauge
-    private static final Vector2 GROGGY_GAUGE_POSITION = new Vector2(838.0, 100.0);
+    private static final Vector2 GROGGY_GAUGE_UI_POSITION = new Vector2(838.0, 100.0);
     private static final Vector2 GROGGY_GAUGE_SIZE = new Vector2(156.25, 13.93);
 
     /// Icon
@@ -48,7 +48,6 @@ public final class VoltraxisPrefab {
 
     /// Power core
     private static final Vector2 POWER_CORE_COLLIDER_SIZE = new Vector2(80.0, 80.0);
-    private static final Vector2 POWER_CORE_RENDER_SIZE = new Vector2(128.0, 128.0);
     private static final Vector2 POWER_CORE_UI_OFFSET = new Vector2(0.0, -60.0);
     private static final Vector2 POWER_CORE_HEALTH_BAR_RENDER_SIZE = new Vector2(146.0, 14.29);
 
@@ -66,21 +65,23 @@ public final class VoltraxisPrefab {
 
         // Create components
         var voltraxis = instantiateVoltraxis();
-        var groggyGauge = instantiateGroggyGauge();
+        var groggy = voltraxis.addComponent(VoltraxisGroggy.class);
+        var groggyUI = instantiateGroggyUI();
         var effectManager = instantiateEffectManager();
         var healthBar = instantiateHealthBar();
         var visual = instantiateVisual();
 
         // Link components
         voltraxis.attachVoltraxisEffectManager(effectManager);
-        voltraxis.attachVoltraxisGroggyGauge(groggyGauge);
-        groggyGauge.setVoltraxis(voltraxis);
+        voltraxis.attachVoltraxisGroggyGauge(groggy);
+        groggy.attachVoltraxisGroggyUI(groggyUI);
+        groggy.setVoltraxis(voltraxis);
         healthBar.setVoltraxis(voltraxis);
         visual.setVoltraxis(voltraxis);
 
         // Parent components
         voltraxis.getGameObject().setParent(voltraxisObject);
-        groggyGauge.getGameObject().setParent(voltraxisObject);
+        groggyUI.getGameObject().setParent(voltraxisObject);
         healthBar.getGameObject().setParent(voltraxisObject);
         visual.getGameObject().setParent(voltraxis.getGameObject());
         effectManager.getGameObject().setParent(voltraxisObject);
@@ -164,7 +165,7 @@ public final class VoltraxisPrefab {
         powerCoreCollider.setLocalSize(POWER_CORE_COLLIDER_SIZE);
 
         // Visual object
-        var powerCoreVisualObject = GameObjectManager.instantiate("Visual");
+        var powerCoreVisualObject = GameObjectManager.instantiate("PowerCoreVisual");
         powerCoreVisualObject.setParent(powerCoreObject);
         var powerCoreVisual = powerCoreVisualObject.addComponent(PowerCoreVisual.class);
         var powerCoreVisualRenderer = powerCoreVisualObject.addComponent(SpriteRenderer.class);
@@ -246,6 +247,8 @@ public final class VoltraxisPrefab {
         // Main object
         var voltraxisObject = GameObjectManager.instantiate("Voltraxis");
         var voltraxis = voltraxisObject.addComponent(Voltraxis.class);
+        var voltraxisPowerCoreManager = voltraxisObject.addComponent(VoltraxisPowerCoreManager.class);
+        voltraxis.attachVoltraxisPowerCoreManager(voltraxisPowerCoreManager);
         voltraxisObject.addComponent(BoxCollider.class).setLocalSize(BOSS_COLLIDER_SIZE);
         return voltraxis;
 
@@ -285,19 +288,19 @@ public final class VoltraxisPrefab {
     }
 
     /**
-     * Instantiate the base object of {@link VoltraxisGroggyGauge}.
+     * Instantiate the base object of {@link VoltraxisGroggy}.
      *
-     * @return The component {@link VoltraxisGroggyGauge} attached to
+     * @return The component {@link VoltraxisGroggy} attached to
      * its base object.
      */
-    private static VoltraxisGroggyGauge instantiateGroggyGauge() {
+    private static VoltraxisGroggyUI instantiateGroggyUI() {
 
         var centerPivot = new Vector2(0.5, 0.5);
 
         // Groggy
-        var groggyObject = GameObjectManager.instantiate("Groggy Gauge");
-        var groggyGauge = groggyObject.addComponent(VoltraxisGroggyGauge.class);
-        groggyObject.getTransform().setGlobalPosition(GROGGY_GAUGE_POSITION);
+        var groggyUIObject = GameObjectManager.instantiate("GroggyGaugeUI");
+        var groggyUI = groggyUIObject.addComponent(VoltraxisGroggyUI.class);
+        groggyUIObject.getTransform().setGlobalPosition(GROGGY_GAUGE_UI_POSITION);
 
         // Background
         var backgroundObject = GameObjectManager.instantiate("Background");
@@ -306,7 +309,7 @@ public final class VoltraxisPrefab {
         backgroundRenderer.setPivot(centerPivot);
         backgroundRenderer.setRenderLayer(RenderLayer.UI);
         backgroundRenderer.setSize(GROGGY_GAUGE_SIZE);
-        backgroundObject.setParent(groggyObject);
+        backgroundObject.setParent(groggyUIObject);
 
         // Fill
         var fillObject = GameObjectManager.instantiate("Fill");
@@ -316,7 +319,7 @@ public final class VoltraxisPrefab {
         fillRenderer.setRenderLayer(RenderLayer.UI);
         fillRenderer.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);
         fillRenderer.setSize(GROGGY_GAUGE_SIZE);
-        fillObject.setParent(groggyObject);
+        fillObject.setParent(groggyUIObject);
 
         // Outline
         var outlineObject = GameObjectManager.instantiate("Outline");
@@ -325,12 +328,12 @@ public final class VoltraxisPrefab {
         outlineRenderer.setPivot(centerPivot);
         outlineRenderer.setRenderLayer(RenderLayer.UI);
         outlineRenderer.setSize(GROGGY_GAUGE_SIZE);
-        outlineObject.setParent(groggyObject);
+        outlineObject.setParent(groggyUIObject);
 
         // Link component
-        groggyGauge.setFill(fillRenderer);
+        groggyUI.attachFillRenderer(fillRenderer);
 
-        return groggyGauge;
+        return groggyUI;
 
     }
 
