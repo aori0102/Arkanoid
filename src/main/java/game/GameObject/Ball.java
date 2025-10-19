@@ -8,6 +8,7 @@ import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
+import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 import utils.Time;
 
@@ -155,6 +156,15 @@ public class Ball extends MonoBehaviour {
      */
     public void setPaddle(Paddle paddle) {
         this.paddle = paddle;
+    }
+
+    public SpriteRenderer getBallVisual() {
+        for(var child : getTransform().getChildren()) {
+            if (child.getComponent(SpriteRenderer.class) != null) {
+                return child.getComponent(SpriteRenderer.class);
+            }
+        }
+        return null;
     }
 
     /**

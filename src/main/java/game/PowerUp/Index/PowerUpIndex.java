@@ -5,15 +5,15 @@ import org.Rendering.ImageAsset;
 public enum PowerUpIndex {
 
     DuplicateBall(ImageAsset.ImageIndex.DuplicateBall),
-    TriplicateBall(ImageAsset.ImageIndex.DuplicateBall),
-    FireBall(ImageAsset.ImageIndex.None),
-    Blizzard(ImageAsset.ImageIndex.None),
+    TriplicateBall(ImageAsset.ImageIndex.TriplicateBall),
+    FireBall(ImageAsset.ImageIndex.FireBallICon),
+    Blizzard(ImageAsset.ImageIndex.BlizzardBallIcon),
     Explosive(ImageAsset.ImageIndex.Explosive),
     Shield(ImageAsset.ImageIndex.None),
     Expand(ImageAsset.ImageIndex.None),
     Slow(ImageAsset.ImageIndex.None),
     Catch(ImageAsset.ImageIndex.None),
-    LaserBeam(ImageAsset.ImageIndex.None),
+    LaserBeam(ImageAsset.ImageIndex.LaserBeam),
     Recovery(ImageAsset.ImageIndex.None),
     None(ImageAsset.ImageIndex.None);
 
