@@ -72,8 +72,8 @@ public final class VoltraxisPrefab {
         var visual = instantiateVisual();
 
         // Link components
-        voltraxis.attachVoltraxisEffectManager(effectManager);
-        voltraxis.attachVoltraxisGroggyGauge(groggy);
+        voltraxis.linkVoltraxisEffectManager(effectManager);
+        voltraxis.linkVoltraxisGroggyGauge(groggy);
         groggy.attachVoltraxisGroggyUI(groggyUI);
         groggy.setVoltraxis(voltraxis);
         healthBar.setVoltraxis(voltraxis);
@@ -248,9 +248,20 @@ public final class VoltraxisPrefab {
         var voltraxisObject = GameObjectManager.instantiate("Voltraxis");
         var voltraxis = voltraxisObject.addComponent(Voltraxis.class);
         var voltraxisPowerCoreManager = voltraxisObject.addComponent(VoltraxisPowerCoreManager.class);
-        voltraxis.attachVoltraxisPowerCoreManager(voltraxisPowerCoreManager);
+        var voltraxisCharging = voltraxisObject.addComponent(VoltraxisCharging.class);
+        voltraxisCharging.linkVoltraxis(voltraxis);
+        voltraxisCharging.linkVoltraxisChargingUI(instantiateVoltraxisChargingUI());
+        voltraxis.linkVoltraxisCharging(voltraxisCharging);
+        voltraxis.linkVoltraxisPowerCoreManager(voltraxisPowerCoreManager);
         voltraxisObject.addComponent(BoxCollider.class).setLocalSize(BOSS_COLLIDER_SIZE);
         return voltraxis;
+
+    }
+
+    private static VoltraxisChargingUI instantiateVoltraxisChargingUI() {
+
+        var chargingUIObject = GameObjectManager.instantiate("VoltraxisChargingUI");
+        return chargingUIObject.addComponent(VoltraxisChargingUI.class);
 
     }
 

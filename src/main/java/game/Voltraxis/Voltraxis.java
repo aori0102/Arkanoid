@@ -225,7 +225,7 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
      * @param voltraxisEffectManager The {@link VoltraxisEffectManager}
      *                               object to attach.
      */
-    public void attachVoltraxisEffectManager(VoltraxisEffectManager voltraxisEffectManager) {
+    public void linkVoltraxisEffectManager(VoltraxisEffectManager voltraxisEffectManager) {
         this.voltraxisEffectManager = voltraxisEffectManager;
     }
 
@@ -237,7 +237,7 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
      * @param voltraxisGroggy The {@link VoltraxisGroggy}
      *                        object to attach.
      */
-    public void attachVoltraxisGroggyGauge(VoltraxisGroggy voltraxisGroggy) {
+    public void linkVoltraxisGroggyGauge(VoltraxisGroggy voltraxisGroggy) {
         this.voltraxisGroggy = voltraxisGroggy;
         voltraxisGroggy.onGroggyReachedMax.addListener(this::groggyGauge_onGroggyReachedMax);
         voltraxisGroggy.onGroggyToDeployPowerCore.addListener(this::groggyGauge_onGroggyToDeployPowerCore);
@@ -251,7 +251,7 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
      * @param voltraxisPowerCoreManager The {@link VoltraxisPowerCoreManager}
      *                                  to attach.
      */
-    public void attachVoltraxisPowerCoreManager(VoltraxisPowerCoreManager voltraxisPowerCoreManager) {
+    public void linkVoltraxisPowerCoreManager(VoltraxisPowerCoreManager voltraxisPowerCoreManager) {
         this.voltraxisPowerCoreManager = voltraxisPowerCoreManager;
         voltraxisPowerCoreManager.onPowerCoreDestroyed
                 .addListener(this::voltraxisPowerCoreManager_onPowerCoreDestroyed);
