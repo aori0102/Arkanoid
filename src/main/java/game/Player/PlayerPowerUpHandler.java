@@ -2,6 +2,7 @@ package game.Player;
 
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpIndex;
+import game.PowerUp.StatusEffect;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -58,6 +59,15 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
     public EventHandler<Double> onShieldSpawnRequested = new EventHandler<>(this);
 
     /**
+     * Upon called, the {@code Opponent} will be attached the
+     * {@code Burn} effect, which will deal damage each time in
+     * a specific amount of time.
+     */
+    public EventHandler<StatusEffect> onFireBallRequested = new EventHandler<>(this);
+
+    public
+
+    /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
@@ -91,6 +101,8 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
                     .invoke(this, PADDLE_EXPANSION_SCALE);
             case Shield -> onShieldSpawnRequested
                     .invoke(this, SHIELD_MAX_DURATION);
+            case FireBall -> onFireBallRequested
+                    .invoke(this, StatusEffect.Burn);
 
         }
 

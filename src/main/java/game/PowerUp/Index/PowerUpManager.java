@@ -1,6 +1,7 @@
 package game.PowerUp.Index;
 
 import game.Player.PlayerPowerUpHandler;
+import game.PowerUp.StatusEffect;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -25,6 +26,13 @@ public class PowerUpManager extends MonoBehaviour {
      * by the multiple provided within the event argument.
      */
     public EventHandler<Integer> onTriplicateBall = new EventHandler<>(this);
+
+    /**
+     * Upon called, the {@code Opponent} will be attached the
+     * {@code Burn} effect, which will deal damage each time in
+     * a specific amount of time.
+     */
+    public EventHandler<StatusEffect> onFireBall = new EventHandler<>(this);
 
     private HashSet<PowerUp> powerUpsSet = new HashSet<>();
     private PlayerPowerUpHandler playerPowerUpHandler;
@@ -65,6 +73,12 @@ public class PowerUpManager extends MonoBehaviour {
                     playerPowerUpHandler.onTriplicateBallRequested.addListener((sender, multipleNumber) -> {
                         onTriplicateBall.invoke(this, multipleNumber);
                     });
+                }
+
+                case FireBall -> {
+                     playerPowerUpHandler.onFireBallRequested.addListener((sender, powerEffect) -> {
+                         onFireBall.invoke(this, powerEffect);
+                     });
                 }
             }
         }

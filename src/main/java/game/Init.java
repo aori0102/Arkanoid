@@ -5,6 +5,7 @@ import game.GameObject.BallsManager;
 import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
 import game.Perks.Object.CooldownPerk;
+import game.PowerUp.FireBall;
 import game.PowerUp.Index.PowerUpManager;
 import game.PowerUp.DuplicateBall;
 import game.PowerUp.TriplicateBall;
@@ -44,7 +45,7 @@ public class Init {
         ball.addComponent(Ball.class);
         ball.addComponent(BoxCollider.class);
         ball.getComponent(Ball.class).setPaddle(paddle.getComponent(Paddle.class));
-        ball.getTransform().setGlobalPosition(new Vector2(584, 530));
+        ball.getTransform().setGlobalPosition(new Vector2(584,530 ));
         ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
 
         var ballVisual = GameObjectManager.instantiate("ballVisual");
@@ -71,18 +72,24 @@ public class Init {
 
         var brick = GameObjectManager.instantiate("brick");
         brick.addComponent(Brick.class);
-        brick.getTransform().setGlobalPosition(new Vector2(300, 300));
+        brick.getTransform().setGlobalPosition(new Vector2(300 , 300));
         brick.getTransform().setGlobalScale(new Vector2(2, 2));
         brick.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
 
         var duplicateBall = GameObjectManager.instantiate("duplicateBall");
         duplicateBall.addComponent(DuplicateBall.class);
-        duplicateBall.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.DuplicateBall.getImage());
+        duplicateBall.getTransform().setGlobalPosition(new Vector2(100, 300));
+        duplicateBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
 
         var triplicateBall = GameObjectManager.instantiate("triplicateBall");
         triplicateBall.addComponent(TriplicateBall.class);
         triplicateBall.getTransform().setGlobalPosition(new Vector2(300, 200));
-        triplicateBall.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.DuplicateBall.getImage());
+        triplicateBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
+
+        var fireBall = GameObjectManager.instantiate("fireBall");
+        fireBall.addComponent(FireBall.class);
+        fireBall.getTransform().setGlobalPosition(new Vector2(400, 300));
+        fireBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
 
 
         var obstacleManager = GameObjectManager.instantiate("obstacleManager");
@@ -99,6 +106,7 @@ public class Init {
         powerUpManager.addComponent(PowerUpManager.class);
         PowerUpManager.instance.addPowerUp(duplicateBall.getComponent(DuplicateBall.class));
         PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class));
+        PowerUpManager.instance.addPowerUp(fireBall.getComponent(FireBall.class));
 
 
         var player = GameObjectManager.instantiate("player");
@@ -122,15 +130,16 @@ public class Init {
 //        healthPerk.addComponent(HealthPerk.class);
 //        healthPerk.getTransform().setGlobalPosition(new Vector2(400, 400));
 //
+         /*
         var coolDownPerk = GameObjectManager.instantiate("coolDownPerk");
         coolDownPerk.addComponent(CooldownPerk.class);
         coolDownPerk.getTransform().setGlobalPosition(new Vector2(300, 300));
 
 
-
         var startButton = GameObjectManager.instantiate("StartButton");
         startButton.addComponent(StartButton.class);
         startButton.getTransform().setGlobalPosition(new Vector2(100,100));
+         */
     }
 
     public static void Init_Duc() {

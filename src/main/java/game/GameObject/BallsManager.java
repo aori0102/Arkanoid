@@ -1,8 +1,12 @@
 package game.GameObject;
 
+import game.PowerUp.StatusEffect;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
+import org.Rendering.ImageAsset;
+import org.Rendering.SpriteRenderer;
 
+import javafx.scene.image.Image;
 import java.util.HashSet;
 
 public class BallsManager extends MonoBehaviour {
@@ -39,6 +43,30 @@ public class BallsManager extends MonoBehaviour {
 
     public String ballVisualNameBuilder() {
         return "ball" + index++;
+    }
+
+    public void applyStatusPowerUpEffect(StatusEffect statusEffect) {
+        switch(statusEffect) {
+            case Burn -> {
+                changeBallVisual(ImageAsset.ImageIndex.FireBall.getImage());
+            }
+
+            case FrostBite -> {
+                changeBallVisual(ImageAsset.ImageIndex.BlizzardBall.getImage());
+            }
+        }
+    }
+
+    public void resetBallVisual() {
+        changeBallVisual(ImageAsset.ImageIndex.Ball.getImage());
+    }
+
+    private void changeBallVisual(Image image) {
+        for (var ball : ballSet) {
+            if (ball.getBallVisual() != null) {
+                ball.getBallVisual().setImage(image);
+            }
+        }
     }
 
 

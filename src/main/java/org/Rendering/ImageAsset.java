@@ -7,9 +7,15 @@ public class ImageAsset {
     public enum ImageIndex {
 
         /// Power ups
-        DuplicateBall("/duplicateBall.png"),
-        TriplicateBall("/triplicate_ball.png"),
+        DuplicateBall("/PowerUp/DuplicateBall.png"),
+        TriplicateBall("/PowerUp/TriplicateBall.png"),
         Explosive("/explosive.png"),
+        FireBallICon("/PowerUp/FireBallIcon.png"),
+        FireBall("/PowerUp/FireBall.png"),
+        BlizzardBall("/PowerUp/BlizzardBall.png"),
+        BlizzardBallIcon("/PowerUp/BlizzardBallIcon.png"),
+        LaserBeam("/PowerUp/LaserBeam.png"),
+
 
         /// Player object
         Ball("/ball.png"),

@@ -17,7 +17,7 @@ import utils.Vector2;
 /**
  * Base class for all the multiple ball power up
  */
-public class MultipleBall extends PowerUp {
+public abstract class MultipleBall extends PowerUp {
 
     protected PlayerPowerUpHandler playerPowerUpHandler;
     protected Paddle paddle;
@@ -34,13 +34,8 @@ public class MultipleBall extends PowerUp {
     /**
      * Handle the onMultipleRequest event. This will be called when the paddle
      * collided with a power up. The child class will override this method.
-     * Will throw an exception if the child does not override it
      */
-    protected void handleOnMultipleRequest() {
-        throw new UnsupportedOperationException(
-                this.getClass().getSimpleName() + " must override handleOnMultipleRequest()!"
-        );
-    }
+    protected abstract void handleOnMultipleRequest();
 
     /**
      * Spawning the ball
