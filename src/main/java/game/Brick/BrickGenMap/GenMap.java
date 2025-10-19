@@ -1,13 +1,13 @@
 package game.Brick.BrickGenMap;
 import game.Brick.BrickObj;
-import game.Brick.InitBrick;
+import static game.Brick.InitMatrix.*;
 import org.GameObjectManager;
 
 import java.util.Random;
 import java.util.Stack;
 import java.util.Vector;
 
-public final class GenMap extends InitBrick {
+public final class GenMap {
 
     private int ROWS;
     private int COLS;
@@ -80,10 +80,7 @@ public final class GenMap extends InitBrick {
             double bias = clamp01(0.15 + 0.85 * Math.pow(rowBias, 0.75 + 0.5 * difficulty));
             BrickObj.BrickType ty = pickByBias(bias);
             for (int c = 0; c < COLS; c++) {
-                var brickObject = GameObjectManager.instantiate("Brick");
-                var brickComponent = brickObject.addComponent(BrickObj.class);
-                brickComponent.setType(ty);
-                g.set(r, c, brickComponent);
+                g.set(r, c, getNewBrick(ty));
             }
         }
         sprinkleSpecialsByDifficulty(g, difficulty);
@@ -97,10 +94,7 @@ public final class GenMap extends InitBrick {
         for (int r = 0; r < ROWS; r++) {
             BrickObj.BrickType ty = palette[(r / stripeH) % palette.length];
             for (int c = 0; c < COLS; c++) {
-                var brickObject = GameObjectManager.instantiate("Brick");
-                var brickComponent = brickObject.addComponent(BrickObj.class);
-                brickComponent.setType(ty);
-                g.set(r, c, brickComponent);
+                g.set(r, c, getNewBrick(ty));
             }
         }
         sprinkleSpecialsByDifficulty(g, difficulty);
@@ -114,10 +108,7 @@ public final class GenMap extends InitBrick {
         BrickMatrix g = emptyGrid();
         for (int r = 0; r < ROWS; r++)
             for (int c = 0; c < COLS; c++) {
-                var brickObject = GameObjectManager.instantiate("Brick");
-                var brickComponent = brickObject.addComponent(BrickObj.class);
-                brickComponent.setType((((r / cellH) + (c / cellW)) & 1) == 0 ? a : b);
-                g.set(r, c, brickComponent);
+                g.set(r, c, getNewBrick(((((r / cellH) + (c / cellW)) & 1) == 0 ? a : b)));
             }
         sprinkleSpecialsByDifficulty(g, difficulty);
         return g;
@@ -131,9 +122,9 @@ public final class GenMap extends InitBrick {
                 if (rng.nextDouble() < density) {
                     BrickObj.BrickType t = pickByBias(hardnessBias);
 
-                    g.set(r, c, new BrickObj(t));
+                    g.set(r, c, getNewBrick(t));
                     int m = COLS - 1 - c;
-                    if (m != c) g.set(r, m, new BrickObj(t));
+                    if (m != c) g.set(r, m, getNewBrick(t));
                 }
         sprinkleSpecialsByDifficulty(g, hardnessBias);
         return g;
@@ -166,9 +157,10 @@ public final class GenMap extends InitBrick {
                 if (f <= 0.0) {
                     double edge = clamp01(1.0 - Math.min(1.0, Math.abs(f) * 40));
                     double bias = clamp01(0.25 + 0.6 * difficulty + 0.15 * edge);
-                    g.set(r, c, new BrickObj(pickByBias(bias)));
+
+                    g.set(r, c, getNewBrick(pickByBias(bias)));
                 } else if (rng.nextDouble() < 0.06) {
-                    g.set(r, c, new BrickObj(BrickObj.BrickType.Normal));
+                    g.set(r, c, getNewBrick(BrickObj.BrickType.Normal));
                 }
             }
         for (int r = 0; r < ROWS; r++)
@@ -182,7 +174,7 @@ public final class GenMap extends InitBrick {
                         if (!inBounds(nr, nc) || g.get(nr, nc) == null) edge = true;
                     }
                 if (edge && rng.nextDouble() < 0.75)
-                    g.set(r, c, new BrickObj(pickFromTopHard(lerpIndexTop(0.6 + 0.35 * difficulty))));
+                    g.set(r, c, getNewBrick(pickFromTopHard(lerpIndexTop(0.6 + 0.35 * difficulty))));
             }
         sprinkleSpecialsByDifficulty(g, difficulty);
         return g;
