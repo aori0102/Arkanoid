@@ -42,7 +42,7 @@ public class BrickFactory {
         }
     }
 
-    public void setupNewBrick(int x, int y, BrickObj.BrickType brickType) {
+    public void setupNewBrick(int x, int y, BrickType brickType) {
         matrixObj.set(x, y, getNewBrick(brickType));
     }
 
@@ -57,5 +57,9 @@ public class BrickFactory {
 
     public BrickMatrix getBrickMatrix() {
         return matrixObj;
+    }
+
+    public Matrix getWaveMatrix() {
+        return waveEffect.getStateMatrix().clone();
     }
 }
