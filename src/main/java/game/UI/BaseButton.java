@@ -55,7 +55,7 @@ public abstract class BaseButton extends MonoBehaviour {
                         case Released -> releasedKey;
                         case Clicked -> clickedKey;
                     }
-            );
+                    , null);
             prevState = buttonState;
         }
     }

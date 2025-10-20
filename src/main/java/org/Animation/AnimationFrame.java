@@ -10,7 +10,6 @@ public final class AnimationFrame {
 
     private Vector2 clipAnchor = new Vector2();
     private Vector2 clipSize = new Vector2();
-    private Vector2 renderSize = new Vector2();
     private double duration = 0.0;
     private double rotationAngle = 0.0;
 
@@ -44,14 +43,6 @@ public final class AnimationFrame {
 
     public void setRotationAngle(double rotationAngle) {
         this.rotationAngle = rotationAngle;
-    }
-
-    public Vector2 getRenderSize() {
-        return renderSize;
-    }
-
-    public void setRenderSize(Vector2 renderSize) {
-        this.renderSize = new Vector2(renderSize);
     }
 
 }

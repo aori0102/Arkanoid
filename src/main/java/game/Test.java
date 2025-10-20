@@ -28,7 +28,7 @@ public class Test extends MonoBehaviour {
 
     @Override
     public void awake() {
-        animator.playAnimation(AnimationClipData.Start_Button_Idle);
+        animator.playAnimation(AnimationClipData.Start_Button_Idle, null);
     }
 
 }

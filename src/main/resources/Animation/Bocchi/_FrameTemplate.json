@@ -7,10 +7,6 @@
     "x": $SIZE_X$,
     "y": $SIZE_Y$
   },
-  "renderSize": {
-    "x": $RENDER_X$,
-    "y": $RENDER_Y$
-  },
   "duration": $DURATION$,
   "rotationAngle": $ROTATION_ANGLE$
 }

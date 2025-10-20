@@ -27,7 +27,7 @@ public final class VoltraxisVisual extends MonoBehaviour {
     @Override
     public void awake() {
         animator = getComponent(SpriteAnimator.class);
-        animator.playAnimation(AnimationClipData.Voltraxis_Idle);
+        animator.playAnimation(AnimationClipData.Voltraxis_Idle, null);
     }
 
     @Override

@@ -25,6 +25,7 @@ public class SpriteAnimator extends MonoBehaviour {
     private HashMap<AnimationClipData, SpriteAnimationClip> animationClipMap;
     private SpriteAnimationClip.AnimationNode currentAnimationNode;
     private Time.CoroutineID currentFrameCoroutineID = null;
+    private Runnable currentAnimationFinishCallback = null;
 
     /**
      * Create this MonoBehaviour.
@@ -71,7 +72,7 @@ public class SpriteAnimator extends MonoBehaviour {
      *
      * @param clipKey The animation key to play.
      */
-    public void playAnimation(AnimationClipData clipKey) {
+    public void playAnimation(AnimationClipData clipKey, Runnable onFinishedCallback) {
 
         if (!animationClipMap.containsKey(clipKey)) {
             throw new RuntimeException("Animation clip doesn't exist. Use addAnimationClip() to create an animation clip");
@@ -81,6 +82,8 @@ public class SpriteAnimator extends MonoBehaviour {
             Time.removeCoroutine(currentFrameCoroutineID);
             currentFrameCoroutineID = null;
         }
+
+        currentAnimationFinishCallback = onFinishedCallback;
 
         var clip = animationClipMap.get(clipKey);
         currentAnimationNode = clip.head;
@@ -118,12 +121,15 @@ public class SpriteAnimator extends MonoBehaviour {
             spriteRenderer.setSpriteClip(
                     currentAnimationNode.frame.getClipAnchor(), currentAnimationNode.frame.getClipSize()
             );
-            spriteRenderer.setSize(currentAnimationNode.frame.getRenderSize());
             spriteRenderer.setImageRotation(currentAnimationNode.frame.getRotationAngle());
             spriteRenderer.setPivot(new Vector2(0.5, 0.5));
             currentFrameCoroutineID = Time.addCoroutine(this::progressFrame, Time.time + currentAnimationNode.frame.getDuration());
         } else {
             currentFrameCoroutineID = null;
+            if (currentAnimationFinishCallback != null) {
+                currentAnimationFinishCallback.run();
+                currentAnimationFinishCallback = null;
+            }
         }
     }
 

@@ -25,19 +25,19 @@ public class PowerCoreVisual extends MonoBehaviour {
     @Override
     public void awake() {
         animator = getComponent(SpriteAnimator.class);
-        animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle);
+        animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle, null);
     }
 
     public void animateLowCharging() {
-        animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingLow);
+        animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingLow, null);
     }
 
     public void animateMediumCharging() {
-        animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingMedium);
+        animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingMedium, null);
     }
 
     public void animateHighCharging() {
-        animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingHigh);
+        animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingHigh, null);
     }
 
 }
