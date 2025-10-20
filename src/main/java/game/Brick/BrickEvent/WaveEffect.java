@@ -24,18 +24,31 @@ public final class WaveEffect {
         return matrixOfObj.clone();
     }
 
+    /**
+     * This list contains all object which just hitted.
+     */
     public void getListObjHitDamage() {
         listObjHitDamage.clear();
+
         for (int i = 0; i < rowData; i++) {
             for (int j = 0; j < colData; j++) {
-                if (matrixObj.isJustDamaged(i, j)) { // matrixObj import từ InitMatrix
+                System.out.printf("%3d ", matrixObj.getHealth(i, j));
+                if (matrixObj.isJustDamaged(i, j)) {
                     listObjHitDamage.add(new IntPair(i, j));
                     matrixObj.resetJustDamaged(i, j);
                 }
             }
+            System.out.println();
         }
     }
 
+    /**
+     * For each cell:
+     *  -1 means that object is doing nothing.
+     *  -2 means that object is dead.
+     *  1 means that object is in waveType1.
+     *  2, 3 means same thing as 1.
+     */
     public void runAllWave() {
         Matrix stateMatrix = new Matrix(rowData, colData, -1);
 

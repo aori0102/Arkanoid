@@ -135,6 +135,7 @@ public class InitMatrix {
                     tmp.onBrickCollision.addListener(this::onBrickCollision);
                     tmp.setRowId(r);
                     tmp.setColID(c);
+                    tmp.setType(val.getBrickType());
                     row.add(tmp);
                 }
                 matrix.add(row);

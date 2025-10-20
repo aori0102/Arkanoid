@@ -38,7 +38,7 @@ public class BrickFactory {
         int col = brickPosition.se();
 
         if (matrixObj.inBounds(row, col) && !matrixObj.isDestroyed(row, col)) {
-            BrickType brickType = matrixObj.getObjType(row, col);
+            matrixObj.hitDamage(row, col, damage);
         }
     }
 
