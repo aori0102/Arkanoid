@@ -30,10 +30,11 @@ public class ActionMap extends MonoBehaviour {
 
     public ActionMap(GameObject owner) {
         super(owner);
+        addComponent(PlayerInput.class);
     }
 
     public void awake() {
-        playerInput = gameObject.getComponent(PlayerInput.class);
+        playerInput = getComponent(PlayerInput.class);
         assignActionMap();
     }
 
@@ -70,6 +71,14 @@ public class ActionMap extends MonoBehaviour {
 
     public boolean isActionPresented(Action action) {
         return currentAction.contains(action);
+    }
+
+    /**
+     * Link player input.
+     * @param playerInput .
+     */
+    public void linkPlayerInput(PlayerInput playerInput) {
+        this.playerInput = playerInput;
     }
 
     @Override

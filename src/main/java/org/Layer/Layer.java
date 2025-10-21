@@ -16,7 +16,7 @@ public enum Layer {
     Paddle(8),
     Ball(9),
     Brick(10),
-    _11(11),
+    Skill(11),
     _12(12),
     _13(13),
     _14(14),

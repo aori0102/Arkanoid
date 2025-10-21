@@ -7,6 +7,7 @@ import game.GameObject.BallsManager;
 import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
 import game.Perks.Object.CooldownPerk;
+import game.Player.PlayerSkillsHandler;
 import game.PowerUp.BlizzardBall;
 import game.PowerUp.FireBall;
 import game.PowerUp.Index.PowerUpManager;
@@ -30,11 +31,15 @@ import org.GameObject.GameObjectManager;
 public class Init {
 
     public static void Init_Kine() {
+
+        var actionMap = GameObjectManager.instantiate("ActionMap");
+        actionMap.addComponent(ActionMap.class);
+
         var paddle = GameObjectManager.instantiate("paddle");
         GameObjectManager.instantiate("paddle");
         paddle.addComponent(Paddle.class);
-        paddle.addComponent(PlayerInput.class);
-        paddle.addComponent(ActionMap.class);
+        paddle.getComponent(Paddle.class).linkActionMap(actionMap.getComponent(ActionMap.class));
+        paddle.getComponent(Paddle.class).linkPlayerInput(actionMap.getComponent(PlayerInput.class));
         paddle.addComponent(BoxCollider.class);
         paddle.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
         paddle.getTransform().setGlobalPosition(new Vector2(600, 700));
@@ -118,6 +123,10 @@ public class Init {
         PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class));
         PowerUpManager.instance.addPowerUp(fireBall.getComponent(FireBall.class));
         PowerUpManager.instance.addPowerUp(blizzardBall.getComponent(BlizzardBall.class));
+
+        var playerSkillsHandler = GameObjectManager.instantiate("PlayerSkillsHandler");
+        playerSkillsHandler.addComponent(PlayerSkillsHandler.class).linkPaddle(paddle.getComponent(Paddle.class));
+        playerSkillsHandler.getComponent(PlayerSkillsHandler.class).linkActionMap(actionMap.getComponent(ActionMap.class));
 
 
         var player = GameObjectManager.instantiate("player");

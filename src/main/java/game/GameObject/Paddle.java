@@ -56,9 +56,7 @@ public class Paddle extends MonoBehaviour {
      */
     public void awake() {
         // Assign components
-        actionMap = gameObject.getComponent(ActionMap.class);
         boxCollider = gameObject.getComponent(BoxCollider.class);
-        playerInput = gameObject.getComponent(PlayerInput.class);
 
         //Assign collider specs
         boxCollider.setLocalCenter(new Vector2(0, 0));
@@ -86,20 +84,20 @@ public class Paddle extends MonoBehaviour {
     public void handleMovement() {
         if (!isMoving) return;
 
-        // Reset vector di chuyển mỗi frame
         movementVector = new Vector2(0, 0);
 
-        // Duyệt toàn bộ action hiện có
         for (ActionMap.Action action : actionMap.currentAction) {
             switch (action) {
-                case GoLeft -> movementVector = movementVector.add(new Vector2(-1, 0));
+                case GoLeft -> {
+                    System.out.println("Go left");
+                    movementVector = movementVector.add(new Vector2(-1, 0));
+                }
                 case GoRight -> movementVector = movementVector.add(new Vector2(1, 0));
                 case MousePressed -> HandleRayDirection();
                 default -> {}
             }
         }
 
-        // Nếu không bấm gì => xử lý chuột, tắt mũi tên
         if (actionMap.currentAction.isEmpty()) {
             arrow.turnOff();
 
@@ -111,13 +109,11 @@ public class Paddle extends MonoBehaviour {
             }
         }
 
-        // Nếu có hướng di chuyển thì normalize để giữ tốc độ ổn định
         if (!movementVector.equals(Vector2.zero())) {
             movementVector = movementVector.normalize()
                     .multiply(currentSpeed * Time.deltaTime);
         }
 
-        // Cuối cùng, di chuyển paddle
         getTransform().translate(movementVector);
     }
 
@@ -211,6 +207,22 @@ public class Paddle extends MonoBehaviour {
      */
     public void linkArrow(Arrow arrow) {
         this.arrow = arrow;
+    }
+    
+    /**
+     * Link action map.
+     * @param actionMap .
+     */
+    public void linkActionMap(ActionMap actionMap) {
+        this.actionMap = actionMap;
+    }
+    
+    /**
+     * Link player input.
+     * @param playerInput .
+     */
+    public void linkPlayerInput(PlayerInput playerInput) {
+        this.playerInput = playerInput;
     }
 
     @Override
