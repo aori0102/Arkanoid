@@ -78,15 +78,29 @@ public final class SpecialsSprinkler {
         }
     }
 
+    public static void openDimondGate(BrickMatrix matrix, Random rng) {
+        final int row = matrix.rows();
+        final int col = matrix.columns();
+
+        boolean[][] isDimond  = new boolean[row][col];
+        for (int r = 0; r < row; r++) {
+            for (int c = 0; c < col; c++) {
+                if(matrix.getObjType(r, c) == BrickType.Diamond) {
+                    isDimond[r][c] = true;
+                }
+            }
+        }
+    }
+
     public static void sprinkle(BrickMatrix g, Random rng, double difficulty) {
         if (g == null || rng == null) return;
 
-        final double bombP = keep01(0.2 - 0.06 * difficulty);
-        final double rockP = keep01(0.1 - 0.06 * difficulty);
+        final double bombP = keep01(0.2 - 6 * difficulty);
+        final double rockP = keep01(0.1 - 6 * difficulty);
 
-        final double rebornP = keep01(0.02 + 0.04 * difficulty);
-        final double giftP   = keep01(0.03 + 0.05 * difficulty);
-        final double otherP  = keep01(0.01 + 0.03 * difficulty);
+        final double rebornP = keep01(0.1 + 4 * difficulty);
+        final double giftP   = keep01(0.2 + 5 * difficulty);
+        final double otherP  = keep01(0.3 + 3 * difficulty);
 
         final Counters cnt = new Counters(
                 /*maxBomb*/3,
@@ -165,5 +179,7 @@ public final class SpecialsSprinkler {
                 }
             }
         }
+
+        openDimondGate(g, rng);
     }
 }

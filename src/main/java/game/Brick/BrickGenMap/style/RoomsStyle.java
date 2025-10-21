@@ -16,7 +16,6 @@ public final class RoomsStyle implements StyleGenerator {
     public BrickMatrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);
         BrickMatrix g = new BrickMatrix(rows, cols);
-        fillAll(g, BrickType.Normal);
 
         int roomCount = 3 + (int)Math.round(lerp(2, 5, difficulty));
         for (int k = 0; k < roomCount; k++) {
