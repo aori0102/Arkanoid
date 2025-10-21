@@ -26,7 +26,8 @@ public class SpriteAnimator extends MonoBehaviour {
     private SpriteAnimationClip.AnimationNode currentAnimationNode;
     private Time.CoroutineID currentFrameCoroutineID = null;
     private Runnable currentAnimationFinishCallback = null;
-    private Vector2 renderSize = Vector2.zero();
+    private Vector2 renderSize = null;
+    private Vector2 pivot = null;
 
     /**
      * Create this MonoBehaviour.
@@ -93,7 +94,12 @@ public class SpriteAnimator extends MonoBehaviour {
         }
 
         spriteRenderer.setImage(clip.getSpriteSheet());
-        spriteRenderer.setSize(renderSize);
+        if (renderSize != null) {
+            spriteRenderer.setSize(renderSize);
+        }
+        if (pivot != null) {
+            spriteRenderer.setPivot(pivot);
+        }
         updateCurrentFrame();
 
     }
@@ -124,7 +130,6 @@ public class SpriteAnimator extends MonoBehaviour {
                     currentAnimationNode.frame.getClipAnchor(), currentAnimationNode.frame.getClipSize()
             );
             spriteRenderer.setImageRotation(currentAnimationNode.frame.getRotationAngle());
-            spriteRenderer.setPivot(new Vector2(0.5, 0.5));
             currentFrameCoroutineID = Time.addCoroutine(this::progressFrame, Time.time + currentAnimationNode.frame.getDuration());
         } else {
             currentFrameCoroutineID = null;
@@ -142,6 +147,15 @@ public class SpriteAnimator extends MonoBehaviour {
      */
     public void setRenderSize(Vector2 renderSize) {
         this.renderSize = renderSize;
+    }
+
+    /**
+     * Set the render pivot for every frame played in this animator.
+     *
+     * @param pivot The pivot to set
+     */
+    public void setPivot(Vector2 pivot) {
+        this.pivot = pivot;
     }
 
     @Override
