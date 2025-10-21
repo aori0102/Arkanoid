@@ -229,12 +229,36 @@ public class Vector2 {
     public static double distance(Vector2 a, Vector2 b) {
         double x = (a.x - b.x) * (a.x - b.x);
         double y = (a.y - b.y) * (a.y - b.y);
-        return Math.sqrt(x + y );
+        return Math.sqrt(x + y);
     }
 
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";
+    }
+
+    /**
+     * Rotate this vector by {@code angle} radians.
+     *
+     * @param angle The angle in radian.
+     * @return The vector after rotation.
+     */
+    public Vector2 rotateBy(double angle) {
+        return rotate(this, angle);
+    }
+
+    /**
+     * Rotate vector {@code from} by {@code angle} radians.
+     *
+     * @param from  The vector to rotate.
+     * @param angle The angle in radian.
+     * @return A vector after rotating {@code from}.
+     */
+    public static Vector2 rotate(Vector2 from, double angle) {
+        return new Vector2(
+                from.x * Math.cos(angle) - from.y * Math.sin(angle),
+                from.x * Math.sin(angle) + from.y * Math.cos(angle)
+        );
     }
 
 }
