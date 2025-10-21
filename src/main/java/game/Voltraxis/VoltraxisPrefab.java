@@ -1,9 +1,6 @@
 package game.Voltraxis;
 
-import game.Voltraxis.Object.ElectricBall;
-import game.Voltraxis.Object.PowerCore;
-import game.Voltraxis.Object.PowerCoreHealthBar;
-import game.Voltraxis.Object.PowerCoreVisual;
+import game.Voltraxis.Object.*;
 import javafx.scene.paint.Color;
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
@@ -48,8 +45,13 @@ public final class VoltraxisPrefab {
 
     /// Power core
     private static final Vector2 POWER_CORE_COLLIDER_SIZE = new Vector2(80.0, 80.0);
+    private static final Vector2 POWER_CORE_RENDER_SIZE = new Vector2(128.0, 128.0);
     private static final Vector2 POWER_CORE_UI_OFFSET = new Vector2(0.0, -60.0);
     private static final Vector2 POWER_CORE_HEALTH_BAR_RENDER_SIZE = new Vector2(146.0, 14.29);
+
+    /// Charging
+    private static final Vector2 CHARGING_UI_RENDER_SIZE = new Vector2(200.0, 10.0);
+    private static final Vector2 CHARGING_UI_RENDER_POSITION = new Vector2(600.0, 100.0);
 
     /// Electric ball
     private static final Vector2 BALL_SIZE = new Vector2(64.0, 64.0);
@@ -67,6 +69,8 @@ public final class VoltraxisPrefab {
         var voltraxis = instantiateVoltraxis();
         var groggy = voltraxis.addComponent(VoltraxisGroggy.class);
         var groggyUI = instantiateGroggyUI();
+        var charging = voltraxis.addComponent(VoltraxisCharging.class);
+        var chargingUI = instantiateVoltraxisChargingUI();
         var effectManager = instantiateEffectManager();
         var healthBar = instantiateHealthBar();
         var visual = instantiateVisual();
@@ -77,7 +81,9 @@ public final class VoltraxisPrefab {
         groggy.attachVoltraxisGroggyUI(groggyUI);
         groggy.setVoltraxis(voltraxis);
         healthBar.setVoltraxis(voltraxis);
-        visual.setVoltraxis(voltraxis);
+        visual.linkVoltraxis(voltraxis);
+        charging.linkVoltraxis(voltraxis);
+        chargingUI.linkVoltraxisCharging(charging);
 
         // Parent components
         voltraxis.getGameObject().setParent(voltraxisObject);
@@ -85,6 +91,7 @@ public final class VoltraxisPrefab {
         healthBar.getGameObject().setParent(voltraxisObject);
         visual.getGameObject().setParent(voltraxis.getGameObject());
         effectManager.getGameObject().setParent(voltraxisObject);
+        chargingUI.getGameObject().setParent(voltraxisObject);
 
         // Starting position
         voltraxis.getTransform().setGlobalPosition(BOSS_POSITION);
@@ -175,6 +182,7 @@ public final class VoltraxisPrefab {
         powerCoreVisualAnimator.addAnimationClip(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingLow);
         powerCoreVisualAnimator.addAnimationClip(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingMedium);
         powerCoreVisualAnimator.addAnimationClip(AnimationClipData.Voltraxis_PowerCore_Idle);
+        powerCoreVisualAnimator.setRenderSize(POWER_CORE_RENDER_SIZE);
 
         // UI object
         var powerCoreUIObject = GameObjectManager.instantiate("PowerCoreUI");
@@ -244,24 +252,67 @@ public final class VoltraxisPrefab {
      */
     private static Voltraxis instantiateVoltraxis() {
 
-        // Main object
-        var voltraxisObject = GameObjectManager.instantiate("Voltraxis");
-        var voltraxis = voltraxisObject.addComponent(Voltraxis.class);
-        var voltraxisPowerCoreManager = voltraxisObject.addComponent(VoltraxisPowerCoreManager.class);
-        var voltraxisCharging = voltraxisObject.addComponent(VoltraxisCharging.class);
+        // Instantiate
+        var voltraxis = GameObjectManager.instantiate("Voltraxis").addComponent(Voltraxis.class);
+        voltraxis.addComponent(BoxCollider.class).setLocalSize(BOSS_COLLIDER_SIZE);
+        var voltraxisPowerCoreManager = voltraxis.addComponent(VoltraxisPowerCoreManager.class);
+        var voltraxisCharging = voltraxis.addComponent(VoltraxisCharging.class);
+        var voltraxisNormalAttackBrain = voltraxis.addComponent(VoltraxisNormalAttackBrain.class);
+
+        // Link component
         voltraxisCharging.linkVoltraxis(voltraxis);
-        voltraxisCharging.linkVoltraxisChargingUI(instantiateVoltraxisChargingUI());
+        voltraxisNormalAttackBrain.linkVoltraxis(voltraxis);
         voltraxis.linkVoltraxisCharging(voltraxisCharging);
         voltraxis.linkVoltraxisPowerCoreManager(voltraxisPowerCoreManager);
-        voltraxisObject.addComponent(BoxCollider.class).setLocalSize(BOSS_COLLIDER_SIZE);
+        voltraxis.linkVoltraxisNormalAttackBrain(voltraxisNormalAttackBrain);
+
         return voltraxis;
 
     }
 
     private static VoltraxisChargingUI instantiateVoltraxisChargingUI() {
 
-        var chargingUIObject = GameObjectManager.instantiate("VoltraxisChargingUI");
-        return chargingUIObject.addComponent(VoltraxisChargingUI.class);
+        var chargingUI = GameObjectManager.instantiate("VoltraxisChargingUI")
+                .addComponent(VoltraxisChargingUI.class);
+        var uiHolderObject = GameObjectManager.instantiate("UIHolder");
+        uiHolderObject.setParent(chargingUI.getGameObject());
+        uiHolderObject.getTransform().setGlobalPosition(CHARGING_UI_RENDER_POSITION);
+
+        var centerPivot = new Vector2(0.5, 0.5);
+
+        // Background
+        var backgroundObject = GameObjectManager.instantiate("Background");
+        var backgroundRenderer = backgroundObject.addComponent(SpriteRenderer.class);
+        backgroundRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_Charging_Background.getImage());
+        backgroundRenderer.setPivot(centerPivot);
+        backgroundRenderer.setRenderLayer(RenderLayer.UI);
+        backgroundRenderer.setSize(CHARGING_UI_RENDER_SIZE);
+        backgroundObject.setParent(uiHolderObject);
+
+        // Fill
+        var fillObject = GameObjectManager.instantiate("Fill");
+        var fillRenderer = fillObject.addComponent(SpriteRenderer.class);
+        fillRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_Charging_Fill.getImage());
+        fillRenderer.setPivot(centerPivot);
+        fillRenderer.setRenderLayer(RenderLayer.UI);
+        fillRenderer.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);
+        fillRenderer.setSize(CHARGING_UI_RENDER_SIZE);
+        fillObject.setParent(uiHolderObject);
+
+        // Outline
+        var outlineObject = GameObjectManager.instantiate("Outline");
+        var outlineRenderer = outlineObject.addComponent(SpriteRenderer.class);
+        outlineRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_Charging_Outline.getImage());
+        outlineRenderer.setPivot(centerPivot);
+        outlineRenderer.setRenderLayer(RenderLayer.UI);
+        outlineRenderer.setSize(CHARGING_UI_RENDER_SIZE);
+        outlineObject.setParent(uiHolderObject);
+
+        // Link component
+        chargingUI.linkFillRenderer(fillRenderer);
+        chargingUI.linkUIObject(uiHolderObject);
+
+        return chargingUI;
 
     }
 
@@ -275,10 +326,24 @@ public final class VoltraxisPrefab {
 
         var visualObject = GameObjectManager.instantiate("VoltraxisVisual");
         var visual = visualObject.addComponent(VoltraxisVisual.class);
+
+        // Load animation
         var animator = visualObject.addComponent(SpriteAnimator.class);
         animator.addAnimationClip(AnimationClipData.Voltraxis_Idle);
-        var renderer = visualObject.addComponent(SpriteRenderer.class);
-        renderer.setPivot(new Vector2(0.5, 0.5));
+        animator.addAnimationClip(AnimationClipData.Voltraxis_NormalAttack);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_Phase_1);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_Phase_2);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_Phase_3);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_Phase_4);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_Phase_5);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_Phase_6);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_FinishCharging);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_UnleashingLaser);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_EnterCharging);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_ExitUltimate);
+        animator.setRenderSize(BOSS_RENDER_SIZE);
+        animator.setPivot(new Vector2(0.5, 0.5));
+
         return visual;
 
     }
@@ -428,6 +493,17 @@ public final class VoltraxisPrefab {
         healthBar.setHealthRemainImage(remainSpriteRenderer);
 
         return healthBar;
+
+    }
+
+    public static UltimateLaser instantiateLaser() {
+
+        var laser = GameObjectManager.instantiate("Laser").addComponent(UltimateLaser.class);
+        var animator = laser.addComponent(SpriteAnimator.class);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_UltimateLaser);
+        animator.setPivot(new Vector2(0.5, 0.0));
+
+        return laser;
 
     }
 

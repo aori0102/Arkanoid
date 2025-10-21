@@ -1,0 +1,30 @@
+{
+  "imagePath": "Voltraxis_UltimateLaser",
+  "frameList": [
+    {
+      "clipAnchor": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "clipSize": {
+        "x": 128.0,
+        "y": 720.0
+      },
+      "duration": 0.1,
+      "rotationAngle": 0.0
+    },
+    {
+      "clipAnchor": {
+        "x": 128.0,
+        "y": 0.0
+      },
+      "clipSize": {
+        "x": 128.0,
+        "y": 720.0
+      },
+      "duration": 0.1,
+      "rotationAngle": 0.0
+    }
+  ],
+  "loop": true
+}

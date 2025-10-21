@@ -26,7 +26,7 @@ public final class VoltraxisData {
     /// Groggy skill
     public static final double GROGGY_BASIC_COOLDOWN_REDUCTION = 0.35;
     public static final double GROGGY_ATTACK_INCREMENT = 0.2;
-    public static final double GROGGY_DELTA = 0.03;
+    public static final double GROGGY_DELTA = 3;
     public static final double GROGGY_DURATION = 18.0;
 
     /// EX skill
@@ -42,7 +42,7 @@ public final class VoltraxisData {
     public static final Vector2 RIGHT_CORE_POSITION = new Vector2(800.0, 400.0);
 
     /// Charging
-    public static final double CHARGING_RATE = 3.1;
+    public static final double CHARGING_RATE = 9.1;
     public static final double CHARGING_HALT_DELAY = 1.2;
     public static final double CHARGING_HALT_AMOUNT = 42;
     public static final double CHARGING_MAX = ChargingState.High.chargePoint;

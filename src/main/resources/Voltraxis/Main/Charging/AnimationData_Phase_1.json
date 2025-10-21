@@ -1,0 +1,54 @@
+{
+  "imagePath": "Voltraxis_Anim_Charging",
+  "frameList": [
+    {
+      "clipAnchor": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "clipSize": {
+        "x": 128.0,
+        "y": 128.0
+      },
+      "duration": 0.2,
+      "rotationAngle": 0.0
+    },
+    {
+      "clipAnchor": {
+        "x": 128.0,
+        "y": 0.0
+      },
+      "clipSize": {
+        "x": 128.0,
+        "y": 128.0
+      },
+      "duration": 0.2,
+      "rotationAngle": 0.0
+    },
+    {
+      "clipAnchor": {
+        "x": 256.0,
+        "y": 0.0
+      },
+      "clipSize": {
+        "x": 128.0,
+        "y": 128.0
+      },
+      "duration": 0.2,
+      "rotationAngle": 0.0
+    },
+    {
+      "clipAnchor": {
+        "x": 384.0,
+        "y": 0.0
+      },
+      "clipSize": {
+        "x": 128.0,
+        "y": 128.0
+      },
+      "duration": 0.2,
+      "rotationAngle": 0.0
+    }
+  ],
+  "loop": true
+}

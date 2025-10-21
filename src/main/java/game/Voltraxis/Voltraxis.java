@@ -1,16 +1,11 @@
 package game.Voltraxis;
 
 import game.Voltraxis.Interface.IBossTarget;
-import game.Voltraxis.Object.ElectricBall;
 import game.Voltraxis.Object.PowerCore;
-import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import utils.Time;
-import utils.Vector2;
-
-import java.util.HashMap;
 
 /**
  * Main class of the Voltraxis boss. Handle central logic
@@ -25,10 +20,12 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
     private VoltraxisPowerCoreManager voltraxisPowerCoreManager = null;
     private VoltraxisGroggy voltraxisGroggy = null;
     private VoltraxisCharging voltraxisCharging = null;
+    private VoltraxisNormalAttackBrain voltraxisNormalAttackBrain = null;
 
     private int health = VoltraxisData.BASE_MAX_HEALTH;
     private Time.CoroutineID chargingCoroutineID = null;
-    private final HashMap<ElectricBall, EventActionID> electricBallEventActionIDMap = new HashMap<>();
+
+    public EventHandler<Void> onBasicAttackCommenced = new EventHandler<>(this);
 
     public Voltraxis(GameObject owner) {
         super(owner);
@@ -42,7 +39,6 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
     @Override
     public void awake() {
         Time.addCoroutine(this::enhanceSkill, VoltraxisData.ENHANCE_SKILL_COOLDOWN);
-        Time.addCoroutine(this::basicSkill, VoltraxisData.BASIC_SKILL_COOLDOWN * voltraxisEffectManager.getBasicCooldownMultiplier());
     }
 
     @Override
@@ -60,41 +56,24 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
 
     }
 
-    /**
-     * <b>Voltraxis' basic skill: Arc Discharge</b><br><br>
-     * Fires up to <b>5</b> electric orbs at varying angles
-     * toward the player, each dealing <b>63.2%</b> ATK. If hit,
-     * the player is stunned for <b>3s</b>.
-     */
-    private void basicSkill() {
+    public VoltraxisEffectManager getVoltraxisEffectManager() {
+        return voltraxisEffectManager;
+    }
 
-        // Sample directions for every electric ball
-        Vector2[] directionArray = {
-                new Vector2(0.0, 1.0),
-                new Vector2(-0.2, 1.0),
-                new Vector2(-0.4, 1.0),
-                new Vector2(0.2, 1.0),
-                new Vector2(0.4, 1.0),
-        };
+    public VoltraxisPowerCoreManager getVoltraxisPowerCoreManager() {
+        return voltraxisPowerCoreManager;
+    }
 
-        for (Vector2 direction : directionArray) {
+    public VoltraxisGroggy getVoltraxisGroggy() {
+        return voltraxisGroggy;
+    }
 
-            // Instantiate electric ball
-            var electricBall = VoltraxisPrefab.instantiateElectricBall();
+    public VoltraxisCharging getVoltraxisCharging() {
+        return voltraxisCharging;
+    }
 
-            // Modify value
-            electricBallEventActionIDMap.put(
-                    electricBall,
-                    electricBall.onPaddleHit.addListener(this::electricBall_onPaddleHit)
-            );
-            electricBall.getTransform().setGlobalPosition(getTransform().getGlobalPosition());
-            electricBall.setDirection(direction);
-
-        }
-
-        // Repeat basic skill after cooldown
-        Time.addCoroutine(this::basicSkill, Time.time + getBasicSkillCooldown());
-
+    public VoltraxisNormalAttackBrain getVoltraxisNormalAttackBrain() {
+        return voltraxisNormalAttackBrain;
     }
 
     /**
@@ -153,9 +132,6 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
                 chargingEffectInfo,
                 this::terminateCurrentCharging
         );
-
-        // Charge towards EX Skill
-        voltraxisCharging.startCharging();
 
     }
 
@@ -271,6 +247,29 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
     }
 
     /**
+     * Link {@link VoltraxisNormalAttackBrain} which manages Voltraxis'
+     * basic skill (normal attack).<br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link VoltraxisPrefab}
+     * as part of component linking process.</i></b>
+     *
+     * @param voltraxisNormalAttackBrain .
+     */
+    public void linkVoltraxisNormalAttackBrain(VoltraxisNormalAttackBrain voltraxisNormalAttackBrain) {
+        this.voltraxisNormalAttackBrain = voltraxisNormalAttackBrain;
+        voltraxisNormalAttackBrain.onBasicAttackCommenced.addListener(this::normalAttackBrain_onBasicAttackCommenced);
+    }
+
+    /**
+     * Called when {@link VoltraxisNormalAttackBrain#onBasicAttackCommenced} is
+     * invoked.<br><br>
+     * This function calls the corresponding event {@link #onBasicAttackCommenced}
+     * to further update visual.
+     */
+    private void normalAttackBrain_onBasicAttackCommenced(Object sender, Void e) {
+        onBasicAttackCommenced.invoke(this, null);
+    }
+
+    /**
      * Called from {@link VoltraxisGroggy#onGroggyReachedMax}
      * when Voltraxis' groggy gauge has reached is maximum value. Thus,
      * Voltraxis will activate {@link #groggySkill()}.
@@ -293,23 +292,6 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
      */
     private void groggyGauge_onGroggyToDeployPowerCore(Object sender, Void e) {
         voltraxisPowerCoreManager.spawnPowerCores();
-    }
-
-    /**
-     * Called when {@link game.Voltraxis.Object.ElectricBall#onPaddleHit}
-     * is invoked. This function deals damage to {@link game.Player.Player}
-     * based on Voltraxis' current stat.
-     *
-     * @param sender {@link game.Voltraxis.Object.ElectricBall}.
-     * @param e      Empty event argument.
-     */
-    private void electricBall_onPaddleHit(Object sender, Void e) {
-        if (sender instanceof ElectricBall electricBall) {
-            // TODO: caution when removing listener. - Aori
-            electricBall.onPaddleHit
-                    .removeListener(electricBallEventActionIDMap.get(electricBall));
-            // TODO: damage player - Aori
-        }
     }
 
     private void voltraxisPowerCoreManager_onPowerCoreDeployed(Object sender, PowerCore powerCore) {
@@ -336,12 +318,11 @@ public class Voltraxis extends MonoBehaviour implements IBossTarget {
     }
 
     private void voltraxisPowerCoreManager_onPowerCoreDestroyed(Object sender, PowerCore e) {
-        if(voltraxisPowerCoreManager.hasPowerCore()){
-            voltraxisCharging.haltCharging();
-        }else{
-            voltraxisCharging.terminateCharging();
-            // TODO: force the boss into weakened state - Aori
-        }
+        // TODO: force the boss into weakened state - Aori
+    }
+
+    public void inflictEffect(VoltraxisEffectManager.EffectInfo info, Runnable onEffectEnded) {
+        voltraxisEffectManager.addEffect(info, onEffectEnded);
     }
 
     // TODO: link charging state - Aori

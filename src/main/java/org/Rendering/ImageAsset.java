@@ -32,7 +32,12 @@ public class ImageAsset {
 
         /// Voltraxis
         Voltraxis_Anim_Idle("/Voltraxis/Main/Idle/SpriteSheet.png"),
+        Voltraxis_Anim_NormalAttack("/Voltraxis/Main/NormalAttack/SpriteSheet.png"),
+        Voltraxis_Anim_Charging("/Voltraxis/Main/Charging/Charging.png"),
+        Voltraxis_Anim_ChargingEnter("/Voltraxis/Main/Charging/EnterCharging.png"),
+        Voltraxis_Anim_UnleashingLaser("/Voltraxis/Main/Charging/UnleashingLaser.png"),
         Voltraxis_ElectricBall("/Voltraxis/Object/ElectricBall.png"),
+        Voltraxis_UltimateLaser("/Voltraxis/Object/UltimateLaser/UltimateLaser.png"),
         Voltraxis_PowerCore_Anim_Idle("/Voltraxis/Object/PowerCore/Idle/SpriteSheet.png"),
         Voltraxis_PowerCore_UI_HealthBar_Background("/Voltraxis/UI/PowerCore/Background.png"),
         Voltraxis_PowerCore_UI_HealthBar_Lost("/Voltraxis/UI/PowerCore/FillLost.png"),
@@ -52,6 +57,9 @@ public class ImageAsset {
         Voltraxis_UI_Groggy_Background("/Voltraxis/UI/Groggy/Background.png"),
         Voltraxis_UI_Groggy_Fill("/Voltraxis/UI/Groggy/Fill.png"),
         Voltraxis_UI_Groggy_Outline("/Voltraxis/UI/Groggy/Outline.png"),
+        Voltraxis_UI_Charging_Background("/Voltraxis/UI/Charging/Background.png"),
+        Voltraxis_UI_Charging_Fill("/Voltraxis/UI/Charging/Fill.png"),
+        Voltraxis_UI_Charging_Outline("/Voltraxis/UI/Charging/Outline.png"),
 
         /// Bricks
         GreenBrick("/Brick/GreenBrick.png"),

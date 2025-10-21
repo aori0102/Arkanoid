@@ -1,5 +1,6 @@
 package game.Voltraxis;
 
+import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
@@ -14,7 +15,7 @@ import java.util.function.Function;
  * current effects and stat modifier as each effect is applied.
  */
 public final class VoltraxisEffectManager extends MonoBehaviour {
-
+    // TODO: decouple - Aori
     private static final Vector2 ICON_OFFSET = new Vector2(30.0, 0.0);
 
     private double attackMultiplier = 1.0;
@@ -77,6 +78,8 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
     }
 
     private final LinkedList<EffectUILinker> effectUILinkerList = new LinkedList<>();
+
+    public EventHandler<Double> onEffectDamaged = new EventHandler<>(this);
 
     /**
      * Create this MonoBehaviour.
@@ -278,6 +281,10 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
      */
     public double getBasicCooldownMultiplier() {
         return basicCooldownMultiplier;
+    }
+
+    private void damageBurn(){
+
     }
 
 }

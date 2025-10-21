@@ -5,10 +5,22 @@ public enum AnimationClipData {
 
     /// Voltraxis
     Voltraxis_Idle("/Voltraxis/Main/Idle/AnimationData.json"),
+    Voltraxis_NormalAttack("/Voltraxis/Main/NormalAttack/AnimationData.json"),
     Voltraxis_PowerCore_Idle("/Voltraxis/Object/PowerCore/Idle/AnimationData_Idle.json"),
     Voltraxis_PowerCore_Idle_ChargingLow("/Voltraxis/Object/PowerCore/Idle/AnimationData_Low.json"),
     Voltraxis_PowerCore_Idle_ChargingMedium("/Voltraxis/Object/PowerCore/Idle/AnimationData_Medium.json"),
     Voltraxis_PowerCore_Idle_ChargingHigh("/Voltraxis/Object/PowerCore/Idle/AnimationData_High.json"),
+    Voltraxis_UltimateLaser("/Voltraxis/Object/UltimateLaser/UltimateLaser.json"),
+    Voltraxis_Charging_Phase_1("/Voltraxis/Main/Charging/AnimationData_Phase_1.json"),
+    Voltraxis_Charging_Phase_2("/Voltraxis/Main/Charging/AnimationData_Phase_2.json"),
+    Voltraxis_Charging_Phase_3("/Voltraxis/Main/Charging/AnimationData_Phase_3.json"),
+    Voltraxis_Charging_Phase_4("/Voltraxis/Main/Charging/AnimationData_Phase_4.json"),
+    Voltraxis_Charging_Phase_5("/Voltraxis/Main/Charging/AnimationData_Phase_5.json"),
+    Voltraxis_Charging_Phase_6("/Voltraxis/Main/Charging/AnimationData_Phase_6.json"),
+    Voltraxis_Charging_EnterCharging("/Voltraxis/Main/Charging/EnterCharging.json"),
+    Voltraxis_Charging_ExitUltimate("/Voltraxis/Main/Charging/ExitUltimate.json"),
+    Voltraxis_Charging_FinishCharging("/Voltraxis/Main/Charging/PrepareUnleash.json"),
+    Voltraxis_Charging_UnleashingLaser("/Voltraxis/Main/Charging/UnleashingLaser.json"),
 
     /// Button
     Start_Button_Idle("/Animation/Button/StartButton/Idle.json"),
