@@ -19,6 +19,10 @@ public class InitMatrix {
         return brickComponent;
     }
 
+    public static boolean inBounds(int r, int c, int rows, int cols) {
+        return r >= 0 && r < rows && c >= 0 && c < cols;
+    }
+
     public static class Matrix implements Cloneable {
         private int rows;
         private int columns;
@@ -149,7 +153,7 @@ public class InitMatrix {
         }
 
         public BrickMatrix(int rows, int columns) {
-            this(rows, columns, null);
+            this(rows, columns, getNewBrick(BrickType.Normal));
         }
 
         public BrickMatrix(BrickMatrix other) {

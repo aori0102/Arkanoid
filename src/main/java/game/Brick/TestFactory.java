@@ -1,9 +1,12 @@
 package game.Brick;
 
+import game.Brick.BrickGenMap.MapStyle;
+
 public class TestFactory {
     public static void main(String[] args) {
 
-        BrickFactory factory = new BrickFactory(8, 8, 1, "trx");
+        BrickFactory factory = new BrickFactory(8, 8, MapStyle.RANDOM, 0.02);
+        factory.printBrickTypes();
 
         factory.handleCollision(new InitMatrix.IntPair(1, 1), 10);
         factory.runProgress();
@@ -19,6 +22,18 @@ public class TestFactory {
         factory.runProgress();
         System.out.println("Wave matrix after hit (1,3):");
         printMatrix(factory.getWaveMatrix());
+        factory.runProgress();
+        System.out.println("Wave matrix after hit (1,3):");
+        printMatrix(factory.getWaveMatrix());
+        factory.runProgress();
+        System.out.println("Wave matrix after hit (1,3):");
+        printMatrix(factory.getWaveMatrix());
+        factory.runProgress();
+        System.out.println("Wave matrix after hit (1,3):");
+        printMatrix(factory.getWaveMatrix());factory.runProgress();
+        System.out.println("Wave matrix after hit (1,3):");
+        printMatrix(factory.getWaveMatrix());
+
     }
 
     private static void printMatrix(InitMatrix.Matrix m) {

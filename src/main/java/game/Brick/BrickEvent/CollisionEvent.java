@@ -18,6 +18,7 @@ public final class CollisionEvent {
 
         matrixObj.hitDamage(r, c, damage);
         if(matrixObj.isDestroyed(r, c)) matrixObj.setObjDeathStatus(r, c);
+        else return;
 
         switch (brickType) {
             case Ball -> {

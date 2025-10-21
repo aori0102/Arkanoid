@@ -2,6 +2,8 @@ package game.Brick;
 
 import game.Brick.BrickEvent.EndEvent;
 import game.Brick.BrickEvent.WaveEffect;
+import game.Brick.BrickGenMap.GenMap;
+import game.Brick.BrickGenMap.MapStyle;
 import org.GameObject.GameObjectManager;
 import static game.Brick.InitMatrix.*;
 
@@ -9,17 +11,17 @@ public class BrickFactory {
 
     final int incHealthConst = 5;
 
-    private int level;
-    private String kindMap;
+    private final double difficult;
+    private final MapStyle kindMap;
 
     private EndEvent endEvent;
     private WaveEffect waveEffect;
 
-    public BrickFactory(int rows, int cols, int level, String kindMap) {
+    public BrickFactory(int rows, int cols, MapStyle _kindMap, double _difficult) {
         rowData = rows;
         colData = cols;
-        this.level = level;
-        this.kindMap = kindMap;
+        this.difficult = _difficult;
+        this.kindMap = _kindMap;
         setup();
     }
 
@@ -28,6 +30,9 @@ public class BrickFactory {
         var brickComponent = brickObject.addComponent(Brick.class);
         brickComponent.setType(BrickType.Normal);
         matrixObj = new BrickMatrix(rowData, colData, brickComponent);
+
+        GenMap gen = new GenMap(rowData, colData);
+        matrixObj = gen.generate(kindMap, difficult);
 
         endEvent = new EndEvent();
         waveEffect = new WaveEffect();
@@ -61,5 +66,22 @@ public class BrickFactory {
 
     public Matrix getWaveMatrix() {
         return waveEffect.getStateMatrix().clone();
+    }
+
+    public void printBrickTypes() {
+        int rows = matrixObj.rows();
+        int cols = matrixObj.columns();
+
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                Brick brick = matrixObj.get(r, c);
+                if (brick != null) {
+                    System.out.print(brick.getType() + "\t");
+                } else {
+                    System.out.print("EMPTY\t");
+                }
+            }
+            System.out.println();
+        }
     }
 }
