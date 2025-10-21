@@ -26,6 +26,7 @@ public class SpriteAnimator extends MonoBehaviour {
     private SpriteAnimationClip.AnimationNode currentAnimationNode;
     private Time.CoroutineID currentFrameCoroutineID = null;
     private Runnable currentAnimationFinishCallback = null;
+    private Vector2 renderSize = Vector2.zero();
 
     /**
      * Create this MonoBehaviour.
@@ -92,6 +93,7 @@ public class SpriteAnimator extends MonoBehaviour {
         }
 
         spriteRenderer.setImage(clip.getSpriteSheet());
+        spriteRenderer.setSize(renderSize);
         updateCurrentFrame();
 
     }
@@ -131,6 +133,15 @@ public class SpriteAnimator extends MonoBehaviour {
                 currentAnimationFinishCallback = null;
             }
         }
+    }
+
+    /**
+     * Set the render size for every frame played in this animator.
+     *
+     * @param renderSize The render size to set.
+     */
+    public void setRenderSize(Vector2 renderSize) {
+        this.renderSize = renderSize;
     }
 
     @Override
