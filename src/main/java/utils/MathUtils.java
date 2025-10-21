@@ -18,4 +18,24 @@ public final class MathUtils {
         return (1 - t) * a + t * b;
     }
 
+    /**
+     * Convert angle from degree to radian.
+     *
+     * @param deg The angle in degree.
+     * @return The angle in radian.
+     */
+    public static double deg2rad(double deg) {
+        return Math.PI * deg / 180.0;
+    }
+
+    /**
+     * Convert angle from radian to degree.
+     *
+     * @param rad The angle in radian.
+     * @return The angle in degree.
+     */
+    public static double rad2deg(double rad) {
+        return 180.0 * rad / Math.PI;
+    }
+
 }
