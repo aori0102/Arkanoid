@@ -5,7 +5,7 @@ import game.Brick.BrickGenMap.MapStyle;
 public class TestFactory {
     public static void main(String[] args) {
 
-        BrickFactory factory = new BrickFactory(8, 8, MapStyle.RANDOM, 0.02);
+        BrickFactory factory = new BrickFactory(8, 8, MapStyle.CHECKER, 0.03);
         factory.printBrickTypes();
 
         factory.handleCollision(new InitMatrix.IntPair(1, 1), 10);
