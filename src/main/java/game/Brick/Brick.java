@@ -159,4 +159,8 @@ public final class Brick extends MonoBehaviour {
     public int getColID() {
         return this.colID;
     }
+
+    public String getType() {
+        return brickType.toString();
+    }
 }
