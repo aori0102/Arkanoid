@@ -21,7 +21,7 @@ public final class WaveEffect {
     }
 
     public Matrix getStateMatrix() {
-        return matrixOfObj.clone();
+        return matrixOfObj;
     }
 
     /**
@@ -32,13 +32,11 @@ public final class WaveEffect {
 
         for (int i = 0; i < rowData; i++) {
             for (int j = 0; j < colData; j++) {
-                System.out.printf("%3d ", matrixObj.getHealth(i, j));
                 if (matrixObj.isJustDamaged(i, j)) {
                     listObjHitDamage.add(new IntPair(i, j));
                     matrixObj.resetJustDamaged(i, j);
                 }
             }
-            System.out.println();
         }
     }
 

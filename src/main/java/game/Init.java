@@ -1,6 +1,9 @@
 package game;
 
 import game.Brick.Brick;
+import game.Brick.BrickFactory;
+import game.Brick.BrickGenMap.MapStyle;
+import game.Brick.BrickManager;
 import game.GameObject.BallsManager;
 import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
@@ -78,17 +81,17 @@ public class Init {
 
         var duplicateBall = GameObjectManager.instantiate("duplicateBall");
         duplicateBall.addComponent(DuplicateBall.class);
-        duplicateBall.getTransform().setGlobalPosition(new Vector2(100, 300));
+        duplicateBall.getTransform().setGlobalPosition(new Vector2(600, 300));
         duplicateBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
 
         var triplicateBall = GameObjectManager.instantiate("triplicateBall");
         triplicateBall.addComponent(TriplicateBall.class);
-        triplicateBall.getTransform().setGlobalPosition(new Vector2(300, 200));
+        triplicateBall.getTransform().setGlobalPosition(new Vector2(600, 200));
         triplicateBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
 
         var fireBall = GameObjectManager.instantiate("fireBall");
         fireBall.addComponent(FireBall.class);
-        fireBall.getTransform().setGlobalPosition(new Vector2(400, 300));
+        fireBall.getTransform().setGlobalPosition(new Vector2(600, 300));
         fireBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
 
 
@@ -143,11 +146,14 @@ public class Init {
     }
 
     public static void Init_Duc() {
+
+        GameObjectManager.instantiate("BrickManager").addComponent(BrickManager.class);
+
     }
 
     public static void Init_Aori() {
 
-        VoltraxisPrefab.instantiate();
+        //VoltraxisPrefab.instantiate();
 
         var borderLeft = GameObjectManager.instantiate("Border_Left");
         borderLeft.getTransform().setLocalPosition(new Vector2(5.0, 0));

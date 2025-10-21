@@ -2,12 +2,17 @@ package game.Brick;
 
 import game.Brick.BrickEvent.CollisionEvent;
 import org.GameObject.GameObjectManager;
+import utils.Vector2;
 
 import java.util.Vector;
+
 public class InitMatrix {
 
-    private InitMatrix() {}
-    public static record IntPair(int fi, int se) {}
+    private InitMatrix() {
+    }
+
+    public static record IntPair(int fi, int se) {
+    }
 
     public final static int[] fx = {-1, 1, 0, 0, 1, 1, -1, -1};
     public final static int[] fy = {0, 0, 1, -1, 1, -1, 1, -1};
@@ -99,7 +104,7 @@ public class InitMatrix {
         }
 
         public void assignFrom(Matrix other) {
-            if(other.rows != this.rows || other.columns != this.columns) {
+            if (other.rows != this.rows || other.columns != this.columns) {
                 assignFromResize(other);
                 return;
             }
@@ -131,24 +136,27 @@ public class InitMatrix {
             this.rows = rows;
             this.columns = columns;
             this.matrix = new Vector<>(rows);
+            var anchor = new Vector2(300.0, 300.0);
             for (int r = 0; r < rows; r++) {
                 Vector<Brick> row = new Vector<>(columns);
                 for (int c = 0; c < columns; c++) {
                     // TODO: fix brick instantiation here (removed game object copy) - Aori
-                    var curr = GameObjectManager.instantiate();
-                    var tmp = curr.getComponent(Brick.class);
-                    tmp.onBrickCollision.addListener(this::onBrickCollision);
-                    tmp.setRowId(r);
-                    tmp.setColID(c);
-                    tmp.setType(val.getBrickType());
-                    row.add(tmp);
+                    var currentBrick = BrickManager.getInstance().instantiateBrick();
+                    currentBrick.getTransform().setGlobalPosition(
+                            anchor.add(new Vector2(c, r).scaleUp(new Vector2(82.0, 22.0)))
+                    );
+                    currentBrick.onBrickCollision.addListener(this::onBrickCollision);
+                    currentBrick.setRowId(r);
+                    currentBrick.setColID(c);
+                    currentBrick.setType(val.getBrickType());
+                    row.add(currentBrick);
                 }
                 matrix.add(row);
             }
         }
 
         private void onBrickCollision(Object curr, Void E) {
-            if(curr instanceof Brick brickobj) {
+            if (curr instanceof Brick brickobj) {
                 CollisionEvent.ColliEvent(brickobj.getRowID(), brickobj.getColID(), brickobj.getBrickType());
             }
         }
@@ -165,6 +173,7 @@ public class InitMatrix {
         public int rows() {
             return rows;
         }
+
         public int columns() {
             return columns;
         }
@@ -225,7 +234,7 @@ public class InitMatrix {
         }
 
         public void hitDamage(int r, int c, int damge) {
-             matrix.get(r).get(c).hitDamage(damge);
+            matrix.get(r).get(c).hitDamage(damge);
         }
 
         public void incHealth(int r, int c, int inc) {

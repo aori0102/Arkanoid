@@ -68,6 +68,10 @@ public class BrickFactory {
         return waveEffect.getStateMatrix().clone();
     }
 
+    public int getStateWaveCell(int x, int y) {
+        return waveEffect.getStateMatrix().get(x, y);
+    }
+
     public void printBrickTypes() {
         int rows = matrixObj.rows();
         int cols = matrixObj.columns();
