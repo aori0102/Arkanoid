@@ -5,29 +5,29 @@ import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpIndex;
 import game.PowerUp.Index.PowerUpManager;
 import org.GameObject.GameObject;
-import org.GameObject.MonoBehaviour;
 
-public class FireBall extends PowerUp {
+public class BlizzardBall extends PowerUp {
+
     /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
-    public FireBall(GameObject owner) {
+    public BlizzardBall(GameObject owner) {
         super(owner);
     }
 
     public void awake() {
-        setPowerUpIndex(PowerUpIndex.FireBall);
+        setPowerUpIndex(PowerUpIndex.Blizzard);
     }
 
     public void start() {
-        PowerUpManager.instance.onFireBall.addListener((sender, fireBall) -> {
-            handleOnFireBallRequested(fireBall);
+        PowerUpManager.instance.onBlizzardBall.addListener((sender, powerEffect) -> {
+            handleOnBlizzardBallRequested(powerEffect);
         });
     }
 
-    private void handleOnFireBallRequested(StatusEffect statusEffect) {
+    public void handleOnBlizzardBallRequested(StatusEffect statusEffect) {
         BallsManager.instance.applyStatusPowerUpEffect(statusEffect);
     }
 }

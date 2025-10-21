@@ -131,7 +131,7 @@ public class InitMatrix {
                 Vector<Brick> row = new Vector<>(columns);
                 for (int c = 0; c < columns; c++) {
                     // TODO: fix brick instantiation here (removed game object copy) - Aori
-                    var curr = GameObjectManager.instantiate();
+                    var curr = GameObjectManager.instantiate().addComponent(Brick.class);
                     var tmp = curr.getComponent(Brick.class);
                     tmp.onBrickCollision.addListener(this::onBrickCollision);
                     tmp.setRowId(r);

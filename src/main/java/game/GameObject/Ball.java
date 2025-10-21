@@ -1,6 +1,7 @@
 package game.GameObject;
 
 import game.Brick.Brick;
+import game.PowerUp.StatusEffect;
 import game.Voltraxis.Interface.IBossTarget;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -8,9 +9,12 @@ import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
+import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 import utils.Time;
+
+import javax.swing.plaf.TableHeaderUI;
 
 public class Ball extends MonoBehaviour {
 
@@ -20,8 +24,10 @@ public class Ball extends MonoBehaviour {
     private double ballSpeed = 500;
     private BoxCollider ballCollider;
     private Paddle paddle;
-    private Vector2 offsetVector = new Vector2(0.5, 0.5);
+    private Vector2 offsetVector = new Vector2(0.2, 0.2);
     private Vector2 offsetBallPosition;
+    private StatusEffect currentStatusEffect = StatusEffect.None;
+    private StatusEffect pendingEffect = StatusEffect.None;
 
     private boolean isMoving = false;
 
@@ -53,7 +59,13 @@ public class Ball extends MonoBehaviour {
         });
 
         // Off set ball position when it follows the paddle in order to make it is in the surface
-        offsetBallPosition = new Vector2(-ballCollider.getLocalSize().x / 2, -20);
+        offsetBallPosition = new Vector2(0, -20);
+
+        if (pendingEffect != StatusEffect.None) {
+            addEffect(pendingEffect);
+            pendingEffect = StatusEffect.None;
+        }
+
     }
 
     public void update() {
@@ -177,6 +189,36 @@ public class Ball extends MonoBehaviour {
     private boolean isCollidedWith(CollisionData collisionData, Class type) {
         GameObject collidedObject = collisionData.otherCollider.getGameObject();
         return collidedObject.getComponent(type) != null;
+    }
+
+    public void changeBallVisual() {
+        if (getBallVisual() != null) {
+            switch (currentStatusEffect) {
+                case FrostBite -> {
+                    getBallVisual().setImage(ImageAsset.ImageIndex.BlizzardBall.getImage());
+                }
+                case Burn -> {
+                    getBallVisual().setImage(ImageAsset.ImageIndex.FireBall.getImage());
+                }
+
+                default -> {
+                    getBallVisual().setImage(ImageAsset.ImageIndex.Ball.getImage());
+                }
+            }
+        }
+    }
+
+    public void addEffect(StatusEffect statusEffect) {
+        this.currentStatusEffect = statusEffect;
+        changeBallVisual();
+    }
+
+    public void setPendingEffect(StatusEffect statusEffect) {
+        this.pendingEffect = statusEffect;
+    }
+
+    public StatusEffect getCurrentStatusEffect() {
+        return currentStatusEffect;
     }
 
     @Override
