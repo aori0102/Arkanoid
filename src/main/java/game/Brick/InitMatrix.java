@@ -18,10 +18,9 @@ public class InitMatrix {
     public final static int[] fy = {0, 0, 1, -1, 1, -1, 1, -1};
 
     public static Brick getNewBrick(BrickType brickType) {
-        var brickObject = GameObjectManager.instantiate("Brick");
-        var brickComponent = brickObject.addComponent(Brick.class);
-        brickComponent.setType(brickType);
-        return brickComponent;
+        var brick = BrickManager.getInstance().instantiateBrick();
+        brick.setType(brickType);
+        return brick;
     }
 
     public static boolean inBounds(int r, int c, int rows, int cols) {
@@ -141,10 +140,7 @@ public class InitMatrix {
                 Vector<Brick> row = new Vector<>(columns);
                 for (int c = 0; c < columns; c++) {
                     // TODO: fix brick instantiation here (removed game object copy) - Aori
-                    var currentBrick = BrickManager.getInstance().instantiateBrick();
-                    currentBrick.getTransform().setGlobalPosition(
-                            anchor.add(new Vector2(c, r).scaleUp(new Vector2(82.0, 22.0)))
-                    );
+                    var currentBrick = GameObjectManager.instantiate().addComponent(Brick.class);
                     currentBrick.onBrickCollision.addListener(this::onBrickCollision);
                     currentBrick.setRowId(r);
                     currentBrick.setColID(c);
@@ -187,6 +183,7 @@ public class InitMatrix {
         }
 
         public void set(int r, int c, Brick value) {
+            GameObjectManager.destroy(matrix.get(r).get(c).getGameObject());
             value.setRowId(r);
             value.setColID(c);
             matrix.get(r).set(c, value);
@@ -277,13 +274,6 @@ public class InitMatrix {
             matrix.get(r).get(c).resetIsDamaged();
         }
 
-        @Override
-        @SuppressWarnings("MethodDoesntCallSuperMethod")
-        public BrickMatrix clone() {
-            BrickMatrix copy = new BrickMatrix(this.rows, this.columns, null);
-            copy.assignFrom(this);
-            return copy;
-        }
     }
 
     public static BrickMatrix matrixObj;

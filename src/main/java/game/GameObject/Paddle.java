@@ -152,6 +152,7 @@ public class Paddle extends MonoBehaviour {
 
         }
     }
+
     /**
      * Handle the movement of the paddle when an obstacle hits it. Its speed will be
      * reduced by 10 times when hit
@@ -176,22 +177,27 @@ public class Paddle extends MonoBehaviour {
 
     /**
      * Check if the direction is in the valid range.
+     *
      * @param direction : the fire direction.
      * @return true if the direction is valid.
      */
     private boolean isDirectionValid(Vector2 direction) {
         if (direction == null) return false;
         double angle = Math.toDegrees(Vector2.angle(direction.normalize(), directionVector.normalize()));
-        return angle >= DOT_LIMIT_ANGLE_RIGHT &&  angle <= DOT_LIMIT_ANGLE_LEFT;
+        return angle >= DOT_LIMIT_ANGLE_RIGHT && angle <= DOT_LIMIT_ANGLE_LEFT;
     }
 
     /**
      * Trigger the event when the paddle consumes a power up.
      * It will invoke an event which is listened by player
+     *
      * @param collisionData : the collision data of the power up
      */
     private void onTriggerEnter(CollisionData collisionData) {
 
+        if (!isFired) {
+            return;
+        }
         var powerUp = collisionData.otherCollider.getComponent(PowerUp.class);
         if (powerUp != null) {
             onPowerUpConsumed.invoke(this, powerUp);
@@ -201,6 +207,7 @@ public class Paddle extends MonoBehaviour {
 
     /**
      * Link the arrow
+     *
      * @param arrow: linked arrow
      */
     public void linkArrow(Arrow arrow) {

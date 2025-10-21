@@ -42,10 +42,6 @@ public final class WaveEffect {
 
     /**
      * For each cell:
-     *  -1 means that object is doing nothing.
-     *  -2 means that object is dead.
-     *  1 means that object is in waveType1.
-     *  2, 3 means same thing as 1.
      */
     public void runAllWave() {
         Matrix stateMatrix = new Matrix(rowData, colData, -1);

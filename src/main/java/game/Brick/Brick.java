@@ -8,6 +8,7 @@ import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
+import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
@@ -45,6 +46,11 @@ public final class Brick extends MonoBehaviour {
         collider.setLocalSize(new Vector2(width, height));
         collider.setOnCollisionEnterCallback(this::onCollisionEnter);
 
+        var renderer = addComponent(SpriteRenderer.class);
+        renderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
+        renderer.setPivot(new Vector2(0.5, 0.5));
+        renderer.setSize(new Vector2(width, height));
+
         addComponent(SpriteRenderer.class);
 
         owner.setLayer(Layer.Brick);
@@ -52,6 +58,7 @@ public final class Brick extends MonoBehaviour {
 
     public void awake() {
         setType(BrickType.Normal);
+        System.out.printf("%3d %3d\n",colID, rowID);
     }
 
     public void update() {
@@ -78,14 +85,15 @@ public final class Brick extends MonoBehaviour {
     }
 
     public void hitDamage(int damge) {
-        if (this.health < 0) {
+        if (this.health <= 0) {
             return;
         }
 
         this.health -= damge;
         this.isDamaged = true;
 
-        if (this.health < 0) {
+        if (this.health <= 0) {
+            GameObjectManager.destroy(gameObject);
             this.health = 0;
             this.isNewDeath = true;
         }
@@ -146,10 +154,20 @@ public final class Brick extends MonoBehaviour {
 
     public void setRowId(int id) {
         this.rowID = id;
+        getTransform().setGlobalPosition(
+                BrickManager.BRICK_MAP_ANCHOR.add(
+                        BrickManager.BRICK_SIZE.scaleUp(new Vector2(colID, rowID))
+                )
+        );
     }
 
     public void setColID(int id) {
         this.colID = id;
+        getTransform().setGlobalPosition(
+                BrickManager.BRICK_MAP_ANCHOR.add(
+                        BrickManager.BRICK_SIZE.scaleUp(new Vector2(colID, rowID))
+                )
+        );
     }
 
     public int getRowID() {

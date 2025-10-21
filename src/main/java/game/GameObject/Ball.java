@@ -14,7 +14,7 @@ import utils.Time;
 
 public class Ball extends MonoBehaviour {
 
-    private static final int BALL_DAMAGE = 80;
+    private static final int BALL_DAMAGE = 360;
 
     private Vector2 direction;
     private double ballSpeed = 500;
@@ -86,7 +86,7 @@ public class Ball extends MonoBehaviour {
         }
         var brick = collisionData.otherCollider.getComponent(Brick.class);
         if (brick != null) {
-            brick.decreaseHealth(BALL_DAMAGE);
+            brick.hitDamage(BALL_DAMAGE);
         }
     }
 

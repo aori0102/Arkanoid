@@ -11,7 +11,8 @@ import utils.Vector2;
 
 public class BrickManager extends MonoBehaviour {
 
-    private static final Vector2 BRICK_SIZE = new Vector2(80.0, 20.0);
+    public static final Vector2 BRICK_SIZE = new Vector2(64.0, 32.0);
+    public static final Vector2 BRICK_MAP_ANCHOR = new Vector2(300.0, 100.0);
 
     private static BrickManager instance = null;
 
