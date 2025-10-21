@@ -2,6 +2,8 @@ package game.Player;
 
 import game.PowerUp.Index.PowerUp;
 import game.GameObject.Paddle;
+import org.Event.EventHandler;
+import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 
@@ -11,12 +13,17 @@ import org.GameObject.MonoBehaviour;
  */
 public class Player extends MonoBehaviour {
 
-    private static final int MAX_HEALTH = 100;
+    public static final int MAX_HEALTH = 100;
+    public static final int MAX_LIVES = 3;
 
-    public static Player instance = null;
+    private static Player instance = null;
 
     private PlayerPowerUpHandler playerPowerUpHandler = null;
     private int health = MAX_HEALTH;
+    private int lives = MAX_LIVES;
+
+    public EventHandler<Void> onHealthChanged = new EventHandler<>(this);
+    public EventHandler<Void> onLivesChanged = new EventHandler<>(this);
 
     /**
      * Create this MonoBehaviour.
@@ -28,10 +35,10 @@ public class Player extends MonoBehaviour {
         super(owner);
 
         if (instance != null) {
-            throw new RuntimeException("Player is a singleton!");
+            throw new ReinitializedSingletonException("Player is a singleton");
         }
-
         instance = this;
+
         playerPowerUpHandler = addComponent(PlayerPowerUpHandler.class);
 
     }
@@ -60,12 +67,38 @@ public class Player extends MonoBehaviour {
 
     @Override
     protected void destroyComponent() {
-        playerPowerUpHandler = null;
         instance = null;
+    }
+
+    private void onPlayerDead() {
+        lives--;
+        onLivesChanged.invoke(this, null);
+        if (lives > 0) {
+            health = MAX_HEALTH;
+        } else {
+            System.out.println("Game over!");
+        }
     }
 
     public static Player getInstance() {
         return instance;
+    }
+
+    public void damage(int amount) {
+        health -= amount;
+        if (health <= 0) {
+            health = 0;
+            onPlayerDead();
+        }
+        onHealthChanged.invoke(this, null);
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public int getHealth() {
+        return health;
     }
 
 }

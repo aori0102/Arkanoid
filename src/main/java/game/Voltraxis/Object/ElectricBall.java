@@ -1,6 +1,8 @@
 package game.Voltraxis.Object;
 
 import game.GameObject.Paddle;
+import game.Obstacle.ICanDamagePlayer;
+import game.Player.Player;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -13,7 +15,7 @@ import utils.Vector2;
 /**
  * Voltraxis' electric ball that deals damage and stun the player.
  */
-public class ElectricBall extends MonoBehaviour {
+public class ElectricBall extends MonoBehaviour implements ICanDamagePlayer {
 
     private static final double MOVEMENT_SPEED = 412.423;
     private static final double BALL_LIFESPAN = 12.0;
@@ -82,4 +84,8 @@ public class ElectricBall extends MonoBehaviour {
         this.direction = direction;
     }
 
+    @Override
+    public void damagePlayer() {
+        Player.getInstance().damage(damage);
+    }
 }

@@ -1,6 +1,6 @@
 package game.GameObject;
 
-import game.Brick.Brick;
+import game.BrickObj.Brick;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;

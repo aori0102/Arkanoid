@@ -1,19 +1,14 @@
 package game;
 
-import game.Brick.Brick;
-import game.Brick.BrickFactory;
-import game.Brick.BrickGenMap.MapStyle;
-import game.Brick.BrickManager;
 import game.GameObject.BallsManager;
+import game.MapGenerator.BrickMapManager;
 import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
-import game.Perks.Object.CooldownPerk;
+import game.Player.PlayerPrefab;
 import game.PowerUp.FireBall;
 import game.PowerUp.Index.PowerUpManager;
 import game.PowerUp.DuplicateBall;
 import game.PowerUp.TriplicateBall;
-import game.UI.StartButton;
-import game.Voltraxis.VoltraxisPrefab;
 import game.GameObject.Arrow;
 import game.GameObject.Ball;
 import game.GameObject.Paddle;
@@ -73,12 +68,6 @@ public class Init {
         arrow.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Arrow.getImage());
         paddle.getComponent(Paddle.class).linkArrow(arrow.getComponent(Arrow.class));
 
-        var brick = GameObjectManager.instantiate("brick");
-        brick.addComponent(Brick.class);
-        brick.getTransform().setGlobalPosition(new Vector2(300, 300));
-        brick.getTransform().setGlobalScale(new Vector2(2, 2));
-        brick.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
-
         var duplicateBall = GameObjectManager.instantiate("duplicateBall");
         duplicateBall.addComponent(DuplicateBall.class);
         duplicateBall.getTransform().setGlobalPosition(new Vector2(600, 300));
@@ -115,14 +104,14 @@ public class Init {
         var player = GameObjectManager.instantiate("player");
         player.addComponent(Player.class);
 
-        PowerUpManager.instance.linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
-        duplicateBall.getComponent(DuplicateBall.class).linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
+        PowerUpManager.instance.linkPlayerPowerUp(Player.getInstance().getComponent(PlayerPowerUpHandler.class));
+        duplicateBall.getComponent(DuplicateBall.class).linkPlayerPowerUp(Player.getInstance().getComponent(PlayerPowerUpHandler.class));
         duplicateBall.getComponent(DuplicateBall.class).linkPaddle(paddle.getComponent(Paddle.class));
 
-        triplicateBall.getComponent(TriplicateBall.class).linkPlayerPowerUp(Player.instance.getComponent(PlayerPowerUpHandler.class));
+        triplicateBall.getComponent(TriplicateBall.class).linkPlayerPowerUp(Player.getInstance().getComponent(PlayerPowerUpHandler.class));
         triplicateBall.getComponent(TriplicateBall.class).linkPaddle(paddle.getComponent(Paddle.class));
 
-        Player.instance.linkPaddle(paddle.getComponent(Paddle.class));
+        Player.getInstance().linkPaddle(paddle.getComponent(Paddle.class));
         BallsManager.instance.addBall(ball.getComponent(Ball.class));
 
     }
@@ -146,8 +135,6 @@ public class Init {
     }
 
     public static void Init_Duc() {
-
-        GameObjectManager.instantiate("BrickManager").addComponent(BrickManager.class);
 
     }
 
@@ -191,7 +178,9 @@ public class Init {
     }
 
     public static void initGame() {
-
+        GameObjectManager.instantiate("BrickMapManager").addComponent(BrickMapManager.class);
+        BrickMapManager.getInstance().generateMap();
+        PlayerPrefab.instantiate();
     }
 
     public static void initRecord() {

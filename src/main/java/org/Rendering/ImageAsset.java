@@ -61,6 +61,13 @@ public class ImageAsset {
         Voltraxis_UI_Charging_Fill("/Voltraxis/UI/Charging/Fill.png"),
         Voltraxis_UI_Charging_Outline("/Voltraxis/UI/Charging/Outline.png"),
 
+        /// Player
+        Player_UI_HealthBar_Background("/Player/UI/HealthBar/Background.png"),
+        Player_UI_HealthBar_Fill("/Player/UI/HealthBar/Fill.png"),
+        Player_UI_HealthBar_LifeLost("/Player/UI/HealthBar/LifeLost.png"),
+        Player_UI_HealthBar_LifeRemain("/Player/UI/HealthBar/LifeRemain.png"),
+        Player_UI_HealthBar_Outline("/Player/UI/HealthBar/Outline.png"),
+
         /// Bricks
         GreenBrick("/Brick/GreenBrick.png"),
 
