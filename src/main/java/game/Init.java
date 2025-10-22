@@ -1,9 +1,15 @@
 package game;
 
+import game.Brick.Brick;
+import game.Brick.BrickEvent.BrickManager;
+import game.Brick.BrickFactory;
 import game.GameObject.BallsManager;
 import game.MapGenerator.BrickMapManager;
 import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
+import game.Perks.Object.CooldownPerk;
+import game.Player.PlayerSkillsHandler;
+import game.PowerUp.BlizzardBall;
 import game.Player.PlayerPrefab;
 import game.PowerUp.FireBall;
 import game.PowerUp.Index.PowerUpManager;
@@ -28,16 +34,16 @@ public class Init {
         var paddle = GameObjectManager.instantiate("paddle");
         GameObjectManager.instantiate("paddle");
         paddle.addComponent(Paddle.class);
-        paddle.addComponent(PlayerInput.class);
-        paddle.addComponent(ActionMap.class);
+        paddle.getComponent(Paddle.class).linkActionMap(actionMap.getComponent(ActionMap.class));
+        paddle.getComponent(Paddle.class).linkPlayerInput(actionMap.getComponent(PlayerInput.class));
         paddle.addComponent(BoxCollider.class);
         paddle.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
-        paddle.getTransform().setGlobalPosition(new Vector2(600, 550));
+        paddle.getTransform().setGlobalPosition(new Vector2(600, 700));
 
         var paddleVisual = GameObjectManager.instantiate("paddleVisual");
         paddleVisual.setParent(paddle);
-        paddleVisual.getTransform().setLocalPosition(new Vector2(-47, 0));
         paddleVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Paddle.getImage());
+        paddleVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
 
         var ball = GameObjectManager.instantiate("ball");
         ball.addComponent(Ball.class);
@@ -49,6 +55,7 @@ public class Init {
         var ballVisual = GameObjectManager.instantiate("ballVisual");
         ballVisual.setParent(ball);
         ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
+        ballVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
 
         var laser = GameObjectManager.instantiate("laser");
         laser.addComponent(BoxCollider.class);
@@ -59,29 +66,35 @@ public class Init {
         var laserVisual = GameObjectManager.instantiate("laserVisual");
         laserVisual.setParent(laser);
         laserVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Laser.getImage());
-        laserVisual.getTransform().setLocalPosition(new Vector2(-15, -45));
+        laserVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
 
         var arrow = GameObjectManager.instantiate("arrow");
         arrow.addComponent(Arrow.class);
         arrow.setParent(paddle);
         arrow.getTransform().setLocalPosition(new Vector2(0, 0));
         arrow.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Arrow.getImage());
+        arrow.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
         paddle.getComponent(Paddle.class).linkArrow(arrow.getComponent(Arrow.class));
 
         var duplicateBall = GameObjectManager.instantiate("duplicateBall");
         duplicateBall.addComponent(DuplicateBall.class);
-        duplicateBall.getTransform().setGlobalPosition(new Vector2(600, 300));
+        duplicateBall.getTransform().setGlobalPosition(new Vector2(100, 100));
         duplicateBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
 
         var triplicateBall = GameObjectManager.instantiate("triplicateBall");
         triplicateBall.addComponent(TriplicateBall.class);
-        triplicateBall.getTransform().setGlobalPosition(new Vector2(600, 200));
+        triplicateBall.getTransform().setGlobalPosition(new Vector2(300, 0));
         triplicateBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
 
         var fireBall = GameObjectManager.instantiate("fireBall");
         fireBall.addComponent(FireBall.class);
-        fireBall.getTransform().setGlobalPosition(new Vector2(600, 300));
+        fireBall.getTransform().setGlobalPosition(new Vector2(400, 100));
         fireBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
+
+        var blizzardBall = GameObjectManager.instantiate("blizzardBall");
+        blizzardBall.addComponent(BlizzardBall.class);
+        blizzardBall.getTransform().setGlobalPosition(new Vector2(500, 100));
+        blizzardBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
 
 
         var obstacleManager = GameObjectManager.instantiate("obstacleManager");
@@ -99,6 +112,11 @@ public class Init {
         PowerUpManager.instance.addPowerUp(duplicateBall.getComponent(DuplicateBall.class));
         PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class));
         PowerUpManager.instance.addPowerUp(fireBall.getComponent(FireBall.class));
+        PowerUpManager.instance.addPowerUp(blizzardBall.getComponent(BlizzardBall.class));
+
+        var playerSkillsHandler = GameObjectManager.instantiate("PlayerSkillsHandler");
+        playerSkillsHandler.addComponent(PlayerSkillsHandler.class).linkPaddle(paddle.getComponent(Paddle.class));
+        playerSkillsHandler.getComponent(PlayerSkillsHandler.class).linkActionMap(actionMap.getComponent(ActionMap.class));
 
 
         var player = GameObjectManager.instantiate("player");

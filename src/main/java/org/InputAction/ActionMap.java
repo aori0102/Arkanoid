@@ -1,6 +1,7 @@
 package org.InputAction;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
@@ -16,20 +17,24 @@ public class ActionMap extends MonoBehaviour {
         GoLeft,
         GoRight,
         MousePressed,
+        Skill1,
+        Skill2,
+        Skill3,
         None
     }
 
     private PlayerInput playerInput;
     private HashMap<KeyCode, Action> keyActionMap = new HashMap<>();
     private HashMap<MouseButton, Action> mouseActionMap = new HashMap<>();
-    public Action currentAction = Action.None;
+    public HashSet<Action> currentAction =new HashSet<>();
 
     public ActionMap(GameObject owner) {
         super(owner);
+        addComponent(PlayerInput.class);
     }
 
     public void awake() {
-        playerInput = gameObject.getComponent(PlayerInput.class);
+        playerInput = getComponent(PlayerInput.class);
         assignActionMap();
     }
 
@@ -40,6 +45,9 @@ public class ActionMap extends MonoBehaviour {
 
         keyActionMap.put(KeyCode.A, Action.GoLeft);
         keyActionMap.put(KeyCode.D, Action.GoRight);
+        keyActionMap.put(KeyCode.DIGIT1, Action.Skill1);
+        keyActionMap.put(KeyCode.DIGIT2, Action.Skill2);
+        keyActionMap.put(KeyCode.DIGIT3, Action.Skill3);
         mouseActionMap.put(MouseButton.PRIMARY, Action.MousePressed);
 
     }
@@ -48,17 +56,29 @@ public class ActionMap extends MonoBehaviour {
      * Adjust the current action state.
      */
     public void update() {
-        currentAction = Action.None;
+        currentAction.clear();
         for (KeyCode keyCode : keyActionMap.keySet()) {
             if (playerInput.isKeyPressed(keyCode)) {
-                currentAction = keyActionMap.get(keyCode);
+                currentAction.add(keyActionMap.get(keyCode));
             }
         }
         for (MouseButton mouseButton : mouseActionMap.keySet()) {
             if (playerInput.isMousePressed(mouseButton)) {
-                currentAction = mouseActionMap.get(mouseButton);
+                currentAction.add(mouseActionMap.get(mouseButton));
             }
         }
+    }
+
+    public boolean isActionPresented(Action action) {
+        return currentAction.contains(action);
+    }
+
+    /**
+     * Link player input.
+     * @param playerInput .
+     */
+    public void linkPlayerInput(PlayerInput playerInput) {
+        this.playerInput = playerInput;
     }
 
     @Override

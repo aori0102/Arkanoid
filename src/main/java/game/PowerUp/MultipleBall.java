@@ -7,7 +7,6 @@ import game.GameObject.Ball;
 import game.GameObject.Paddle;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
-import org.GameObject.MonoBehaviour;
 import org.GameObject.Transform;
 import org.Physics.BoxCollider;
 import org.Rendering.ImageAsset;
@@ -45,7 +44,7 @@ public abstract class MultipleBall extends PowerUp {
      */
     protected Ball spawnBall(Transform spawnPos) {
         var ball = GameObjectManager.instantiate(BallsManager.instance.ballNameBuilder());
-        ball.addComponent(Ball.class);
+        ball.addComponent(Ball.class).setPendingEffect(BallsManager.instance.getCurrentEffect());
         ball.addComponent(BoxCollider.class);
         ball.getTransform().setGlobalPosition(spawnPos.getGlobalPosition());
         ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
@@ -53,6 +52,7 @@ public abstract class MultipleBall extends PowerUp {
         var ballVisual = GameObjectManager.instantiate(BallsManager.instance.ballVisualNameBuilder());
         ballVisual.setParent(ball);
         ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
+        ballVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
 
         return ball.getComponent(Ball.class);
     }

@@ -66,6 +66,13 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
     public EventHandler<StatusEffect> onFireBallRequested = new EventHandler<>(this);
 
     /**
+     * Upon called, the {@code Opponent} will be attached the
+     * {@code FrostBite} effect, which will make the enemy takes more damage
+     * when hit by ball or other damaged resources.
+     */
+    public EventHandler<StatusEffect> onBlizzardBallRequested = new EventHandler<>(this);
+
+    /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
@@ -96,6 +103,8 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
                     .invoke(this, SHIELD_MAX_DURATION);
             case FireBall -> onFireBallRequested
                     .invoke(this, StatusEffect.Burn);
+            case Blizzard ->  onBlizzardBallRequested
+                    .invoke(this, StatusEffect.FrostBite);
 
         }
 

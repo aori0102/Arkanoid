@@ -30,8 +30,6 @@ public class PowerUp extends MonoBehaviour {
         super(owner);
         var boxCollider = addComponent(BoxCollider.class);
         boxCollider.setLocalSize(new Vector2(100.0, 100.0));
-        // TODO: WTF is this offset my guy - Aori to Kine
-        boxCollider.getTransform().setLocalPosition(new Vector2(50, 50));
         boxCollider.isTrigger = true;
         boxCollider.setOnTriggerEnter(e -> {
             if (e.otherCollider.getComponent(Paddle.class) != null) {
@@ -41,7 +39,7 @@ public class PowerUp extends MonoBehaviour {
 
         gameObject.setLayer(Layer.PowerUp);
 
-        addComponent(SpriteRenderer.class);
+        addComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
 
     }
 

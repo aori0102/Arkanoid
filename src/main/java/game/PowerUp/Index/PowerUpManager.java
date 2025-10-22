@@ -34,6 +34,15 @@ public class PowerUpManager extends MonoBehaviour {
      */
     public EventHandler<StatusEffect> onFireBall = new EventHandler<>(this);
 
+    /**
+     * Upon called, the {@code Opponent} will be attached the
+     * {@code FrostBite} effect, which will make the enemy takes more damage
+     * when hit by ball or other damaged resources.
+     */
+    public EventHandler<StatusEffect> onBlizzardBall = new EventHandler<>(this);
+
+    public EventHandler<Void> onLaserBeam = new EventHandler<>(this);
+
     private HashSet<PowerUp> powerUpsSet = new HashSet<>();
     private PlayerPowerUpHandler playerPowerUpHandler;
 
@@ -79,6 +88,16 @@ public class PowerUpManager extends MonoBehaviour {
                      playerPowerUpHandler.onFireBallRequested.addListener((sender, powerEffect) -> {
                          onFireBall.invoke(this, powerEffect);
                      });
+                }
+
+                case Blizzard -> {
+                    playerPowerUpHandler.onBlizzardBallRequested.addListener((sender, powerEffect) -> {
+                        onBlizzardBall.invoke(this, powerEffect);
+                    });
+                }
+
+                case  LaserBeam -> {
+
                 }
             }
         }

@@ -3,10 +3,7 @@ package game.GameObject;
 import game.PowerUp.StatusEffect;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
 
-import javafx.scene.image.Image;
 import java.util.HashSet;
 
 public class BallsManager extends MonoBehaviour {
@@ -14,6 +11,7 @@ public class BallsManager extends MonoBehaviour {
     public static BallsManager instance;
     private HashSet<Ball> ballSet = new HashSet<>();
     public int index = 1;
+    private StatusEffect currentEffect = StatusEffect.None;
 
     /**
      * Create this MonoBehaviour.
@@ -46,27 +44,20 @@ public class BallsManager extends MonoBehaviour {
     }
 
     public void applyStatusPowerUpEffect(StatusEffect statusEffect) {
-        switch(statusEffect) {
-            case Burn -> {
-                changeBallVisual(ImageAsset.ImageIndex.FireBall.getImage());
-            }
-
-            case FrostBite -> {
-                changeBallVisual(ImageAsset.ImageIndex.BlizzardBall.getImage());
-            }
-        }
-    }
-
-    public void resetBallVisual() {
-        changeBallVisual(ImageAsset.ImageIndex.Ball.getImage());
-    }
-
-    private void changeBallVisual(Image image) {
+        this.currentEffect = statusEffect;
         for (var ball : ballSet) {
-            if (ball.getBallVisual() != null) {
-                ball.getBallVisual().setImage(image);
-            }
+            ball.addEffect(currentEffect);
         }
+    }
+
+    private void resetBallStatus() {
+        for (var ball : ballSet) {
+            ball.addEffect(StatusEffect.None);
+        }
+    }
+
+    public StatusEffect getCurrentEffect() {
+        return currentEffect;
     }
 
     @Override

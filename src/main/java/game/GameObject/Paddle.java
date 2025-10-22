@@ -56,13 +56,11 @@ public class Paddle extends MonoBehaviour {
      */
     public void awake() {
         // Assign components
-        actionMap = gameObject.getComponent(ActionMap.class);
         boxCollider = gameObject.getComponent(BoxCollider.class);
-        playerInput = gameObject.getComponent(PlayerInput.class);
 
         //Assign collider specs
         boxCollider.setLocalCenter(new Vector2(0, 0));
-        boxCollider.setLocalSize(new Vector2(80, 20));
+        boxCollider.setLocalSize(new Vector2(64, 16));
 
         //Assign line specs
         boxCollider.setOnTriggerEnter(this::onTriggerEnter);
@@ -84,37 +82,41 @@ public class Paddle extends MonoBehaviour {
      * Using Action defined in Action map to decide move direction.
      */
     public void handleMovement() {
-        if (!isMoving) {
-            return;
+        if (!isMoving) return;
+
+        movementVector = new Vector2(0, 0);
+
+        for (ActionMap.Action action : actionMap.currentAction) {
+            switch (action) {
+                case GoLeft -> {
+                    System.out.println("Go left");
+                    movementVector = movementVector.add(new Vector2(-1, 0));
+                }
+                case GoRight -> movementVector = movementVector.add(new Vector2(1, 0));
+                case MousePressed -> HandleRayDirection();
+                default -> {}
+            }
         }
 
-        getTransform().translate(movementVector);
-        // Current action
-        switch (actionMap.currentAction) {
-            // Go left
-            case GoLeft -> movementVector = new Vector2(-currentSpeed * Time.deltaTime, 0);
-            // Go Right
-            case GoRight -> movementVector = new Vector2(currentSpeed * Time.deltaTime, 0);
-            // Adjust ray direction by pressing left mouse button
-            case MousePressed -> {
-                HandleRayDirection();
-            }
-            default -> {
-                // Set the movement vector to zero to stop the paddle
-                movementVector = new Vector2(0, 0);
-                arrow.turnOff();
-                //Fire the ball if the ball is not fired
-                if (playerInput.isMouseReleased) {
-                    if (isDirectionValid(fireDirection)) {
-                        if (canInvoke) {
-                            onMouseReleased.invoke(this, fireDirection);
-                            playerInput.isMouseReleased = false;
-                        }
-                    }
+        if (actionMap.currentAction.isEmpty()) {
+            arrow.turnOff();
+
+            if (playerInput.isMouseReleased) {
+                if (isDirectionValid(fireDirection) && canInvoke) {
+                    onMouseReleased.invoke(this, fireDirection);
+                    playerInput.isMouseReleased = false;
                 }
             }
         }
+
+        if (!movementVector.equals(Vector2.zero())) {
+            movementVector = movementVector.normalize()
+                    .multiply(currentSpeed * Time.deltaTime);
+        }
+
+        getTransform().translate(movementVector);
     }
+
 
     /**
      * Handle the direction ray.
@@ -212,6 +214,22 @@ public class Paddle extends MonoBehaviour {
      */
     public void linkArrow(Arrow arrow) {
         this.arrow = arrow;
+    }
+    
+    /**
+     * Link action map.
+     * @param actionMap .
+     */
+    public void linkActionMap(ActionMap actionMap) {
+        this.actionMap = actionMap;
+    }
+    
+    /**
+     * Link player input.
+     * @param playerInput .
+     */
+    public void linkPlayerInput(PlayerInput playerInput) {
+        this.playerInput = playerInput;
     }
 
     @Override
