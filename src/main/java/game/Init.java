@@ -6,6 +6,9 @@ import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
 import game.PowerUp.BlizzardBall;
 import game.Player.PlayerPrefab;
+import game.Perks.Index.PerkManager;
+import game.Perks.Object.AttackPerk;
+import game.Perks.Object.CooldownPerk;
 import game.PowerUp.FireBall;
 import game.PowerUp.Index.PowerUpManager;
 import game.PowerUp.DuplicateBall;
@@ -131,16 +134,18 @@ public class Init {
 //        healthPerk.addComponent(HealthPerk.class);
 //        healthPerk.getTransform().setGlobalPosition(new Vector2(400, 400));
 //
-         /*
-        var coolDownPerk = GameObjectManager.instantiate("coolDownPerk");
-        coolDownPerk.addComponent(CooldownPerk.class);
-        coolDownPerk.getTransform().setGlobalPosition(new Vector2(300, 300));
+//
+//
+            var perkManager = GameObjectManager.instantiate("PerkManager");
+            perkManager.addComponent(PerkManager.class);
+            PerkManager.instance.instantiatePerks();
 
 
-        var startButton = GameObjectManager.instantiate("StartButton");
-        startButton.addComponent(StartButton.class);
-        startButton.getTransform().setGlobalPosition(new Vector2(100,100));
-         */
+//        var renderer = GameObjectManager.instantiate("SpriteRenderer").addComponent(SpriteRenderer.class);
+//        renderer.setImage(ImageAsset.ImageIndex.Perks.getImage());
+//        renderer.setSpriteClip(new Vector2(800, 2), new Vector2(396, 576));
+//        renderer.setSize(new Vector2(396, 576));
+
     }
 
     public static void Init_Duc() {

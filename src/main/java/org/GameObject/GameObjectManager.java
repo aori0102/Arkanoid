@@ -176,4 +176,19 @@ public class GameObjectManager {
 
     }
 
+    /**
+     * Find the first GameObject with the given name.
+     *
+     * @param name The name of the GameObject to find.
+     * @return The GameObject, or null if not found.
+     */
+    public static GameObject find(String name) {
+        for (var obj : gameObjectSet) {
+            if (obj.getName().equals(name)) {
+                return obj;
+            }
+        }
+        return null;
+    }
+
 }

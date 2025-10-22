@@ -56,7 +56,7 @@ public enum AnimationClipData {
 
     /// Perk
     Health_Perk("/Animation/Perk/HealthPerk.json"),
-    Attach_Perk("/Animation/Perk/AttachPerk.json"),
+    Attack_Perk("/Animation/Perk/AttackPerk.json"),
     Cooldown_Perk("/Animation/Perk/CooldownPerk.json"),
     Speed_Perk("/Animation/Perk/SpeedPerk.json"),
 

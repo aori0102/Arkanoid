@@ -18,8 +18,5 @@ public class QuitButton extends BaseButton {
         clickedKey = AnimationClipData.Quit_Button_Clicked;
     }
 
-    @Override
-    protected void baseButton_onPointerClicked(Object sender, MouseEvent e) {
 
-    }
 }

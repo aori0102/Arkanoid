@@ -18,8 +18,5 @@ public class MenuButton extends BaseButton{
         clickedKey = AnimationClipData.Menu_Button_Clicked;
     }
 
-    @Override
-    protected void baseButton_onPointerClicked(Object sender, MouseEvent e) {
 
-    }
 }

@@ -18,8 +18,5 @@ public class RecordButton extends BaseButton {
         clickedKey = AnimationClipData.Record_Button_Clicked;
     }
 
-    @Override
-    protected void baseButton_onPointerClicked(Object sender, MouseEvent e) {
 
-    }
 }

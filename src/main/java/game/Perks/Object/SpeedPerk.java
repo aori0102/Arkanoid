@@ -4,6 +4,7 @@ import game.Perks.Index.Perk;
 import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
+import utils.Random;
 
 public class SpeedPerk extends Perk {
     /**
@@ -13,6 +14,12 @@ public class SpeedPerk extends Perk {
      */
     public SpeedPerk(GameObject owner) {
         super(owner);
+    }
+
+    @Override
+    public void awake() {
+        super.awake();
+        randomTime = Random.range(0, 3);
     }
 
     @Override

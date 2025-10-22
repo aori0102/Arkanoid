@@ -1,19 +1,18 @@
 package game.GameManager;
 
+import game.Player.Player;
+import javafx.application.Platform;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 
-/// dit me dui
 public class GameManager extends MonoBehaviour {
     public static GameManager instance;
     private static GameState gameState = GameState.MainMenu;
-    public EventHandler<Void> OnGameStarted = new EventHandler<>(this);
-    public EventHandler<Void> OnGameOver = new EventHandler<>(this);
-    public EventHandler<Void> OnGamePaused = new EventHandler<>(this);
-    public EventHandler<Void> OnGameResumed = new EventHandler<>(this);
+    private int currentLevel = 1;
+    private boolean hasSave =  false;
 
 
     /**
@@ -28,26 +27,88 @@ public class GameManager extends MonoBehaviour {
         }
     }
 
+    @Override
+    public void awake() {
+        Player.getInstance().OnNodeHealthReachZero.addListener(this::gameManager_onNodeHealthReachZero);
+    }
+    private void gameManager_onNodeHealthReachZero(Object sender, Void e) {
+        gameOver();
+    }
 
-    public void startGame(){
-        SceneManager.loadScene(SceneKey.MainGame);
-        gameState = GameState.MainMenu;
+    public void startNewGame(){
+        System.out.println("[GameManager] Starting New Game");
 
-        OnGameStarted.invoke(this, null);
+        currentLevel = 1;
+        loadLevel(currentLevel);
+        gameState = GameState.Playing;
+
+        hasSave = true;
+    }
+
+    public void continueGame(){
+        if(hasSave) {
+            System.out.println("[GameManager] Continuing Game");
+
+            loadLevel(currentLevel);
+            gameState = GameState.Playing;
+        }
+
+        System.out.println("[GameManager] No progress has been saved!");
+
+    }
+
+    public void restartGame(){
+        System.out.println("[GameManager] Restarting Game");
+
+        loadLevel(currentLevel);
+    }
+
+    public void returnToMainMenu(){
+        System.out.println("[GameManager] Returning to Main Menu");
+
+        SceneManager.loadScene(SceneKey.Menu);
+    }
+
+    public void loadLevel(int level){
+        System.out.println("[GameManager] Loading Level " + level);
+
+        currentLevel = level;
+        SceneManager.loadScene(SceneKey.values()[currentLevel]);
+    }
+
+    public void onLevelCompleted(){
+        System.out.println("[GameManager] Level Completed");
+
     }
 
     public void gameOver(){
         gameState = GameState.GameOver;
-
-        OnGameOver.invoke(this, null);
     }
 
     public void pauseGame(){
-        OnGamePaused.invoke(this, null);
+
     }
 
     public void resumeGame(){
-        OnGameResumed.invoke(this, null);
+
+    }
+
+    public void quitGame(){
+        Platform.exit();
+    }
+
+    public void giveUp(){
+        System.out.println("[GameManager] Giving Up");
+
+        hasSave = false;
+        SceneManager.loadScene(SceneKey.Menu);
+    }
+
+    public void toNextLevel(){
+        System.out.println("[GameManager] To Next Level");
+
+        currentLevel++;
+        loadLevel(currentLevel);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package game.Brick;
 
-public enum BrickType {
+public enum  BrickType {
 
     Normal(18),
     Steel(36),
