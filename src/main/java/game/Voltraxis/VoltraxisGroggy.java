@@ -19,7 +19,7 @@ public class VoltraxisGroggy extends MonoBehaviour {
      * Fired when Voltraxis' groggy is full<br><br>
      * Use within {@link Voltraxis} to initiate groggy skill.
      */
-    public EventHandler<Void> onGroggyReachedMax = new EventHandler<>(this);
+    public EventHandler<Void> onGroggyReachedMax = new EventHandler<>(VoltraxisGroggy.class);
 
     /**
      * Fired when Voltraxis' groggy has surpassed the minimum
@@ -29,7 +29,7 @@ public class VoltraxisGroggy extends MonoBehaviour {
      * Use within {@link Voltraxis} to spawn
      * {@link game.Voltraxis.Object.PowerCore}s.
      */
-    public EventHandler<Void> onGroggyToDeployPowerCore = new EventHandler<>(this);
+    public EventHandler<Void> onGroggyToDeployPowerCore = new EventHandler<>(VoltraxisGroggy.class);
 
     /**
      * Create this MonoBehaviour.

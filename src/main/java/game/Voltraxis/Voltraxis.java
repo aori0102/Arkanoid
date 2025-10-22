@@ -13,8 +13,8 @@ import utils.Time;
  */
 public class Voltraxis extends MonoBehaviour implements ITakeBallDamage {
 
-    public EventHandler<Void> onHealthChanged = new EventHandler<>(this);
-    public EventHandler<Void> onDamaged = new EventHandler<>(this);
+    public EventHandler<Void> onHealthChanged = new EventHandler<>(Voltraxis.class);
+    public EventHandler<Void> onDamaged = new EventHandler<>(Voltraxis.class);
 
     private VoltraxisEffectManager voltraxisEffectManager = null;
     private VoltraxisPowerCoreManager voltraxisPowerCoreManager = null;
@@ -25,7 +25,7 @@ public class Voltraxis extends MonoBehaviour implements ITakeBallDamage {
     private int health = VoltraxisData.BASE_MAX_HEALTH;
     private Time.CoroutineID chargingCoroutineID = null;
 
-    public EventHandler<Void> onBasicAttackCommenced = new EventHandler<>(this);
+    public EventHandler<Void> onBasicAttackCommenced = new EventHandler<>(Voltraxis.class);
 
     public Voltraxis(GameObject owner) {
         super(owner);

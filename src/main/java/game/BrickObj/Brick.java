@@ -26,8 +26,8 @@ public final class Brick extends MonoBehaviour {
     private final int height = 32;
 
     // Create a
-    public EventHandler<Void> onBrickDestroyed = new EventHandler<>(this);
-    public EventHandler<Void> onBrickCollision = new EventHandler<>(this);
+    public EventHandler<Void> onBrickDestroyed = new EventHandler<>(Brick.class);
+    public EventHandler<Void> onBrickCollision = new EventHandler<>(Brick.class);
 
     @Override
     protected void destroyComponent() {

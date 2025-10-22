@@ -23,6 +23,9 @@ public class Time {
     private static final double offset = System.nanoTime() / 1000000000.0;
     private static final HashMap<CoroutineID, Coroutine> coroutineMap = new HashMap<>();
 
+    private static double timeScale = 1.0;
+
+    // TODO: private plz
     /**
      * The current time in seconds from the start of the application.
      */
@@ -48,7 +51,7 @@ public class Time {
 
         var prev = time;
         time = System.nanoTime() / 1000000000.0 - offset;
-        deltaTime = time - prev;
+        deltaTime = (time - prev) * timeScale;
 
     }
 
@@ -91,6 +94,16 @@ public class Time {
      */
     public static void removeCoroutine(CoroutineID id) {
         coroutineMap.remove(id);
+    }
+
+    /**
+     * Set the scaling of time of the game, meaning how fast time moves.
+     *
+     * @param timeScale The scale of time, i.g. {@code 1.0} is normal speed,
+     *                  {@code 0.0} is frozen.
+     */
+    public static void setTimeScale(double timeScale) {
+        Time.timeScale = timeScale;
     }
 
 }

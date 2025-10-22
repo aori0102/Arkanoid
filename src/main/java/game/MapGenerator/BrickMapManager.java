@@ -31,7 +31,7 @@ public final class BrickMapManager extends MonoBehaviour {
     private final List<List<Brick>> brickGrid = new ArrayList<>();
     private final HashMap<Brick, Cell> brickCoordinateMap = new HashMap<>();
 
-    public EventHandler<Void> onMapCleared = new EventHandler<>(this);
+    public EventHandler<Void> onMapCleared = new EventHandler<>(BrickMapManager.class);
 
     /**
      * Create this MonoBehaviour.

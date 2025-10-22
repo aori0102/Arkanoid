@@ -23,10 +23,10 @@ public class Player extends MonoBehaviour {
     private int attack = 10;
     private int health = MAX_HEALTH;
 
-    public EventHandler<Void> onHealthChanged = new EventHandler<>(this);
-    public EventHandler<Void> onLivesChanged = new EventHandler<>(this);
-    public EventHandler<Void> onHealthReachZero = new EventHandler<>(this);
-    public EventHandler<Void> onLivesReachZero = new EventHandler<>(this);
+    public EventHandler<Void> onHealthChanged = new EventHandler<>(Player.class);
+    public EventHandler<Void> onLivesChanged = new EventHandler<>(Player.class);
+    public EventHandler<Void> onHealthReachZero = new EventHandler<>(Player.class);
+    public EventHandler<Void> onLivesReachZero = new EventHandler<>(Player.class);
 
     /**
      * Create this MonoBehaviour.

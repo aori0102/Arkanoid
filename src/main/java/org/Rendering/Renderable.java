@@ -36,7 +36,7 @@ public abstract class Renderable extends MonoBehaviour {
      * <b><i><u>NOTE</u>: This function should only be listened to by
      * {@link RendererManager} to handle per-layer rendering.</i></b>
      */
-    public EventHandler<OnRenderLayerChangedEventArgs> onRenderLayerChanged = new EventHandler<>(this);
+    public EventHandler<OnRenderLayerChangedEventArgs> onRenderLayerChanged = new EventHandler<>(Renderable.class);
 
     /**
      * Event argument for {@link #onRenderLayerChanged}.<br><br>
@@ -54,21 +54,21 @@ public abstract class Renderable extends MonoBehaviour {
     /**
      * Fired when the {@link #pivot} of this rendering object changes.
      */
-    public EventHandler<Void> onPivotChanged = new EventHandler<>(this);
+    public EventHandler<Void> onPivotChanged = new EventHandler<>(Renderable.class);
 
     /**
      * Fired when the rendering position of this rendering
      * object changes. This also consider changes from
      * {@link Transform#getGlobalPosition()}.
      */
-    public EventHandler<Void> onRenderPositionChanged = new EventHandler<>(this);
+    public EventHandler<Void> onRenderPositionChanged = new EventHandler<>(Renderable.class);
 
     /**
      * Fired when the rendering size of this rendering object
      * changes. This also consider changes from
      * {@link Transform#getGlobalScale()}.
      */
-    public EventHandler<Void> onRenderSizeChanged = new EventHandler<>(this);
+    public EventHandler<Void> onRenderSizeChanged = new EventHandler<>(Renderable.class);
 
     /**
      * Create this MonoBehaviour.

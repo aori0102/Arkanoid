@@ -13,8 +13,8 @@ public class Transform extends MonoBehaviour {
     private Vector2 _localPosition = Vector2.zero();
     private Vector2 _localScale = Vector2.one();
 
-    public EventHandler<Void> onPositionChanged = new EventHandler<>(this);
-    public EventHandler<Void> onScaleChanged = new EventHandler<>(this);
+    public EventHandler<Void> onPositionChanged = new EventHandler<>(Transform.class);
+    public EventHandler<Void> onScaleChanged = new EventHandler<>(Transform.class);
 
     private EventActionID parentPositionChangedEventActionID = null;
     private EventActionID parentScaleChangedEventActionID = null;

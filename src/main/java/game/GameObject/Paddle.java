@@ -24,8 +24,8 @@ public class Paddle extends MonoBehaviour {
     private final double STUNNED_TIME = 3.6;
 
     //Event
-    public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(this);
-    public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(this);
+    public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(Paddle.class);
+    public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(Paddle.class);
 
     private ActionMap actionMap;
     private PlayerInput playerInput;

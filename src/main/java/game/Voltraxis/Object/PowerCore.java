@@ -23,8 +23,8 @@ public class PowerCore extends MonoBehaviour implements ITakeBallDamage {
     private PowerCoreVisual powerCoreVisual = null;
     private Vector2 defaultPosition = Vector2.zero();
 
-    public EventHandler<Void> onPowerCoreDestroyed = new EventHandler<>(this);
-    public EventHandler<Void> onHealthChanged = new EventHandler<>(this);
+    public EventHandler<Void> onPowerCoreDestroyed = new EventHandler<>(PowerCore.class);
+    public EventHandler<Void> onHealthChanged = new EventHandler<>(PowerCore.class);
 
     /**
      * Create this MonoBehaviour.

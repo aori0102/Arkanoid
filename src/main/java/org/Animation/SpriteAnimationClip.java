@@ -2,6 +2,7 @@ package org.Animation;
 
 import javafx.scene.image.Image;
 import org.Rendering.ImageAsset;
+import utils.Vector2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,21 +23,14 @@ public class SpriteAnimationClip {
 
     }
 
-    private Image spriteSheet;
-    protected AnimationNode head;
-    private AnimationNode tail;
-    private AnimationNode currentFrame;
-    private boolean isLoop;
-    private ImageAsset.ImageIndex imageIndex;
-
-    public SpriteAnimationClip() {
-        spriteSheet = null;
-        head = null;
-        tail = null;
-        currentFrame = null;
-        isLoop = false;
-        imageIndex = null;
-    }
+    private Image spriteSheet = null;
+    protected AnimationNode head = null;
+    private AnimationNode tail = null;
+    private AnimationNode currentFrame = null;
+    private boolean isLoop = false;
+    private ImageAsset.ImageIndex imageIndex = null;
+    private Vector2 renderSize = Vector2.zero();
+    private Vector2 pivot = Vector2.zero();
 
     /**
      * Add a frame to this animation clip's sequence. Should
@@ -118,6 +112,7 @@ public class SpriteAnimationClip {
 
     }
 
+    // TODO: doc this script again since changed from animator to clip adapter
     /**
      * Get the sprite sheet bound to this animation clip.
      *
@@ -125,6 +120,22 @@ public class SpriteAnimationClip {
      */
     protected Image getSpriteSheet() {
         return spriteSheet;
+    }
+
+    public void setRenderSize(Vector2 renderSize) {
+        this.renderSize = renderSize;
+    }
+
+    public Vector2 getRenderSize() {
+        return renderSize;
+    }
+
+    public Vector2 getPivot() {
+        return pivot;
+    }
+
+    public void setPivot(Vector2 renderPivot) {
+        this.pivot = renderPivot;
     }
 
     public ImageAsset.ImageIndex getImageIndex() {

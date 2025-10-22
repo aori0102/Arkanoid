@@ -8,11 +8,12 @@ import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 
 public class GameManager extends MonoBehaviour {
-    public static GameManager instance;
+
     private static GameState gameState = GameState.MainMenu;
     private int currentLevel = 1;
     private boolean hasSave =  false;
 
+    private static GameManager instance=null;
 
     /**
      * Create this MonoBehaviour.
@@ -26,11 +27,15 @@ public class GameManager extends MonoBehaviour {
         }
     }
 
+    public static GameManager getInstance() {
+        return instance;
+    }
+
     @Override
     public void awake() {
-        Player.getInstance().onLivesReachZero.addListener(this::gameManager_onNodeHealthReachZero);
+        Player.getInstance().onLivesReachZero.addListener(this::player_onNodeHealthReachZero);
     }
-    private void gameManager_onNodeHealthReachZero(Object sender, Void e) {
+    private void player_onNodeHealthReachZero(Object sender, Void e) {
         gameOver();
     }
 
@@ -77,7 +82,6 @@ public class GameManager extends MonoBehaviour {
 
     public void onLevelCompleted(){
         System.out.println("[GameManager] Level Completed");
-
     }
 
     public void gameOver(){
@@ -85,10 +89,11 @@ public class GameManager extends MonoBehaviour {
     }
 
     public void pauseGame(){
-
+        // TODO: lam di thang ngu
     }
 
     public void resumeGame(){
+        // TODO: lam di thang ngu
 
     }
 

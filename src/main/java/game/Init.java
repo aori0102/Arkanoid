@@ -16,6 +16,7 @@ import game.GameObject.Ball;
 import game.GameObject.Paddle;
 import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
+import game.UI.StartButton;
 import org.InputAction.ActionMap;
 import org.InputAction.PlayerInput;
 import org.Physics.BoxCollider;
@@ -122,9 +123,13 @@ public class Init {
 //
 //
 //
-            var perkManager = GameObjectManager.instantiate("PerkManager");
-            perkManager.addComponent(PerkManager.class);
-            PerkManager.instance.instantiatePerks();
+        var perkManager = GameObjectManager.instantiate("PerkManager");
+        perkManager.addComponent(PerkManager.class);
+        PerkManager.getInstance().instantiatePerks();
+
+        var button = GameObjectManager.instantiate("Button")
+                .addComponent(StartButton.class);
+        button.getTransform().setGlobalPosition(new Vector2(400.0, 400.0));
 
 
 //        var renderer = GameObjectManager.instantiate("SpriteRenderer").addComponent(SpriteRenderer.class);

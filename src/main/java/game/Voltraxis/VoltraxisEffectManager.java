@@ -79,7 +79,7 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
 
     private final LinkedList<EffectUILinker> effectUILinkerList = new LinkedList<>();
 
-    public EventHandler<Double> onEffectDamaged = new EventHandler<>(this);
+    public EventHandler<Double> onEffectDamaged = new EventHandler<>(VoltraxisEffectManager.class);
 
     /**
      * Create this MonoBehaviour.

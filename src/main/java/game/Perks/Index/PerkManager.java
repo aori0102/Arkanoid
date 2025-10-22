@@ -1,9 +1,6 @@
 package game.Perks.Index;
 
-import game.Perks.Object.AttackPerk;
-import game.Perks.Object.CooldownPerk;
-import game.Perks.Object.HealthPerk;
-import game.Perks.Object.SpeedPerk;
+import game.Perks.Index.Prefab.PerkPrefabGenerator;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -16,14 +13,19 @@ import java.util.HashSet;
 
 public class PerkManager extends MonoBehaviour {
 
-    public static PerkManager instance;
+    private static PerkManager instance;
     public EventHandler<Perk> OnPerkChosen;
 
-    private final ArrayList<Class<? extends Perk>> perks = new ArrayList<>();
-    private final ArrayList<GameObject> onScreenPerks = new ArrayList<>();
+    private static final int MAX_PERK_PER_GENERATION = 3;
 
     private final ArrayList<Vector2> perkPositions = new ArrayList<>();
+    private final ArrayList<GameObject> onScreenPerks = new ArrayList<>();
+
     private final HashSet<Integer> randomPerksPick = new HashSet<>();
+
+    public static PerkManager getInstance() {
+        return instance;
+    }
 
     /**
      * Create this MonoBehaviour.
@@ -32,14 +34,9 @@ public class PerkManager extends MonoBehaviour {
      */
     public PerkManager(GameObject owner) {
         super(owner);
-        if(instance == null) {
+        if (instance == null) {
             instance = this;
         }
-
-        perks.add(HealthPerk.class);
-        perks.add(AttackPerk.class);
-        perks.add(CooldownPerk.class);
-        perks.add(SpeedPerk.class);
 
         perkPositions.add(new Vector2(0, 300));
         perkPositions.add(new Vector2(250, 300));
@@ -47,12 +44,9 @@ public class PerkManager extends MonoBehaviour {
     }
 
     public void instantiatePerks() {
-        for(int i  = 0; i < 3; i++){
-            var perkGameObject = GameObjectManager.instantiate("PerkGameObject"+i);
-            int random = Random.range(0, perks.size() - 1);
-            var randomPerk = perks.get(random);
-            perkGameObject.addComponent(randomPerk);
-            perkGameObject.getTransform().setGlobalPosition(perkPositions.get(i));
+        var perkList = PerkPrefabGenerator.generateRandomPerks(MAX_PERK_PER_GENERATION);
+        for (int i = 0; i < MAX_PERK_PER_GENERATION; i++) {
+            perkList.get(i).getTransform().setGlobalPosition(perkPositions.get(i));
         }
     }
 

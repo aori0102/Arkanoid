@@ -27,8 +27,8 @@ public class GameObject {
     private Layer layer = Layer.Default;
 
     private final SceneKey registeredSceneKey;
-    public EventHandler<Void> onObjectActivenessChanged = new EventHandler<>(this);
-    public EventHandler<OnParentChangedEventArgs> onParentChanged = new EventHandler<>(this);
+    public EventHandler<Void> onObjectActivenessChanged = new EventHandler<>(GameObject.class);
+    public EventHandler<OnParentChangedEventArgs> onParentChanged = new EventHandler<>(GameObject.class);
 
     private EventActionID parentOnActivenessChangedActionID = null;
     private EventActionID parentOnParentChangedActionID = null;

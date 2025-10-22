@@ -23,19 +23,19 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
      * Upon called, all {@link game.GameObject.Ball} duplicate itself
      * by the multiple provided within the event argument.
      */
-    public EventHandler<Integer> onDuplicateBallRequested = new EventHandler<>(this);
+    public EventHandler<Integer> onDuplicateBallRequested = new EventHandler<>(PlayerPowerUpHandler.class);
 
     /**
      * Upon called, all {@link game.GameObject.Ball} triplicate itself
      * by the multiple provided within the event argument.
      */
-    public EventHandler<Integer> onTriplicateBallRequested = new EventHandler<>(this);
+    public EventHandler<Integer> onTriplicateBallRequested = new EventHandler<>(PlayerPowerUpHandler.class);
 
     /**
      * Upon called, all {@link game.GameObject.Ball} turns into explosive
      * with the constraints provided.
      */
-    public EventHandler<OnBallToExplosiveEventArgs> onBallToExplosiveRequested = new EventHandler<>(this);
+    public EventHandler<OnBallToExplosiveEventArgs> onBallToExplosiveRequested = new EventHandler<>(PlayerPowerUpHandler.class);
 
     /**
      * Event arguments for {@link #onBallToExplosiveRequested}.
@@ -50,27 +50,27 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
      * Upon called, the {@link game.GameObject.Paddle} modify its scale
      * by the amount provided within the event argument.
      */
-    public EventHandler<Double> onPaddleScaleChangeRequested = new EventHandler<>(this);
+    public EventHandler<Double> onPaddleScaleChangeRequested = new EventHandler<>(PlayerPowerUpHandler.class);
 
     /**
      * Upon called, the {@link Player} creates a shield with the duration
      * as provided within the event argument.
      */
-    public EventHandler<Double> onShieldSpawnRequested = new EventHandler<>(this);
+    public EventHandler<Double> onShieldSpawnRequested = new EventHandler<>(PlayerPowerUpHandler.class);
 
     /**
      * Upon called, the {@code Opponent} will be attached the
      * {@code Burn} effect, which will deal damage each time in
      * a specific amount of time.
      */
-    public EventHandler<StatusEffect> onFireBallRequested = new EventHandler<>(this);
+    public EventHandler<StatusEffect> onFireBallRequested = new EventHandler<>(PlayerPowerUpHandler.class);
 
     /**
      * Upon called, the {@code Opponent} will be attached the
      * {@code FrostBite} effect, which will make the enemy takes more damage
      * when hit by ball or other damaged resources.
      */
-    public EventHandler<StatusEffect> onBlizzardBallRequested = new EventHandler<>(this);
+    public EventHandler<StatusEffect> onBlizzardBallRequested = new EventHandler<>(PlayerPowerUpHandler.class);
 
     /**
      * Create this MonoBehaviour.

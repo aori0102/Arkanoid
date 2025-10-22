@@ -8,8 +8,8 @@ public class GameObjectManager {
 
     private static final LinkedHashSet<GameObject> gameObjectSet = new LinkedHashSet<>();
     private static final Queue<GameObject> addedGameObjectQueue = new LinkedList<>();
-    public static EventHandler<GameObject> onGameObjectInstantiated = new EventHandler<>(null);
-    public static EventHandler<GameObject> onGameObjectDestroyed = new EventHandler<>(null);
+    public static EventHandler<GameObject> onGameObjectInstantiated = new EventHandler<>(GameObjectManager.class);
+    public static EventHandler<GameObject> onGameObjectDestroyed = new EventHandler<>(GameObjectManager.class);
 
     /**
      * Run all update for the current frame in the

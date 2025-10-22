@@ -1,6 +1,8 @@
 package game.GameManager;
 
+import game.Player.Player;
 import game.UI.*;
+import game.Voltraxis.Voltraxis;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
@@ -15,6 +17,7 @@ public class MainMenuController extends MonoBehaviour {
     private RecordButton recordButton;
     private OptionsButton optionsButton;
     private QuitButton quitButton;
+
     /**
      * Create this MonoBehaviour.
      *
@@ -26,25 +29,33 @@ public class MainMenuController extends MonoBehaviour {
 
     @Override
     public void awake() {
-        startButton = GameObjectManager.find("StartButton").getComponent(StartButton.class);
-        continueButton = GameObjectManager.find("ContinueButton").getComponent(ContinueButton.class);
-        recordButton = GameObjectManager.find("RecordButton").getComponent(RecordButton.class);
-        optionsButton = GameObjectManager.find("OptionsButton").getComponent(OptionsButton.class);
-        quitButton = GameObjectManager.find("QuitButton").getComponent(QuitButton.class);
+        BaseButton.onAnyMenuButtonClicked.addListener(this::baseButton_onAnyMenuButtonClicked);
+    }
 
-        startButton.getButtonUI().onPointerClick.addListener(this::onStartButtonClick);
-        continueButton.getButtonUI().onPointerClick.addListener(this::onContinueButtonClick);
-        recordButton.getButtonUI().onPointerClick.addListener(this::onRecordButtonClick);
-        optionsButton.getButtonUI().onPointerClick.addListener(this::onOptionsButtonClick);
-        quitButton.getButtonUI().onPointerClick.addListener(this::onQuitButtonClick);
+    /**
+     * Called when {@link BaseButton#onAnyMenuButtonClicked} is invoked.<br><br>
+     * This function handles menu button click event.
+     */
+    private void baseButton_onAnyMenuButtonClicked(Object sender, MouseEvent e) {
+        if (sender instanceof StartButton) {
+            onStartButtonClick(sender, e);
+        } else if (sender instanceof ContinueButton) {
+            onContinueButtonClick(sender, e);
+        } else if (sender instanceof RecordButton) {
+            onRecordButtonClick(sender, e);
+        } else if (sender instanceof OptionsButton) {
+            onOptionsButtonClick(sender, e);
+        } else if (sender instanceof QuitButton) {
+            onQuitButtonClick(sender, e);
+        }
     }
 
     private void onStartButtonClick(Object sender, MouseEvent e) {
-        GameManager.instance.startNewGame();
+        GameManager.getInstance().startNewGame();
     }
 
     private void onContinueButtonClick(Object sender, MouseEvent e) {
-        GameManager.instance.continueGame();
+        GameManager.getInstance().continueGame();
     }
 
     private void onRecordButtonClick(Object sender, MouseEvent e) {
@@ -56,11 +67,12 @@ public class MainMenuController extends MonoBehaviour {
     }
 
     private void onQuitButtonClick(Object sender, MouseEvent e) {
-        GameManager.instance.quitGame();
+        GameManager.getInstance().quitGame();
     }
 
     @Override
     protected void destroyComponent() {
 
     }
+
 }

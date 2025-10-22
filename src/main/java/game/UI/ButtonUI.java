@@ -16,11 +16,11 @@ public class ButtonUI extends MonoBehaviour
         IPointerExitHandler {
 
     private SpriteRenderer image;
-    public EventHandler<MouseEvent> onPointerClick = new EventHandler<>(this);
-    public EventHandler<MouseEvent> onPointerUp = new EventHandler<>(this);
-    public EventHandler<MouseEvent> onPointerEnter = new EventHandler<>(this);
-    public EventHandler<MouseEvent> onPointerExit = new EventHandler<>(this);
-    public EventHandler<MouseEvent> onPointerDown = new EventHandler<>(this);
+    public EventHandler<MouseEvent> onPointerClick = new EventHandler<>(ButtonUI.class);
+    public EventHandler<MouseEvent> onPointerUp = new EventHandler<>(ButtonUI.class);
+    public EventHandler<MouseEvent> onPointerEnter = new EventHandler<>(ButtonUI.class);
+    public EventHandler<MouseEvent> onPointerExit = new EventHandler<>(ButtonUI.class);
+    public EventHandler<MouseEvent> onPointerDown = new EventHandler<>(ButtonUI.class);
 
     /**
      * Get the game object this MonoBehaviour is attached to.

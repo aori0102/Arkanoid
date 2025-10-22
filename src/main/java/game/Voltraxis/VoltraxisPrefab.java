@@ -182,7 +182,6 @@ public final class VoltraxisPrefab {
         powerCoreVisualAnimator.addAnimationClip(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingLow);
         powerCoreVisualAnimator.addAnimationClip(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingMedium);
         powerCoreVisualAnimator.addAnimationClip(AnimationClipData.Voltraxis_PowerCore_Idle);
-        powerCoreVisualAnimator.setRenderSize(POWER_CORE_RENDER_SIZE);
 
         // UI object
         var powerCoreUIObject = GameObjectManager.instantiate("PowerCoreUI");
@@ -341,8 +340,6 @@ public final class VoltraxisPrefab {
         animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_UnleashingLaser);
         animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_EnterCharging);
         animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_ExitUltimate);
-        animator.setRenderSize(BOSS_RENDER_SIZE);
-        animator.setPivot(new Vector2(0.5, 0.5));
 
         return visual;
 
@@ -501,7 +498,6 @@ public final class VoltraxisPrefab {
         var laser = GameObjectManager.instantiate("Laser").addComponent(UltimateLaser.class);
         var animator = laser.addComponent(SpriteAnimator.class);
         animator.addAnimationClip(AnimationClipData.Voltraxis_UltimateLaser);
-        animator.setPivot(new Vector2(0.5, 0.0));
 
         return laser;
 

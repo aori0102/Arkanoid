@@ -12,7 +12,7 @@ public class Brick extends MonoBehaviour implements ITakeBallDamage {
     private int health = 0;
     private BrickType brickType = BrickType.Normal;
 
-    public EventHandler<OnBrickDestroyedEventArgs> onBrickDestroyed = new EventHandler<>(this);
+    public EventHandler<OnBrickDestroyedEventArgs> onBrickDestroyed = new EventHandler<>(Brick.class);
 
     public static class OnBrickDestroyedEventArgs {
         public Vector2 brickPosition;

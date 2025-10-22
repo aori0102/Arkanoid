@@ -2,6 +2,7 @@ package game.UI;
 
 import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
+import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Animation.SpriteAnimator;
@@ -17,9 +18,12 @@ public abstract class BaseButton extends MonoBehaviour {
     protected AnimationClipData releasedKey;
     protected AnimationClipData clickedKey;
 
-    protected enum ButtonState { Idle, Hover, Pressed, Released, Clicked }
+    protected enum ButtonState {Idle, Hover, Pressed, Released, Clicked}
+
     protected ButtonState buttonState = ButtonState.Idle;
     private ButtonState prevState = null;
+
+    public static EventHandler<MouseEvent> onAnyMenuButtonClicked = new EventHandler<>(BaseButton.class);
 
     public BaseButton(GameObject owner) {
         super(owner);
@@ -39,7 +43,6 @@ public abstract class BaseButton extends MonoBehaviour {
         spriteAnimator.addAnimationClip(releasedKey);
         spriteAnimator.addAnimationClip(clickedKey);
         setupStateHandlers();
-
 
 
     }
@@ -62,6 +65,7 @@ public abstract class BaseButton extends MonoBehaviour {
 
     private void setupStateHandlers() {
         buttonUI.onPointerClick.addListener((s, e) -> {
+            onAnyMenuButtonClicked.invoke(this, e);
             buttonState = ButtonState.Clicked;
             System.out.println("[ButtonUI] → Clicked event triggered | State: " + buttonState);
         });
@@ -94,6 +98,7 @@ public abstract class BaseButton extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() { }
+    protected void destroyComponent() {
+    }
 }
 

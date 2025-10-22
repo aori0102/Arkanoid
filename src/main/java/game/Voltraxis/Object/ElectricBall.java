@@ -26,7 +26,7 @@ public class ElectricBall extends MonoBehaviour implements ICanDamagePlayer {
     /**
      * Fired when this electric ball hits the {@link Paddle}.
      */
-    public EventHandler<Void> onPaddleHit = new EventHandler<>(this);
+    public EventHandler<Void> onPaddleHit = new EventHandler<>(ElectricBall.class);
 
     /**
      * Create this MonoBehaviour.

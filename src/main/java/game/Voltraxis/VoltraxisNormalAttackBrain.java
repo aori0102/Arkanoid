@@ -24,7 +24,7 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
     private final HashMap<ElectricBall, EventActionID> electricBallEventActionIDMap = new HashMap<>();
     private Time.CoroutineID normalAttackCoroutineID = null;
 
-    public EventHandler<Void> onBasicAttackCommenced = new EventHandler<>(this);
+    public EventHandler<Void> onBasicAttackCommenced = new EventHandler<>(VoltraxisNormalAttackBrain.class);
 
     /**
      * Create this MonoBehaviour.

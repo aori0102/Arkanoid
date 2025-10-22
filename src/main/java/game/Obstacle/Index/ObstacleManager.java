@@ -60,7 +60,7 @@ public class ObstacleManager extends MonoBehaviour {
     /**
      * Event fired to paddle when it collides with obstacles.
      */
-    public EventHandler<Void> onPaddleCollidedWithObstacle = new EventHandler<>(this);
+    public EventHandler<Void> onPaddleCollidedWithObstacle = new EventHandler<>(ObstacleManager.class);
 
     public ObstacleManager(GameObject gameObjectManager) {
         super(gameObjectManager);

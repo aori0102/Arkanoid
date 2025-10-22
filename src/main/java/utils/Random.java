@@ -1,5 +1,8 @@
 package utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Random {
 
     private static java.util.Random random;
@@ -12,25 +15,42 @@ public class Random {
     }
 
     /**
-     * Return a random integer within [{@code min}, {@code max}).
+     * Return a random integer within {@code [min, max)}.
      *
      * @param min The minimum value (inclusive).
      * @param max The maximum value (exclusive).
-     * @return A random integer within [{@code min}, {@code max}).
+     * @return A random integer within {@code [min, max)}.
      */
     public static int range(int min, int max) {
         return random.nextInt(min, max);
     }
 
     /**
-     * Return a random decimal number within [{@code min}, {@code max}).
+     * Return a random decimal number within {@code [min, max)}.
      *
      * @param min The minimum value (inclusive).
      * @param max The maximum value (exclusive).
-     * @return A random decimal number within [{@code min}, {@code max}).
+     * @return A random decimal number within {@code [min, max)}.
      */
     public static double range(double min, double max) {
         return random.nextDouble(min, max);
+    }
+
+    /**
+     * Shuffle the given list.
+     * @param input The list to shuffle.
+     * @return A copied shuffled version of the input list.
+     * @param <T> List type.
+     */
+    public static <T> List<T> shuffle(List<T> input) {
+        var output = new ArrayList<>(input);
+        for (int i = output.size() - 1; i > 0; i--) {
+            int j = range(0, i + 1);
+            var temp = output.get(i);
+            output.set(i, output.get(j));
+            output.set(j, temp);
+        }
+        return output;
     }
 
 }

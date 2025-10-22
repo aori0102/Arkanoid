@@ -19,29 +19,29 @@ public class PowerUpManager extends MonoBehaviour {
      * Upon called, all {@link game.GameObject.Ball} duplicate itself
      * by the multiple provided within the event argument.
      */
-    public EventHandler<Integer> onDuplicateBall = new EventHandler<Integer>(this);
+    public EventHandler<Integer> onDuplicateBall = new EventHandler<Integer>(PowerUpManager.class);
 
     /**
      * Upon called, all {@link game.GameObject.Ball} triplicate itself
      * by the multiple provided within the event argument.
      */
-    public EventHandler<Integer> onTriplicateBall = new EventHandler<>(this);
+    public EventHandler<Integer> onTriplicateBall = new EventHandler<>(PowerUpManager.class);
 
     /**
      * Upon called, the {@code Opponent} will be attached the
      * {@code Burn} effect, which will deal damage each time in
      * a specific amount of time.
      */
-    public EventHandler<StatusEffect> onFireBall = new EventHandler<>(this);
+    public EventHandler<StatusEffect> onFireBall = new EventHandler<>(PowerUpManager.class);
 
     /**
      * Upon called, the {@code Opponent} will be attached the
      * {@code FrostBite} effect, which will make the enemy takes more damage
      * when hit by ball or other damaged resources.
      */
-    public EventHandler<StatusEffect> onBlizzardBall = new EventHandler<>(this);
+    public EventHandler<StatusEffect> onBlizzardBall = new EventHandler<>(PowerUpManager.class);
 
-    public EventHandler<Void> onLaserBeam = new EventHandler<>(this);
+    public EventHandler<Void> onLaserBeam = new EventHandler<>(PowerUpManager.class);
 
     private HashSet<PowerUp> powerUpsSet = new HashSet<>();
     private PlayerPowerUpHandler playerPowerUpHandler;

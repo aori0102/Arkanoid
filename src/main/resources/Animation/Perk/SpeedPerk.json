@@ -10,13 +10,17 @@
         "x": 396,
         "y": 576
       },
-      "renderSize": {
-        "x": 198,
-        "y": 288
-      },
       "duration": 0.1,
       "rotationAngle": 0
     }
   ],
+  "renderSize": {
+    "x": 198,
+    "y": 288
+  },
+  "pivot": {
+    "x": 0,
+    "y": 0
+  },
   "loop": true
 }

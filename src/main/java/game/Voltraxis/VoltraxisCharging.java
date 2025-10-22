@@ -55,13 +55,13 @@ public class VoltraxisCharging extends MonoBehaviour {
      */
     private ChargingPhase _currentChargingPhase = ChargingPhase.None;
 
-    public EventHandler<ChargingPhase> onChargingPhaseChanged = new EventHandler<>(this);
-    public EventHandler<Double> onChargingRatioChanged = new EventHandler<>(this);
-    public EventHandler<Void> onChargingEntered = new EventHandler<>(this);
-    public EventHandler<Void> onChargingTerminated = new EventHandler<>(this);
-    public EventHandler<Void> onStartUnleashing = new EventHandler<>(this);
-    public EventHandler<Void> onUnleashingLaser = new EventHandler<>(this);
-    public EventHandler<Void> onFinishUnleashing = new EventHandler<>(this);
+    public EventHandler<ChargingPhase> onChargingPhaseChanged = new EventHandler<>(VoltraxisCharging.class);
+    public EventHandler<Double> onChargingRatioChanged = new EventHandler<>(VoltraxisCharging.class);
+    public EventHandler<Void> onChargingEntered = new EventHandler<>(VoltraxisCharging.class);
+    public EventHandler<Void> onChargingTerminated = new EventHandler<>(VoltraxisCharging.class);
+    public EventHandler<Void> onStartUnleashing = new EventHandler<>(VoltraxisCharging.class);
+    public EventHandler<Void> onUnleashingLaser = new EventHandler<>(VoltraxisCharging.class);
+    public EventHandler<Void> onFinishUnleashing = new EventHandler<>(VoltraxisCharging.class);
 
     /**
      * Create this MonoBehaviour.

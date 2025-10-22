@@ -17,8 +17,8 @@ public class VoltraxisPowerCoreManager extends MonoBehaviour {
     private EventActionID leftCoreEventActionID = null;
     private EventActionID rightCoreEventActionID = null;
 
-    public EventHandler<PowerCore> onPowerCoreDeployed = new EventHandler<>(this);
-    public EventHandler<PowerCore> onPowerCoreDestroyed = new EventHandler<>(this);
+    public EventHandler<PowerCore> onPowerCoreDeployed = new EventHandler<>(VoltraxisPowerCoreManager.class);
+    public EventHandler<PowerCore> onPowerCoreDestroyed = new EventHandler<>(VoltraxisPowerCoreManager.class);
 
     /**
      * Create this MonoBehaviour.

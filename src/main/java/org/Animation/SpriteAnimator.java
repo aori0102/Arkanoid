@@ -26,8 +26,6 @@ public class SpriteAnimator extends MonoBehaviour {
     private SpriteAnimationClip.AnimationNode currentAnimationNode;
     private Time.CoroutineID currentFrameCoroutineID = null;
     private Runnable currentAnimationFinishCallback = null;
-    private Vector2 renderSize = null;
-    private Vector2 pivot = null;
 
     /**
      * Create this MonoBehaviour.
@@ -94,12 +92,8 @@ public class SpriteAnimator extends MonoBehaviour {
         }
 
         spriteRenderer.setImage(clip.getSpriteSheet());
-        if (renderSize != null) {
-            spriteRenderer.setSize(renderSize);
-        }
-        if (pivot != null) {
-            spriteRenderer.setPivot(pivot);
-        }
+        spriteRenderer.setPivot(clip.getPivot());
+        spriteRenderer.setSize(clip.getRenderSize());
         updateCurrentFrame();
 
     }
@@ -138,24 +132,6 @@ public class SpriteAnimator extends MonoBehaviour {
                 currentAnimationFinishCallback = null;
             }
         }
-    }
-
-    /**
-     * Set the render size for every frame played in this animator.
-     *
-     * @param renderSize The render size to set.
-     */
-    public void setRenderSize(Vector2 renderSize) {
-        this.renderSize = renderSize;
-    }
-
-    /**
-     * Set the render pivot for every frame played in this animator.
-     *
-     * @param pivot The pivot to set
-     */
-    public void setPivot(Vector2 pivot) {
-        this.pivot = pivot;
     }
 
     @Override

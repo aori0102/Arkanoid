@@ -11,15 +11,18 @@ import java.util.function.BiConsumer;
  */
 public class EventHandler<T> {
 
-    protected Object sender = null;
+    protected final Class<?> callerClass;
 
     /**
      * A list to store all of callbacks
      */
     private final HashMap<EventActionID, BiConsumer<Object, T>> listeners = new HashMap<>();
 
-    public EventHandler(Object sender) {
-        this.sender = sender;
+    public EventHandler(Class<?> callerClass) {
+        if(callerClass == null) {
+            throw new IllegalArgumentException("callerClass cannot be null");
+        }
+        this.callerClass = callerClass;
     }
 
     /**
@@ -57,9 +60,9 @@ public class EventHandler<T> {
      */
     public void invoke(Object sender, T argument) {
 
-        if (sender != this.sender) {
+        if (sender != null && !callerClass.isInstance(sender)) {
             throw new IllegalArgumentException(
-                    "This event can only be called within " + this.sender.getClass().getName() + "."
+                    "This event can only be called within " + callerClass.getName() + "."
             );
         }
 
