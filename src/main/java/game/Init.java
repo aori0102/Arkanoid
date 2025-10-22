@@ -1,13 +1,9 @@
 package game;
 
-import game.Brick.Brick;
-import game.Brick.BrickEvent.BrickManager;
-import game.Brick.BrickFactory;
 import game.GameObject.BallsManager;
 import game.MapGenerator.BrickMapManager;
 import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
-import game.Perks.Object.CooldownPerk;
 import game.Player.PlayerSkillsHandler;
 import game.PowerUp.BlizzardBall;
 import game.Player.PlayerPrefab;
