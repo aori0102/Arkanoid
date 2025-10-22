@@ -198,6 +198,7 @@ public abstract class Renderable extends MonoBehaviour {
     public final void setSize(Vector2 size) {
         this.size = size;
         onRenderSizeChanged.invoke(this, null);
+        onPivotChanged.invoke(this, null);
     }
 
     /**
