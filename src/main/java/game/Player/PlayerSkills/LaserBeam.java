@@ -1,6 +1,6 @@
 package game.Player.PlayerSkills;
 
-import game.Voltraxis.Interface.IBossTarget;
+import game.Voltraxis.Interface.ITakeBallDamage;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Physics.BoxCollider;
@@ -31,7 +31,7 @@ public class LaserBeam extends Skill{
     }
 
     public void handleCollision(CollisionData collisionData) {
-        var boss = collisionData.otherCollider.getComponent(IBossTarget.class);
+        var boss = collisionData.otherCollider.getComponent(ITakeBallDamage.class);
         if (boss != null) {
             boss.takeDamage(LASER_DAMAGE);
             GameObjectManager.destroy(gameObject);

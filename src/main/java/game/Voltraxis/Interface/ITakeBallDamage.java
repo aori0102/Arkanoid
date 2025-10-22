@@ -1,5 +1,5 @@
 package game.Voltraxis.Interface;
 
-public interface IBossTarget {// TODO: rename
+public interface ITakeBallDamage {// TODO: rename
     void takeDamage(int amount);
 }

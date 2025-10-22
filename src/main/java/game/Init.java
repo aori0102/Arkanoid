@@ -7,8 +7,6 @@ import game.Obstacle.Index.ObstacleManager;
 import game.PowerUp.BlizzardBall;
 import game.Player.PlayerPrefab;
 import game.Perks.Index.PerkManager;
-import game.Perks.Object.AttackPerk;
-import game.Perks.Object.CooldownPerk;
 import game.PowerUp.FireBall;
 import game.PowerUp.Index.PowerUpManager;
 import game.PowerUp.DuplicateBall;
@@ -55,17 +53,6 @@ public class Init {
         ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
         ballVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
 
-        var laser = GameObjectManager.instantiate("laser");
-        laser.addComponent(BoxCollider.class);
-        laser.addComponent(Laser.class);
-        laser.getComponent(Laser.class).getGameObject().setActive(false);
-        laser.getTransform().setGlobalPosition(new Vector2(300, 300));
-
-        var laserVisual = GameObjectManager.instantiate("laserVisual");
-        laserVisual.setParent(laser);
-        laserVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Laser.getImage());
-        laserVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
-
         var arrow = GameObjectManager.instantiate("arrow");
         arrow.addComponent(Arrow.class);
         arrow.setParent(paddle);
@@ -99,8 +86,7 @@ public class Init {
         obstacleManager.addComponent(ObstacleManager.class);
 
 
-        ObstacleManager.instance.setPaddle(paddle.getComponent(Paddle.class));
-        ObstacleManager.instance.addObstacle(laser.getComponent(Laser.class));
+        ObstacleManager.getInstance().setPaddle(paddle.getComponent(Paddle.class));
 
         var ballsManager = GameObjectManager.instantiate("ballManager");
         ballsManager.addComponent(BallsManager.class);

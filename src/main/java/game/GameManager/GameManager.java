@@ -2,7 +2,6 @@ package game.GameManager;
 
 import game.Player.Player;
 import javafx.application.Platform;
-import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Scene.SceneKey;
@@ -29,7 +28,7 @@ public class GameManager extends MonoBehaviour {
 
     @Override
     public void awake() {
-        Player.getInstance().OnNodeHealthReachZero.addListener(this::gameManager_onNodeHealthReachZero);
+        Player.getInstance().onLivesReachZero.addListener(this::gameManager_onNodeHealthReachZero);
     }
     private void gameManager_onNodeHealthReachZero(Object sender, Void e) {
         gameOver();

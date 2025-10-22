@@ -1,93 +1,82 @@
 package game.Obstacle.Index;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import game.GameObject.Paddle;
 import org.Event.EventHandler;
+import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import utils.Random;
 import utils.Time;
 import utils.Vector2;
 
+import java.util.HashSet;
+
 public class ObstacleManager extends MonoBehaviour {
 
-    // Number of obstacles can be spawned per minutes
+    /**
+     * Number of obstacles can be spawned per minutes.
+     */
     private static final double BASE_DENSITY_PER_MINUTE = 20;
 
-    // Max number of existing obstacle
+    /**
+     * Max number of existing obstacle.
+     */
     private static final int MAX_ACTIVE = 10;
 
-    // Minimum time between each spawn times
+    /**
+     * Minimum time between each spawn times.
+     */
     private static final double MIN_SPAWN_INTERVAL = 0.5;
 
-    // Minimum gap between obstacles
+    /**
+     * Minimum gap between obstacles.
+     */
     private static final double MIN_SPAWN_DISTANCE = 200;
 
-    // Safe range to spawn in order to not collied with paddle
+    /**
+     * Safe range to spawn in order to not collide with paddle.
+     */
     private static final double SAFE_RADIUS_FROM_PADDLE = 250;
 
-    // Smoothing coefficient
+    /**
+     * Maximum attempt to spawn an obstacle.
+     */
+    private static final int SPAWNING_ATTEMPT_THRESHOLD=10;
+
+    /**
+     * Smoothing coefficient
+     */
     private static final double ALPHA = 2;
 
-    // Time since last spawn
-    private double timeSinceLastSpawn = 0;
+    // Singleton
+    private static ObstacleManager instance;
 
+    private double timeSinceLastSpawn = 0;
     private Paddle paddle;
 
-    // Singleton
-    public static ObstacleManager instance;
+    private final HashSet<Obstacle> obstacleSet = new HashSet<>();
 
     /**
      * Event fired to paddle when it collides with obstacles.
      */
     public EventHandler<Void> onPaddleCollidedWithObstacle = new EventHandler<>(this);
 
-    // List to store all the obstacles
-    public List<Obstacle> obstacles = new ArrayList<>();
-
     public ObstacleManager(GameObject gameObjectManager) {
         super(gameObjectManager);
         if (instance != null) {
-            throw new IllegalStateException("ObstacleManager is a singleton!");
+            throw new ReinitializedSingletonException("ObstacleManager is a singleton!");
         }
         instance = this;
     }
 
-    @Override
-    public void awake() {
-        for (var obstacle : obstacles) {
-            obstacle.getGameObject().setActive(false);
-        }
-
+    public static ObstacleManager getInstance() {
+        return instance;
     }
 
     @Override
     public void update() {
         spawnObstacles();
-    }
-
-    /**
-     * Adding the obstacles to the set in order to manage it.
-     *
-     * @param obstacle is the obstacle we want to add
-     */
-    public void addObstacle(Obstacle obstacle) {
-        obstacles.add(obstacle);
-        obstacle.onObstacleCollided.addListener((e, obstacleCollided) -> {
-            onPaddleCollidedWithObstacle.invoke(instance, null);
-        });
-    }
-
-    /**
-     * Remove the obstacle from the list
-     *
-     * @param obstacle : the obstacle which is wanted to remove
-     */
-    public void removeObstacle(Obstacle obstacle) {
-        obstacles.remove(obstacle);
     }
 
     /**
@@ -106,7 +95,8 @@ public class ObstacleManager extends MonoBehaviour {
     private boolean handleSpawningStatus() {
         timeSinceLastSpawn += Time.deltaTime;
         // Expected number of spawned obstacles
-        double lambda = (BASE_DENSITY_PER_MINUTE / 60) * (1 + 0.05);
+        var level = 1;        // TODO: add a level system then change this part - Aori
+        double lambda = (BASE_DENSITY_PER_MINUTE / 60) * (1 + level * 0.05);
 
         // Current number of active obstacle
         int active = countActiveObstacles();
@@ -136,12 +126,9 @@ public class ObstacleManager extends MonoBehaviour {
         if (timeSinceLastSpawn < MIN_SPAWN_INTERVAL) return;
 
         // Trying to spawn
-        int tries = 10;
-        for (int i = 0; i < tries; i++) {
-            Vector2 pos = sampleSpawnPosition();
-            spawnAt(pos);
-            timeSinceLastSpawn = 0;
-        }
+        Vector2 pos = sampleSpawnPosition();
+        spawnAt(pos);
+        timeSinceLastSpawn = 0;
     }
 
     /**
@@ -162,44 +149,58 @@ public class ObstacleManager extends MonoBehaviour {
 
             return new Vector2(x, y);
         }
-        return new Vector2(600, 1000);
+        return new Vector2(9999999, 9999999);
     }
 
     /**
      * Spawn obstacle at a chosen position
      *
-     * @param pos : the spawn position
+     * @param position : the spawn position
      */
-    private void spawnAt(Vector2 pos) {
-        if (obstacles.isEmpty()) return;
-
-        Obstacle chosen = obstacles.get(Random.range(0, obstacles.size()));
+    private void spawnAt(Vector2 position) {
+        var chosenKey = ObstaclePrefabGenerator.registeredObstacleList.get(
+                Random.range(0, ObstaclePrefabGenerator.registeredObstacleList.size())
+        );
+        Obstacle chosen = ObstaclePrefabGenerator.obstaclePrefabMap.get(chosenKey).generateObstacle();
         chosen.getGameObject().setActive(true);
-        chosen.getTransform().setGlobalPosition(pos);
+        chosen.getTransform().setGlobalPosition(position);
+        obstacleSet.add(chosen);
+        chosen.onObstacleDestroyed.addListener(this::obstacle_onObstacleDestroyed);
+    }
+
+    /**
+     * Called when {@link Obstacle#onObstacleDestroyed} is invoked.<br><br>
+     * This function clears the obstacle's data inside the registered set.
+     */
+    private void obstacle_onObstacleDestroyed(Object sender, Void e) {
+        if (sender instanceof Obstacle obstacle) {
+            obstacle.onObstacleDestroyed.removeAllListeners();
+            obstacleSet.remove(obstacle);
+        }
     }
 
     /**
      * Check if the spawn pos is too close to the paddle or not
      *
-     * @param pos The chosen position
+     * @param position The chosen position
      * @return {@code true} if the pos is too close to the paddle
      */
-    private boolean isTooCloseToPaddle(Vector2 pos) {
-        Vector2 playerPos = paddle.getTransform().getGlobalPosition();
-        return Vector2.distance(pos, playerPos) < SAFE_RADIUS_FROM_PADDLE;
+    private boolean isTooCloseToPaddle(Vector2 position) {
+        Vector2 paddlePosition = paddle.getTransform().getGlobalPosition();
+        return Vector2.distance(position, paddlePosition) < SAFE_RADIUS_FROM_PADDLE;
     }
 
     /**
-     * Check if the spawn pos is too close to other obstacles
+     * Check if the spawn position is too close to other obstacles
      *
-     * @param pos : the chosen position
+     * @param position : the chosen position
      * @return true if the pos is too close to the other obstacles
      */
-    private boolean isTooCloseToObstacles(Vector2 pos) {
-        for (Obstacle obstacle : obstacles) {
+    private boolean isTooCloseToObstacles(Vector2 position) {
+        for (var obstacle : obstacleSet) {
             if (!obstacle.getGameObject().isActive()) continue;
-            Vector2 op = obstacle.getTransform().getGlobalPosition();
-            if (Vector2.distance(pos, op) < MIN_SPAWN_DISTANCE) return true;
+            Vector2 obstaclePosition = obstacle.getTransform().getGlobalPosition();
+            if (Vector2.distance(position, obstaclePosition) < MIN_SPAWN_DISTANCE) return true;
         }
         return false;
     }
@@ -210,22 +211,7 @@ public class ObstacleManager extends MonoBehaviour {
      * @return number of active obstacles
      */
     private int countActiveObstacles() {
-        int count = 0;
-        var iterator = obstacles.iterator();
-        while (iterator.hasNext()) {
-            Obstacle obstacle = iterator.next();
-
-            if (obstacle == null || obstacle.getGameObject() == null || obstacle.getGameObject().isDestroyed()) {
-                iterator.remove();
-                continue;
-            }
-
-            if (obstacle.getGameObject().isActive()) {
-                count++;
-            }
-        }
-
-        return count;
+        return obstacleSet.size();
     }
 
     /**

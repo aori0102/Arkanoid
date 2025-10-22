@@ -67,7 +67,7 @@ public class Paddle extends MonoBehaviour {
         //Assign line specs
         boxCollider.setOnTriggerEnter(this::onTriggerEnter);
 
-        ObstacleManager.instance.onPaddleCollidedWithObstacle.addListener((e, voi) -> {
+        ObstacleManager.getInstance().onPaddleCollidedWithObstacle.addListener((e, voi) -> {
             canStartStunnedCounter = true;
         });
 

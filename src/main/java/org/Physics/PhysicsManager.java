@@ -8,6 +8,8 @@ import java.util.List;
 
 public class PhysicsManager {
 
+    // TODO: take a closer look
+
     private static final HashSet<BoxCollider> colliderSet = new HashSet<>();
 
     /**

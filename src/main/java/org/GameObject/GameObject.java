@@ -46,7 +46,7 @@ public class GameObject {
 
     public Transform getTransform() {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         return transform;
 
@@ -59,7 +59,7 @@ public class GameObject {
      */
     public void setLayer(Layer layer) {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         var value = layer.getUnderlyingValue();
         if (value == 0 || (value & (value - 1)) != 0) {
@@ -77,7 +77,7 @@ public class GameObject {
      */
     public int getLayerMask() {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         return layer.getUnderlyingValue();
 
@@ -90,7 +90,7 @@ public class GameObject {
      */
     public String getName() {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         return name;
 
@@ -112,7 +112,7 @@ public class GameObject {
      */
     public void setName(String name) {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         this.name = name;
 
@@ -145,7 +145,7 @@ public class GameObject {
      */
     public boolean isActive() {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         boolean parentActive = parent == null || (!parent.isDestroyed() && parent.isActive());
         return isActive && parentActive;
@@ -159,7 +159,7 @@ public class GameObject {
      */
     public void setActive(boolean active) {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         isActive = active;
         onObjectActivenessChanged.invoke(this, null);
@@ -175,14 +175,14 @@ public class GameObject {
      */
     protected void handleAwake() {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         while (!preAwakeMonoBehaviourQueue.isEmpty()) {
 
             var mono = preAwakeMonoBehaviourQueue.poll();
             mono.awake();
             try {
-                ValidateObjectLife();
+                validateObjectLife();
             } catch (Exception e) {
                 return;
             }
@@ -197,7 +197,7 @@ public class GameObject {
      */
     protected void handleStart() {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         while (!preStartMonoBehaviourQueue.isEmpty()) {
 
@@ -205,7 +205,7 @@ public class GameObject {
             mono.start();
 
             try {
-                ValidateObjectLife();
+                validateObjectLife();
             } catch (Exception e) {
                 return;
             }
@@ -219,14 +219,14 @@ public class GameObject {
      */
     protected void handleUpdate() {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         for (var mono : monoBehaviourSet) {
 
             mono.update();
 
             try {
-                ValidateObjectLife();
+                validateObjectLife();
             } catch (Exception e) {
                 return;
             }
@@ -240,13 +240,13 @@ public class GameObject {
      */
     protected void handleLateUpdate() {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         for (var mono : monoBehaviourSet) {
 
             mono.lateUpdate();
             try {
-                ValidateObjectLife();
+                validateObjectLife();
             } catch (Exception e) {
                 return;
             }
@@ -323,9 +323,7 @@ public class GameObject {
     @Deprecated
     protected GameObject(GameObject gameObject) {
 
-        if (gameObject.isDestroyed) {
-            throw new IllegalStateException("Trying to instantiate an object from a destroyed object!");
-        }
+        gameObject.validateObjectLife();
 
         isActive = gameObject.isActive;
         name = gameObject.name;
@@ -344,9 +342,9 @@ public class GameObject {
      */
     protected void destroyObject() {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
-        isDestroyed = true;
+        // TODO: take a closer look
 
         for (var monoBehaviour : monoBehaviourSet) {
             monoBehaviour.destroyComponent();
@@ -364,6 +362,8 @@ public class GameObject {
         if (parent != null) {
             parent.removeChild(this);
         }
+
+        isDestroyed = true;
 
     }
 
@@ -387,7 +387,7 @@ public class GameObject {
      */
     public <T> T getComponent(Class<T> type) {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         if (!type.isInterface() && !MonoBehaviour.class.isAssignableFrom(type)) {
             throw new IllegalArgumentException("Cannot get component. " + type + " is not MonoBehaviour nor an interface!");
@@ -414,7 +414,7 @@ public class GameObject {
      */
     public <T extends MonoBehaviour> T addComponent(Class<T> type) {
 
-        ValidateObjectLife();
+        validateObjectLife();
 
         var comp = getComponent(type);
         if (comp == null) {
@@ -452,7 +452,7 @@ public class GameObject {
      *
      * @throws IllegalStateException if this object is destroyed.
      */
-    private void ValidateObjectLife() {
+    private void validateObjectLife() {
 
         if (isDestroyed) {
             throw new IllegalStateException("You are trying to access a destroyed game object!");
@@ -466,7 +466,7 @@ public class GameObject {
      * @return A copy of all components.
      */
     public HashSet<MonoBehaviour> getAllComponents() {
-        ValidateObjectLife();
+        validateObjectLife();
         return new HashSet<>(monoBehaviourSet); // return a copy to avoid external modification
     }
 
@@ -476,12 +476,17 @@ public class GameObject {
      * @return A copy of all children GameObjects.
      */
     public HashSet<GameObject> getChildren() {
-        ValidateObjectLife();
+        validateObjectLife();
         return new HashSet<>(childSet); // return a copy
     }
 
     public SceneKey getRegisteredSceneKey() {
         return registeredSceneKey;
+    }
+
+    @Override
+    public String toString() {
+        return "GameObject[" + Objects.hashCode(this) + "] - " + name;
     }
 
 }

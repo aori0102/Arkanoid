@@ -8,8 +8,11 @@ import java.util.HashSet;
 
 public class BallsManager extends MonoBehaviour {
 
+    // TODO: ball destroy after falling into the void
+
     public static BallsManager instance;
-    private HashSet<Ball> ballSet = new HashSet<>();
+
+    private final HashSet<Ball> ballSet = new HashSet<>();
     public int index = 1;
     private StatusEffect currentEffect = StatusEffect.None;
 
@@ -62,6 +65,6 @@ public class BallsManager extends MonoBehaviour {
 
     @Override
     protected void destroyComponent() {
-
     }
+
 }

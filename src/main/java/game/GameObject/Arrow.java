@@ -7,6 +7,9 @@ import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
 public class Arrow extends MonoBehaviour {
+
+    // TODO: bruh it turns into a fucking green brick
+
     /**
      * Create this MonoBehaviour.
      *
@@ -24,7 +27,6 @@ public class Arrow extends MonoBehaviour {
         spriteRenderer = getComponent(SpriteRenderer.class);
         spriteRenderer.setPivot(new Vector2(0, 0.5));
         gameObject.setActive(false);
-        addComponent(Brick.class);
     }
 
     public void handleArrowDirection(double angle) {

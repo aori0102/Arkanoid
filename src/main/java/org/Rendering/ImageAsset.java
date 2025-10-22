@@ -23,7 +23,7 @@ public class ImageAsset {
 
         /// Obstacle
         Laser("/laser.png"),
-        Arrow("/arrow.png"),
+        Arrow("/Arrow.png"),
 
         /// Buttons
         GeneralButtons("/GeneralButtons.png"),

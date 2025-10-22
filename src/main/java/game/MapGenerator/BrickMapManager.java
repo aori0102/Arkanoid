@@ -91,7 +91,7 @@ public final class BrickMapManager extends MonoBehaviour {
      * Called when {@link Brick#onBrickDestroyed} is invoked.<br><br>
      * This function clears the brick data inside the grid.
      */
-    private void brick_onBrickDestroyed(Object sender, Void e) {
+    private void brick_onBrickDestroyed(Object sender, Brick.OnBrickDestroyedEventArgs e) {
 
         if (sender instanceof Brick brick) {
             var cell = brickCoordinateMap.remove(brick);

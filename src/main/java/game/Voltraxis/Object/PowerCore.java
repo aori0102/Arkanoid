@@ -1,8 +1,7 @@
 package game.Voltraxis.Object;
 
-import game.Voltraxis.Interface.IBossTarget;
+import game.Voltraxis.Interface.ITakeBallDamage;
 import game.Voltraxis.Voltraxis;
-import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -13,7 +12,7 @@ import utils.Vector2;
 /**
  * Voltraxis' power core.
  */
-public class PowerCore extends MonoBehaviour implements IBossTarget {
+public class PowerCore extends MonoBehaviour implements ITakeBallDamage {
 
     private static final double MAX_CORE_FLUCTUATION_DISTANCE = 3.2;
     private static final double CORE_FLUCTUATION_RATE = 0.49;

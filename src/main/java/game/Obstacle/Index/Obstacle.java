@@ -12,18 +12,12 @@ import org.Physics.BoxCollider;
 public abstract class Obstacle extends MonoBehaviour {
 
     /**
-     * Warning time before the obstacle appears.
-     */
-    private final float warningTime = 3f;
-
-    /**
      * The event happens when the paddle collides with this.
      */
     public EventHandler<Void> onObstacleCollided = new EventHandler<>(this);
+    public EventHandler<Void> onObstacleDestroyed = new EventHandler<>(this);
 
     protected BoxCollider collider;
-
-    protected boolean isDestroyed = false;
 
     /**
      * Create this MonoBehaviour.
@@ -37,6 +31,7 @@ public abstract class Obstacle extends MonoBehaviour {
     /**
      * Assign the collider and fire the event when collide
      */
+    @Override
     public void awake() {
         collider = getComponent(BoxCollider.class);
         collider.setOnCollisionEnterCallback(e -> {
@@ -46,22 +41,15 @@ public abstract class Obstacle extends MonoBehaviour {
         });
     }
 
-    public void update() {
-    }
-
     protected void handleInteraction() {
-        onObstacleCollided.invoke(this, null );
+        onObstacleCollided.invoke(this, null);
     }
-
-    public BoxCollider getCollider() {
-        return collider;
-    }
-
 
     protected abstract void handleMovement();
 
     @Override
     protected void destroyComponent() {
-
+        onObstacleDestroyed.invoke(this, null);
     }
+
 }

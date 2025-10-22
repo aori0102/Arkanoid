@@ -187,10 +187,6 @@ public class Transform extends MonoBehaviour {
 
     @Override
     protected void destroyComponent() {
-        _localPosition = null;
-        _localScale = null;
-        onPositionChanged = null;
-        onScaleChanged = null;
     }
 
     /**

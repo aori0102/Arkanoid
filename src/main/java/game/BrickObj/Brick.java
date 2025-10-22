@@ -46,19 +46,13 @@ public final class Brick extends MonoBehaviour {
         collider.setLocalSize(new Vector2(width, height));
         collider.setOnCollisionEnterCallback(this::onCollisionEnter);
 
-        var renderer = addComponent(SpriteRenderer.class);
-        renderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
-        renderer.setPivot(new Vector2(0.5, 0.5));
-        renderer.setSize(new Vector2(width, height));
-
-        addComponent(SpriteRenderer.class);
 
         owner.setLayer(Layer.Brick);
     }
 
     public void awake() {
         setType(BrickType.Normal);
-        System.out.printf("%3d %3d\n",colID, rowID);
+        System.out.printf("%3d %3d\n", colID, rowID);
     }
 
     public void update() {

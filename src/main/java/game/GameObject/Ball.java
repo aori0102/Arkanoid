@@ -1,7 +1,7 @@
 package game.GameObject;
 
 import game.PowerUp.StatusEffect;
-import game.Voltraxis.Interface.IBossTarget;
+import game.Voltraxis.Interface.ITakeBallDamage;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
@@ -19,11 +19,10 @@ public class Ball extends MonoBehaviour {
 
     private static final int BALL_DAMAGE = 80;
     private static final double BASE_BALL_SPEED = 500;
+    private static final Vector2 BOUNCE_OFFSET = new Vector2(0.2, 0.2);
 
     private Vector2 direction;
-    private BoxCollider ballCollider;
     private Paddle paddle;
-    private Vector2 offsetVector = new Vector2(0.2, 0.2);
     private Vector2 offsetBallPosition;
     private StatusEffect currentStatusEffect = StatusEffect.None;
     private StatusEffect pendingEffect = StatusEffect.None;
@@ -39,7 +38,7 @@ public class Ball extends MonoBehaviour {
     public void awake() {
 
         // Assign collider specs and the function
-        ballCollider = getComponent(BoxCollider.class);
+        var ballCollider = getComponent(BoxCollider.class);
         ballCollider.setExcludeLayer(Layer.Ball.getUnderlyingValue());
         ballCollider.setLocalCenter(new Vector2(0, 0));
         ballCollider.setLocalSize(new Vector2(20, 16));
@@ -87,9 +86,9 @@ public class Ball extends MonoBehaviour {
     }
 
     private void handleCollision(CollisionData collisionData) {
-        var boss = collisionData.otherCollider.getComponent(IBossTarget.class);
-        if (boss != null) {
-            boss.takeDamage(BALL_DAMAGE);
+        var target = collisionData.otherCollider.getComponent(ITakeBallDamage.class);
+        if (target != null) {
+            target.takeDamage(BALL_DAMAGE);
         }
     }
 
@@ -117,7 +116,7 @@ public class Ball extends MonoBehaviour {
 
         // If the ball's direction is perpendicular then adding the offset vector to it in order to avoid horizontal movement
         if (nearlyParallel) {
-            reflectDir = reflectDir.add(offsetVector.normalize());
+            reflectDir = reflectDir.add(BOUNCE_OFFSET.normalize());
         }
 
         // If the ball interacts with the moving paddle, the reflected direction will be different from the motionless paddle,
@@ -128,9 +127,6 @@ public class Ball extends MonoBehaviour {
 
 
         direction = reflectDir;
-    }
-
-    private void handleBrickCollision(CollisionData collisionData) {
     }
 
     /**

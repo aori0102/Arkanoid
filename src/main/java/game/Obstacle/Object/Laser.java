@@ -2,6 +2,7 @@ package game.Obstacle.Object;
 
 import game.Obstacle.ICanDamagePlayer;
 import game.Obstacle.Index.Obstacle;
+import game.Player.Player;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.Layer;
@@ -12,6 +13,7 @@ import utils.Vector2;
 public class Laser extends Obstacle implements ICanDamagePlayer {
 
     private static final double LASER_SPEED = 1000;
+    private static final int LASER_DAMAGE = 10;
 
     /**
      * Create this MonoBehaviour.
@@ -22,41 +24,35 @@ public class Laser extends Obstacle implements ICanDamagePlayer {
         super(owner);
     }
 
+    @Override
     public void awake() {
         collider = getComponent(BoxCollider.class);
         collider.setLocalCenter(new Vector2(0, 0));
         collider.setLocalSize(new Vector2(30, 90));
         collider.setIncludeLayer(Layer.Paddle.getUnderlyingValue());
 
-        collider.setOnCollisionEnterCallback(collider -> {
-            isDestroyed = true;
-            handleInteraction();
-        });
+        collider.setOnCollisionEnterCallback(_ -> handleInteraction());
 
     }
 
-    public void start() {
-    }
-
+    @Override
     public void update() {
         super.update();
         handleMovement();
     }
 
-
     @Override
     protected void handleMovement() {
-
         getTransform().translate(Vector2.up().multiply(LASER_SPEED * Time.deltaTime));
-        if (getTransform().getGlobalPosition().x < 0 || isDestroyed) {
+        if (getTransform().getGlobalPosition().x < 0) {
             GameObjectManager.destroy(gameObject);
         }
     }
 
     @Override
     public void damagePlayer() {
-
+        Player.getInstance().damage(LASER_DAMAGE);
     }
-}
 
+}
 

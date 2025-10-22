@@ -1,17 +1,22 @@
 package game.Brick;
 
-import game.Voltraxis.Interface.IBossTarget;
+import game.Voltraxis.Interface.ITakeBallDamage;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import utils.Vector2;
 
-public class Brick extends MonoBehaviour implements IBossTarget {
+public class Brick extends MonoBehaviour implements ITakeBallDamage {
 
     private int health = 0;
     private BrickType brickType = BrickType.Normal;
 
-    public EventHandler<Void> onBrickDestroyed = new EventHandler<>(this);
+    public EventHandler<OnBrickDestroyedEventArgs> onBrickDestroyed = new EventHandler<>(this);
+
+    public static class OnBrickDestroyedEventArgs {
+        public Vector2 brickPosition;
+    }
 
     /**
      * Create this MonoBehaviour.
@@ -25,7 +30,9 @@ public class Brick extends MonoBehaviour implements IBossTarget {
 
     @Override
     protected void destroyComponent() {
-        onBrickDestroyed.invoke(this, null);
+        var onBrickDestroyedEventArgs = new OnBrickDestroyedEventArgs();
+        onBrickDestroyedEventArgs.brickPosition = getTransform().getGlobalPosition();
+        onBrickDestroyed.invoke(this, onBrickDestroyedEventArgs);
     }
 
     @Override
