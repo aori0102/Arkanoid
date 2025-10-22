@@ -40,7 +40,7 @@ public abstract class BaseButton extends MonoBehaviour {
         spriteAnimator.addAnimationClip(clickedKey);
         setupStateHandlers();
 
-        buttonUI.onPointerClick.addListener(this::baseButton_onPointerClicked);
+
 
     }
 
@@ -89,7 +89,9 @@ public abstract class BaseButton extends MonoBehaviour {
         System.out.println("[ButtonUI] State handlers initialized successfully for " + gameObject.getName());
     }
 
-    protected abstract void baseButton_onPointerClicked(Object sender, MouseEvent e);
+    public ButtonUI getButtonUI() {
+        return buttonUI;
+    }
 
     @Override
     protected void destroyComponent() { }

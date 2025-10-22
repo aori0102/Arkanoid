@@ -4,6 +4,7 @@ import game.Perks.Index.Perk;
 import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
+import utils.Random;
 
 public class AttackPerk extends Perk {
     /**
@@ -18,13 +19,13 @@ public class AttackPerk extends Perk {
     @Override
     public void awake() {
         super.awake();
-        this.onPointerClicked.addListener(this::perk_onPointerClicked);
+        randomTime = Random.range(0, 3);
     }
 
     @Override
     protected void setUpVisual() {
         textUI.setText("Increase attack!");
-        perkKey = AnimationClipData.Attach_Perk;
+        perkKey = AnimationClipData.Attack_Perk;
 
     }
 
@@ -32,4 +33,5 @@ public class AttackPerk extends Perk {
     protected void perk_onPointerClicked(Object sender, MouseEvent e) {
         System.out.println("Increase attack!");
     }
+
 }

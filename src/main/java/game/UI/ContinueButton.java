@@ -18,8 +18,5 @@ public class ContinueButton extends BaseButton {
         clickedKey = AnimationClipData.Continue_Button_Clicked;
     }
 
-    @Override
-    protected void baseButton_onPointerClicked(Object sender, MouseEvent e) {
 
-    }
 }

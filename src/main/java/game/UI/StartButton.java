@@ -19,11 +19,4 @@ public class StartButton extends BaseButton {
         clickedKey = AnimationClipData.Start_Button_Clicked;
     }
 
-    @Override
-    protected void baseButton_onPointerClicked(Object sender, MouseEvent e) {
-        System.out.println("BaseButton_onPointerClicked");
-        //GameManager.instance.startGame();
-    }
-
-
 }

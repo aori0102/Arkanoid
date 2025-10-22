@@ -2,6 +2,7 @@ package game.Player;
 
 import game.PowerUp.Index.PowerUp;
 import game.GameObject.Paddle;
+import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 
@@ -12,11 +13,17 @@ import org.GameObject.MonoBehaviour;
 public class Player extends MonoBehaviour {
 
     private static final int MAX_HEALTH = 100;
+    private int attack = 10;
+    private int health = MAX_HEALTH;
+    private int nodeHealth = 3;
+
+    public EventHandler<Void> OnHealthReachZero = new EventHandler<>(this);
+    public EventHandler<Void> OnNodeHealthReachZero = new EventHandler<>(this);
+
 
     public static Player instance = null;
 
     private PlayerPowerUpHandler playerPowerUpHandler = null;
-    private int health = MAX_HEALTH;
 
     /**
      * Create this MonoBehaviour.
@@ -64,8 +71,37 @@ public class Player extends MonoBehaviour {
         instance = null;
     }
 
+    @Override
+    public void update() {
+        if(health <= 0) {
+            OnHealthReachZero.invoke(this, null);
+        }
+    }
+
     public static Player getInstance() {
         return instance;
     }
+    public void setHealth(int health) {
+        this.health = health;
+    }
 
+    public int getHealth() {
+        return health;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    private void player_onHealthReachZero(Object sender, Void e) {
+        health = MAX_HEALTH;
+        nodeHealth--;
+        if (nodeHealth <= 0) {
+            OnNodeHealthReachZero.invoke(this, null);
+        }
+    }
 }

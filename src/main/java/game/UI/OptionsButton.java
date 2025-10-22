@@ -18,8 +18,5 @@ public class OptionsButton extends BaseButton {
         clickedKey = AnimationClipData.Options_Button_Clicked;
     }
 
-    @Override
-    protected void baseButton_onPointerClicked(Object sender, MouseEvent e) {
 
-    }
 }

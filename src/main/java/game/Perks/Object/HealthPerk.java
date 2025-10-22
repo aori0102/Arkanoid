@@ -4,6 +4,7 @@ import game.Perks.Index.Perk;
 import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
+import utils.Random;
 
 public class HealthPerk extends Perk {
 
@@ -19,7 +20,7 @@ public class HealthPerk extends Perk {
     @Override
     public void awake() {
         super.awake();
-        this.onPointerClicked.addListener(this::perk_onPointerClicked);
+        randomTime = Random.range(0, 3);
     }
 
     @Override
