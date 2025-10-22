@@ -1,6 +1,5 @@
 package game.GameObject;
 
-import game.Brick.Brick;
 import game.PowerUp.StatusEffect;
 import game.Voltraxis.Interface.IBossTarget;
 import org.GameObject.GameObject;
@@ -14,22 +13,20 @@ import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 import utils.Time;
 
-import javax.swing.plaf.TableHeaderUI;
+// TODO: ur code stinky af man - Aori to Kine.
 
 public class Ball extends MonoBehaviour {
 
     private static final int BALL_DAMAGE = 80;
+    private static final double BASE_BALL_SPEED = 500;
 
     private Vector2 direction;
-    private double ballSpeed = 500;
     private BoxCollider ballCollider;
     private Paddle paddle;
     private Vector2 offsetVector = new Vector2(0.2, 0.2);
     private Vector2 offsetBallPosition;
     private StatusEffect currentStatusEffect = StatusEffect.None;
     private StatusEffect pendingEffect = StatusEffect.None;
-
-    private boolean isMoving = false;
 
     public Ball(GameObject owner) {
         super(owner);
@@ -54,7 +51,6 @@ public class Ball extends MonoBehaviour {
         // Add listener to paddle event
         paddle.onMouseReleased.addListener((e, vector2) -> {
             setDirection(vector2);
-            isMoving = true;
             paddle.isFired = true;
         });
 
@@ -82,7 +78,7 @@ public class Ball extends MonoBehaviour {
         }
         // Moving the ball
         else {
-            getTransform().translate(direction.normalize().multiply(ballSpeed * Time.deltaTime));
+            getTransform().translate(direction.normalize().multiply(BASE_BALL_SPEED * Time.deltaTime));
         }
 
         if (getTransform().getGlobalPosition().y > 1000) {
@@ -94,11 +90,6 @@ public class Ball extends MonoBehaviour {
         var boss = collisionData.otherCollider.getComponent(IBossTarget.class);
         if (boss != null) {
             boss.takeDamage(BALL_DAMAGE);
-            return;
-        }
-        var brick = collisionData.otherCollider.getComponent(Brick.class);
-        if (brick != null) {
-            brick.decreaseHealth(BALL_DAMAGE);
         }
     }
 
@@ -186,7 +177,7 @@ public class Ball extends MonoBehaviour {
      * @param type          : the desired type.
      * @return true if the object matches with the desired type.
      */
-    private boolean isCollidedWith(CollisionData collisionData, Class type) {
+    private boolean isCollidedWith(CollisionData collisionData, Class<?> type) {
         GameObject collidedObject = collisionData.otherCollider.getGameObject();
         return collidedObject.getComponent(type) != null;
     }

@@ -1,5 +1,6 @@
 package game.Obstacle.Object;
 
+import game.Obstacle.ICanDamagePlayer;
 import game.Obstacle.Index.Obstacle;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -8,9 +9,9 @@ import org.Physics.BoxCollider;
 import utils.Time;
 import utils.Vector2;
 
-public class Laser extends Obstacle {
+public class Laser extends Obstacle implements ICanDamagePlayer {
 
-    private final double laserSpeed = 1000;
+    private static final double LASER_SPEED = 1000;
 
     /**
      * Create this MonoBehaviour.
@@ -46,10 +47,15 @@ public class Laser extends Obstacle {
     @Override
     protected void handleMovement() {
 
-        getTransform().translate(Vector2.up().multiply(laserSpeed * Time.deltaTime));
+        getTransform().translate(Vector2.up().multiply(LASER_SPEED * Time.deltaTime));
         if (getTransform().getGlobalPosition().x < 0 || isDestroyed) {
             GameObjectManager.destroy(gameObject);
         }
+    }
+
+    @Override
+    public void damagePlayer() {
+
     }
 }
 

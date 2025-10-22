@@ -19,7 +19,7 @@ public abstract class Obstacle extends MonoBehaviour {
     /**
      * The event happens when the paddle collides with this.
      */
-    public EventHandler<Void> onObstacleCollided = new EventHandler(this);
+    public EventHandler<Void> onObstacleCollided = new EventHandler<>(this);
 
     protected BoxCollider collider;
 

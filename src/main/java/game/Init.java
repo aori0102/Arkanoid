@@ -4,8 +4,6 @@ import game.GameObject.BallsManager;
 import game.MapGenerator.BrickMapManager;
 import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
-import game.Player.PlayerSkillsHandler;
-import game.Perks.Object.CooldownPerk;
 import game.PowerUp.BlizzardBall;
 import game.Player.PlayerPrefab;
 import game.PowerUp.FireBall;
