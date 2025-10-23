@@ -186,10 +186,4 @@ public class TextUI extends Renderable {
         return text;
     }
 
-    @Override
-    protected void onComponentDestroyed() {
-        text = null;
-        fontName = null;
-    }
-
 }

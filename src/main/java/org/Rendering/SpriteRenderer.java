@@ -359,15 +359,6 @@ public class SpriteRenderer extends Renderable {
         return sprite;
     }
 
-    @Override
-    protected void onComponentDestroyed() {
-        sprite = null;
-        imageOriginalDimension = null;
-        rectangularClip = null;
-        circularClip = null;
-        rotateProperty = null;
-    }
-
     public ImageView getSprite() {
         return sprite;
     }
