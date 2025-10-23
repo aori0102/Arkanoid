@@ -43,16 +43,6 @@ public class ButtonUI extends MonoBehaviour
     }
 
     @Override
-    protected void destroyComponent() {
-        image = null;
-        onPointerClick = null;
-        onPointerEnter = null;
-        onPointerExit = null;
-        onPointerDown = null;
-        onPointerUp = null;
-    }
-
-    @Override
     public void onPointerClicked(MouseEvent event) {
         onPointerClick.invoke(this, event);
     }

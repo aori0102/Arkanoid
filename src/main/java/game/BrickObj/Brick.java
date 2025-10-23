@@ -30,7 +30,7 @@ public final class Brick extends MonoBehaviour {
     public EventHandler<Void> onBrickCollision = new EventHandler<>(Brick.class);
 
     @Override
-    protected void destroyComponent() {
+    protected void onDestroy() {
         onBrickDestroyed.invoke(this, null);
     }
 

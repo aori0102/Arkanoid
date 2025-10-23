@@ -36,14 +36,6 @@ public class PowerCore extends MonoBehaviour implements ITakeBallDamage {
     }
 
     @Override
-    protected void destroyComponent() {
-        onPowerCoreDestroyed = null;
-        powerCoreVisual = null;
-        onHealthChanged = null;
-        voltraxis = null;
-    }
-
-    @Override
     public void takeDamage(int amount) {
         health -= amount;
         onHealthChanged.invoke(this, null);

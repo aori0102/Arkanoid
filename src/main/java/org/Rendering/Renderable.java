@@ -90,19 +90,8 @@ public abstract class Renderable extends MonoBehaviour {
     }
 
     @Override
-    protected final void destroyComponent() {
-
+    protected final void onDestroy() {
         RendererManager.unregisterNode(this);
-
-        pivot = null;
-        size = null;
-        position = null;
-        onRenderSizeChanged = null;
-        onPivotChanged = null;
-        onRenderPositionChanged = null;
-        onRenderLayerChanged = null;
-
-        onComponentDestroyed();
     }
 
     /**
@@ -170,12 +159,6 @@ public abstract class Renderable extends MonoBehaviour {
      * @return JavaFX's rendering {@link Node}.
      */
     public abstract Node getNode();
-
-    /**
-     * Secondary deconstructing function followed after
-     * initial {@link #destroyComponent()}.
-     */
-    protected abstract void onComponentDestroyed();
 
     /**
      * Set the {@link #pivot} for this object.

@@ -48,7 +48,7 @@ public abstract class Obstacle extends MonoBehaviour {
     protected abstract void handleMovement();
 
     @Override
-    protected void destroyComponent() {
+    protected void onDestroy() {
         onObstacleDestroyed.invoke(this, null);
     }
 

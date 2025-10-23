@@ -219,9 +219,4 @@ public class Paddle extends MonoBehaviour {
     public void linkArrow(Arrow arrow) {
         this.arrow = arrow;
     }
-
-    @Override
-    protected void destroyComponent() {
-
-    }
 }

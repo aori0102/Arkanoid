@@ -81,8 +81,4 @@ public class ActionMap extends MonoBehaviour {
         this.playerInput = playerInput;
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
 }

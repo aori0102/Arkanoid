@@ -185,10 +185,6 @@ public class Transform extends MonoBehaviour {
         onScaleChanged.invoke(this, null);
     }
 
-    @Override
-    protected void destroyComponent() {
-    }
-
     /**
      * Get all child transforms of this Transform.
      *

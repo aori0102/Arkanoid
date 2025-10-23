@@ -97,8 +97,5 @@ public abstract class BaseButton extends MonoBehaviour {
         return buttonUI;
     }
 
-    @Override
-    protected void destroyComponent() {
-    }
 }
 

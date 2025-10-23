@@ -27,11 +27,6 @@ public class VoltraxisGroggyUI extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
-        fillRenderer = null;
-    }
-
-    @Override
     public void update() {
         ratio = MathUtils.lerp(ratio, targetRatio, Time.deltaTime * GROGGY_BAR_CHANGE_RATE);
         fillRenderer.setFillAmount(ratio);

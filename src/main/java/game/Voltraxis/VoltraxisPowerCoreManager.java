@@ -29,14 +29,6 @@ public class VoltraxisPowerCoreManager extends MonoBehaviour {
         super(owner);
     }
 
-    @Override
-    protected void destroyComponent() {
-        leftCore = null;
-        rightCore = null;
-        leftCoreEventActionID = null;
-        rightCoreEventActionID = null;
-    }
-
     /**
      * Spawn two power cores on either side of the board.
      */

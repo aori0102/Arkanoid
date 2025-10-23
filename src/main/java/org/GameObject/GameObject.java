@@ -343,6 +343,9 @@ public class GameObject {
      * <b><i><u>NOTE</u> : Only call within {@link GameObjectManager}.</i></b>
      */
     protected void markDestroyed() {
+        for (var mono : monoBehaviourSet) {
+            mono.onDestroy();
+        }
         isDestroyed = true;
     }
 
@@ -354,9 +357,6 @@ public class GameObject {
     protected void clearData() {
 
         // Clear components
-        for (var monoBehaviour : monoBehaviourSet) {
-            monoBehaviour.destroyComponent();
-        }
         monoBehaviourSet.clear();
         preStartMonoBehaviourQueue.clear();
         preAwakeMonoBehaviourQueue.clear();

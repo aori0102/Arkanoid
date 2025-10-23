@@ -66,6 +66,11 @@ public class PhysicsManager {
         // Process all non-trigger colliders
         for (var other : colliderSet) {
 
+            // Skip if processing a destroyed game object.
+            if (other.getGameObject().isDestroyed()) {
+                continue;
+            }
+
             // Skip if processing an inactive game object
             if (!other.getGameObject().isActive()) {
                 continue;
@@ -204,6 +209,11 @@ public class PhysicsManager {
         var layerMask = collider.getIncludeLayer();
 
         for (var other : colliderSet) {
+
+            // Skip if processing a destroyed object.
+            if (other.getGameObject().isDestroyed()) {
+                continue;
+            }
 
             // Skip if processing an inactive game object
             if (!other.getGameObject().isActive()) {

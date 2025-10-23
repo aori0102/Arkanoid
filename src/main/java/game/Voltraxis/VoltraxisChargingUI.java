@@ -25,11 +25,6 @@ public class VoltraxisChargingUI extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
-
-    }
-
-    @Override
     public void awake() {
         uiObject.setActive(false);
     }

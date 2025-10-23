@@ -16,8 +16,4 @@ public class PlayerPaddle extends MonoBehaviour {
         super(owner);
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
 }

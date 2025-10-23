@@ -41,8 +41,4 @@ public class Arrow extends MonoBehaviour {
         gameObject.setActive(false);
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
 }

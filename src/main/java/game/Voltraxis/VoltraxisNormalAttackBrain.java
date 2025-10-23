@@ -36,11 +36,6 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
-
-    }
-
-    @Override
     public void awake() {
         normalAttackCoroutineID = Time.addCoroutine(this::basicSkill, Time.time + voltraxis.getBasicSkillCooldown());
 

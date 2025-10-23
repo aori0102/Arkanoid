@@ -115,8 +115,4 @@ public class GameManager extends MonoBehaviour {
         loadLevel(currentLevel);
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
 }

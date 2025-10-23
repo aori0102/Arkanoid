@@ -44,11 +44,6 @@ public class PowerUp extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
-
-    }
-
-    @Override
     public void update() {
         handleDroppingMotion();
     }

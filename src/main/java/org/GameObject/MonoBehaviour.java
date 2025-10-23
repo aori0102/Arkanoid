@@ -31,11 +31,11 @@ public abstract class MonoBehaviour {
     }
 
     /**
-     * Wipe clean this MonoBehaviours data.<br><br>
-     * This function is called at the end of each frame when a
-     * game object is destroyed (after the entire frame cycle)
+     * Calls when a game object is to be destroyed, which means
+     * before any of the data is actually wiped.
      */
-    protected abstract void destroyComponent();
+    protected void onDestroy() {
+    }
 
     /**
      * Called first right after this object is instantiated

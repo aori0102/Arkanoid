@@ -69,7 +69,7 @@ public class Player extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
+    protected void onDestroy() {
         instance = null;
     }
 

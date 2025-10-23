@@ -91,11 +91,6 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
-        effectUILinkerList.clear();
-    }
-
-    @Override
     public void update() {
 
         var iterator = effectUILinkerList.listIterator();

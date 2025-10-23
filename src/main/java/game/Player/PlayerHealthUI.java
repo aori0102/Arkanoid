@@ -37,10 +37,6 @@ public final class PlayerHealthUI extends MonoBehaviour {
         fillRenderer.setFillAmount(ratio);
     }
 
-    @Override
-    protected void destroyComponent() {
-    }
-
     /**
      * Called when {@link Player#onLivesChanged} is invoked.<br><br>
      * This function updates the health UI as player lives change.

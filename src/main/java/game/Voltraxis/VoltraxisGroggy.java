@@ -40,11 +40,6 @@ public class VoltraxisGroggy extends MonoBehaviour {
         super(owner);
     }
 
-    @Override
-    protected void destroyComponent() {
-        voltraxisGroggyUI = null;
-    }
-
     /**
      * Listen to event {@link Voltraxis#onDamaged}.
      *

@@ -32,7 +32,8 @@ public class Voltraxis extends MonoBehaviour implements ITakeBallDamage {
     }
 
     @Override
-    protected void destroyComponent() {
+    protected void onDestroy() {
+        // TODO: look through the coroutine
         chargingCoroutineID = null;
     }
 

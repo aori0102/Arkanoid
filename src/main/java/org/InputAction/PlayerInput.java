@@ -80,8 +80,4 @@ public class PlayerInput extends MonoBehaviour {
         return null;
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
 }

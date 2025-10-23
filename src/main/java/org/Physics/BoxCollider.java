@@ -49,11 +49,8 @@ public class BoxCollider extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
+    protected void onDestroy() {
         PhysicsManager.UnregisterCollider(this);
-        localCenter = null;
-        localSize = null;
-        onCollisionEnter = null;
     }
 
     /**

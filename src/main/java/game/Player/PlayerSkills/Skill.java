@@ -36,7 +36,4 @@ public abstract class Skill extends MonoBehaviour {
         this.skillIndex = skillIndex;
     }
 
-    protected void destroyComponent() {
-
-    }
 }

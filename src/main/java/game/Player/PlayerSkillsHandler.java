@@ -67,9 +67,4 @@ public class PlayerSkillsHandler extends MonoBehaviour {
         this.actionMap = actionMap;
     }
 
-
-    @Override
-    protected void destroyComponent() {
-
-    }
 }

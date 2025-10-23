@@ -29,7 +29,7 @@ public class Brick extends MonoBehaviour implements ITakeBallDamage {
     }
 
     @Override
-    protected void destroyComponent() {
+    protected void onDestroy() {
         var onBrickDestroyedEventArgs = new OnBrickDestroyedEventArgs();
         onBrickDestroyedEventArgs.brickPosition = getTransform().getGlobalPosition();
         onBrickDestroyed.invoke(this, onBrickDestroyedEventArgs);

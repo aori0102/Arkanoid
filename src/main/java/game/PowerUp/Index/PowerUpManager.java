@@ -132,7 +132,7 @@ public class PowerUpManager extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
+    protected void onDestroy() {
 
     }
 
