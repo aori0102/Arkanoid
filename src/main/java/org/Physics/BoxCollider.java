@@ -7,23 +7,57 @@ import utils.Vector2;
 
 import java.util.function.Consumer;
 
+/**
+ * Class that allows physics collision to happen.
+ */
 public class BoxCollider extends MonoBehaviour {
 
-    private Vector2 localCenter;
-    private Vector2 localSize;
-    protected Consumer<CollisionData> onCollisionEnter;
-    protected Consumer<CollisionData> onTriggerEnter;
+    protected Consumer<CollisionData> onCollisionEnter = null;
+    protected Consumer<CollisionData> onTriggerEnter = null;
 
-    public boolean isTrigger;
-    private int includeLayer;
+    /**
+     * Read-only field. Can only be written to via {@link #setLocalCenter}.
+     */
+    private Vector2 _localCenter;
+
+    /**
+     * Set the center for the bounding box in local space.
+     *
+     * @param center The center in local space.
+     */
+    public void setLocalCenter(Vector2 center) {
+        this._localCenter = center;
+    }
+
+    /**
+     * Read-only field. Can only be written to via {@link #setLocalSize}.
+     */
+    private Vector2 _localSize;
+
+    /**
+     * Set the size for the bounding box in local space.
+     *
+     * @param size The size in local space.
+     */
+    public void setLocalSize(Vector2 size) {
+        this._localSize = size;
+    }
+
+    private boolean isTrigger = false;
+    private int includeLayer = Layer.EVERYTHING;
 
     public BoxCollider(GameObject owner) {
         super(owner);
-        localCenter = new Vector2(0.0, 0.0);
-        localSize = new Vector2(1.0, 1.0);
+        _localCenter = new Vector2(0.0, 0.0);
+        _localSize = new Vector2(1.0, 1.0);
         PhysicsManager.RegisterCollider(this);
         isTrigger = false;
         includeLayer = Layer.EVERYTHING;
+    }
+
+    @Override
+    protected void onDestroy() {
+        PhysicsManager.UnregisterCollider(this);
     }
 
     /**
@@ -35,6 +69,11 @@ public class BoxCollider extends MonoBehaviour {
         includeLayer = layerMask;
     }
 
+    /**
+     * Set the excluded layer mask from collision checks
+     *
+     * @param layerMask The layer mask to exclude from collision checks.
+     */
     public void setExcludeLayer(int layerMask) {
         includeLayer &= ~layerMask;
     }
@@ -48,18 +87,13 @@ public class BoxCollider extends MonoBehaviour {
         return includeLayer;
     }
 
-    @Override
-    protected void onDestroy() {
-        PhysicsManager.UnregisterCollider(this);
-    }
-
     /**
      * Get the center of the bounding box in local space.
      *
      * @return The center of the bounding box in local space
      */
     public Vector2 getLocalCenter() {
-        return new Vector2(localCenter);
+        return new Vector2(_localCenter);
     }
 
     /**
@@ -67,8 +101,8 @@ public class BoxCollider extends MonoBehaviour {
      *
      * @return The center of the bounding box in world space.
      */
-    public Vector2 getCenter() {
-        return getTransform().getGlobalPosition().add(localCenter);
+    public Vector2 getGlobalCenter() {
+        return getTransform().getGlobalPosition().add(_localCenter);
     }
 
     /**
@@ -77,7 +111,7 @@ public class BoxCollider extends MonoBehaviour {
      * @return The size of the bounding box in local space.
      */
     public Vector2 getLocalSize() {
-        return new Vector2(localSize);
+        return new Vector2(_localSize);
     }
 
     /**
@@ -85,26 +119,8 @@ public class BoxCollider extends MonoBehaviour {
      *
      * @return The size of the bounding box in world space.
      */
-    public Vector2 getSize() {
-        return localSize.scaleUp(getTransform().getGlobalScale());
-    }
-
-    /**
-     * Set the center for the bounding box in local space.
-     *
-     * @param center The center in local space.
-     */
-    public void setLocalCenter(Vector2 center) {
-        this.localCenter = center;
-    }
-
-    /**
-     * Set the size for the bounding box in local space.
-     *
-     * @param size The size in local space.
-     */
-    public void setLocalSize(Vector2 size) {
-        this.localSize = size;
+    public Vector2 getGlobalSize() {
+        return _localSize.scaleUp(getTransform().getGlobalScale());
     }
 
     /**
@@ -114,7 +130,7 @@ public class BoxCollider extends MonoBehaviour {
      * @return The min bound of the bounding box.
      */
     public Vector2 getMinBound() {
-        return getCenter().subtract(getExtents());
+        return getGlobalCenter().subtract(getExtents());
     }
 
     /**
@@ -124,7 +140,7 @@ public class BoxCollider extends MonoBehaviour {
      * @return The max bound of the bounding box.
      */
     public Vector2 getMaxBound() {
-        return getCenter().add(getExtents());
+        return getGlobalCenter().add(getExtents());
     }
 
     /**
@@ -134,7 +150,7 @@ public class BoxCollider extends MonoBehaviour {
      * @return The extents of the bounding box.
      */
     public Vector2 getExtents() {
-        return getSize().divide(2.0);
+        return getGlobalSize().divide(2.0);
     }
 
     /**
@@ -151,8 +167,26 @@ public class BoxCollider extends MonoBehaviour {
      *
      * @param onTriggerEnter The callback when trigger happens.
      */
-    public void setOnTriggerEnter(Consumer<CollisionData> onTriggerEnter) {
+    public void setOnTriggerEnterCallback(Consumer<CollisionData> onTriggerEnter) {
         this.onTriggerEnter = onTriggerEnter;
+    }
+
+    /**
+     * Get the trigger property of this box collider.
+     *
+     * @return The trigger property of this box collider.
+     */
+    public boolean isTrigger() {
+        return isTrigger;
+    }
+
+    /**
+     * Set the trigger property of this box collider.
+     *
+     * @param trigger The trigger property to set.
+     */
+    public void setTrigger(boolean trigger) {
+        isTrigger = trigger;
     }
 
 }

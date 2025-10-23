@@ -65,7 +65,7 @@ public class Paddle extends MonoBehaviour {
         boxCollider.setLocalSize(new Vector2(64, 16));
 
         //Assign line specs
-        boxCollider.setOnTriggerEnter(this::onTriggerEnter);
+        boxCollider.setOnTriggerEnterCallback(this::onTriggerEnter);
 
         ObstacleManager.getInstance().onPaddleCollidedWithObstacle.addListener((e, voi) -> {
             canStartStunnedCounter = true;

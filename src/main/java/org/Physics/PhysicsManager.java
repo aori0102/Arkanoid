@@ -54,7 +54,7 @@ public class PhysicsManager {
         result.thisCollider = collider;
 
         // Define collision movement attributes
-        var from = collider.getCenter();
+        var from = collider.getGlobalCenter();
         var to = from.add(movement);
         var extents = collider.getExtents();
         double collisionTime = Double.MAX_VALUE;
@@ -82,7 +82,7 @@ public class PhysicsManager {
             }
 
             // Skip if processing a trigger collider
-            if (other.isTrigger) {
+            if (other.isTrigger()) {
                 continue;
             }
 
@@ -175,7 +175,7 @@ public class PhysicsManager {
 
                 // Call collision on the second collider
                 var inverseResult = result.getInverseData();
-                inverseResult.contactPoint = hitCollider.getCenter();
+                inverseResult.contactPoint = hitCollider.getGlobalCenter();
 
                 if (hitCollider.onCollisionEnter != null) {
                     hitCollider.onCollisionEnter.accept(inverseResult);
@@ -202,7 +202,7 @@ public class PhysicsManager {
             return;
         }
 
-        Vector2 from = collider.getCenter();
+        Vector2 from = collider.getGlobalCenter();
         Vector2 to = from.add(movement);
         Vector2 extents = collider.getExtents();
         List<CollisionData> dataList = new ArrayList<>();
@@ -227,7 +227,7 @@ public class PhysicsManager {
 
             // Skip if processing a collider of the same trigger (trigger collision only occurs between a
             // trigger collider and a non-trigger collider)
-            if (other.isTrigger == collider.isTrigger) {
+            if (other.isTrigger() == collider.isTrigger()) {
                 continue;
             }
 

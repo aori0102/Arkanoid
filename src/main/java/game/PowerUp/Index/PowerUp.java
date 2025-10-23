@@ -30,8 +30,8 @@ public class PowerUp extends MonoBehaviour {
         super(owner);
         var boxCollider = addComponent(BoxCollider.class);
         boxCollider.setLocalSize(new Vector2(100.0, 100.0));
-        boxCollider.isTrigger = true;
-        boxCollider.setOnTriggerEnter(e -> {
+        boxCollider.setTrigger(true);
+        boxCollider.setOnTriggerEnterCallback(e -> {
             if (e.otherCollider.getComponent(Paddle.class) != null) {
                 isMoving = false;
             }
