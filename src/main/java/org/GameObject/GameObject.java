@@ -179,12 +179,13 @@ public class GameObject {
 
         while (!preAwakeMonoBehaviourQueue.isEmpty()) {
 
-            var mono = preAwakeMonoBehaviourQueue.poll();
-            mono.awake();
-            try {
-                validateObjectLife();
-            } catch (Exception e) {
+            if (isDestroyed) {
                 return;
+            }
+
+            var mono = preAwakeMonoBehaviourQueue.poll();
+            if (mono != null) {
+                mono.awake();
             }
             preStartMonoBehaviourQueue.offer(mono);
 
@@ -201,13 +202,13 @@ public class GameObject {
 
         while (!preStartMonoBehaviourQueue.isEmpty()) {
 
-            var mono = preStartMonoBehaviourQueue.poll();
-            mono.start();
-
-            try {
-                validateObjectLife();
-            } catch (Exception e) {
+            if (isDestroyed) {
                 return;
+            }
+
+            var mono = preStartMonoBehaviourQueue.poll();
+            if (mono != null) {
+                mono.start();
             }
 
         }
@@ -224,10 +225,7 @@ public class GameObject {
         for (var mono : monoBehaviourSet) {
 
             mono.update();
-
-            try {
-                validateObjectLife();
-            } catch (Exception e) {
+            if (isDestroyed) {
                 return;
             }
 
@@ -245,9 +243,7 @@ public class GameObject {
         for (var mono : monoBehaviourSet) {
 
             mono.lateUpdate();
-            try {
-                validateObjectLife();
-            } catch (Exception e) {
+            if (isDestroyed) {
                 return;
             }
 

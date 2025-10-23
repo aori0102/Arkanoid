@@ -164,12 +164,20 @@ public class Transform extends MonoBehaviour {
         if (collider != null) {
 
             var collisionData = PhysicsManager.validateMovement(collider, translation);
+            // Possible object removal
+            if (gameObject.isDestroyed()) {
+                return;
+            }
             if (collisionData.collided && !collider.isTrigger) {
                 destination = collisionData.contactPoint.subtract(collider.getLocalCenter());
             }
 
             var movement = destination.subtract(getGlobalPosition());
+            // Possible object removal
             PhysicsManager.handleTriggerCollision(collider, movement);
+            if (gameObject.isDestroyed()) {
+                return;
+            }
 
         }
 

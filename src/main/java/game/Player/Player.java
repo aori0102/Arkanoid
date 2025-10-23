@@ -1,15 +1,18 @@
 package game.Player;
 
 import game.PowerUp.Index.PowerUp;
-import game.GameObject.Paddle;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
+import org.InputAction.ActionMap;
+
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Central logic for player. Control {@link PowerUp}'s effects
- * and {@link Paddle} behaviour.
+ * and {@link PlayerPaddle} behaviour.
  */
 public class Player extends MonoBehaviour {
 
@@ -19,6 +22,7 @@ public class Player extends MonoBehaviour {
     private static Player instance = null;
 
     private PlayerPowerUpHandler playerPowerUpHandler = null;
+    private PlayerController playerController = null;
     private int lives = MAX_LIVES;
     private int attack = 10;
     private int health = MAX_HEALTH;
@@ -27,6 +31,7 @@ public class Player extends MonoBehaviour {
     public EventHandler<Void> onLivesChanged = new EventHandler<>(Player.class);
     public EventHandler<Void> onHealthReachZero = new EventHandler<>(Player.class);
     public EventHandler<Void> onLivesReachZero = new EventHandler<>(Player.class);
+    public EventHandler<HashSet<ActionMap.Action>> onPlayerInputEnter = new EventHandler<>(Player.class);
 
     /**
      * Create this MonoBehaviour.
@@ -43,16 +48,17 @@ public class Player extends MonoBehaviour {
         instance = this;
 
         playerPowerUpHandler = addComponent(PlayerPowerUpHandler.class);
+        playerController = addComponent(PlayerController.class);
 
     }
 
     /**
      * Link this player with a paddle. Player will be
-     * listening to paddle's {@link Paddle#onPowerUpConsumed}.
+     * listening to paddle's {@link PlayerPaddle#onPowerUpConsumed}.
      *
      * @param paddle The paddle to be linked.
      */
-    public void linkPaddle(Paddle paddle) {
+    public void linkPlayerPaddle(PlayerPaddle paddle) {
         paddle.onPowerUpConsumed.addListener(this::paddle_onPowerUpConsumed);
     }
 
@@ -60,7 +66,7 @@ public class Player extends MonoBehaviour {
      * Called when a power up triggers against this player's
      * registered paddle.
      *
-     * @param sender The caller, {@link Paddle}.
+     * @param sender The caller, {@link PlayerPaddle}.
      * @param e      The power up that was triggered.
      */
     private void paddle_onPowerUpConsumed(Object sender, PowerUp e) {
@@ -123,4 +129,7 @@ public class Player extends MonoBehaviour {
         return health;
     }
 
+    public PlayerController getPlayerController() {
+        return playerController;
+    }
 }

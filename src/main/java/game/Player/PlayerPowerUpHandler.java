@@ -47,7 +47,7 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
     }
 
     /**
-     * Upon called, the {@link game.GameObject.Paddle} modify its scale
+     * Upon called, the {@link PlayerPaddle} modify its scale
      * by the amount provided within the event argument.
      */
     public EventHandler<Double> onPaddleScaleChangeRequested = new EventHandler<>(PlayerPowerUpHandler.class);

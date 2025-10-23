@@ -1,7 +1,7 @@
 package game.Obstacle.Index;
 
 
-import game.GameObject.Paddle;
+import game.Player.PlayerPaddle;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
@@ -53,7 +53,7 @@ public class ObstacleManager extends MonoBehaviour {
     private static ObstacleManager instance;
 
     private double timeSinceLastSpawn = 0;
-    private Paddle paddle;
+    private PlayerPaddle paddle;
 
     private final HashSet<Obstacle> obstacleSet = new HashSet<>();
 
@@ -126,8 +126,8 @@ public class ObstacleManager extends MonoBehaviour {
         if (timeSinceLastSpawn < MIN_SPAWN_INTERVAL) return;
 
         // Trying to spawn
-        Vector2 pos = sampleSpawnPosition();
-        spawnAt(pos);
+        Vector2 position = sampleSpawnPosition();
+        spawnAt(position);
         timeSinceLastSpawn = 0;
     }
 
@@ -140,7 +140,7 @@ public class ObstacleManager extends MonoBehaviour {
         int tries = 10;
         for (int i = 0; i < tries; i++) {
             double x = 50 + Random.range(0.0, 1.0) * (1200 - 100);
-            double y = 1000;
+            double y = 0;
 
             Vector2 pos = new Vector2(x, y);
 
@@ -166,6 +166,7 @@ public class ObstacleManager extends MonoBehaviour {
         chosen.getTransform().setGlobalPosition(position);
         obstacleSet.add(chosen);
         chosen.onObstacleDestroyed.addListener(this::obstacle_onObstacleDestroyed);
+        chosen.onObstacleCollided.addListener(this::obstacle_onObstacleCollided);
     }
 
     /**
@@ -176,6 +177,16 @@ public class ObstacleManager extends MonoBehaviour {
         if (sender instanceof Obstacle obstacle) {
             obstacle.onObstacleDestroyed.removeAllListeners();
             obstacleSet.remove(obstacle);
+        }
+    }
+
+    /**
+     * Called when {@link Obstacle#onObstacleCollided} is invoked/<br><br>
+     * This function tells the paddle that it was hit.
+     */
+    private void obstacle_onObstacleCollided(Object sender, Void e) {
+        if (sender instanceof Obstacle obstacle) {
+            onPaddleCollidedWithObstacle.invoke(this, null);
         }
     }
 
@@ -219,7 +230,7 @@ public class ObstacleManager extends MonoBehaviour {
      *
      * @param chosenPaddle the set paddle
      */
-    public void setPaddle(Paddle chosenPaddle) {
+    public void setPaddle(PlayerPaddle chosenPaddle) {
         paddle = chosenPaddle;
     }
 

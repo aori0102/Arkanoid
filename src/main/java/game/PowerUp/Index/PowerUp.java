@@ -1,6 +1,6 @@
 package game.PowerUp.Index;
 
-import game.GameObject.Paddle;
+import game.Player.PlayerPaddle;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
@@ -32,7 +32,7 @@ public class PowerUp extends MonoBehaviour {
         boxCollider.setLocalSize(new Vector2(100.0, 100.0));
         boxCollider.isTrigger = true;
         boxCollider.setOnTriggerEnter(e -> {
-            if (e.otherCollider.getComponent(Paddle.class) != null) {
+            if (e.otherCollider.getComponent(PlayerPaddle.class) != null) {
                 isMoving = false;
             }
         });

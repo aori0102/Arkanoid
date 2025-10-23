@@ -1,6 +1,5 @@
 package game.Player;
 
-import game.GameObject.Paddle;
 import game.Player.PlayerSkills.LaserBeam;
 import game.Player.PlayerSkills.PlayerSkillsPrefab.LaserVisualPrefab;
 import org.GameObject.GameObject;
@@ -9,7 +8,8 @@ import org.InputAction.ActionMap;
 
 public class PlayerSkillsHandler extends MonoBehaviour {
 
-    private Paddle paddle;
+    // TODO : Finish this class
+    private PlayerPaddle paddle;
     private ActionMap actionMap;
 
 
@@ -55,7 +55,7 @@ public class PlayerSkillsHandler extends MonoBehaviour {
      * Link the paddle.
      * @param paddle .
      */
-    public void linkPaddle(Paddle paddle) {
+    public void linkPaddle(PlayerPaddle paddle) {
         this.paddle = paddle;
     }
 

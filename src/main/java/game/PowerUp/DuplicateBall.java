@@ -4,7 +4,7 @@ import game.GameObject.BallsManager;
 import game.PowerUp.Index.PowerUpIndex;
 import game.PowerUp.Index.PowerUpManager;
 import game.GameObject.Ball;
-import game.GameObject.Paddle;
+import game.Player.PlayerPaddle;
 import org.GameObject.GameObject;
 import utils.Vector2;
 
@@ -50,7 +50,7 @@ public class DuplicateBall extends MultipleBall {
             Vector2 direction = ball.getDirection().add(normalVector).normalize();
 
             var newBall = spawnBall(ball.getTransform());
-            newBall.setPaddle(paddle.getComponent(Paddle.class));
+            newBall.setPaddle(paddle.getComponent(PlayerPaddle.class));
             BallsManager.instance.addBall(newBall);
             newBall.setDirection(direction);
         }

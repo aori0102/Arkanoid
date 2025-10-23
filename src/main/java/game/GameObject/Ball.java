@@ -1,5 +1,6 @@
 package game.GameObject;
 
+import game.Player.PlayerPaddle;
 import game.PowerUp.StatusEffect;
 import game.Voltraxis.Interface.ITakeBallDamage;
 import org.GameObject.GameObject;
@@ -22,7 +23,7 @@ public class Ball extends MonoBehaviour {
     private static final Vector2 BOUNCE_OFFSET = new Vector2(0.2, 0.2);
 
     private Vector2 direction;
-    private Paddle paddle;
+    private PlayerPaddle paddle;
     private Vector2 offsetBallPosition;
     private StatusEffect currentStatusEffect = StatusEffect.None;
     private StatusEffect pendingEffect = StatusEffect.None;
@@ -121,7 +122,7 @@ public class Ball extends MonoBehaviour {
 
         // If the ball interacts with the moving paddle, the reflected direction will be different from the motionless paddle,
         // and it will be calculated by adding the moving vector to the reflected direction
-        if (isCollidedWith(collisionData, Paddle.class) && !paddle.movementVector.equals(Vector2.zero())) {
+        if (isCollidedWith(collisionData, PlayerPaddle.class) && !paddle.movementVector.equals(Vector2.zero())) {
             reflectDir = reflectDir.add(paddle.movementVector.normalize());
         }
 
@@ -153,7 +154,7 @@ public class Ball extends MonoBehaviour {
      *
      * @param paddle : invoked event's position.
      */
-    public void setPaddle(Paddle paddle) {
+    public void setPaddle(PlayerPaddle paddle) {
         this.paddle = paddle;
     }
 

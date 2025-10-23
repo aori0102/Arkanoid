@@ -74,9 +74,6 @@ public class EventHandler<T> {
                     listener.accept(sender, argument);
                 }
             }
-
-        } else {
-            System.out.println("There are no listeners to process!");
         }
 
     }

@@ -7,6 +7,7 @@ import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
+import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
 
@@ -31,7 +32,7 @@ public class Laser extends Obstacle implements ICanDamagePlayer {
         collider.setLocalSize(new Vector2(30, 90));
         collider.setIncludeLayer(Layer.Paddle.getUnderlyingValue());
 
-        collider.setOnCollisionEnterCallback(_ -> handleInteraction());
+        collider.setOnCollisionEnterCallback(this::handleInteraction);
 
     }
 
@@ -43,10 +44,7 @@ public class Laser extends Obstacle implements ICanDamagePlayer {
 
     @Override
     protected void handleMovement() {
-        getTransform().translate(Vector2.up().multiply(LASER_SPEED * Time.deltaTime));
-        if (getTransform().getGlobalPosition().x < 0) {
-            GameObjectManager.destroy(gameObject);
-        }
+        getTransform().translate(Vector2.down().multiply(LASER_SPEED * Time.deltaTime));
     }
 
     @Override

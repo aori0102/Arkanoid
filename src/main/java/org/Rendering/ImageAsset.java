@@ -70,6 +70,7 @@ public class ImageAsset {
 
         /// Bricks
         GreenBrick("/Brick/GreenBrick.png"),
+        PurpleBrick("/Brick/PurpleBrick.png"),
 
         None("");
 

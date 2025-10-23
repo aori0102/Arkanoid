@@ -1,10 +1,15 @@
 package game.Obstacle.Index;
 
-import game.GameObject.Ball;
+import game.GameObject.Border.Border;
+import game.GameObject.Border.BorderType;
+import game.Player.PlayerPaddle;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import org.Layer.Layer;
 import org.Physics.BoxCollider;
+import org.Physics.CollisionData;
 
 /**
  * Base class of call obstacles appearing in game.
@@ -34,15 +39,16 @@ public abstract class Obstacle extends MonoBehaviour {
     @Override
     public void awake() {
         collider = getComponent(BoxCollider.class);
-        collider.setOnCollisionEnterCallback(e -> {
-            if (e.otherCollider.getComponent(Ball.class) != null) {
-                handleInteraction();
-            }
-        });
+        collider.setIncludeLayer(Layer.Paddle.getUnderlyingValue());
+        collider.setOnCollisionEnterCallback(this::handleInteraction);
     }
 
-    protected void handleInteraction() {
+    protected void handleInteraction(CollisionData collisionData) {
         onObstacleCollided.invoke(this, null);
+        if (collisionData.otherCollider.getComponent(PlayerPaddle.class) != null
+            || collisionData.otherCollider.getComponent(Border.class).getBorderType() == BorderType.BorderBottom) {
+            GameObjectManager.destroy(gameObject);
+        }
     }
 
     protected abstract void handleMovement();

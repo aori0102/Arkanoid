@@ -4,7 +4,7 @@ import game.GameObject.BallsManager;
 import game.Player.PlayerPowerUpHandler;
 import game.PowerUp.Index.PowerUp;
 import game.GameObject.Ball;
-import game.GameObject.Paddle;
+import game.Player.PlayerPaddle;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.Transform;
@@ -19,7 +19,7 @@ import utils.Vector2;
 public abstract class MultipleBall extends PowerUp {
 
     protected PlayerPowerUpHandler playerPowerUpHandler;
-    protected Paddle paddle;
+    protected PlayerPaddle paddle;
 
     /**
      * Create this MonoBehaviour.
@@ -71,7 +71,7 @@ public abstract class MultipleBall extends PowerUp {
      *
      * @param paddle: the linked paddle
      */
-    public void linkPaddle(Paddle paddle) {
+    public void linkPaddle(PlayerPaddle paddle) {
         this.paddle = paddle;
     }
 

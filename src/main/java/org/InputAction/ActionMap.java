@@ -73,14 +73,6 @@ public class ActionMap extends MonoBehaviour {
         return currentAction.contains(action);
     }
 
-    /**
-     * Link player input.
-     * @param playerInput .
-     */
-    public void linkPlayerInput(PlayerInput playerInput) {
-        this.playerInput = playerInput;
-    }
-
     @Override
     protected void destroyComponent() {
 

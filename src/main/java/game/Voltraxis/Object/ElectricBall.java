@@ -1,6 +1,6 @@
 package game.Voltraxis.Object;
 
-import game.GameObject.Paddle;
+import game.Player.PlayerPaddle;
 import game.Obstacle.ICanDamagePlayer;
 import game.Player.Player;
 import org.Event.EventHandler;
@@ -24,7 +24,7 @@ public class ElectricBall extends MonoBehaviour implements ICanDamagePlayer {
     private int damage = 0;
 
     /**
-     * Fired when this electric ball hits the {@link Paddle}.
+     * Fired when this electric ball hits the {@link PlayerPaddle}.
      */
     public EventHandler<Void> onPaddleHit = new EventHandler<>(ElectricBall.class);
 
@@ -54,13 +54,13 @@ public class ElectricBall extends MonoBehaviour implements ICanDamagePlayer {
     }
 
     /**
-     * Handle collision with {@link Paddle} and deal damage
+     * Handle collision with {@link PlayerPaddle} and deal damage
      * to {@link game.Player.Player} accordingly.
      *
      * @param data The collision data.
      */
     private void onCollided(CollisionData data) {
-        var paddle = data.otherCollider.getComponent(Paddle.class);
+        var paddle = data.otherCollider.getComponent(PlayerPaddle.class);
         if (paddle != null) {
             onPaddleHit.invoke(this, null);
             GameObjectManager.destroy(gameObject);
