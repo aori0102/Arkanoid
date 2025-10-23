@@ -2,7 +2,10 @@ package org.GameObject;
 
 public abstract class MonoBehaviour {
 
-    protected transient GameObject gameObject = null;
+    /**
+     * The {@link GameObject} this component is attached to.
+     */
+    protected final GameObject gameObject;
 
     /**
      * Get the {@link Transform} for this game object.
@@ -23,56 +26,44 @@ public abstract class MonoBehaviour {
     }
 
     /**
-     * Wipe clean this MonoBehaviours data.
+     * Wipe clean this MonoBehaviours data.<br><br>
+     * This function is called at the end of each frame when a
+     * game object is destroyed (after the entire frame cycle)
      */
     protected abstract void destroyComponent();
 
     /**
-     * Called when an object is instantiated and is active.
+     * Called first right after this object is instantiated
+     * and is active.
      */
     public void awake() {
     }
 
     /**
-     * Called in the first frame of update.
+     * Called at the first frame of update.
      */
     public void start() {
     }
 
     /**
-     * Called every frame.
+     * Called every frame after {@link #start}.
      */
     public void update() {
     }
 
     /**
-     * Called late every frame after all Update().
+     * Called late every frame after {@link #update}.
      */
     public void lateUpdate() {
     }
 
     /**
-     * Get the game object this MonoBehaviour is attached to.
+     * Get the {@link GameObject} this {@link MonoBehaviour} is attached to.
      *
      * @return the game object this MonoBehaviour is attached to.
      */
     public GameObject getGameObject() {
         return gameObject;
-    }
-
-    /**
-     * Safely cast this MonoBehaviour to a specific type.
-     *
-     * @param type the type under MonoBehaviour.
-     * @param <T>  the type under MonoBehaviour.
-     * @return a valid class derive from MonoBehaviour, or {@code null} if error.
-     */
-    public <T extends MonoBehaviour> T as(Class<T> type) {
-        try {
-            return type.cast(this);
-        } catch (ClassCastException e) {
-            return null;
-        }
     }
 
     /**
