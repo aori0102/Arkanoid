@@ -1,139 +1,101 @@
 package game.BrickObj.BrickEvent;
 
-import java.util.HashSet;
-import java.util.Vector;
+import java.util.*;
 import static game.BrickObj.InitMatrix.*;
 
 public final class WaveEffect {
 
-    record Wave(Vector<IntPair> list) {}
-    record LayerWave(Wave layer3, Wave layer2, Wave layer1) {}
+    private static final int DESTROYED = -2;
+    private static final int EMPTY = -1;
 
-    private Vector<IntPair> listObjHitDamage;
-    private Vector<LayerWave> listOfLayer;
-    private Matrix matrixOfObj;
+    private final Matrix matrixOfObj;
+    private final List<IntPair> justDamaged = new ArrayList<>();
+
+    // mỗi wave giữ 3 tầng, mỗi tầng 1 danh sách các ô
+    private static final class WaveLayer {
+        final List<IntPair> layer1 = new ArrayList<>();
+        final List<IntPair> layer2 = new ArrayList<>();
+        final List<IntPair> layer3 = new ArrayList<>();
+    }
+
+    private final List<WaveLayer> activeWaves = new ArrayList<>();
 
     public WaveEffect() {
-        super();
-        matrixOfObj = new Matrix(rowData, colData, -1);
-        listObjHitDamage = new Vector<>();
-        listOfLayer = new Vector<>();
+        matrixOfObj = new Matrix(rowData, colData, EMPTY);
     }
 
     public Matrix getStateMatrix() {
         return matrixOfObj;
     }
 
-    /**
-     * This list contains all object which just hitted.
-     */
-    public void getListObjHitDamage() {
-        listObjHitDamage.clear();
-
+    public void collectJustDamaged() {
+        justDamaged.clear();
         for (int i = 0; i < rowData; i++) {
             for (int j = 0; j < colData; j++) {
                 if (matrixObj.isJustDamaged(i, j)) {
-                    listObjHitDamage.add(new IntPair(i, j));
+                    justDamaged.add(new IntPair(i, j));
                     matrixObj.resetJustDamaged(i, j);
                 }
             }
         }
     }
 
-    /**
-     * For each cell:
-     */
     public void runAllWave() {
-        Matrix stateMatrix = new Matrix(rowData, colData, -1);
+        final Matrix state = new Matrix(rowData, colData, EMPTY);
 
         for (int i = 0; i < rowData; i++) {
             for (int j = 0; j < colData; j++) {
                 if (matrixObj.isDestroyed(i, j)) {
-                    stateMatrix.set(i, j, -2);
+                    state.set(i, j, DESTROYED);
                 }
             }
         }
 
-        for (IntPair p : listObjHitDamage) {
-            Vector<IntPair> list = new Vector<>();
-            list.add(new IntPair(p.fi(), p.se()));
-            LayerWave newWave = new LayerWave(null, null, new Wave(list));
-            listOfLayer.add(newWave);
+        for (IntPair p : justDamaged) {
+            WaveLayer w = new WaveLayer();
+            w.layer3.add(p);
+            activeWaves.add(w);
         }
 
-        Vector<LayerWave> newListOfLayer = new Vector<>();
+        List<WaveLayer> nextWaves = new ArrayList<>();
 
-        for (int i = 0; i < listOfLayer.size(); i++) {
-            Wave fi = listOfLayer.get(i).layer1();
-            Wave se = listOfLayer.get(i).layer2();
-            Wave thir = listOfLayer.get(i).layer3();
+        for (WaveLayer wave : activeWaves) {
+            boolean[][] visited = new boolean[rowData][colData];
 
-            Wave newFi = new Wave(new Vector<>());
-            Wave newSe = new Wave(new Vector<>());
-            Wave newThir = new Wave(new Vector<>());
-
-            HashSet<IntPair> Mp = new HashSet<>();
-            if (se != null) {
-                for (IntPair p : se.list()) {
-                    Mp.add(new IntPair(p.fi(), p.se()));
-                }
-            }
-
-            if (fi != null) {
-                for (IntPair p : fi.list()) {
-                    for (int j = 0; j < 8; j++) {
-                        int x = p.fi() + fx[j];
-                        int y = p.se() + fy[j];
-
-                        if (stateMatrix.valid(x, y) && !Mp.contains(new IntPair(x, y))) {
-                            newFi.list().add(new IntPair(x, y));
-                        }
+            for (IntPair p : wave.layer1) {
+                for (int k = 0; k < 8; k++) {
+                    int x = p.fi() + fx[k];
+                    int y = p.se() + fy[k];
+                    if (state.valid(x, y) && !visited[x][y] && state.get(x, y) != DESTROYED) {
+                        visited[x][y] = true;
+                        wave.layer3.add(new IntPair(x, y));
                     }
                 }
             }
 
-            newSe = fi != null ? new Wave(new Vector<>(fi.list())) : new Wave(new Vector<>());
-            newThir = se != null ? new Wave(new Vector<>(se.list())) : new Wave(new Vector<>());
+            WaveLayer newWave = new WaveLayer();
+            newWave.layer1.addAll(wave.layer2);
+            newWave.layer2.addAll(wave.layer3);
 
-            if (!newFi.list().isEmpty() || !newSe.list().isEmpty() || !newThir.list().isEmpty()) {
-                newListOfLayer.add(new LayerWave(newThir, newSe, newFi));
-            }
+            if (!newWave.layer1.isEmpty() || !newWave.layer2.isEmpty())
+                nextWaves.add(newWave);
         }
 
-        listOfLayer = newListOfLayer;
+        activeWaves.clear();
+        activeWaves.addAll(nextWaves);
 
-        for (LayerWave wave : listOfLayer) {
-            if (wave.layer1() != null) {
-                for (IntPair p : wave.layer1().list()) {
-                    int x = p.fi();
-                    int y = p.se();
-                    if (stateMatrix.get(x, y) != -2) {
-                        stateMatrix.set(x, y, 1);
-                    }
-                }
-            }
-
-            if (wave.layer2() != null) {
-                for (IntPair p : wave.layer2().list()) {
-                    int x = p.fi();
-                    int y = p.se();
-                    if (stateMatrix.get(x, y) == -1 || stateMatrix.get(x, y) > 2) {
-                        stateMatrix.set(x, y, 2);
-                    }
-                }
-            }
-
-            if (wave.layer3() != null) {
-                for (IntPair p : wave.layer3().list()) {
-                    int x = p.fi();
-                    int y = p.se();
-                    if (stateMatrix.get(x, y) == -1) {
-                        stateMatrix.set(x, y, 3);
-                    }
-                }
-            }
+        for (WaveLayer wave : activeWaves) {
+            for (IntPair p : wave.layer1)
+                if (state.get(p.fi(), p.se()) != DESTROYED)
+                    state.set(p.fi(), p.se(), 1);
+            for (IntPair p : wave.layer2)
+                if (state.get(p.fi(), p.se()) > 2 || state.get(p.fi(), p.se()) == EMPTY)
+                    state.set(p.fi(), p.se(), 2);
+            for (IntPair p : wave.layer3)
+                if (state.get(p.fi(), p.se()) == EMPTY)
+                    state.set(p.fi(), p.se(), 3);
         }
 
-        matrixOfObj.assignFrom(stateMatrix);
+        matrixOfObj.assignFrom(state);
     }
 }

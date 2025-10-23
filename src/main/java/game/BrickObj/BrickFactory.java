@@ -9,10 +9,9 @@ import static game.BrickObj.InitMatrix.*;
 
 public class BrickFactory {
 
-    final int incHealthConst = 5;
-
     private final double difficult;
     private final MapStyle kindMap;
+    private int gameTime = 0;
 
     private EndEvent endEvent;
     private WaveEffect waveEffect;
@@ -33,27 +32,23 @@ public class BrickFactory {
 
       /*  GenMap gen = new GenMap(rowData, colData);
         matrixObj = gen.generate(kindMap, difficult);
+
 */
         endEvent = new EndEvent();
         waveEffect = new WaveEffect();
     }
 
-    public void handleCollision(IntPair brickPosition, int damage) {
-        int row = brickPosition.fi();
-        int col = brickPosition.se();
-
-        if (matrixObj.inBounds(row, col) && !matrixObj.isDestroyed(row, col)) {
-            matrixObj.hitDamage(row, col, damage);
-        }
-    }
 
     public void setupNewBrick(int x, int y, BrickType brickType) {
         matrixObj.set(x, y, getNewBrick(brickType));
     }
 
     public void runProgress() {
-        waveEffect.getListObjHitDamage();
-        waveEffect.runAllWave();
+        gameTime++;
+        if(gameTime % 100 == 0) {
+            waveEffect.collectJustDamaged();
+            waveEffect.runAllWave();
+        }
     }
 
     public boolean isGameFinished() {

@@ -30,18 +30,16 @@ public class BrickManager extends MonoBehaviour {
         }
         instance = this;
         brickFactory = new BrickFactory(10, 10, MapStyle.CAVES, 0.3);
-        brickFactory.setup();
     }
 
     public Brick instantiateBrick() {
 
         var brick = GameObjectManager.instantiate("Brick").addComponent(Brick.class);
-        var renderer = brick.addComponent(SpriteRenderer.class);
-        renderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
-        renderer.setPivot(new Vector2(0.5, 0.5));
-        renderer.setSize(BRICK_SIZE);
+        var brickRenderer = brick.addComponent(SpriteRenderer.class);
+        brickRenderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
+        brickRenderer.setSize(BRICK_SIZE);
+        brickRenderer.setPivot(new Vector2(0.5, 0.5));
         brick.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
-
         return brick;
 
     }

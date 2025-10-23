@@ -126,7 +126,7 @@ public class InitMatrix {
         }
     }
 
-    public static class BrickMatrix implements Cloneable {
+    public static class BrickMatrix {
         private int rows;
         private int columns;
         private Vector<Vector<Brick>> matrix;
@@ -139,7 +139,6 @@ public class InitMatrix {
             for (int r = 0; r < rows; r++) {
                 Vector<Brick> row = new Vector<>(columns);
                 for (int c = 0; c < columns; c++) {
-                    // TODO: fix brick instantiation here (removed game object copy) - Aori
                     var currentBrick = GameObjectManager.instantiate().addComponent(Brick.class);
                     currentBrick.onBrickCollision.addListener(this::onBrickCollision);
                     currentBrick.setRowId(r);
@@ -183,6 +182,7 @@ public class InitMatrix {
         }
 
         public void set(int r, int c, Brick value) {
+            matrix.get(r).set(c, null);
             GameObjectManager.destroy(matrix.get(r).get(c).getGameObject());
             value.setRowId(r);
             value.setColID(c);

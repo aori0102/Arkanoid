@@ -15,7 +15,7 @@ import utils.Vector2;
 public final class Brick extends MonoBehaviour {
 
     private int health;
-    private int rowID = 0, colID = 0;
+    private int rowID = -1, colID = -1;
 
     private int maxHealth;
     private boolean isNewDeath = false;
@@ -45,14 +45,12 @@ public final class Brick extends MonoBehaviour {
         var collider = addComponent(BoxCollider.class);
         collider.setLocalSize(new Vector2(width, height));
         collider.setOnCollisionEnterCallback(this::onCollisionEnter);
-
-
         owner.setLayer(Layer.Brick);
     }
 
     public void awake() {
         setType(BrickType.Normal);
-        System.out.printf("%3d %3d\n", colID, rowID);
+        System.out.printf("%3d %3d %3d\n", colID, rowID, health);
     }
 
     public void update() {
@@ -105,6 +103,10 @@ public final class Brick extends MonoBehaviour {
     }
 
     public void decreaseHealth(int decreaseAmount) {
+        if (this.health <= 0) {
+            return;
+        }
+
         this.health -= decreaseAmount;
 
         if (health <= 0) {
