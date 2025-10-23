@@ -1,27 +1,36 @@
 package org.GameObject;
 
 import org.Event.EventHandler;
+import org.Main;
 
 import java.util.*;
 
+/**
+ * Central brain for handling game object's creation, life cycle
+ * and removal.
+ */
 public class GameObjectManager {
 
     private static final LinkedHashSet<GameObject> gameObjectSet = new LinkedHashSet<>();
     private static final Queue<GameObject> addedGameObjectQueue = new LinkedList<>();
+    private static final Queue<GameObject> removedObjectQueue = new LinkedList<>();
+
     public static EventHandler<GameObject> onGameObjectInstantiated = new EventHandler<>(GameObjectManager.class);
     public static EventHandler<GameObject> onGameObjectDestroyed = new EventHandler<>(GameObjectManager.class);
 
     /**
-     * Run all update for the current frame in the
-     * order Awake - Start - Update - Late Update - Clean Up.
+     * Run the cycle for all {@link GameObject} for the current frame in the
+     * order Awake - Start - Update - Late Update - Clean Up.<br><br>
+     * <b><i><u>NOTE</u> : Only call within {@link Main}.</i></b>
      */
-    public static void runUpdate() {
+    public static void runCycle() {
 
         awake();
         start();
         update();
         lateUpdate();
-        cleanUp();
+        cleanUpDestroyed();
+        reboot();
 
     }
 
@@ -86,32 +95,36 @@ public class GameObjectManager {
     }
 
     /**
-     * Clean any destroyed object from scene.
+     * Clean up any destroyed object from scene.
      */
-    private static void cleanUp() {
+    private static void cleanUpDestroyed() {
 
-        Queue<GameObject> destroyedQueue = new LinkedList<>();
-        for (var object : gameObjectSet) {
-            if (object.isDestroyed()) {
-                destroyedQueue.offer(object);
-            } else {
-                object.processChildSet();
-            }
-        }
-
-        while (!destroyedQueue.isEmpty()) {
-
-            var destroyed = destroyedQueue.poll();
+        while (!removedObjectQueue.isEmpty()) {
+            var destroyed = removedObjectQueue.poll();
+            destroyed.clearData();
             onGameObjectDestroyed.invoke(null, destroyed);
             unregisterGameObject(destroyed);
-
         }
 
+    }
+
+    /**
+     * Reboot the frame by adding the queued game objects
+     * and query each object's children modification.
+     */
+    private static void reboot() {
+
+        // Added queried objects
         while (!addedGameObjectQueue.isEmpty()) {
 
             var added = addedGameObjectQueue.poll();
             registerGameObject(added);
 
+        }
+
+        // Process children for each object
+        for (var object : gameObjectSet) {
+            object.processChildSet();
         }
 
     }
@@ -149,7 +162,7 @@ public class GameObjectManager {
     }
 
     /**
-     * Create an empty game object.
+     * Create an empty game object with the specified name.
      *
      * @param name The name for the game object.
      * @return An empty game object.
@@ -171,7 +184,8 @@ public class GameObjectManager {
     public static void destroy(GameObject gameObject) {
 
         if (gameObjectSet.contains(gameObject)) {
-            gameObject.destroyObject();
+            gameObject.markDestroyed();
+            removedObjectQueue.offer(gameObject);
         }
 
     }
@@ -180,8 +194,9 @@ public class GameObjectManager {
      * Find the first GameObject with the given name.
      *
      * @param name The name of the GameObject to find.
-     * @return The GameObject, or null if not found.
+     * @return The GameObject, or {@code null} if not found.
      */
+    // TODO: should be removed, too many risks
     public static GameObject find(String name) {
         for (var obj : gameObjectSet) {
             if (obj.getName().equals(name)) {

@@ -26,6 +26,11 @@ public class GameObject {
     private final SceneKey registeredSceneKey;
 
     private boolean isActive = true;
+    /**
+     * This field should only be written to as {@code true} via
+     * {@link #markDestroyed()}. <b>DO NOT</b> write to this field
+     * anywhere else.
+     */
     private boolean isDestroyed = false;
     private String name = DEFAULT_NAME;
     private Layer layer = Layer.Default;
@@ -280,7 +285,9 @@ public class GameObject {
     }
 
     /**
-     * Process child addition and removal of current frame.
+     * Process child addition and removal of current frame.<br><br>
+     * <b><i><u>NOTE</u> : Should only be called within
+     * {@link GameObjectManager}.</i></b>
      */
     protected void processChildSet() {
         while (!childRemovalQueue.isEmpty()) {
@@ -332,32 +339,40 @@ public class GameObject {
     }
 
     /**
-     * Wipe clean this game object's data.
+     * Mark this game object as destroyed.<br><br>
+     * <b><i><u>NOTE</u> : Only call within {@link GameObjectManager}.</i></b>
      */
-    protected void destroyObject() {
+    protected void markDestroyed() {
+        isDestroyed = true;
+    }
 
-        validateObjectLife();
+    /**
+     * Wipe clean this game object's data, including its
+     * subscribed events, children, parent and components.<br><br>
+     * <b><i><u>NOTE</u> : Only call within {@link GameObjectManager}.</i></b>
+     */
+    protected void clearData() {
 
-        // TODO: take a closer look
-
+        // Clear components
         for (var monoBehaviour : monoBehaviourSet) {
             monoBehaviour.destroyComponent();
         }
-
         monoBehaviourSet.clear();
         preStartMonoBehaviourQueue.clear();
         preAwakeMonoBehaviourQueue.clear();
 
+        // Clear children
         for (var child : childSet) {
             GameObjectManager.destroy(child);
         }
         childSet = null;
 
+        // Remove from parent and unsubscribe from event
         if (parent != null) {
             parent.removeChild(this);
+            parent.onParentChanged.removeListener(parentOnParentChangedActionID);
+            parent.onObjectActivenessChanged.removeListener(parentOnActivenessChangedActionID);
         }
-
-        isDestroyed = true;
 
     }
 

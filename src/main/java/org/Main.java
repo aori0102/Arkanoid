@@ -53,7 +53,7 @@ public class Main extends Application {
      */
     private void update() {
         Time.update();
-        GameObjectManager.runUpdate();
+        GameObjectManager.runCycle();
     }
 
     /**
