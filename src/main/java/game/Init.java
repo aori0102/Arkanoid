@@ -17,6 +17,7 @@ import game.GameObject.Paddle;
 import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
 import game.UI.StartButton;
+import game.Voltraxis.VoltraxisPrefab;
 import org.InputAction.ActionMap;
 import org.InputAction.PlayerInput;
 import org.Physics.BoxCollider;
@@ -145,8 +146,6 @@ public class Init {
 
     public static void Init_Aori() {
 
-        //VoltraxisPrefab.instantiate();
-
         var borderLeft = GameObjectManager.instantiate("Border_Left");
         borderLeft.getTransform().setLocalPosition(new Vector2(5.0, 0));
         borderLeft.addComponent(BoxCollider.class).setLocalSize(new Vector2(1.0, 20000.0));
@@ -183,9 +182,11 @@ public class Init {
     }
 
     public static void initGame() {
-        GameObjectManager.instantiate("BrickMapManager").addComponent(BrickMapManager.class);
-        BrickMapManager.getInstance().generateMap();
-        PlayerPrefab.instantiate();
+//        GameObjectManager.instantiate("BrickMapManager").addComponent(BrickMapManager.class);
+//        BrickMapManager.getInstance().generateMap();
+//        PlayerPrefab.instantiate();
+
+        VoltraxisPrefab.instantiate();
     }
 
     public static void initRecord() {

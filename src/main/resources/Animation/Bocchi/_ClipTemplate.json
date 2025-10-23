@@ -3,5 +3,13 @@
   "frameList": [
 
   ],
+  "renderSize": {
+    "x": 0,
+    "y": 0
+  },
+  "pivot": {
+    "x": 0,
+    "y": 0
+  },
   "loop": true
 }
