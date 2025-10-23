@@ -22,11 +22,36 @@ public class Transform extends MonoBehaviour {
     public EventHandler<Void> onScaleChanged = new EventHandler<>(Transform.class);
 
     /**
-     * Read-only field. Can
+     * Read-only field. Can only be written to within {@link #setLocalPosition}.
      */
     private Vector2 _localPosition = Vector2.zero();
 
+    /**
+     * Set the local position for this object.
+     */
+    public void setLocalPosition(Vector2 localPosition) {
+        if (gameObject.isDestroyed()) {
+            return;
+        }
+        this._localPosition = new Vector2(localPosition);
+        onPositionChanged.invoke(this, null);
+    }
+
+    /**
+     * Read-only field. Can only be written to within {@link #setLocalScale}.
+     */
     private Vector2 _localScale = Vector2.one();
+
+    /**
+     * Set the local scale for this object.
+     */
+    public void setLocalScale(Vector2 localScale) {
+        if (gameObject.isDestroyed()) {
+            return;
+        }
+        this._localScale = new Vector2(localScale);
+        onScaleChanged.invoke(this, null);
+    }
 
     /**
      * Create this MonoBehaviour.
@@ -146,28 +171,6 @@ public class Transform extends MonoBehaviour {
     }
 
     /**
-     * Set the local position for this object.
-     */
-    public void setLocalPosition(Vector2 localPosition) {
-        if (gameObject.isDestroyed()) {
-            return;
-        }
-        this._localPosition = new Vector2(localPosition);
-        onPositionChanged.invoke(this, null);
-    }
-
-    /**
-     * Set the local scale for this object.
-     */
-    public void setLocalScale(Vector2 localScale) {
-        if (gameObject.isDestroyed()) {
-            return;
-        }
-        this._localScale = new Vector2(localScale);
-        onScaleChanged.invoke(this, null);
-    }
-
-    /**
      * Translate this transform by {@code translation}.
      *
      * @param translation The translation (movement).
@@ -183,7 +186,7 @@ public class Transform extends MonoBehaviour {
         if (collider != null) {
 
             var collisionData = PhysicsManager.validateMovement(collider, translation);
-            if (collisionData.collided && !collider.isTrigger) {
+            if (collisionData.collided && !collider.isTrigger()) {
                 destination = collisionData.contactPoint.subtract(collider.getLocalCenter());
             }
 
