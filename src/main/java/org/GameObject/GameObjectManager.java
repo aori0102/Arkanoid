@@ -95,7 +95,7 @@ public class GameObjectManager {
             if (object.isDestroyed()) {
                 destroyedQueue.offer(object);
             } else {
-                object.cleanUp();
+                object.processChildSet();
             }
         }
 

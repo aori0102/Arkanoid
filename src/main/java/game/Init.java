@@ -182,11 +182,11 @@ public class Init {
     }
 
     public static void initGame() {
-//        GameObjectManager.instantiate("BrickMapManager").addComponent(BrickMapManager.class);
-//        BrickMapManager.getInstance().generateMap();
-//        PlayerPrefab.instantiate();
+        GameObjectManager.instantiate("BrickMapManager").addComponent(BrickMapManager.class);
+        BrickMapManager.getInstance().generateMap();
+        PlayerPrefab.instantiate();
 
-        VoltraxisPrefab.instantiate();
+//        VoltraxisPrefab.instantiate();
     }
 
     public static void initRecord() {
