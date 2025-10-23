@@ -1,5 +1,10 @@
 package org.GameObject;
 
+/**
+ * Base class of every game component. Each component is
+ * derived through this class and is responsible for defining
+ * a {@link GameObject}'s attribute.
+ */
 public abstract class MonoBehaviour {
 
     /**
