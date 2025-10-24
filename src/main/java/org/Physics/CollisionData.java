@@ -14,11 +14,6 @@ public class CollisionData {
     public BoxCollider otherCollider = null;
 
     /**
-     * Whether a collision happens.
-     */
-    public boolean collided = false;
-
-    /**
      * The position of {@code thisCollider} when it hits
      * {@code otherCollider}.
      */
@@ -40,7 +35,6 @@ public class CollisionData {
         flipped.otherCollider = thisCollider;
         flipped.contactPoint = contactPoint;
         flipped.hitNormal = hitNormal.inverse();
-        flipped.collided = collided;
         return flipped;
     }
 

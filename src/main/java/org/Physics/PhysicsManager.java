@@ -6,52 +6,63 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * Central logic class to handle basic physical collision.<br><br>
+ * This manager uses linear interpolation instead of AABB to perform
+ * collision checks.
+ */
 public class PhysicsManager {
-
-    // TODO: take a closer look
 
     private static final HashSet<BoxCollider> colliderSet = new HashSet<>();
 
     /**
      * Register a collider.<br><br>
-     * <b>Should only be called within a {@link BoxCollider}'s constructor.</b>
+     * <b><i><u>NOTE</u> : Should only be called within a
+     * {@link BoxCollider}'s constructor.</i></b>
      *
      * @param collider The collider to unregister.
      */
-    protected static void RegisterCollider(BoxCollider collider) {
+    protected static void registerCollider(BoxCollider collider) {
         colliderSet.add(collider);
     }
 
     /**
-     * Register a collider. Should only be called
-     * within a {@link BoxCollider}'s destructor.
+     * Unregister a collider.<br><br>
+     * <b><i><u>NOTE</u> : Should only be called within
+     * {@link BoxCollider#onDestroy}.</i></b>
      *
      * @param collider The collider to unregister.
      */
-    protected static void UnregisterCollider(BoxCollider collider) {
+    protected static void unregisterCollider(BoxCollider collider) {
         colliderSet.remove(collider);
     }
 
     /**
-     * Get the collision data for collider {@code collider}
-     * after movement by a vector {@code movement}.
-     * Should only be called from {@code Transform.translate()}.
+     * Validate an object's movement.
+     * <p>
+     * This function checks for physical contacts between the queried {@code collider} with
+     * other objects with {@link BoxCollider}. This function only checks for physical contacts,
+     * so any {@link BoxCollider} with {@code isTrigger} enabled will be ignored.
+     * </p>
+     * <p>
+     * <b><i><u>NOTE</u> : Should only be called within {@link org.GameObject.Transform#translate}.</i></b>
+     * </p>
      *
-     * @param collider The collider to check.
-     * @param movement The movement of the collider.
-     * @return The collision data for the collider.
+     * @param collider The {@link BoxCollider} with movement to process, this collider should
+     *                 be non-trigger ({@code isTrigger = false}).
+     * @param movement The movement of {@code collider}.
+     * @return A {@link CollisionData} object, which holds the information of the collision
+     * of the queried {@link BoxCollider}, or {@code null} if there is no collision. See
+     * {@link CollisionData} for more info about collision parameters.
      */
-    public static CollisionData validateMovement(BoxCollider collider, Vector2 movement) {
+    public static CollisionData handlePhysicsCollision(BoxCollider collider, Vector2 movement) {
 
-        var result = new CollisionData();
+        CollisionData result = null;
 
         // Only proceed if collider is valid
         if (collider == null || collider.getGameObject().isDestroyed()) {
             return result;
         }
-
-        // Set this collider
-        result.thisCollider = collider;
 
         // Define collision movement attributes
         var from = collider.getGlobalCenter();
@@ -66,6 +77,11 @@ public class PhysicsManager {
         // Process all non-trigger colliders
         for (var other : colliderSet) {
 
+            // Skip if processing the same collider
+            if (other == collider) {
+                continue;
+            }
+
             // Skip if processing a destroyed game object.
             if (other.getGameObject().isDestroyed()) {
                 continue;
@@ -76,22 +92,17 @@ public class PhysicsManager {
                 continue;
             }
 
-            // Skip if processing the same collider
-            if (other == collider) {
-                continue;
-            }
-
             // Skip if processing a trigger collider
             if (other.isTrigger()) {
                 continue;
             }
 
-            // Skip if processing a non-valid layer
+            // Skip if the other collider's layer is not included within the collider's constraint
             if ((other.getGameObject().getLayerMask() & layerMask) == 0) {
                 continue;
             }
 
-            // Skip if the other collider cannot collide with this object's layer
+            // Skip if this collider's layer is not included within the other collider's constraint
             if ((other.getIncludeLayer() & collider.getGameObject().getLayerMask()) == 0) {
                 continue;
             }
@@ -161,8 +172,9 @@ public class PhysicsManager {
         // Finalize collision data if a collision happens
         if (collided && !hitCollider.getGameObject().isDestroyed()) {
 
-            // Call collision on the first collider
-            result.collided = true;
+            // Call collision callback on the first collider
+            result = new CollisionData();
+            result.thisCollider = hitCollider;
             result.otherCollider = hitCollider;
             result.contactPoint = from.add(movement.multiply(collisionTime));
             result.hitNormal = hitNormal;
@@ -171,9 +183,11 @@ public class PhysicsManager {
                 collider.onCollisionEnter.accept(result);
             }
 
+            // The previous callback is out of PhysicsManager's control, which mean
+            // within this callback, either one or both objects could be destroyed.
             if (!hitCollider.getGameObject().isDestroyed() && !collider.getGameObject().isDestroyed()) {
 
-                // Call collision on the second collider
+                // Call collision callback on the second collider
                 var inverseResult = result.getInverseData();
                 inverseResult.contactPoint = hitCollider.getGlobalCenter();
 
@@ -190,18 +204,30 @@ public class PhysicsManager {
     }
 
     /**
-     * Handle all trigger collision for through {@code collider}'s movement.
+     * <h>
+     * Validate an object's movement.
+     * </h>
+     * <p>
+     * This function checks for trigger contact between the queried {@code collider} with
+     * other objects with {@link BoxCollider}. This function only checks for trigger contacts,
+     * so any {@link BoxCollider} with {@code isTrigger} disabled will be ignored.
+     * </p>
+     * <p>
+     * <b><i><u>NOTE</u> : Should only be called within {@link org.GameObject.Transform#translate}.</i></b>
+     * </p>
      *
-     * @param collider The collider to check, this must be a non-trigger collider.
+     * @param collider The {@link BoxCollider} with movement to process, this collider should
+     *                 be trigger ({@code isTrigger = true}).
      * @param movement The movement of {@code collider}.
      */
     public static void handleTriggerCollision(BoxCollider collider, Vector2 movement) {
 
         // Only proceed if this collider is valid
-        if (collider == null) {
+        if (collider == null || collider.getGameObject().isDestroyed()) {
             return;
         }
 
+        // Define variables
         Vector2 from = collider.getGlobalCenter();
         Vector2 to = from.add(movement);
         Vector2 extents = collider.getExtents();
@@ -209,6 +235,11 @@ public class PhysicsManager {
         var layerMask = collider.getIncludeLayer();
 
         for (var other : colliderSet) {
+
+            // Skip if processing the same collider
+            if (other == collider) {
+                continue;
+            }
 
             // Skip if processing a destroyed object.
             if (other.getGameObject().isDestroyed()) {
@@ -220,23 +251,18 @@ public class PhysicsManager {
                 continue;
             }
 
-            // Skip if processing the same collider
-            if (other == collider) {
-                continue;
-            }
-
             // Skip if processing a collider of the same trigger (trigger collision only occurs between a
-            // trigger collider and a non-trigger collider)
+            // trigger collider and a non-trigger collider, cannot occur when there are two trigger colliers)
             if (other.isTrigger() == collider.isTrigger()) {
                 continue;
             }
 
-            // Skip if processing a game object with invalid layer
+            // Skip if the other collider's layer is not included within this collider's constraint
             if ((other.getGameObject().getLayerMask() & layerMask) == 0) {
                 continue;
             }
 
-            // Skip if the other collider cannot collide with this object's layer
+            // Skip if this collider's layer is not included within the other collider's constraint
             if ((other.getIncludeLayer() & collider.getGameObject().getLayerMask()) == 0) {
                 continue;
             }
@@ -249,7 +275,6 @@ public class PhysicsManager {
             var collisionData = new CollisionData();
             collisionData.thisCollider = collider;
             collisionData.otherCollider = other;
-            collisionData.collided = true;
             collisionData.contactPoint = from;
 
             // Check left surface (max x)
@@ -325,14 +350,16 @@ public class PhysicsManager {
     }
 
     /**
-     * Check possible collision on one side of the bounding box. This check
-     * follows after calculating the collider's path and determine whether
-     * a collision would happen with the side with normal {@code normal} of
-     * the other collider. For example, checking possible collision between
-     * collider {@code A} with collider {@code B} on the left side of {@code B}.
-     * The surface {@code normal} will be {@code Vector2.left()}, which is {@code (-1, 0)}
-     * and is along the {@code X}-axis. That means you have to pass in {@code from}, {@code to},
-     * {@code extents}, {@code min} and {@code max} value along to {@code Y}-axis
+     * Check possible collision on one side of the bounding box.
+     * <p>
+     * This check follows after calculating the collider's path to determine whether a
+     * collision would happen with the side with {@code normal} of the other
+     * collider. For example, checking possible collision between collider {@code A}
+     * with collider {@code B} on the left side of {@code B}. The surface {@code normal}
+     * will be {@link Vector2#left()}, which is {@code (-1, 0)} and is along the
+     * {@code X}-axis. That means you have to pass in {@code from}, {@code to}, {@code extents},
+     * {@code min} and {@code max} value along to {@code Y}-axis
+     * </p>
      *
      * @param movement              The movement of this collider.
      * @param normal                The normal of the surface to check.
@@ -352,10 +379,14 @@ public class PhysicsManager {
      * @return {@code true} if there is a collision, otherwise {@code false}.
      */
     private static boolean checkSide(
-            Vector2 movement, Vector2 normal,
+            Vector2 movement,
+            Vector2 normal,
             double expectedCollisionTime,
-            double from, double to,
-            double extents, double min, double max) {
+            double from,
+            double to,
+            double extents,
+            double min,
+            double max) {
 
         return canCollide(movement, normal) &&
                 isArrivalValid(expectedCollisionTime) &&
@@ -364,50 +395,67 @@ public class PhysicsManager {
     }
 
     /**
-     * Check if a range overlap a certain ({@code min}, {@code max}).
+     * Check if the range from {@code point} extended by {@code extents}
+     * overlaps the range {@code [min, max]}.
      *
      * @param point   The point to check.
-     * @param extents The interval to both side from center {@code point}.
-     * @param min     The range min point.
-     * @param max     The range max point.
-     * @return {@code true} if the checking range is within ({@code min}, {@code max}),
+     * @param extents The extension from {@code point} to either side.
+     * @param min     The referenced range minimum point.
+     * @param max     The referenced range maximum point.
+     * @return {@code true} if the checking range overlaps {@code [min, max]},
+     * otherwise {@code false}.
      */
     private static boolean isOverlap(double point, double extents, double min, double max) {
         return min <= point + extents && point - extents <= max;
     }
 
     /**
-     * Get the point going from {@code start} to {@code end}
-     * by time {@code time}.
+     * Get the point going from {@code start} to {@code end} by {@code time}.
+     * <p>
+     * This function uses linear interpolation math to calculate. {@code time = 0}
+     * is the starting point, {@code time = 1} is the ending point.
+     * {@code 0 < time < 1} means the point within the segment, and either
+     * {@code time < 0} or {@code time > 1} means the point outside the segment.
+     * </p>
      *
-     * @param start The start point.
-     * @param end   The end point.
-     * @param time  The time to check.
-     * @return The point at time {@code time}.
+     * @param start The starting point.
+     * @param end   The ending point.
+     * @param time  The interpolation time to check, with any points within
+     *              segment from {@code start} to {@code end} sees {@code time}
+     *              within {@code [0, 1]}.
+     * @return The point at {@code time}.
      */
     private static double getArrivalPoint(double start, double end, double time) {
         return (1.0 - time) * start + time * end;
     }
 
     /**
-     * Get the time to reach {@code point} from {@code start}
-     * to {@code end}. With {@code start} being 0 and {@code end}
-     * being 1.
+     * Get the time to reach {@code point} from {@code start} to {@code end}.
+     * <p>
+     * This function uses linear interpolation math to calculate. {@code time = 0}
+     * is the starting point, {@code time = 1} is the ending point.
+     * {@code 0 < time < 1} means the point within the segment, and either
+     * {@code time < 0} or {@code time > 1} means the point outside the segment.
+     * </p>
      *
-     * @param start The start point.
-     * @param end   The end point.
-     * @param point The check point.
-     * @return The time upon reaching {@code point}.
+     * @param start The starting point.
+     * @param end   The ending point.
+     * @param point The checking point.
+     * @return The time upon reaching {@code point} from {@code start} to {@code end}.
      */
     private static double getArrivalTime(double start, double end, double point) {
         return (point - start) / (end - start);
     }
 
     /**
-     * Check if the interpolation time {@code arrivalTime} is valid
-     * (within 0 and 1)
+     * Check if the interpolation time {@code arrivalTime} is valid.
+     * <p>
+     * A valid interpolation time within this context is within {@code [0, 1]}.
+     * Any time lies beyond this range is considered invalid, which means not
+     * happening in the current frame.
+     * </p>
      *
-     * @param arrivalTime The interpolation time.
+     * @param arrivalTime The interpolation time to check.
      * @return {@code true} if is a valid interpolation time, {@code false} otherwise.
      */
     private static boolean isArrivalValid(double arrivalTime) {
@@ -415,8 +463,13 @@ public class PhysicsManager {
     }
 
     /**
-     * Check if {@code movement} can lead to a collision against surface
-     * with normal {@code normal} based on the direction.
+     * Broad check if {@code movement} can lead to a collision against a surface
+     * with {@code normal} based on the direction.
+     * <p>
+     * The idea is that {@code movement}'s direction must face the surface in order to
+     * lead to a potential collision. This means that {@code movement} and the surface's
+     * {@code normal} has to be in opposite direction, or their dot product is negative.
+     * </p>
      *
      * @param movement The movement to check.
      * @param normal   The normal of the surface to check.

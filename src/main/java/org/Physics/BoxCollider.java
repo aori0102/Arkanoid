@@ -50,14 +50,14 @@ public class BoxCollider extends MonoBehaviour {
         super(owner);
         _localCenter = new Vector2(0.0, 0.0);
         _localSize = new Vector2(1.0, 1.0);
-        PhysicsManager.RegisterCollider(this);
+        PhysicsManager.registerCollider(this);
         isTrigger = false;
         includeLayer = Layer.EVERYTHING;
     }
 
     @Override
     protected void onDestroy() {
-        PhysicsManager.UnregisterCollider(this);
+        PhysicsManager.unregisterCollider(this);
     }
 
     /**

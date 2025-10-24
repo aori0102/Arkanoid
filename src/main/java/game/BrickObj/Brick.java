@@ -59,7 +59,7 @@ public final class Brick extends MonoBehaviour {
     }
 
     private void onCollisionEnter(CollisionData data) {
-        if (data.collided && data.otherCollider.getComponent(Ball.class) != null) {
+        if (data.otherCollider.getComponent(Ball.class) != null) {
             onBrickCollision.invoke(this, null);
         }
     }

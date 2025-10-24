@@ -185,8 +185,8 @@ public class Transform extends MonoBehaviour {
         var collider = getComponent(BoxCollider.class);
         if (collider != null) {
 
-            var collisionData = PhysicsManager.validateMovement(collider, translation);
-            if (collisionData.collided && !collider.isTrigger()) {
+            var collisionData = PhysicsManager.handlePhysicsCollision(collider, translation);
+            if (collisionData != null && !collider.isTrigger()) {
                 destination = collisionData.contactPoint.subtract(collider.getLocalCenter());
             }
 
