@@ -1,6 +1,6 @@
 package game.Voltraxis.Object;
 
-import game.Voltraxis.Interface.ITakeBallDamage;
+import game.Voltraxis.Interface.ITakePlayerDamage;
 import game.Voltraxis.Voltraxis;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -12,7 +12,7 @@ import utils.Vector2;
 /**
  * Voltraxis' power core.
  */
-public class PowerCore extends MonoBehaviour implements ITakeBallDamage {
+public class PowerCore extends MonoBehaviour implements ITakePlayerDamage {
 
     private static final double MAX_CORE_FLUCTUATION_DISTANCE = 3.2;
     private static final double CORE_FLUCTUATION_RATE = 0.49;

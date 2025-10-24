@@ -13,8 +13,6 @@ import java.util.HashSet;
  */
 public class PlayerController extends MonoBehaviour {
 
-    public EventHandler<ActionMap.Action> onSkillsInputRequested = new  EventHandler<ActionMap.Action>(PlayerController.class);
-
     /**
      * Create this MonoBehaviour.
      *
@@ -26,34 +24,12 @@ public class PlayerController extends MonoBehaviour {
         addComponent(ActionMap.class);
     }
 
-    public void update() {
-        handleOnSkillInputRequest();
-    }
-
     public PlayerInput getPlayerInput() {
         return getComponent(PlayerInput.class);
     }
 
     public ActionMap getActionMap() {
         return getComponent(ActionMap.class);
-    }
-
-    /**
-     * Get all the current action input from user.
-     * @return the currentActions set
-     */
-    public HashSet<ActionMap.Action> getActionsList() {
-        return getComponent(ActionMap.class).currentAction;
-    }
-
-    public void handleOnSkillInputRequest() {
-        for (ActionMap.Action action : getActionsList()) {
-            if (action == ActionMap.Action.Skill1
-            || action == ActionMap.Action.Skill2
-            || action == ActionMap.Action.Skill3) {
-                onSkillsInputRequested.invoke(this, action);
-            }
-        }
     }
 
     @Override

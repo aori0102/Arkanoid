@@ -9,9 +9,19 @@ import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 
+import java.util.HashMap;
+
 public class PlayerSkillsHandler extends MonoBehaviour {
 
-    private int count = 0;
+    private static final int MAX_SKILL_CHARGE = 3;
+
+    private HashMap<Class<? extends Skill>, Integer> skillChargeMap = new HashMap<>() {
+        {
+            put(LaserBeam.class, 3);
+        }
+    };
+
+    private PlayerPaddle playerPaddle;
 
     /**
      * Create this MonoBehaviour.
@@ -23,20 +33,34 @@ public class PlayerSkillsHandler extends MonoBehaviour {
     }
 
     public void awake() {
-        Player.getInstance().getPlayerController().
-                onSkillsInputRequested.addListener(this::handleSkillRequest);
+       Player.getInstance().getPlayerController().getActionMap().
+               onKeyPressed.addListener(this::handleSkillRequest);
+
     }
 
     private void handleSkillRequest(Object o,ActionMap.Action action) {
         switch (action) {
-            case Skill1 -> {
-                spawnSkill(LaserBeam.class);
-            }
+            case Skill1 -> spawnSkill(LaserBeam.class);
         }
     }
 
     private void spawnSkill(Class<? extends Skill> skillClass) {
-        SkillPrefabGenerator.skillPrefabSet.get(skillClass).skillGenerator();
+        if (skillChargeMap.containsKey(skillClass)
+            && skillChargeMap.get(skillClass) <= MAX_SKILL_CHARGE
+            && skillChargeMap.get(skillClass) > 0) {
+            SkillPrefabGenerator.skillPrefabSet.get(skillClass).skillGenerator(playerPaddle);
+            skillChargeMap.put(skillClass, skillChargeMap.getOrDefault(skillClass, 0) - 1);
+        }
+    }
+
+    /**
+     * <br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link PlayerSkillsHandler }
+     * as part of component linking process.</i></b>
+     * @param playerPaddle .
+     */
+    public void linkPlayerPaddle(PlayerPaddle playerPaddle) {
+        this.playerPaddle = playerPaddle;
     }
 
     @Override

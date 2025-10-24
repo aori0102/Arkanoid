@@ -1,6 +1,6 @@
 package game.Voltraxis;
 
-import game.Voltraxis.Interface.ITakeBallDamage;
+import game.Voltraxis.Interface.ITakePlayerDamage;
 import game.Voltraxis.Object.PowerCore;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -11,7 +11,7 @@ import utils.Time;
  * Main class of the Voltraxis boss. Handle central logic
  * (damage, health, status...) and skills.
  */
-public class Voltraxis extends MonoBehaviour implements ITakeBallDamage {
+public class Voltraxis extends MonoBehaviour implements ITakePlayerDamage {
 
     public EventHandler<Void> onHealthChanged = new EventHandler<>(Voltraxis.class);
     public EventHandler<Void> onDamaged = new EventHandler<>(Voltraxis.class);

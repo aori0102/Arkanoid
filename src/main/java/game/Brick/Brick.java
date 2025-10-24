@@ -1,13 +1,14 @@
 package game.Brick;
 
-import game.Voltraxis.Interface.ITakeBallDamage;
+import game.Voltraxis.Interface.ITakePlayerDamage;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import org.Layer.Layer;
 import utils.Vector2;
 
-public class Brick extends MonoBehaviour implements ITakeBallDamage {
+public class Brick extends MonoBehaviour implements ITakePlayerDamage {
 
     private int health = 0;
     private BrickType brickType = BrickType.Normal;
@@ -26,6 +27,7 @@ public class Brick extends MonoBehaviour implements ITakeBallDamage {
     public Brick(GameObject owner) {
         super(owner);
         setBrickType(BrickType.Normal);
+        owner.setLayer(Layer.Brick);
     }
 
     @Override

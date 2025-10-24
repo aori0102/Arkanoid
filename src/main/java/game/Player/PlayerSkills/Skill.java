@@ -5,14 +5,11 @@ import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Rendering.SpriteRenderer;
+import utils.Vector2;
 
 public abstract class Skill extends MonoBehaviour {
 
-    protected final static int MAX_SKILL_CHARGES = 3;
-
     protected SkillIndex skillIndex = SkillIndex.None;
-
-    protected int currentSkillCharges;
 
     /**
      * Create this MonoBehaviour.
@@ -22,10 +19,8 @@ public abstract class Skill extends MonoBehaviour {
     public Skill(GameObject owner) {
         super(owner);
         owner.setLayer(Layer.Skill);
-
-        addComponent(BoxCollider.class).setExcludeLayer(Layer.Ball.getUnderlyingValue());
-        getComponent(BoxCollider.class).setExcludeLayer(Layer.Paddle.getUnderlyingValue());
-        addComponent(SpriteRenderer.class).setImage(skillIndex.getImageIndex().getImage());
+        addComponent(BoxCollider.class);
+        addComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
 
     }
 
@@ -35,12 +30,9 @@ public abstract class Skill extends MonoBehaviour {
 
     public abstract void assignColliderInfo();
 
-    public int getCurrentSkillCharges() {
-        return currentSkillCharges;
-    }
-
     protected void setSkillIndex(SkillIndex skillIndex) {
         this.skillIndex = skillIndex;
+        getComponent(SpriteRenderer.class).setImage(skillIndex.getImageIndex().getImage());
     }
 
     protected void destroyComponent() {

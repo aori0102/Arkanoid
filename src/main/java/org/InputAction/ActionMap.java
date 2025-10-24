@@ -27,7 +27,6 @@ public class ActionMap extends MonoBehaviour {
     private PlayerInput playerInput;
     private final HashMap<KeyCode, Action> keyActionMap = new HashMap<>();
     private final HashMap<MouseButton, Action> mouseActionMap = new HashMap<>();
-    public HashSet<Action> currentAction =new HashSet<>();
 
     private final HashSet<KeyCode> currentKey = new HashSet<>();
     private final HashSet<KeyCode> previousKey = new HashSet<>();
@@ -71,7 +70,10 @@ public class ActionMap extends MonoBehaviour {
      * Adjust the current action state.
      */
     public void update() {
-        currentAction.clear();
+        handlePlayerInput();
+    }
+
+    public void handlePlayerInput() {
         currentKey.clear();
         currentMouseButton.clear();
 
@@ -124,10 +126,6 @@ public class ActionMap extends MonoBehaviour {
 
         previousMouseButton.clear();
         previousMouseButton.addAll(currentMouseButton);
-    }
-
-    public boolean isActionPresented(Action action) {
-        return currentAction.contains(action);
     }
 
     @Override

@@ -1,9 +1,12 @@
 package game.Player.PlayerSkills;
 
 import game.Brick.Brick;
-import game.Voltraxis.Interface.ITakeBallDamage;
+import game.GameObject.Border.Border;
+import game.GameObject.Border.BorderType;
+import game.Voltraxis.Interface.ITakePlayerDamage;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
 import utils.Time;
@@ -13,6 +16,7 @@ public class LaserBeam extends Skill{
 
     private static final double LASER_SPEED = 1000;
     private static final int LASER_DAMAGE = 36;
+    private final Layer[] colliderLayers = {Layer.Boss, Layer.Brick};
 
     /**
      * Create this MonoBehaviour.
@@ -25,6 +29,7 @@ public class LaserBeam extends Skill{
 
     public void awake() {
         setSkillIndex(SkillIndex.LaserBeam);
+        assignColliderInfo();
     }
 
     public void update() {
@@ -36,26 +41,30 @@ public class LaserBeam extends Skill{
     }
 
     public void handleCollision(CollisionData collisionData) {
-        var boss = collisionData.otherCollider.getComponent(ITakeBallDamage.class);
-        if (boss != null) {
-            boss.takeDamage(LASER_DAMAGE);
+
+        var target = collisionData.otherCollider.getComponent(ITakePlayerDamage.class);
+        if (target != null) {
+            target.takeDamage(LASER_DAMAGE);
             GameObjectManager.destroy(gameObject);
+            return;
         }
-        var brick = collisionData.otherCollider.getComponent(Brick.class);
-        if (brick != null) {
-            brick.takeDamage(LASER_DAMAGE);
+
+        var border = collisionData.otherCollider.getComponent(Border.class);
+        if (border != null && border.getBorderType() == BorderType.BorderTop) {
+            GameObjectManager.destroy(gameObject);
+            return;
         }
     }
 
     @Override
     public void assignColliderInfo() {
         var collider = getComponent(BoxCollider.class);
+        System.out.println(Layer.combineLayerMask(colliderLayers));
+        collider.setIncludeLayer(Layer.combineLayerMask(colliderLayers));
         collider.setLocalCenter(new Vector2(0, 0));
         collider.setLocalSize(new Vector2(32, 256));
 
-        collider.setOnCollisionEnterCallback(e -> {
-            handleCollision(e);
-        });
+        collider.setOnCollisionEnterCallback(this::handleCollision);
     }
 
 

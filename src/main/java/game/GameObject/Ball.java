@@ -2,7 +2,7 @@ package game.GameObject;
 
 import game.Player.PlayerPaddle;
 import game.PowerUp.StatusEffect;
-import game.Voltraxis.Interface.ITakeBallDamage;
+import game.Voltraxis.Interface.ITakePlayerDamage;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
@@ -87,7 +87,7 @@ public class Ball extends MonoBehaviour {
     }
 
     private void handleCollision(CollisionData collisionData) {
-        var target = collisionData.otherCollider.getComponent(ITakeBallDamage.class);
+        var target = collisionData.otherCollider.getComponent(ITakePlayerDamage.class);
         if (target != null) {
             target.takeDamage(BALL_DAMAGE);
         }

@@ -29,6 +29,8 @@ public class Player extends MonoBehaviour {
     private int attack = 10;
     private int health = MAX_HEALTH;
 
+    private PlayerPaddle playerPaddle;
+
     public EventHandler<Void> onHealthChanged = new EventHandler<>(Player.class);
     public EventHandler<Void> onLivesChanged = new EventHandler<>(Player.class);
     public EventHandler<Void> onHealthReachZero = new EventHandler<>(Player.class);
@@ -62,7 +64,9 @@ public class Player extends MonoBehaviour {
      * @param paddle The paddle to be linked.
      */
     public void linkPlayerPaddle(PlayerPaddle paddle) {
-        paddle.onPowerUpConsumed.addListener(this::paddle_onPowerUpConsumed);
+        this.playerPaddle = paddle;
+        playerPaddle.onPowerUpConsumed.addListener(this::paddle_onPowerUpConsumed);
+        playerSkillsHandler.linkPlayerPaddle(paddle.getComponent(PlayerPaddle.class));
     }
 
     /**
@@ -139,4 +143,5 @@ public class Player extends MonoBehaviour {
     public PlayerSkillsHandler getPlayerSkillsHandler() {
         return playerSkillsHandler;
     }
+
 }

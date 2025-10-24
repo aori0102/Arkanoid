@@ -18,6 +18,7 @@ import game.Player.PlayerPaddle;
 import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
 import game.UI.StartButton;
+import game.Voltraxis.VoltraxisPrefab;
 import org.InputAction.ActionMap;
 import org.InputAction.PlayerInput;
 import org.Physics.BoxCollider;
