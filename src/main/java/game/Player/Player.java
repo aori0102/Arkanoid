@@ -23,6 +23,8 @@ public class Player extends MonoBehaviour {
 
     private PlayerPowerUpHandler playerPowerUpHandler = null;
     private PlayerController playerController = null;
+    private PlayerSkillsHandler playerSkillsHandler = null;
+
     private int lives = MAX_LIVES;
     private int attack = 10;
     private int health = MAX_HEALTH;
@@ -49,6 +51,7 @@ public class Player extends MonoBehaviour {
 
         playerPowerUpHandler = addComponent(PlayerPowerUpHandler.class);
         playerController = addComponent(PlayerController.class);
+        playerSkillsHandler = addComponent(PlayerSkillsHandler.class);
 
     }
 
@@ -131,5 +134,9 @@ public class Player extends MonoBehaviour {
 
     public PlayerController getPlayerController() {
         return playerController;
+    }
+
+    public PlayerSkillsHandler getPlayerSkillsHandler() {
+        return playerSkillsHandler;
     }
 }

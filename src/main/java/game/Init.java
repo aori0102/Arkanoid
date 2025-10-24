@@ -122,13 +122,13 @@ public class Init {
 //
 //
 //
-        var perkManager = GameObjectManager.instantiate("PerkManager");
-        perkManager.addComponent(PerkManager.class);
-        PerkManager.getInstance().instantiatePerks();
+ //        var perkManager = GameObjectManager.instantiate("PerkManager");
+ //       perkManager.addComponent(PerkManager.class);
+//        PerkManager.getInstance().instantiatePerks();
 
-        var button = GameObjectManager.instantiate("Button")
-                .addComponent(StartButton.class);
-        button.getTransform().setGlobalPosition(new Vector2(400.0, 400.0));
+//        var button = GameObjectManager.instantiate("Button")
+//                .addComponent(StartButton.class);
+//        button.getTransform().setGlobalPosition(new Vector2(400.0, 400.0));
 
 
 //        var renderer = GameObjectManager.instantiate("SpriteRenderer").addComponent(SpriteRenderer.class);

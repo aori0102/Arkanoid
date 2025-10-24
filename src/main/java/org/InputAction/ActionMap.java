@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 
@@ -24,9 +25,23 @@ public class ActionMap extends MonoBehaviour {
     }
 
     private PlayerInput playerInput;
-    private HashMap<KeyCode, Action> keyActionMap = new HashMap<>();
-    private HashMap<MouseButton, Action> mouseActionMap = new HashMap<>();
+    private final HashMap<KeyCode, Action> keyActionMap = new HashMap<>();
+    private final HashMap<MouseButton, Action> mouseActionMap = new HashMap<>();
     public HashSet<Action> currentAction =new HashSet<>();
+
+    private final HashSet<KeyCode> currentKey = new HashSet<>();
+    private final HashSet<KeyCode> previousKey = new HashSet<>();
+
+    private final HashSet<MouseButton> previousMouseButton = new HashSet<>();
+    private final HashSet<MouseButton> currentMouseButton = new HashSet<>();
+
+    public EventHandler<Action> onKeyPressed = new EventHandler<>(ActionMap.class);
+    public EventHandler<Action> onKeyHeld = new EventHandler<>(ActionMap.class);
+    public EventHandler<Action> onKeyReleased = new EventHandler<>(ActionMap.class);
+
+    public EventHandler<Action> onMouseHeld = new EventHandler<>(ActionMap.class);
+    public EventHandler<Action> onMouseReleased = new EventHandler<>(ActionMap.class);
+    public EventHandler<Action> onMouseClicked = new EventHandler<>(ActionMap.class);
 
     public ActionMap(GameObject owner) {
         super(owner);
@@ -57,16 +72,58 @@ public class ActionMap extends MonoBehaviour {
      */
     public void update() {
         currentAction.clear();
+        currentKey.clear();
+        currentMouseButton.clear();
+
         for (KeyCode keyCode : keyActionMap.keySet()) {
             if (playerInput.isKeyPressed(keyCode)) {
-                currentAction.add(keyActionMap.get(keyCode));
+                currentKey.add(keyCode);
             }
         }
+
         for (MouseButton mouseButton : mouseActionMap.keySet()) {
             if (playerInput.isMousePressed(mouseButton)) {
-                currentAction.add(mouseActionMap.get(mouseButton));
+                currentMouseButton.add(mouseButton);
             }
         }
+
+        HashSet<KeyCode> allKey = new HashSet<>(currentKey);
+        allKey.addAll(previousKey);
+        for (KeyCode keyCode : allKey) {
+            Action action = keyActionMap.get(keyCode);
+            boolean wasPressed = previousKey.contains(keyCode);
+            boolean isPressed = currentKey.contains(keyCode);
+
+            if (!wasPressed && isPressed) {
+                onKeyPressed.invoke(this, action);
+            } else if (wasPressed && isPressed) {
+                onKeyHeld.invoke(this, action);
+            } else {
+                onKeyReleased.invoke(this, action);
+            }
+        }
+
+        HashSet<MouseButton> allMouseButton = new HashSet<>(currentMouseButton);
+        allMouseButton.addAll(previousMouseButton);
+        for  (MouseButton mouseButton : allMouseButton) {
+            Action action = mouseActionMap.get(mouseButton);
+            boolean wasPressed = previousMouseButton.contains(mouseButton);
+            boolean isPressed = currentMouseButton.contains(mouseButton);
+
+            if (!wasPressed && isPressed) {
+                onMouseClicked.invoke(this, action);
+            } else if (wasPressed && isPressed) {
+                onMouseHeld.invoke(this, action);
+            } else {
+                onMouseReleased.invoke(this, action);
+            }
+        }
+
+        previousKey.clear();
+        previousKey.addAll(currentKey);
+
+        previousMouseButton.clear();
+        previousMouseButton.addAll(currentMouseButton);
     }
 
     public boolean isActionPresented(Action action) {

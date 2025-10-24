@@ -8,7 +8,6 @@ import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
-import org.InputAction.PlayerInput;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
@@ -68,41 +67,26 @@ public class PlayerPaddle extends MonoBehaviour {
             canStartStunnedCounter = true;
         });
 
+        Player.getInstance().getPlayerController().getActionMap().
+                onKeyHeld.addListener(this::handlePaddleMovement);
+        Player.getInstance().getPlayerController().getActionMap().
+                onMouseHeld.addListener(this::handleRayDirection);
+        Player.getInstance().getPlayerController().getActionMap().
+                onMouseReleased.addListener(this::handleRayReleased);
     }
 
     public void update() {
-        handleMovement();
         handleCollisionWithObstacles();
     }
 
-
-    /**
-     * Handle the movement of the paddle.
-     * Using Action defined in Action map to decide move direction.
-     */
-    public void handleMovement() {
-        if (!isMoving) return;
+    private void handlePaddleMovement(Object e, ActionMap.Action action) {
 
         movementVector = new Vector2(0, 0);
 
-        for (ActionMap.Action action : Player.getInstance().getPlayerController().getActions()) {
-            switch (action) {
-                case GoLeft -> movementVector = movementVector.add(new Vector2(-1, 0));
-                case GoRight -> movementVector = movementVector.add(new Vector2(1, 0));
-                case MousePressed -> HandleRayDirection();
-                default -> {}
-            }
-        }
-
-        if (Player.getInstance().getPlayerController().getActions().isEmpty()) {
-            arrow.turnOff();
-
-            if (Player.getInstance().getPlayerController().getPlayerInput().isMouseReleased) {
-                if (isDirectionValid(fireDirection) && canInvoke) {
-                    onMouseReleased.invoke(this, fireDirection);
-                    Player.getInstance().getPlayerController().getPlayerInput().isMouseReleased = false;
-                }
-            }
+        switch (action) {
+            case GoLeft -> movementVector = movementVector.add(new Vector2(-1, 0));
+            case GoRight -> movementVector = movementVector.add(new Vector2(1, 0));
+            default -> {}
         }
 
         if (!movementVector.equals(Vector2.zero())) {
@@ -113,11 +97,18 @@ public class PlayerPaddle extends MonoBehaviour {
         getTransform().translate(movementVector);
     }
 
+    private void handleRayReleased(Object e, ActionMap.Action action) {
+        arrow.turnOff();
+        if (isDirectionValid(fireDirection) && canInvoke) {
+            onMouseReleased.invoke(this, fireDirection);
+            Player.getInstance().getPlayerController().getPlayerInput().isMouseReleased = false;
+        }
+    }
 
     /**
      * Handle the direction ray.
      */
-    private void HandleRayDirection() {
+    private void handleRayDirection(Object e, ActionMap.Action action) {
         if (isFired) {
             return;
         }
@@ -149,7 +140,6 @@ public class PlayerPaddle extends MonoBehaviour {
                 double angle = Math.toDegrees(Vector2.angle(fireDirection.normalize(), DIRECTION_VECTOR));
                 arrow.handleArrowDirection(angle);
             }
-
         }
     }
 

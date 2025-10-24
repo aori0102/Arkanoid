@@ -8,7 +8,11 @@ import org.Rendering.SpriteRenderer;
 
 public abstract class Skill extends MonoBehaviour {
 
+    protected final static int MAX_SKILL_CHARGES = 3;
+
     protected SkillIndex skillIndex = SkillIndex.None;
+
+    protected int currentSkillCharges;
 
     /**
      * Create this MonoBehaviour.
@@ -21,7 +25,6 @@ public abstract class Skill extends MonoBehaviour {
 
         addComponent(BoxCollider.class).setExcludeLayer(Layer.Ball.getUnderlyingValue());
         getComponent(BoxCollider.class).setExcludeLayer(Layer.Paddle.getUnderlyingValue());
-
         addComponent(SpriteRenderer.class).setImage(skillIndex.getImageIndex().getImage());
 
     }
@@ -31,6 +34,10 @@ public abstract class Skill extends MonoBehaviour {
     }
 
     public abstract void assignColliderInfo();
+
+    public int getCurrentSkillCharges() {
+        return currentSkillCharges;
+    }
 
     protected void setSkillIndex(SkillIndex skillIndex) {
         this.skillIndex = skillIndex;
