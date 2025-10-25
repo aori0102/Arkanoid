@@ -81,6 +81,7 @@ public class ElectricBall extends MonoBehaviour implements ICanDamagePlayer {
 
     @Override
     public void damagePlayer() {
-        Player.getInstance().damage(damage);
+        Player.getInstance().getPlayerHealth().damage(damage);
     }
+
 }

@@ -453,7 +453,7 @@ public class GameObject {
             } catch (InstantiationException e) {
                 throw new RuntimeException("InstantiationException: " + e.getMessage());
             } catch (InvocationTargetException e) {
-                throw new RuntimeException("InvocationTargetException: " + e.getMessage());
+                throw new RuntimeException("InvocationTargetException: " + e.getTargetException());
             } catch (ExceptionInInitializerError e) {
                 throw new RuntimeException("ExceptionInInitializerError: " + e.getMessage());
             } catch (SecurityException e) {

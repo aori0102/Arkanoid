@@ -39,18 +39,26 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
     public void awake() {
         normalAttackCoroutineID = Time.addCoroutine(this::basicSkill, Time.time + voltraxis.getBasicSkillCooldown());
 
-        voltraxis.getVoltraxisCharging().onChargingPhaseChanged
-                .addListener(this::voltraxisCharging_onChargingPhaseChanged);
+        voltraxis.getVoltraxisCharging().onChargingEntered
+                .addListener(this::voltraxisCharging_onChargingEntered);
+        voltraxis.getVoltraxisCharging().onChargingTerminated
+                .addListener(this::voltraxisCharging_onChargingTerminated);
     }
 
     /**
-     * Called when {@link VoltraxisCharging#onChargingPhaseChanged} is invoked.<br><br>
-     * This function disable or enable normal attack based on the charging phase.
+     * Called when {@link VoltraxisCharging#onChargingTerminated} is invoked.<br><br>
+     * This function re-enable normal attack function of Voltraxis after its EX.
      */
-    private void voltraxisCharging_onChargingPhaseChanged(Object sender, VoltraxisCharging.ChargingPhase e) {
-        if (e == VoltraxisCharging.ChargingPhase.None) {
-            normalAttackCoroutineID = Time.addCoroutine(this::basicSkill, Time.time + voltraxis.getBasicSkillCooldown());
-        } else if (normalAttackCoroutineID != null) {
+    private void voltraxisCharging_onChargingTerminated(Object sender, Void e) {
+        normalAttackCoroutineID = Time.addCoroutine(this::basicSkill, Time.time + voltraxis.getBasicSkillCooldown());
+    }
+
+    /**
+     * Called when {@link VoltraxisCharging#onChargingEntered} is invoked.<br><br>
+     * This function disable normal attack function of Voltraxis when entering its charging phase.
+     */
+    private void voltraxisCharging_onChargingEntered(Object sender, Void e) {
+        if (normalAttackCoroutineID != null) {
             Time.removeCoroutine(normalAttackCoroutineID);
             normalAttackCoroutineID = null;
         }

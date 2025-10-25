@@ -2,10 +2,9 @@ package game;
 
 import game.GameObject.BallsManager;
 import game.MapGenerator.BrickMapManager;
-import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
 import game.PowerUp.BlizzardBall;
-import game.Player.PlayerPrefab;
+import game.Player.Prefab.PlayerPrefabManager;
 import game.Perks.Index.PerkManager;
 import game.PowerUp.FireBall;
 import game.PowerUp.Index.PowerUpManager;
@@ -17,7 +16,6 @@ import game.GameObject.Paddle;
 import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
 import game.UI.StartButton;
-import game.Voltraxis.VoltraxisPrefab;
 import org.InputAction.ActionMap;
 import org.InputAction.PlayerInput;
 import org.Physics.BoxCollider;
@@ -100,10 +98,6 @@ public class Init {
         PowerUpManager.instance.addPowerUp(fireBall.getComponent(FireBall.class));
         PowerUpManager.instance.addPowerUp(blizzardBall.getComponent(BlizzardBall.class));
 
-
-        var player = GameObjectManager.instantiate("player");
-        player.addComponent(Player.class);
-
         PowerUpManager.instance.linkPlayerPowerUp(Player.getInstance().getComponent(PlayerPowerUpHandler.class));
         duplicateBall.getComponent(DuplicateBall.class).linkPlayerPowerUp(Player.getInstance().getComponent(PlayerPowerUpHandler.class));
         duplicateBall.getComponent(DuplicateBall.class).linkPaddle(paddle.getComponent(Paddle.class));
@@ -184,7 +178,7 @@ public class Init {
     public static void initGame() {
         GameObjectManager.instantiate("BrickMapManager").addComponent(BrickMapManager.class);
         BrickMapManager.getInstance().generateMap();
-        PlayerPrefab.instantiate();
+        PlayerPrefabManager.instantiatePlayer();
 
 //        VoltraxisPrefab.instantiate();
     }

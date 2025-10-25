@@ -1,16 +1,22 @@
-package game.Player;
+package game.Player.Prefab;
 
+import game.Player.PlayerHealthUI;
+import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.RenderLayer;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
-public final class PlayerPrefab {
+/**
+ * Prefab of the player's health bar UI. Attached with {@link PlayerHealthUI}
+ * with multiple UI elements as children.
+ */
+public class PlayerHealthBarPrefab implements IPlayerPrefab {
 
     private static final Vector2 HEALTH_BAR_POSITION = new Vector2(600.0, 750.0);
     private static final Vector2 HEALTH_BAR_SIZE = new Vector2(246.0, 16.0);
-    private static final Vector2 LIFE_BAR_SIZE = new Vector2(76.0, 3.0);
+    public static final Vector2 LIFE_BAR_SIZE = new Vector2(76.0, 3.0);
     /**
      * Offset between lives bar and health bar.
      */
@@ -20,16 +26,8 @@ public final class PlayerPrefab {
      */
     private static final Vector2 LIFE_RENDERER_OFFSET = new Vector2(79.0, 0.0);
 
-    public static void instantiate() {
-
-        var playerObject = GameObjectManager.instantiate("Player");
-        var healthBar = instantiateHealthBar();
-
-        healthBar.getGameObject().setParent(playerObject);
-
-    }
-
-    private static PlayerHealthUI instantiateHealthBar() {
+    @Override
+    public GameObject instantiatePrefab() {
 
         var centerPivot = new Vector2(0.5, 0.5);
         var healthBar = GameObjectManager.instantiate("HealthBarUI")
@@ -102,7 +100,7 @@ public final class PlayerPrefab {
         healthBar.linkFillRenderer(fillRenderer);
         healthBar.linkLivesRenderers(leftLifeRenderer, centerLifeRenderer, rightLifeRenderer);
 
-        return healthBar;
+        return healthBar.getGameObject();
 
     }
 
