@@ -3,6 +3,7 @@ package game.BrickObj;
 import game.BrickObj.BrickEvent.CollisionEvent;
 import org.GameObject.GameObjectManager;
 import utils.Vector2;
+import game.BrickObj.BrickManager.*;
 
 import java.util.Vector;
 
@@ -182,7 +183,6 @@ public class InitMatrix {
         }
 
         public void set(int r, int c, Brick value) {
-            matrix.get(r).set(c, null);
             GameObjectManager.destroy(matrix.get(r).get(c).getGameObject());
             value.setRowId(r);
             value.setColID(c);
@@ -208,7 +208,7 @@ public class InitMatrix {
             for (int r = 0; r < rows; r++) {
                 Vector<Brick> row = new Vector<>(columns);
                 for (int c = 0; c < columns; c++) {
-                    row.add(other.matrix.get(r).get(c)); // shallow phần tử
+                    row.add(other.matrix.get(r).get(c));
                 }
                 newMat.add(row);
             }

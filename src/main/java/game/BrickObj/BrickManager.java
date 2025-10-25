@@ -1,6 +1,8 @@
 package game.BrickObj;
 
 import game.BrickObj.BrickGenMap.MapStyle;
+import org.Event.EventHandler;
+import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
@@ -28,8 +30,8 @@ public class BrickManager extends MonoBehaviour {
         if (instance != null) {
             throw new IllegalStateException("BrickManager is a singleton!");
         }
-        instance = this;
         brickFactory = new BrickFactory(10, 10, MapStyle.CAVES, 0.3);
+        instance = this;
     }
 
     public Brick instantiateBrick() {

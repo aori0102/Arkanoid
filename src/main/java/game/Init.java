@@ -3,6 +3,7 @@ package game;
 import game.BrickObj.Brick;
 import game.BrickObj.BrickManager;
 import game.GameObject.BallsManager;
+import game.MapGenerator.BrickMapManager;
 import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
 import game.PowerUp.BlizzardBall;
@@ -185,7 +186,8 @@ public class Init {
 
     public static void initGame() {
         GameObjectManager.instantiate("BrickManager").addComponent(BrickManager.class);
-        GameObjectManager.instantiate();
+//        GameObjectManager.instantiate("BrickMapManager").addComponent(BrickMapManager.class);
+//        BrickMapManager.getInstance().generateMap();
         PlayerPrefab.instantiate();
     }
 

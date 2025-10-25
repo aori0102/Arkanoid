@@ -15,7 +15,7 @@ import utils.Vector2;
 public final class Brick extends MonoBehaviour {
 
     private int health;
-    private int rowID = -1, colID = -1;
+    private int rowID = 0, colID = 0;
 
     private int maxHealth;
     private boolean isNewDeath = false;

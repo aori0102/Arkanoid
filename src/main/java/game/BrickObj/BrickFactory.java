@@ -21,6 +21,7 @@ public class BrickFactory {
         colData = cols;
         this.difficult = _difficult;
         this.kindMap = _kindMap;
+        gameTime = 0;
         setup();
     }
 

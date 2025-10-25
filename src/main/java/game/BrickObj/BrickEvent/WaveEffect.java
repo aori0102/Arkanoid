@@ -11,7 +11,6 @@ public final class WaveEffect {
     private final Matrix matrixOfObj;
     private final List<IntPair> justDamaged = new ArrayList<>();
 
-    // mỗi wave giữ 3 tầng, mỗi tầng 1 danh sách các ô
     private static final class WaveLayer {
         final List<IntPair> layer1 = new ArrayList<>();
         final List<IntPair> layer2 = new ArrayList<>();
