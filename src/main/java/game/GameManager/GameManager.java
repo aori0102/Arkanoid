@@ -6,14 +6,15 @@ import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Scene.SceneKey;
 import org.Scene.SceneManager;
+import utils.Time;
 
 public class GameManager extends MonoBehaviour {
 
     private static GameState gameState = GameState.MainMenu;
     private int currentLevel = 1;
-    private boolean hasSave = false;
+    private boolean hasSave =  false;
 
-    private static GameManager instance = null;
+    private static GameManager instance=null;
 
     /**
      * Create this MonoBehaviour.
@@ -22,7 +23,7 @@ public class GameManager extends MonoBehaviour {
      */
     public GameManager(GameObject owner) {
         super(owner);
-        if (instance == null) {
+        if(instance == null) {
             instance = this;
         }
     }
@@ -33,14 +34,13 @@ public class GameManager extends MonoBehaviour {
 
     @Override
     public void awake() {
-        Player.getInstance().getPlayerHealth().onLivesReachZero.addListener(this::player_onNodeHealthReachZero);
+        Player.getInstance().onLivesReachZero.addListener(this::player_onNodeHealthReachZero);
     }
-
     private void player_onNodeHealthReachZero(Object sender, Void e) {
         gameOver();
     }
 
-    public void startNewGame() {
+    public void startNewGame(){
         System.out.println("[GameManager] Starting New Game");
 
         currentLevel = 1;
@@ -50,8 +50,8 @@ public class GameManager extends MonoBehaviour {
         hasSave = true;
     }
 
-    public void continueGame() {
-        if (hasSave) {
+    public void continueGame(){
+        if(hasSave) {
             System.out.println("[GameManager] Continuing Game");
 
             loadLevel(currentLevel);
@@ -62,58 +62,68 @@ public class GameManager extends MonoBehaviour {
 
     }
 
-    public void restartGame() {
+    public void restartGame(){
         System.out.println("[GameManager] Restarting Game");
 
         loadLevel(currentLevel);
     }
 
-    public void returnToMainMenu() {
+    public void returnToMainMenu(){
         System.out.println("[GameManager] Returning to Main Menu");
 
         SceneManager.loadScene(SceneKey.Menu);
     }
 
-    public void loadLevel(int level) {
+    public void loadLevel(int level){
         System.out.println("[GameManager] Loading Level " + level);
 
         currentLevel = level;
         SceneManager.loadScene(SceneKey.values()[currentLevel]);
     }
 
-    public void onLevelCompleted() {
+    public void onLevelCompleted(){
         System.out.println("[GameManager] Level Completed");
     }
 
-    public void gameOver() {
+    public void gameOver(){
         gameState = GameState.GameOver;
     }
 
-    public void pauseGame() {
-        // TODO: lam di thang ngu
+    public void pauseGame(){
+        Time.setTimeScale(0);
+        //showPauseUI
     }
 
-    public void resumeGame() {
-        // TODO: lam di thang ngu
-
+    public void resumeGame(){
+        Time.setTimeScale(1);
+        //hidePauseUI
     }
 
-    public void quitGame() {
+    public void quitGame(){
         Platform.exit();
     }
 
-    public void giveUp() {
+    public void giveUp(){
         System.out.println("[GameManager] Giving Up");
 
         hasSave = false;
         SceneManager.loadScene(SceneKey.Menu);
     }
 
-    public void toNextLevel() {
+    public void toNextLevel(){
         System.out.println("[GameManager] To Next Level");
 
         currentLevel++;
         loadLevel(currentLevel);
     }
 
+    @Override
+    protected void destroyComponent() {
+
+    }
+
+    private void brickManager_onLevelComplete(){
+        System.out.println("[GameManager] Brick Manager onLevelComplete");
+
+    }
 }

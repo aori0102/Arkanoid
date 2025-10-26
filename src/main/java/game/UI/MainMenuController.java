@@ -1,10 +1,8 @@
-package game.GameManager;
+package game.UI;
 
-import game.Player.Player;
-import game.UI.*;
-import game.Voltraxis.Voltraxis;
+import game.GameManager.GameManager;
+import game.UI.Buttons.*;
 import org.GameObject.GameObject;
-import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 
 import javafx.scene.input.MouseEvent;

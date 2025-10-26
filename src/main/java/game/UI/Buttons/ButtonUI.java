@@ -1,4 +1,4 @@
-package game.UI;
+package game.UI.Buttons;
 
 import javafx.scene.input.MouseEvent;
 import game.Interface.*;
