@@ -26,9 +26,11 @@ public class ImageAsset {
         Arrow("/Arrow.png"),
 
         /// Buttons
-        GeneralButtons("/GeneralButtons.png"),
+        GeneralButtons("/UI/GeneralButtons.png"),
+        PauseButton("/UI/PauseButton.png"),
+        ResumeButton("/UI/ResumeButton.png"),
         /// Perks
-        Perks("/Perks.png"),
+        Perks("/UI/Perks.png"),
 
         /// Voltraxis
         Voltraxis_Anim_Idle("/Voltraxis/Main/Idle/SpriteSheet.png"),

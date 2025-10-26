@@ -6,6 +6,7 @@ import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Scene.SceneKey;
 import org.Scene.SceneManager;
+import utils.Time;
 
 public class GameManager extends MonoBehaviour {
 
@@ -89,12 +90,13 @@ public class GameManager extends MonoBehaviour {
     }
 
     public void pauseGame(){
-        // TODO: lam di thang ngu
+        Time.setTimeScale(0);
+        //showPauseUI
     }
 
     public void resumeGame(){
-        // TODO: lam di thang ngu
-
+        Time.setTimeScale(1);
+        //hidePauseUI
     }
 
     public void quitGame(){
@@ -117,6 +119,11 @@ public class GameManager extends MonoBehaviour {
 
     @Override
     protected void destroyComponent() {
+
+    }
+
+    private void brickManager_onLevelComplete(){
+        System.out.println("[GameManager] Brick Manager onLevelComplete");
 
     }
 }

@@ -1,10 +1,22 @@
 {
-  "imagePath": "GeneralButtons",
+  "imagePath": "ResumeButton",
   "frameList": [
     {
       "clipAnchor": {
-        "x": 420,
+        "x": 1,
         "y": 120
+      },
+      "clipSize": {
+        "x": 418,
+        "y": 118
+      },
+      "duration": 0.1,
+      "rotationAngle": 0
+    },
+    {
+      "clipAnchor": {
+        "x": 1,
+        "y": 1
       },
       "clipSize": {
         "x": 418,
@@ -22,5 +34,5 @@
     "x": 0,
     "y": 0
   },
-  "loop": true
+  "loop": false
 }

@@ -1,10 +1,10 @@
 {
-  "imagePath": "GeneralButtons",
+  "imagePath": "ResumeButton",
   "frameList": [
     {
       "clipAnchor": {
-        "x": 420,
-        "y": 120
+        "x": 1,
+        "y": 1
       },
       "clipSize": {
         "x": 418,
