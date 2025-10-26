@@ -34,7 +34,6 @@ public class GameManager extends MonoBehaviour {
 
     @Override
     public void awake() {
-        Player.getInstance().onLivesReachZero.addListener(this::player_onNodeHealthReachZero);
     }
     private void player_onNodeHealthReachZero(Object sender, Void e) {
         gameOver();
@@ -115,11 +114,6 @@ public class GameManager extends MonoBehaviour {
 
         currentLevel++;
         loadLevel(currentLevel);
-    }
-
-    @Override
-    protected void destroyComponent() {
-
     }
 
     private void brickManager_onLevelComplete(){

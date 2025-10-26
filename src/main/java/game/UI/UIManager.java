@@ -24,8 +24,4 @@ public class UIManager extends MonoBehaviour {
         return instance;
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
 }
