@@ -1,28 +1,34 @@
 package game.PowerUp.Index;
 
+import game.GameObject.Ball;
+import game.Player.Player;
+import game.Player.PlayerPaddle;
 import game.Player.PlayerPowerUpHandler;
-import game.PowerUp.StatusEffect;
+import game.PowerUp.*;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
+import utils.Random;
+import utils.Vector2;
 
-import java.util.HashSet;
 
 /**
  * Manage all the power up of the game
  */
 public class PowerUpManager extends MonoBehaviour {
 
-    public static PowerUpManager instance = null;
+    private static PowerUpManager instance = null;
+    private PlayerPaddle playerPaddle;
+    public static int count = 0;
 
     /**
-     * Upon called, all {@link game.GameObject.Ball} duplicate itself
+     * Upon called, all {@link Ball} duplicate itself
      * by the multiple provided within the event argument.
      */
-    public EventHandler<Integer> onDuplicateBall = new EventHandler<Integer>(PowerUpManager.class);
+    public EventHandler<Integer> onDuplicateBall = new EventHandler<>(PowerUpManager.class);
 
     /**
-     * Upon called, all {@link game.GameObject.Ball} triplicate itself
+     * Upon called, all {@link Ball} triplicate itself
      * by the multiple provided within the event argument.
      */
     public EventHandler<Integer> onTriplicateBall = new EventHandler<>(PowerUpManager.class);
@@ -41,9 +47,6 @@ public class PowerUpManager extends MonoBehaviour {
      */
     public EventHandler<StatusEffect> onBlizzardBall = new EventHandler<>(PowerUpManager.class);
 
-    public EventHandler<Void> onLaserBeam = new EventHandler<>(PowerUpManager.class);
-
-    private HashSet<PowerUp> powerUpsSet = new HashSet<>();
     private PlayerPowerUpHandler playerPowerUpHandler;
 
     /**
@@ -59,67 +62,57 @@ public class PowerUpManager extends MonoBehaviour {
         instance = this;
     }
 
-    @Override
-    public void awake() {
-        assignPowerUpEvent();
-    }
-
     /**
      * Link each power up with its corresponding event
-     * These events are from the {@link game.Player.PlayerPowerUpHandler}
+     * These events are from the {@link PlayerPowerUpHandler}
      */
-    public void assignPowerUpEvent() {
-        for (var x : powerUpsSet) {
-            switch (x.getPowerUpIndex()) {
-                // Duplicate event
-                case DuplicateBall -> {
-                    playerPowerUpHandler.onDuplicateBallRequested.addListener((sender, multipleNumber) -> {
-                        onDuplicateBall.invoke(this, multipleNumber);
-                    });
-                }
-                // Triplicate event
-                case TriplicateBall -> {
-                    playerPowerUpHandler.onTriplicateBallRequested.addListener((sender, multipleNumber) -> {
-                        onTriplicateBall.invoke(this, multipleNumber);
-                    });
-                }
-
-                case FireBall -> {
-                     playerPowerUpHandler.onFireBallRequested.addListener((sender, powerEffect) -> {
-                         onFireBall.invoke(this, powerEffect);
-                     });
-                }
-
-                case Blizzard -> {
-                    playerPowerUpHandler.onBlizzardBallRequested.addListener((sender, powerEffect) -> {
-                        onBlizzardBall.invoke(this, powerEffect);
-                    });
-                }
-
-                case  LaserBeam -> {
-
-                }
+    public void assignPowerUpEvent(PowerUp powerUp) {
+        switch (powerUp) {
+            case DuplicateBall ignored -> {
+                playerPowerUpHandler.onDuplicateBallRequested.removeAllListeners();
+                playerPowerUpHandler.onDuplicateBallRequested.addListener((_, number) ->
+                        onDuplicateBall.invoke(this, number));
+            }
+            case TriplicateBall ignored -> {
+                playerPowerUpHandler.onTriplicateBallRequested.removeAllListeners();
+                playerPowerUpHandler.onTriplicateBallRequested.addListener((_, number) ->
+                        onTriplicateBall.invoke(this, number));
+            }
+            case FireBall ignored -> {
+                playerPowerUpHandler.onFireBallRequested.removeAllListeners();
+                playerPowerUpHandler.onFireBallRequested.addListener((_, effect) ->
+                        onFireBall.invoke(this, effect));
+            }
+            case BlizzardBall ignored -> {
+                playerPowerUpHandler.onBlizzardBallRequested.removeAllListeners();
+                playerPowerUpHandler.onBlizzardBallRequested.addListener((_, effect) ->
+                        onBlizzardBall.invoke(this, effect));
+            }
+            default -> {
+                throw new IllegalArgumentException("You have to add listener to a power up event");
             }
         }
     }
 
-    /**
-     * Adds the power up to the powerupSet
-     *
-     * @param powerUp : the added power up
-     */
-    public void addPowerUp(PowerUp powerUp) {
-        powerUpsSet.add(powerUp);
+    public void spawnPowerUp(Vector2 position) {
+
+
+        int target = 1;
+        //if (Random.range(0, 1) == target) {
+
+            var chosenKey = PowerUpPrefabGenerator.registeredPowerUps.get(
+                    Random.range(0, PowerUpPrefabGenerator.registeredPowerUps.size() - 1)
+            );
+
+            PowerUp chosen = PowerUpPrefabGenerator.powerUpPrefabHashMap.get(chosenKey)
+                    .generatePowerUp(position, playerPaddle);
+
+
+            assignPowerUpEvent(chosen);
+
+        //}
     }
 
-    /**
-     * Removes the power up to the powerupSet
-     *
-     * @param powerUp : the removed power up
-     */
-    public void removePowerUp(PowerUp powerUp) {
-        powerUpsSet.remove(powerUp);
-    }
 
     /**
      * Link the playerPowerUpHandler
@@ -128,17 +121,26 @@ public class PowerUpManager extends MonoBehaviour {
      */
     public void linkPlayerPowerUp(PlayerPowerUpHandler playerPowerUpHandler) {
         this.playerPowerUpHandler = playerPowerUpHandler;
-        assignPowerUpEvent();
+    }
+
+    /**
+     * <br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link }
+     * as part of component linking process.</i></b>
+     *
+     * @param playerPaddle .
+     */
+    public void linkPlayerPaddle(PlayerPaddle playerPaddle) {
+        this.playerPaddle = playerPaddle;
+    }
+
+    public static PowerUpManager getInstance() {
+        return instance;
     }
 
     @Override
     protected void destroyComponent() {
 
-    }
-
-    public PowerUp getPowerUp(PowerUpIndex powerUpIndex) {
-        // spawn
-        return null;
     }
 
 }

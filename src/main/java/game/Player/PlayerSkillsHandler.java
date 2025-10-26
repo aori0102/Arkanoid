@@ -50,7 +50,6 @@ public class PlayerSkillsHandler extends MonoBehaviour {
         handleSKillCooldown();
     }
 
-
     private void handleSkillRequest(Object o,ActionMap.Action action) {
         switch (action) {
             case Skill1 -> spawnSkill(LaserBeam.class);

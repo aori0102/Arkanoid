@@ -11,6 +11,8 @@ import game.Perks.Index.PerkManager;
 import game.PowerUp.FireBall;
 import game.PowerUp.Index.PowerUpManager;
 import game.PowerUp.DuplicateBall;
+import game.PowerUp.Index.PowerUpPrefab.PowerUpPrefab;
+import game.PowerUp.Index.PowerUpPrefabGenerator;
 import game.PowerUp.TriplicateBall;
 import game.GameObject.Arrow;
 import game.GameObject.Ball;
@@ -31,7 +33,6 @@ public class Init {
 
     public static void Init_Kine() {
         var paddle = GameObjectManager.instantiate("paddle");
-        GameObjectManager.instantiate("paddle");
         paddle.addComponent(PlayerPaddle.class);
         paddle.addComponent(BoxCollider.class);
         paddle.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
@@ -62,30 +63,8 @@ public class Init {
         arrow.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
         paddle.getComponent(PlayerPaddle.class).linkArrow(arrow.getComponent(Arrow.class));
 
-        var duplicateBall = GameObjectManager.instantiate("duplicateBall");
-        duplicateBall.addComponent(DuplicateBall.class);
-        duplicateBall.getTransform().setGlobalPosition(new Vector2(100, 100));
-        duplicateBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
-
-        var triplicateBall = GameObjectManager.instantiate("triplicateBall");
-        triplicateBall.addComponent(TriplicateBall.class);
-        triplicateBall.getTransform().setGlobalPosition(new Vector2(300, 0));
-        triplicateBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
-
-        var fireBall = GameObjectManager.instantiate("fireBall");
-        fireBall.addComponent(FireBall.class);
-        fireBall.getTransform().setGlobalPosition(new Vector2(400, 100));
-        fireBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
-
-        var blizzardBall = GameObjectManager.instantiate("blizzardBall");
-        blizzardBall.addComponent(BlizzardBall.class);
-        blizzardBall.getTransform().setGlobalPosition(new Vector2(500, 100));
-        blizzardBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
-
-
         var obstacleManager = GameObjectManager.instantiate("obstacleManager");
         obstacleManager.addComponent(ObstacleManager.class);
-
 
         ObstacleManager.getInstance().setPaddle(paddle.getComponent(PlayerPaddle.class));
 
@@ -94,22 +73,12 @@ public class Init {
 
         var powerUpManager = GameObjectManager.instantiate("powerUpManager");
         powerUpManager.addComponent(PowerUpManager.class);
-        PowerUpManager.instance.addPowerUp(duplicateBall.getComponent(DuplicateBall.class));
-        PowerUpManager.instance.addPowerUp(triplicateBall.getComponent(TriplicateBall.class));
-        PowerUpManager.instance.addPowerUp(fireBall.getComponent(FireBall.class));
-        PowerUpManager.instance.addPowerUp(blizzardBall.getComponent(BlizzardBall.class));
-
 
         var player = GameObjectManager.instantiate("player");
         player.addComponent(Player.class);
 
-        PowerUpManager.instance.linkPlayerPowerUp(Player.getInstance().getComponent(PlayerPowerUpHandler.class));
-        duplicateBall.getComponent(DuplicateBall.class).linkPlayerPowerUp(Player.getInstance().getComponent(PlayerPowerUpHandler.class));
-        duplicateBall.getComponent(DuplicateBall.class).linkPaddle(paddle.getComponent(PlayerPaddle.class));
-
-        triplicateBall.getComponent(TriplicateBall.class).linkPlayerPowerUp(Player.getInstance().getComponent(PlayerPowerUpHandler.class));
-        triplicateBall.getComponent(TriplicateBall.class).linkPaddle(paddle.getComponent(PlayerPaddle.class));
-
+        PowerUpManager.getInstance().linkPlayerPowerUp(Player.getInstance().getComponent(PlayerPowerUpHandler.class));
+        PowerUpManager.getInstance().linkPlayerPaddle(paddle.getComponent(PlayerPaddle.class));
         Player.getInstance().linkPlayerPaddle(paddle.getComponent(PlayerPaddle.class));
         BallsManager.instance.addBall(ball.getComponent(Ball.class));
 

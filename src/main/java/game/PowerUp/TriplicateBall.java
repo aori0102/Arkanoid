@@ -5,7 +5,9 @@ import game.PowerUp.Index.PowerUpIndex;
 import game.PowerUp.Index.PowerUpManager;
 import game.GameObject.Ball;
 import game.Player.PlayerPaddle;
+import org.Event.EventActionID;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 import utils.Vector2;
 
 import java.util.HashSet;
@@ -14,6 +16,8 @@ import java.util.HashSet;
  * Triplicate the number of the balls currently existing
  */
 public class TriplicateBall extends MultipleBall {
+
+    private EventActionID triplicateBallEventActionID = null;
 
     /**
      * Create this MonoBehaviour.
@@ -31,7 +35,8 @@ public class TriplicateBall extends MultipleBall {
 
     @Override
     public void start() {
-        PowerUpManager.instance.onTriplicateBall.addListener((sender, args) -> {
+        triplicateBallEventActionID = PowerUpManager.getInstance().onTriplicateBall.addListener((sender, args) -> {
+            System.out.println("TriplicateBall start");
             handleOnMultipleRequest();
         });
     }
@@ -43,7 +48,7 @@ public class TriplicateBall extends MultipleBall {
      */
     @Override
     protected void handleOnMultipleRequest() {
-        HashSet<Ball> ballHashSet = new HashSet<>(BallsManager.instance.getBallSet());
+        /*HashSet<Ball> ballHashSet = new HashSet<>(BallsManager.instance.getBallSet());
 
         for(Ball ball : ballHashSet) {
             Vector2 normalVector = new Vector2(-ball.getDirection().y, ball.getDirection().x).normalize();
@@ -60,7 +65,21 @@ public class TriplicateBall extends MultipleBall {
             BallsManager.instance.addBall(ball2);
             ball2.setDirection(secondDirection);
         }
+
+         */
+        // TODO : fix this shit too
     }
 
+    @Override
+    public void onApplied() {
+        System.out.println("TriplicateBall onApplied");
+        PowerUpManager.getInstance().onTriplicateBall.removeListener(triplicateBallEventActionID);
+        GameObjectManager.destroy(gameObject);
+    }
+
+    @Override
+    protected void destroyComponent() {
+        triplicateBallEventActionID = null;
+    }
 
 }

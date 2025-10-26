@@ -4,9 +4,13 @@ import game.GameObject.BallsManager;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpIndex;
 import game.PowerUp.Index.PowerUpManager;
+import org.Event.EventActionID;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 
 public class BlizzardBall extends PowerUp {
+
+    private EventActionID blizzardBallEventActionID = null;
 
     /**
      * Create this MonoBehaviour.
@@ -22,12 +26,23 @@ public class BlizzardBall extends PowerUp {
     }
 
     public void start() {
-        PowerUpManager.instance.onBlizzardBall.addListener((sender, powerEffect) -> {
+        PowerUpManager.getInstance().onBlizzardBall.addListener((sender, powerEffect) -> {
             handleOnBlizzardBallRequested(powerEffect);
         });
     }
 
     public void handleOnBlizzardBallRequested(StatusEffect statusEffect) {
         BallsManager.instance.applyStatusPowerUpEffect(statusEffect);
+    }
+
+    @Override
+    public void onApplied() {
+        PowerUpManager.getInstance().onBlizzardBall.removeListener(blizzardBallEventActionID);
+        GameObjectManager.destroy(gameObject);
+    }
+
+    @Override
+    protected void destroyComponent() {
+        blizzardBallEventActionID = null;
     }
 }

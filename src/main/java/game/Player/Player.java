@@ -144,4 +144,12 @@ public class Player extends MonoBehaviour {
         return playerSkillsHandler;
     }
 
+    public PlayerPowerUpHandler getPlayerPowerUpHandler() {
+        return playerPowerUpHandler;
+    }
+
+    public PlayerPaddle getPlayerPaddle() {
+        return playerPaddle;
+    }
+
 }
