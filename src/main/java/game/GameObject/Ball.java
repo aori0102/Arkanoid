@@ -209,10 +209,5 @@ public class Ball extends MonoBehaviour {
         return currentStatusEffect;
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
-
 
 }

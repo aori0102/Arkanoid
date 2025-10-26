@@ -38,9 +38,4 @@ public class UltimateLaser extends MonoBehaviour {
         renderer.setFillAmount(ratio);
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
-
 }

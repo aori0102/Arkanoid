@@ -128,8 +128,4 @@ public class ActionMap extends MonoBehaviour {
         previousMouseButton.addAll(currentMouseButton);
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
 }

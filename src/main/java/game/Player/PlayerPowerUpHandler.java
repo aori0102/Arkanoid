@@ -81,11 +81,6 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
         super(owner);
     }
 
-    @Override
-    protected void destroyComponent() {
-        onDuplicateBallRequested = null;
-    }
-
     protected void apply(PowerUp powerUp) {
 
         switch (powerUp.getPowerUpIndex()) {

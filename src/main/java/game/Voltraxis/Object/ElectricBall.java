@@ -44,11 +44,6 @@ public class ElectricBall extends MonoBehaviour implements ICanDamagePlayer {
     }
 
     @Override
-    protected void destroyComponent() {
-        direction = null;
-    }
-
-    @Override
     public void update() {
         getTransform().translate(direction.normalize().multiply(MOVEMENT_SPEED * Time.deltaTime));
     }
@@ -86,6 +81,7 @@ public class ElectricBall extends MonoBehaviour implements ICanDamagePlayer {
 
     @Override
     public void damagePlayer() {
-        Player.getInstance().damage(damage);
+        Player.getInstance().getPlayerHealth().damage(damage);
     }
+
 }

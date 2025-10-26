@@ -9,6 +9,10 @@ import org.Scene.SceneManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
+/**
+ * Class that contains components ({@link MonoBehaviour}) that
+ * makes up a game object.
+ */
 public class GameObject {
 
     private static final String DEFAULT_NAME = "GameObject";
@@ -18,20 +22,29 @@ public class GameObject {
     private final Queue<GameObject> childRemovalQueue = new LinkedList<>();
     private final Queue<GameObject> childAdditionQueue = new LinkedList<>();
     private final HashSet<MonoBehaviour> monoBehaviourSet = new HashSet<>();
+    private final Transform transform;
+    private final SceneKey registeredSceneKey;
 
     private boolean isActive = true;
+    /**
+     * This field should only be written to as {@code true} via
+     * {@link #markDestroyed()}. <b>DO NOT</b> write to this field
+     * anywhere else.
+     */
     private boolean isDestroyed = false;
-
-    private final Transform transform;
     private String name = DEFAULT_NAME;
     private Layer layer = Layer.Default;
-
-    private final SceneKey registeredSceneKey;
-    public EventHandler<Void> onObjectActivenessChanged = new EventHandler<>(GameObject.class);
-    public EventHandler<OnParentChangedEventArgs> onParentChanged = new EventHandler<>(GameObject.class);
-
     private EventActionID parentOnActivenessChangedActionID = null;
     private EventActionID parentOnParentChangedActionID = null;
+
+    /**
+     * Only access within {@link GameObject} or {@link GameObjectManager}.
+     */
+    protected LinkedHashSet<GameObject> childSet = new LinkedHashSet<>();
+    private GameObject parent = null;
+
+    public EventHandler<Void> onObjectActivenessChanged = new EventHandler<>(GameObject.class);
+    public EventHandler<OnParentChangedEventArgs> onParentChanged = new EventHandler<>(GameObject.class);
 
     public static class OnParentChangedEventArgs {
         public GameObject previousParent;
@@ -39,31 +52,51 @@ public class GameObject {
     }
 
     /**
-     * Only access within {@link GameObject} or {@link GameObjectManager}.
+     * Create an empty game object with a {@link Transform} attached.
      */
-    protected LinkedHashSet<GameObject> childSet = new LinkedHashSet<>();
-    protected GameObject parent = null;
+    protected GameObject() {
+        transform = addComponent(Transform.class);
+        registeredSceneKey = SceneManager.getCurrentSceneKey();
+    }
 
+    /**
+     * Create an empty game object with a {@link Transform} attached.
+     * Set its name as given.
+     *
+     * @param name The name of the object.
+     */
+    protected GameObject(String name) {
+        this();
+        this.name = name;
+    }
+
+    /**
+     * Get the {@link Transform} component attached to this object.
+     *
+     * @return This object's transform.
+     */
     public Transform getTransform() {
-
         validateObjectLife();
-
         return transform;
-
     }
 
     /**
      * Set the game object's layer
      *
      * @param layer The layer to set, must be single bit.
+     * @throws IllegalArgumentException if the layer is invalid
+     *                                  (either {@link Layer#None} or multi-bit)
      */
     public void setLayer(Layer layer) {
 
         validateObjectLife();
 
         var value = layer.getUnderlyingValue();
-        if (value == 0 || (value & (value - 1)) != 0) {
-            throw new IllegalStateException("Layer " + value + " must be single bit (A game object cannot be in two or more layers");
+        if (value == 0) {
+            throw new IllegalArgumentException("Layer cannot be " + Layer.None + ". Game object must belong to a layer");
+        }
+        if ((value & (value - 1)) != 0) {
+            throw new IllegalArgumentException("Layer " + value + " must be single bit (A game object cannot be in two or more layers");
         }
 
         this.layer = layer;
@@ -76,11 +109,8 @@ public class GameObject {
      * @return The layer in bitmask.
      */
     public int getLayerMask() {
-
         validateObjectLife();
-
         return layer.getUnderlyingValue();
-
     }
 
     /**
@@ -89,11 +119,8 @@ public class GameObject {
      * @return The game object's name.
      */
     public String getName() {
-
         validateObjectLife();
-
         return name;
-
     }
 
     /**
@@ -111,28 +138,27 @@ public class GameObject {
      * @param name The name to set.
      */
     public void setName(String name) {
-
         validateObjectLife();
-
         this.name = name;
-
     }
 
     /**
-     * Add a child to this object.
-     * Only access within {@link Transform}.
+     * Add a child to this object's addition queue.
+     * The child will be added at the end of the frame
+     * via {@link #processChildSet()}.
      *
-     * @param child The child to add.
+     * @param child The child to be added.
      */
     protected void addChild(GameObject child) {
         childAdditionQueue.offer(child);
     }
 
     /**
-     * Remove a child from this object.
-     * Only access within {@link Transform}.
+     * Add a child to this object's removal queue.
+     * The child will be removed at the end of the
+     * frame via {@link #processChildSet()}.
      *
-     * @param child The child to remove.
+     * @param child The child to be removed.
      */
     protected void removeChild(GameObject child) {
         childRemovalQueue.offer(child);
@@ -166,12 +192,19 @@ public class GameObject {
 
     }
 
+    /**
+     * Get the object's current parent.
+     *
+     * @return The object's parent.
+     */
     public GameObject getParent() {
         return parent;
     }
 
     /**
-     * Handle Awake state. Should only be called within {@link GameObjectManager}.
+     * Handle Awake state.<br><br>
+     * <b><i><u>NOTE</u> : Should only be called within
+     * {@link GameObjectManager}.</i></b>
      */
     protected void handleAwake() {
 
@@ -179,13 +212,10 @@ public class GameObject {
 
         while (!preAwakeMonoBehaviourQueue.isEmpty()) {
 
+            var mono = preAwakeMonoBehaviourQueue.poll();
+            mono.awake();
             if (isDestroyed) {
                 return;
-            }
-
-            var mono = preAwakeMonoBehaviourQueue.poll();
-            if (mono != null) {
-                mono.awake();
             }
             preStartMonoBehaviourQueue.offer(mono);
 
@@ -194,7 +224,9 @@ public class GameObject {
     }
 
     /**
-     * Handle Start state. Should only be called within {@link GameObjectManager}.
+     * Handle Start state.<br><br>
+     * <b><i><u>NOTE</u> : Should only be called within
+     * {@link GameObjectManager}.</i></b>
      */
     protected void handleStart() {
 
@@ -202,13 +234,10 @@ public class GameObject {
 
         while (!preStartMonoBehaviourQueue.isEmpty()) {
 
+            var mono = preStartMonoBehaviourQueue.poll();
+            mono.start();
             if (isDestroyed) {
                 return;
-            }
-
-            var mono = preStartMonoBehaviourQueue.poll();
-            if (mono != null) {
-                mono.start();
             }
 
         }
@@ -216,7 +245,9 @@ public class GameObject {
     }
 
     /**
-     * Handle Update state. Should only be called within {@link GameObjectManager}.
+     * Handle Update state.<br><br>
+     * <b><i><u>NOTE</u> : Should only be called within
+     * {@link GameObjectManager}.</i></b>
      */
     protected void handleUpdate() {
 
@@ -234,7 +265,9 @@ public class GameObject {
     }
 
     /**
-     * Handle Late Update state. Should only be called within {@link GameObjectManager}.
+     * Handle Late Update state.<br><br>
+     * <b><i><u>NOTE</u> : Should only be called within
+     * {@link GameObjectManager}.</i></b>
      */
     protected void handleLateUpdate() {
 
@@ -251,7 +284,12 @@ public class GameObject {
 
     }
 
-    protected void cleanUp() {
+    /**
+     * Process child addition and removal of current frame.<br><br>
+     * <b><i><u>NOTE</u> : Should only be called within
+     * {@link GameObjectManager}.</i></b>
+     */
+    protected void processChildSet() {
         while (!childRemovalQueue.isEmpty()) {
             childSet.remove(childRemovalQueue.poll());
         }
@@ -260,10 +298,20 @@ public class GameObject {
         }
     }
 
+    /**
+     * Set a new parent for this object.<br><br>
+     * <b><i><u>NOTE</u></i></b> : This object will become the specified new
+     * parent's child on <b>THE NEXT FRAME</b>, along with the removal
+     * of this object's old parent.
+     *
+     * @param parent The new parent to set.
+     * @throws IllegalArgumentException if {@code parent} is invalid,
+     *                                  i.e. {@code parent} is the same as this object.
+     */
     public void setParent(GameObject parent) {
 
         if (parent == this) {
-            throw new RuntimeException(name + " cannot be its own parent!");
+            throw new IllegalArgumentException(name + " cannot be its own parent!");
         }
 
         var eventArgs = new OnParentChangedEventArgs();
@@ -271,8 +319,6 @@ public class GameObject {
         eventArgs.newParent = parent;
         onParentChanged.invoke(this, eventArgs);
 
-        // TODO: caution here with removing event listeners, maybe other place can
-        //  have parent ref, event invocation listener method - Aori
         if (this.parent != null) {
             this.parent.removeChild(this);
             this.parent.onParentChanged.removeListener(parentOnParentChangedActionID);
@@ -283,8 +329,8 @@ public class GameObject {
 
         if (parent != null) {
             parent.addChild(this);
-            parentOnParentChangedActionID = parent.onParentChanged.addListener(this::parent_onParentChanged);
-            parentOnActivenessChangedActionID = parent.onObjectActivenessChanged.addListener(this::parent_onObjectActivenessChanged);
+            parentOnParentChangedActionID = parent.onParentChanged.addListener(this::gameObject_onParentChanged);
+            parentOnActivenessChangedActionID = parent.onObjectActivenessChanged.addListener(this::gameObject_onObjectActivenessChanged);
         } else {
             parentOnActivenessChangedActionID = null;
             parentOnParentChangedActionID = null;
@@ -293,81 +339,58 @@ public class GameObject {
     }
 
     /**
-     * Create a game object. This object has a {@link Transform}.
+     * Mark this game object as destroyed.<br><br>
+     * <b><i><u>NOTE</u> : Only call within {@link GameObjectManager}.</i></b>
      */
-    protected GameObject() {
-        transform = addComponent(Transform.class);
-        registeredSceneKey = SceneManager.getCurrentSceneKey();
-    }
-
-    /**
-     * Create a game object. This object has a {@link Transform}.
-     *
-     * @param name The name of the object.
-     */
-    protected GameObject(String name) {
-        this.name = name;
-        transform = addComponent(Transform.class);
-        registeredSceneKey = SceneManager.getCurrentSceneKey();
-    }
-
-    /**
-     * Copy a game object.
-     *
-     * @param gameObject The copied game object.
-     */
-    @Deprecated
-    protected GameObject(GameObject gameObject) {
-
-        gameObject.validateObjectLife();
-
-        isActive = gameObject.isActive;
-        name = gameObject.name;
-        parent = gameObject.parent;
-        transform = addComponent(Transform.class);
-        for (var mono : gameObject.monoBehaviourSet) {
-            addComponent(mono.getClass());
+    protected void markDestroyed() {
+        for (var mono : monoBehaviourSet) {
+            mono.onDestroy();
         }
-        layer = Layer.Default;
-        registeredSceneKey = gameObject.registeredSceneKey;
-
+        isDestroyed = true;
     }
 
     /**
-     * Wipe clean this game object's data.
+     * Wipe clean this game object's data, including its
+     * subscribed events, children, parent and components.<br><br>
+     * <b><i><u>NOTE</u> : Only call within {@link GameObjectManager}.</i></b>
      */
-    protected void destroyObject() {
+    protected void clearData() {
 
-        validateObjectLife();
-
-        // TODO: take a closer look
-
-        for (var monoBehaviour : monoBehaviourSet) {
-            monoBehaviour.destroyComponent();
-        }
-
+        // Clear components
         monoBehaviourSet.clear();
         preStartMonoBehaviourQueue.clear();
         preAwakeMonoBehaviourQueue.clear();
 
+        // Clear children
         for (var child : childSet) {
             GameObjectManager.destroy(child);
         }
         childSet = null;
 
+        // Remove from parent and unsubscribe from event
         if (parent != null) {
             parent.removeChild(this);
+            parent.onParentChanged.removeListener(parentOnParentChangedActionID);
+            parent.onObjectActivenessChanged.removeListener(parentOnActivenessChangedActionID);
         }
-
-        isDestroyed = true;
 
     }
 
-    private void parent_onObjectActivenessChanged(Object sender, Void e) {
+    /**
+     * Called when {@link GameObject#onObjectActivenessChanged} is invoked.<br><br>
+     * This function calls {@link #onObjectActivenessChanged} due to changes in its
+     * parent's activeness.
+     */
+    private void gameObject_onObjectActivenessChanged(Object sender, Void e) {
         onObjectActivenessChanged.invoke(this, null);
     }
 
-    private void parent_onParentChanged(Object sender, OnParentChangedEventArgs e) {
+    /**
+     * Called when {@link GameObject#onParentChanged} is invoked.<br><br>
+     * This function calls {@link #onParentChanged} as its family-related
+     * attribute can change due to changes in its parent.
+     */
+    private void gameObject_onParentChanged(Object sender, OnParentChangedEventArgs e) {
         var eventArgs = new OnParentChangedEventArgs();
         eventArgs.previousParent = this.parent;
         eventArgs.newParent = this.parent;
@@ -375,10 +398,11 @@ public class GameObject {
     }
 
     /**
-     * Get a component of type {@linkplain T} from this game object.
+     * Get a component of type {@link T} from this game object.
      *
-     * @param type Class type of {@linkplain T}. Use .class.
-     * @param <T>  Component type, must derive from {@link MonoBehaviour} or an {@code interface}.
+     * @param type Class type of {@link T}. Use {@code .class}.
+     * @param <T>  Component type, must derive from {@link MonoBehaviour}
+     *             or an {@code interface}.
      * @return A component, or {@code null} if not found any.
      */
     public <T> T getComponent(Class<T> type) {
@@ -404,9 +428,9 @@ public class GameObject {
     /**
      * Add a component of type {@linkplain T} to this game object.
      *
-     * @param type Class type of {@linkplain T}. Use .class().
+     * @param type Class type of {@linkplain T}. Use {@code .class}.
      * @param <T>  Component type, must derive from {@linkplain MonoBehaviour}.
-     * @return A valid component. If the component already exists, return that version.
+     * @return The already exist component, or the new one otherwise.
      */
     public <T extends MonoBehaviour> T addComponent(Class<T> type) {
 
@@ -429,7 +453,7 @@ public class GameObject {
             } catch (InstantiationException e) {
                 throw new RuntimeException("InstantiationException: " + e.getMessage());
             } catch (InvocationTargetException e) {
-                throw new RuntimeException("InvocationTargetException: " + e.getMessage());
+                throw new RuntimeException("InvocationTargetException: " + e.getTargetException());
             } catch (ExceptionInInitializerError e) {
                 throw new RuntimeException("ExceptionInInitializerError: " + e.getMessage());
             } catch (SecurityException e) {
@@ -449,11 +473,9 @@ public class GameObject {
      * @throws IllegalStateException if this object is destroyed.
      */
     private void validateObjectLife() {
-
         if (isDestroyed) {
             throw new IllegalStateException("You are trying to access a destroyed game object!");
         }
-
     }
 
     /**
@@ -476,6 +498,11 @@ public class GameObject {
         return new HashSet<>(childSet); // return a copy
     }
 
+    /**
+     * Get the {@link SceneKey} of the scene this object belongs to.
+     *
+     * @return The scene key of the scene this object is in.
+     */
     public SceneKey getRegisteredSceneKey() {
         return registeredSceneKey;
     }

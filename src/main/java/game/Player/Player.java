@@ -2,6 +2,7 @@ package game.Player;
 
 import game.PowerUp.Index.PowerUp;
 import org.Event.EventHandler;
+import game.GameObject.Paddle;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -9,6 +10,7 @@ import org.InputAction.ActionMap;
 
 import java.util.HashSet;
 import java.util.List;
+import utils.Time;
 
 /**
  * Central logic for player. Control {@link PowerUp}'s effects
@@ -16,26 +18,18 @@ import java.util.List;
  */
 public class Player extends MonoBehaviour {
 
-    public static final int MAX_HEALTH = 100;
-    public static final int MAX_LIVES = 3;
-
+    /// Singleton
     private static Player instance = null;
 
-    private PlayerPowerUpHandler playerPowerUpHandler = null;
-    private PlayerController playerController = null;
-    private PlayerSkillsHandler playerSkillsHandler = null;
-
-    private int lives = MAX_LIVES;
+    /// Attributes
     private int attack = 10;
-    private int health = MAX_HEALTH;
 
-    private PlayerPaddle playerPaddle;
-
-    public EventHandler<Void> onHealthChanged = new EventHandler<>(Player.class);
-    public EventHandler<Void> onLivesChanged = new EventHandler<>(Player.class);
-    public EventHandler<Void> onHealthReachZero = new EventHandler<>(Player.class);
-    public EventHandler<Void> onLivesReachZero = new EventHandler<>(Player.class);
-    public EventHandler<HashSet<ActionMap.Action>> onPlayerInputEnter = new EventHandler<>(Player.class);
+    /// Player core components
+    private final PlayerPowerUpHandler playerPowerUpHandler;
+    private final PlayerHealth playerHealth;
+    private final PlayerSkillsHandler playerSkillsHandler;
+    private final PlayerPaddle playerPaddle;
+    private PlayerController playerController = null;
 
     /**
      * Create this MonoBehaviour.
@@ -52,9 +46,29 @@ public class Player extends MonoBehaviour {
         instance = this;
 
         playerPowerUpHandler = addComponent(PlayerPowerUpHandler.class);
-        playerController = addComponent(PlayerController.class);
         playerSkillsHandler = addComponent(PlayerSkillsHandler.class);
+        playerPaddle = addComponent(PlayerPaddle.class);
+        playerHealth = addComponent(PlayerHealth.class);
+        playerController = addComponent(PlayerController.class);
+    }
 
+    public PlayerPowerUpHandler getPlayerPowerUpHandler() {
+        return playerPowerUpHandler;
+    }
+
+    public PlayerHealth getPlayerHealth() {
+        return playerHealth;
+    }
+    public PlayerSkillsHandler getPlayerSkillsHandler() {
+        return playerSkillsHandler;
+    }
+
+    public PlayerPaddle getPlayerPaddle() {
+        return playerPaddle;
+    }
+
+    public PlayerController getPlayerController() {
+        return playerController;
     }
 
     /**
@@ -64,6 +78,8 @@ public class Player extends MonoBehaviour {
      * @param paddle The paddle to be linked.
      */
     public void linkPlayerPaddle(PlayerPaddle paddle) {
+        // TODO : Delete this
+
         this.playerPaddle = paddle;
         playerPaddle.onPowerUpConsumed.addListener(this::paddle_onPowerUpConsumed);
         playerSkillsHandler.linkPlayerPaddle(paddle.getComponent(PlayerPaddle.class));
@@ -82,33 +98,21 @@ public class Player extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
+    protected void onDestroy() {
         instance = null;
     }
 
     @Override
-    public void update() {
-        if(health <= 0) {
-            onHealthReachZero.invoke(this, null);
-        }
+    public void awake() {
+        Time.addCoroutine(() -> playerHealth.damage(15), Time.time + 3);
     }
 
     private void onPlayerDead() {
-        lives--;
-        onLivesChanged.invoke(this, null);
-        if (lives > 0) {
-            health = MAX_HEALTH;
-        } else {
-            System.out.println("Game over!");
-        }
+        // Tell health to regenerate
     }
 
     public static Player getInstance() {
         return instance;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
     }
 
     public int getAttack() {
@@ -117,39 +121,6 @@ public class Player extends MonoBehaviour {
 
     public void setAttack(int attack) {
         this.attack = attack;
-    }
-
-    public void damage(int amount) {
-        health -= amount;
-        if (health <= 0) {
-            health = 0;
-            onPlayerDead();
-        }
-        onHealthChanged.invoke(this, null);
-    }
-
-    public int getLives() {
-        return lives;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public PlayerController getPlayerController() {
-        return playerController;
-    }
-
-    public PlayerSkillsHandler getPlayerSkillsHandler() {
-        return playerSkillsHandler;
-    }
-
-    public PlayerPowerUpHandler getPlayerPowerUpHandler() {
-        return playerPowerUpHandler;
-    }
-
-    public PlayerPaddle getPlayerPaddle() {
-        return playerPaddle;
     }
 
 }

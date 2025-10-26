@@ -22,11 +22,6 @@ public class Test extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
-        animator = null;
-    }
-
-    @Override
     public void awake() {
         animator.playAnimation(AnimationClipData.Start_Button_Idle, null);
     }

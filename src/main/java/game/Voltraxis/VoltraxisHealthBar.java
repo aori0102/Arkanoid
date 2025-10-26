@@ -59,14 +59,6 @@ public class VoltraxisHealthBar extends MonoBehaviour {
 
     }
 
-    @Override
-    protected void destroyComponent() {
-        healthText = null;
-        healthLostImage = null;
-        healthRemainImage = null;
-        voltraxis = null;
-    }
-
     /**
      * Set the health text component for this health bar UI.<br><br>
      * <b><i><u>NOTE:</u> Only use within {@link VoltraxisPrefab}

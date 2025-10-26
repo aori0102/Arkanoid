@@ -56,13 +56,6 @@ public class PowerCoreHealthBar extends MonoBehaviour {
 
     }
 
-    @Override
-    protected void destroyComponent() {
-        fillLost = null;
-        fillRemain = null;
-        powerCore = null;
-    }
-
     /**
      * Called when {@link PowerCore#onHealthChanged} is invoked. This function
      * updates the ratio between health and max health for filling.

@@ -72,26 +72,6 @@ public class SpriteAnimationClip {
     }
 
     /**
-     * Clear this animation clip's data, including all of
-     * its frame. Should only be called within {@link SpriteAnimator}.
-     */
-    protected void clearClip() {
-
-        spriteSheet = null;
-        currentFrame = null;
-
-        var temp = head;
-        while (temp != null) {
-            var current = temp;
-            temp = temp.next;
-            current.next = null;
-            current.frame = null;
-        }
-        head = null;
-
-    }
-
-    /**
      * Set this clip's looping. Should only be
      * called within {@link SpriteAnimator}.
      *

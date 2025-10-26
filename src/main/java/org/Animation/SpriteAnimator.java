@@ -135,14 +135,7 @@ public class SpriteAnimator extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
-        spriteRenderer = null;
-        for (var key : animationClipMap.keySet()) {
-            animationClipMap.get(key).clearClip();
-        }
-        animationClipMap.clear();
-        animationClipMap = null;
-        currentAnimationNode = null;
+    protected void onDestroy() {
         if (currentFrameCoroutineID != null) {
             Time.removeCoroutine(currentFrameCoroutineID);
             currentAnimationNode = null;

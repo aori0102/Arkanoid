@@ -117,11 +117,6 @@ public abstract class Perk extends MonoBehaviour
         onPointerExited.invoke(this, null);
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
-
     private void setTextVisual() {
         textUI.setVerticalAlignment(TextVerticalAlignment.Middle);
         textUI.setHorizontalAlignment(TextHorizontalAlignment.Center);

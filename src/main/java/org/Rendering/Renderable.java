@@ -90,19 +90,8 @@ public abstract class Renderable extends MonoBehaviour {
     }
 
     @Override
-    protected final void destroyComponent() {
-
+    protected final void onDestroy() {
         RendererManager.unregisterNode(this);
-
-        pivot = null;
-        size = null;
-        position = null;
-        onRenderSizeChanged = null;
-        onPivotChanged = null;
-        onRenderPositionChanged = null;
-        onRenderLayerChanged = null;
-
-        onComponentDestroyed();
     }
 
     /**
@@ -172,12 +161,6 @@ public abstract class Renderable extends MonoBehaviour {
     public abstract Node getNode();
 
     /**
-     * Secondary deconstructing function followed after
-     * initial {@link #destroyComponent()}.
-     */
-    protected abstract void onComponentDestroyed();
-
-    /**
      * Set the {@link #pivot} for this object.
      *
      * @param pivot The pivot to set.
@@ -198,6 +181,7 @@ public abstract class Renderable extends MonoBehaviour {
     public final void setSize(Vector2 size) {
         this.size = size;
         onRenderSizeChanged.invoke(this, null);
+        onPivotChanged.invoke(this, null);
     }
 
     /**

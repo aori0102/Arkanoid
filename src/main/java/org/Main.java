@@ -24,13 +24,13 @@ public class Main extends Application {
         var defaultScene = SceneManager.createScenes();
         RendererManager.initializeRenderSystem(stage, defaultScene);
         EditorView.init();
+        Init.initMenu();
+        Init.initGame();
+        Init.initRecord();
         Init.Init_Aori();
         Init.Init_Duc();
         Init.Init_Dui();
         Init.Init_Kine();
-        Init.initMenu();
-        Init.initGame();
-        Init.initRecord();
         EditorView.wakeHierarchy();
 
         // --- Game/render loop ---
@@ -53,7 +53,7 @@ public class Main extends Application {
      */
     private void update() {
         Time.update();
-        GameObjectManager.runUpdate();
+        GameObjectManager.runCycle();
     }
 
     /**

@@ -50,9 +50,4 @@ public class PerkManager extends MonoBehaviour {
         }
     }
 
-
-    @Override
-    protected void destroyComponent() {
-
-    }
 }

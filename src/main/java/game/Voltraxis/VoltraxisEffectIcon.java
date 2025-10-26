@@ -21,11 +21,6 @@ public class VoltraxisEffectIcon extends MonoBehaviour {
         super(owner);
     }
 
-    @Override
-    protected void destroyComponent() {
-        visualRenderer = null;
-    }
-
     /**
      * Set the target local position of this icon. Used by
      * {@link VoltraxisEffectManager} to control effect

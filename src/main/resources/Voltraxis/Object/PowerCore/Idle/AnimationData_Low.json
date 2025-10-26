@@ -10,10 +10,6 @@
         "x": 128.0,
         "y": 128.0
       },
-      "renderSize": {
-        "x": 128.0,
-        "y": 128.0
-      },
       "duration": 0.68,
       "rotationAngle": 0.0
     },
@@ -26,13 +22,17 @@
         "x": 128.0,
         "y": 128.0
       },
-      "renderSize": {
-        "x": 128.0,
-        "y": 128.0
-      },
       "duration": 0.68,
       "rotationAngle": 0.0
     }
   ],
+  "renderSize": {
+    "x": 128.0,
+    "y": 128.0
+  },
+  "pivot": {
+    "x": 0.5,
+    "y": 0.5
+  },
   "loop": true
 }

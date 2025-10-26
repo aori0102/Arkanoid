@@ -75,10 +75,4 @@ public abstract class MultipleBall extends PowerUp {
         this.paddle = paddle;
     }
 
-    @Override
-    protected void destroyComponent() {
-        playerPowerUpHandler = null;
-        paddle = null;
-    }
-
 }

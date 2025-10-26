@@ -234,8 +234,4 @@ public class ObstacleManager extends MonoBehaviour {
         paddle = chosenPaddle;
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
 }

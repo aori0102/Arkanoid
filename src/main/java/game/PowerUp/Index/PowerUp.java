@@ -30,8 +30,8 @@ public class PowerUp extends MonoBehaviour {
         super(owner);
         var boxCollider = addComponent(BoxCollider.class);
         boxCollider.setLocalSize(new Vector2(100.0, 100.0));
-        boxCollider.isTrigger = true;
-        boxCollider.setOnTriggerEnter(e -> {
+        boxCollider.setTrigger(true);
+        boxCollider.setOnTriggerEnterCallback(e -> {
             if (e.otherCollider.getComponent(PlayerPaddle.class) != null) {
                 isMoving = false;
             }
@@ -40,11 +40,6 @@ public class PowerUp extends MonoBehaviour {
         gameObject.setLayer(Layer.PowerUp);
 
         addComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
-
-    }
-
-    @Override
-    protected void destroyComponent() {
 
     }
 

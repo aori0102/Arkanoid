@@ -8,37 +8,81 @@ import utils.Vector2;
 
 import java.util.HashSet;
 
+/**
+ * A component responsible for handling an objects position and
+ * scale, along with its movement and collision check if attached
+ * with a {@link BoxCollider}.
+ */
 public class Transform extends MonoBehaviour {
-
-    private Vector2 _localPosition = Vector2.zero();
-    private Vector2 _localScale = Vector2.one();
-
-    public EventHandler<Void> onPositionChanged = new EventHandler<>(Transform.class);
-    public EventHandler<Void> onScaleChanged = new EventHandler<>(Transform.class);
 
     private EventActionID parentPositionChangedEventActionID = null;
     private EventActionID parentScaleChangedEventActionID = null;
 
+    public EventHandler<Void> onPositionChanged = new EventHandler<>(Transform.class);
+    public EventHandler<Void> onScaleChanged = new EventHandler<>(Transform.class);
+
+    /**
+     * Read-only field. Can only be written to within {@link #setLocalPosition}.
+     */
+    private Vector2 _localPosition = Vector2.zero();
+
+    /**
+     * Set the local position for this object.
+     */
+    public void setLocalPosition(Vector2 localPosition) {
+        if (gameObject.isDestroyed()) {
+            return;
+        }
+        this._localPosition = new Vector2(localPosition);
+        onPositionChanged.invoke(this, null);
+    }
+
+    /**
+     * Read-only field. Can only be written to within {@link #setLocalScale}.
+     */
+    private Vector2 _localScale = Vector2.one();
+
+    /**
+     * Set the local scale for this object.
+     */
+    public void setLocalScale(Vector2 localScale) {
+        if (gameObject.isDestroyed()) {
+            return;
+        }
+        this._localScale = new Vector2(localScale);
+        onScaleChanged.invoke(this, null);
+    }
+
+    /**
+     * Create this MonoBehaviour.
+     *
+     * @param owner The owner of this component.
+     */
     public Transform(GameObject owner) {
         super(owner);
         gameObject.onParentChanged.addListener(this::gameObject_onParentChanged);
     }
 
+    /**
+     * Called when {@link GameObject#onParentChanged} is invoked.<br><br>
+     * This function relink parent's events and invoke as position and scale might change.
+     */
     private void gameObject_onParentChanged(Object sender, GameObject.OnParentChangedEventArgs e) {
 
         if (e.newParent != e.previousParent) {
 
             if (e.previousParent != null) {
                 var parentTransform = e.previousParent.getTransform();
-                // TODO: caution when removing listener. maybe other place can have more ref - Aori
                 parentTransform.onPositionChanged.removeListener(parentPositionChangedEventActionID);
                 parentTransform.onScaleChanged.removeListener(parentScaleChangedEventActionID);
             }
 
             if (e.newParent != null) {
                 var parentTransform = e.newParent.getTransform();
-                parentTransform.onPositionChanged.addListener(this::parent_onPositionChanged);
-                parentTransform.onScaleChanged.addListener(this::parent_onScaleChanged);
+                parentPositionChangedEventActionID
+                        = parentTransform.onPositionChanged.addListener(this::transform_onPositionChanged);
+                parentScaleChangedEventActionID
+                        = parentTransform.onScaleChanged.addListener(this::transform_onScaleChanged);
             }
 
         }
@@ -105,7 +149,7 @@ public class Transform extends MonoBehaviour {
         if (parent == null) {
             setLocalPosition(globalPosition);
         } else {
-            setLocalPosition(globalPosition.add(parent.getTransform().getGlobalPosition()));
+            setLocalPosition(globalPosition.subtract(parent.getTransform().getGlobalPosition()));
         }
     }
 
@@ -122,30 +166,8 @@ public class Transform extends MonoBehaviour {
         if (parent == null) {
             setLocalScale(globalScale);
         } else {
-            setLocalScale(globalScale.scaleUp(parent.getTransform().getGlobalScale()));
+            setLocalScale(globalScale.scaleDown(parent.getTransform().getGlobalScale()));
         }
-    }
-
-    /**
-     * Set the local position for this object.
-     */
-    public void setLocalPosition(Vector2 localPosition) {
-        if (gameObject.isDestroyed()) {
-            return;
-        }
-        this._localPosition = new Vector2(localPosition);
-        onPositionChanged.invoke(this, null);
-    }
-
-    /**
-     * Set the local scale for this object.
-     */
-    public void setLocalScale(Vector2 localScale) {
-        if (gameObject.isDestroyed()) {
-            return;
-        }
-        this._localScale = new Vector2(localScale);
-        onScaleChanged.invoke(this, null);
     }
 
     /**
@@ -163,21 +185,13 @@ public class Transform extends MonoBehaviour {
         var collider = getComponent(BoxCollider.class);
         if (collider != null) {
 
-            var collisionData = PhysicsManager.validateMovement(collider, translation);
-            // Possible object removal
-            if (gameObject.isDestroyed()) {
-                return;
-            }
-            if (collisionData.collided && !collider.isTrigger) {
+            var collisionData = PhysicsManager.handlePhysicsCollision(collider, translation);
+            if (collisionData != null && !collider.isTrigger()) {
                 destination = collisionData.contactPoint.subtract(collider.getLocalCenter());
             }
 
             var movement = destination.subtract(getGlobalPosition());
-            // Possible object removal
             PhysicsManager.handleTriggerCollision(collider, movement);
-            if (gameObject.isDestroyed()) {
-                return;
-            }
 
         }
 
@@ -185,16 +199,20 @@ public class Transform extends MonoBehaviour {
 
     }
 
-    private void parent_onPositionChanged(Object sender, Void e) {
+    /**
+     * Called when {@link Transform#onPositionChanged} is invoked.<br><br>
+     * This function handles changes from its parent's position.
+     */
+    private void transform_onPositionChanged(Object sender, Void e) {
         onPositionChanged.invoke(this, null);
     }
 
-    private void parent_onScaleChanged(Object sender, Void e) {
+    /**
+     * Called when {@link Transform#onScaleChanged} is invoked.<br><br>
+     * This function handles changes from its parent's scale.
+     */
+    private void transform_onScaleChanged(Object sender, Void e) {
         onScaleChanged.invoke(this, null);
-    }
-
-    @Override
-    protected void destroyComponent() {
     }
 
     /**

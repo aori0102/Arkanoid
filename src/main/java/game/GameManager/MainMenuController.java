@@ -70,9 +70,4 @@ public class MainMenuController extends MonoBehaviour {
         GameManager.getInstance().quitGame();
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
-
 }

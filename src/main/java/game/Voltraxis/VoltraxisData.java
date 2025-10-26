@@ -26,7 +26,7 @@ public final class VoltraxisData {
     /// Groggy skill
     public static final double GROGGY_BASIC_COOLDOWN_REDUCTION = 0.35;
     public static final double GROGGY_ATTACK_INCREMENT = 0.2;
-    public static final double GROGGY_DELTA = 3;
+    public static final double GROGGY_DELTA = 0.08;
     public static final double GROGGY_DURATION = 18.0;
 
     /// EX skill

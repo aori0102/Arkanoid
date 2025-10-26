@@ -49,7 +49,7 @@ public class Laser extends Obstacle implements ICanDamagePlayer {
 
     @Override
     public void damagePlayer() {
-        Player.getInstance().damage(LASER_DAMAGE);
+        Player.getInstance().getPlayerHealth().damage(LASER_DAMAGE);
     }
 
 }

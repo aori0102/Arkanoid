@@ -38,10 +38,6 @@ public final class VoltraxisVisual extends MonoBehaviour {
                 .addListener(this::voltraxisCharging_onUnleashingLaser);
     }
 
-    @Override
-    protected void destroyComponent() {
-    }
-
     /**
      * Link the central brain of Voltraxis to this visual.<br><br>
      * <b><i><u>NOTE</u> : Only use within {@link VoltraxisPrefab}

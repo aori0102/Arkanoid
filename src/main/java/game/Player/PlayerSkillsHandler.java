@@ -99,8 +99,4 @@ public class PlayerSkillsHandler extends MonoBehaviour {
         this.playerPaddle = playerPaddle;
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
 }

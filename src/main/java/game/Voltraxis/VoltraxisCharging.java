@@ -73,10 +73,6 @@ public class VoltraxisCharging extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
-    }
-
-    @Override
     public void awake() {
         voltraxis.getVoltraxisGroggy().onGroggyReachedMax.addListener(this::voltraxisGroggy_onGroggyReachedMax);
         voltraxis.getVoltraxisPowerCoreManager().onPowerCoreDestroyed

@@ -56,11 +56,6 @@ public final class BrickMapManager extends MonoBehaviour {
 
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
-
     public void generateMap() {
 
         clearMap();

@@ -4,9 +4,10 @@ import game.GameObject.BallsManager;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import game.MapGenerator.BrickMapManager;
+import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
 import game.PowerUp.BlizzardBall;
-import game.Player.PlayerPrefab;
+import game.Player.Prefab.PlayerPrefabManager;
 import game.Perks.Index.PerkManager;
 import game.PowerUp.FireBall;
 import game.PowerUp.Index.PowerUpManager;
@@ -116,7 +117,6 @@ public class Init {
 
         //VoltraxisPrefab.instantiate();
 
-
         var borderLeft = GameObjectManager.instantiate("Border_Left");
         borderLeft.addComponent(Border.class).setBorderType(BorderType.BorderLeft);
 
@@ -142,7 +142,9 @@ public class Init {
     public static void initGame() {
         GameObjectManager.instantiate("BrickMapManager").addComponent(BrickMapManager.class);
         BrickMapManager.getInstance().generateMap();
-        PlayerPrefab.instantiate();
+        PlayerPrefabManager.instantiatePlayer();
+
+//        VoltraxisPrefab.instantiate();
     }
 
     public static void initRecord() {

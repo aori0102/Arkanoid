@@ -1,5 +1,7 @@
 package game.Player;
 
+import game.Player.Prefab.PlayerHealthBarPrefab;
+import game.Player.Prefab.PlayerPrefabManager;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.ImageAsset;
@@ -7,6 +9,10 @@ import org.Rendering.SpriteRenderer;
 import utils.MathUtils;
 import utils.Time;
 
+/**
+ * UI class to render health bar and lives based on information
+ * from {@link PlayerHealth}.
+ */
 public final class PlayerHealthUI extends MonoBehaviour {
 
     private static final double HEALTH_BAR_UPDATE_RATE = 7.992;
@@ -14,7 +20,7 @@ public final class PlayerHealthUI extends MonoBehaviour {
     private double ratio = 1.0;
     private double targetRatio = 1.0;
     private SpriteRenderer fillRenderer = null;
-    private SpriteRenderer[] livesRendererArray = new SpriteRenderer[Player.MAX_LIVES];
+    private SpriteRenderer[] livesRendererArray = new SpriteRenderer[PlayerHealth.MAX_LIVES];
 
     /**
      * Create this MonoBehaviour.
@@ -27,8 +33,8 @@ public final class PlayerHealthUI extends MonoBehaviour {
 
     @Override
     public void awake() {
-        Player.getInstance().onHealthChanged.addListener(this::player_onHealthChanged);
-        Player.getInstance().onLivesChanged.addListener(this::player_onLivesChanged);
+        Player.getInstance().getPlayerHealth().onHealthChanged.addListener(this::player_onHealthChanged);
+        Player.getInstance().getPlayerHealth().onLivesChanged.addListener(this::player_onLivesChanged);
     }
 
     @Override
@@ -37,37 +43,33 @@ public final class PlayerHealthUI extends MonoBehaviour {
         fillRenderer.setFillAmount(ratio);
     }
 
-    @Override
-    protected void destroyComponent() {
-    }
-
     /**
-     * Called when {@link Player#onLivesChanged} is invoked.<br><br>
+     * Called when {@link PlayerHealth#onLivesChanged} is invoked.<br><br>
      * This function updates the health UI as player lives change.
      */
     private void player_onLivesChanged(Object sender, Void e) {
-        var lives = Player.getInstance().getLives();
-        for (int i = 0; i < Player.MAX_LIVES; i++) {
+        var lives = Player.getInstance().getPlayerHealth().getLives();
+        for (int i = 0; i < PlayerHealth.MAX_LIVES; i++) {
             if (i < lives) {
                 livesRendererArray[i].setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_LifeRemain.getImage());
             } else {
                 livesRendererArray[i].setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_LifeLost.getImage());
             }
+            livesRendererArray[i].setSize(PlayerHealthBarPrefab.LIFE_BAR_SIZE);
         }
     }
 
     /**
-     * Called when {@link Player#onHealthChanged} is invoked.<br><br>
+     * Called when {@link PlayerHealth#onHealthChanged} is invoked.<br><br>
      * This function updates the health UI as player health changes.
      */
-    private void player_onHealthChanged(Object sender, Void e) {
-        targetRatio = (double) Player.getInstance().getHealth() / Player.MAX_HEALTH;
+    private void player_onHealthChanged(Object sender, PlayerHealth.OnHealthChangedEventArgs e) {
+        targetRatio = (double) Player.getInstance().getPlayerHealth().getHealth() / PlayerHealth.MAX_HEALTH;
     }
-
 
     /**
      * Link the health fill bar renderer to this object.<br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link PlayerPrefab}
+     * <b><i><u>NOTE</u> : Only use within {@link PlayerPrefabManager}
      * as part of component linking process.</i></b>
      *
      * @param fillRenderer The health fill bar renderer.

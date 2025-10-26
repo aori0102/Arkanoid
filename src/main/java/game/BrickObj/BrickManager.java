@@ -55,9 +55,5 @@ public class BrickManager extends MonoBehaviour {
         brickFactory.runProgress();
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
 
 }

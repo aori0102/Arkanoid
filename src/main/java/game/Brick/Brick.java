@@ -32,7 +32,7 @@ public class Brick extends MonoBehaviour implements ITakePlayerDamage {
     }
 
     @Override
-    protected void destroyComponent() {
+    protected void onDestroy() {
         var onBrickDestroyedEventArgs = new OnBrickDestroyedEventArgs();
         onBrickDestroyedEventArgs.brickPosition = getTransform().getGlobalPosition();
         onBrickDestroyed.invoke(this, onBrickDestroyedEventArgs);

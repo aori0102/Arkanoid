@@ -19,10 +19,6 @@ public class PowerCoreVisual extends MonoBehaviour {
     }
 
     @Override
-    protected void destroyComponent() {
-    }
-
-    @Override
     public void awake() {
         animator = getComponent(SpriteAnimator.class);
         animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle, null);

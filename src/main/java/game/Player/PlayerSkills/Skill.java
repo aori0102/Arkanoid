@@ -35,7 +35,4 @@ public abstract class Skill extends MonoBehaviour {
         getComponent(SpriteRenderer.class).setImage(skillIndex.getImageIndex().getImage());
     }
 
-    protected void destroyComponent() {
-
-    }
 }

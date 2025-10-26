@@ -63,8 +63,4 @@ public class BallsManager extends MonoBehaviour {
         return currentEffect;
     }
 
-    @Override
-    protected void destroyComponent() {
-    }
-
 }
