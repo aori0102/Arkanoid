@@ -81,7 +81,7 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
         super(owner);
     }
 
-    protected void apply(PowerUp powerUp) {
+    private void apply(PowerUp powerUp) {
 
         switch (powerUp.getPowerUpIndex()) {
 
@@ -103,6 +103,24 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
 
         }
 
+    }
+
+    /**
+     * Called when a power up triggers against this player's
+     * registered paddle.
+     *
+     * @param sender The caller, {@link PlayerPaddle}.
+     * @param e      The power up that was triggered.
+     */
+    private void paddle_onPowerUpConsumed(Object sender, PowerUp e) {
+        apply(e);
+        e.onApplied();
+    }
+
+
+    @Override
+    public void awake() {
+        Player.getInstance().getPlayerPaddle().onPowerUpConsumed.addListener(this::paddle_onPowerUpConsumed);
     }
 
 }

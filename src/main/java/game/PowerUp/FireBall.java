@@ -41,9 +41,4 @@ public class FireBall extends PowerUp {
         PowerUpManager.getInstance().onFireBall.removeListener(fireBallEventActionID);
         GameObjectManager.destroy(gameObject);
     }
-
-    @Override
-    public void destroyComponent() {
-        fireBallEventActionID = null;
-    }
 }

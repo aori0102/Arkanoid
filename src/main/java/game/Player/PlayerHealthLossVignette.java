@@ -1,6 +1,5 @@
 package game.Player;
 
-import game.Player.Prefab.PlayerPrefabManager;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;

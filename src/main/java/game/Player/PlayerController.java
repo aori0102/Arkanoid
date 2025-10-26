@@ -32,8 +32,4 @@ public class PlayerController extends MonoBehaviour {
         return getComponent(ActionMap.class);
     }
 
-    @Override
-    protected void destroyComponent() {
-
-    }
 }

@@ -62,6 +62,11 @@ public class PowerUpManager extends MonoBehaviour {
         instance = this;
     }
 
+    @Override
+    public void awake() {
+        playerPaddle = Player.getInstance().getPlayerPaddle();
+    }
+
     /**
      * Link each power up with its corresponding event
      * These events are from the {@link PlayerPowerUpHandler}
@@ -98,7 +103,7 @@ public class PowerUpManager extends MonoBehaviour {
 
 
         int target = 1;
-        //if (Random.range(0, 1) == target) {
+        if (Random.range(0, 10) == target) {
 
             var chosenKey = PowerUpPrefabGenerator.registeredPowerUps.get(
                     Random.range(0, PowerUpPrefabGenerator.registeredPowerUps.size() - 1)
@@ -107,10 +112,9 @@ public class PowerUpManager extends MonoBehaviour {
             PowerUp chosen = PowerUpPrefabGenerator.powerUpPrefabHashMap.get(chosenKey)
                     .generatePowerUp(position, playerPaddle);
 
-
             assignPowerUpEvent(chosen);
 
-        //}
+        }
     }
 
 
@@ -123,24 +127,8 @@ public class PowerUpManager extends MonoBehaviour {
         this.playerPowerUpHandler = playerPowerUpHandler;
     }
 
-    /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
-     *
-     * @param playerPaddle .
-     */
-    public void linkPlayerPaddle(PlayerPaddle playerPaddle) {
-        this.playerPaddle = playerPaddle;
-    }
-
     public static PowerUpManager getInstance() {
         return instance;
-    }
-
-    @Override
-    protected void onDestroy() {
-
     }
 
 }

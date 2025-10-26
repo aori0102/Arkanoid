@@ -48,7 +48,7 @@ public class TriplicateBall extends MultipleBall {
      */
     @Override
     protected void handleOnMultipleRequest() {
-        /*HashSet<Ball> ballHashSet = new HashSet<>(BallsManager.instance.getBallSet());
+        HashSet<Ball> ballHashSet = new HashSet<>(BallsManager.instance.getBallSet());
 
         for(Ball ball : ballHashSet) {
             Vector2 normalVector = new Vector2(-ball.getDirection().y, ball.getDirection().x).normalize();
@@ -56,17 +56,14 @@ public class TriplicateBall extends MultipleBall {
             Vector2 secondDirection = ball.getDirection().add(normalVector.multiply(-1)).normalize();
 
             var ball1 = spawnBall(ball.getTransform());
-            ball1.setPaddle(paddle.getComponent(PlayerPaddle.class));
             BallsManager.instance.addBall(ball1);
             ball1.setDirection(firstDirection);
 
             var ball2 = spawnBall(ball.getTransform());
-            ball2.setPaddle(paddle.getComponent(PlayerPaddle.class));
             BallsManager.instance.addBall(ball2);
             ball2.setDirection(secondDirection);
         }
 
-         */
         // TODO : fix this shit too
     }
 
@@ -75,11 +72,6 @@ public class TriplicateBall extends MultipleBall {
         System.out.println("TriplicateBall onApplied");
         PowerUpManager.getInstance().onTriplicateBall.removeListener(triplicateBallEventActionID);
         GameObjectManager.destroy(gameObject);
-    }
-
-    @Override
-    protected void destroyComponent() {
-        triplicateBallEventActionID = null;
     }
 
 }

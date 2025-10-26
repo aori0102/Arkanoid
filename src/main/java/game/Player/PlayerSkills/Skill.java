@@ -30,9 +30,12 @@ public abstract class Skill extends MonoBehaviour {
 
     public abstract void assignColliderInfo();
 
+    // TODO : fix this class
+
     protected void setSkillIndex(SkillIndex skillIndex) {
         this.skillIndex = skillIndex;
         getComponent(SpriteRenderer.class).setImage(skillIndex.getImageIndex().getImage());
     }
 
+    public abstract void invoke() ;
 }

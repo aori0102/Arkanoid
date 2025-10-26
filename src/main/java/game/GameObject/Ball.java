@@ -1,5 +1,6 @@
 package game.GameObject;
 
+import game.Player.Player;
 import game.Player.PlayerPaddle;
 import game.PowerUp.StatusEffect;
 import game.Voltraxis.Interface.ITakePlayerDamage;
@@ -37,6 +38,7 @@ public class Ball extends MonoBehaviour {
      * Assign collider specs and function to other aspects.
      */
     public void awake() {
+        paddle = Player.getInstance().getPlayerPaddle();
 
         // Assign collider specs and the function
         var ballCollider = getComponent(BoxCollider.class);
@@ -137,7 +139,7 @@ public class Ball extends MonoBehaviour {
      */
     public void setDirection(Vector2 direction) {
         this.direction = direction;
-        paddle.onMouseReleased.removeAllListeners();
+        Player.getInstance().getPlayerPaddle().onMouseReleased.removeAllListeners();
     }
 
     /**
@@ -147,15 +149,6 @@ public class Ball extends MonoBehaviour {
      */
     public Vector2 getDirection() {
         return direction;
-    }
-
-    /**
-     * Set the paddle to listen to its event.
-     *
-     * @param paddle : invoked event's position.
-     */
-    public void setPaddle(PlayerPaddle paddle) {
-        this.paddle = paddle;
     }
 
     public SpriteRenderer getBallVisual() {

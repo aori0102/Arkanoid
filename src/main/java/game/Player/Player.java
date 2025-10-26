@@ -1,15 +1,9 @@
 package game.Player;
 
 import game.PowerUp.Index.PowerUp;
-import org.Event.EventHandler;
-import game.GameObject.Paddle;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
-import org.InputAction.ActionMap;
-
-import java.util.HashSet;
-import java.util.List;
 import utils.Time;
 
 /**
@@ -28,7 +22,7 @@ public class Player extends MonoBehaviour {
     private final PlayerPowerUpHandler playerPowerUpHandler;
     private final PlayerHealth playerHealth;
     private final PlayerSkillsHandler playerSkillsHandler;
-    private final PlayerPaddle playerPaddle;
+    private PlayerPaddle playerPaddle;
     private PlayerController playerController = null;
 
     /**
@@ -47,7 +41,6 @@ public class Player extends MonoBehaviour {
 
         playerPowerUpHandler = addComponent(PlayerPowerUpHandler.class);
         playerSkillsHandler = addComponent(PlayerSkillsHandler.class);
-        playerPaddle = addComponent(PlayerPaddle.class);
         playerHealth = addComponent(PlayerHealth.class);
         playerController = addComponent(PlayerController.class);
     }
@@ -71,31 +64,6 @@ public class Player extends MonoBehaviour {
         return playerController;
     }
 
-    /**
-     * Link this player with a paddle. Player will be
-     * listening to paddle's {@link PlayerPaddle#onPowerUpConsumed}.
-     *
-     * @param paddle The paddle to be linked.
-     */
-    public void linkPlayerPaddle(PlayerPaddle paddle) {
-        // TODO : Delete this
-
-        this.playerPaddle = paddle;
-        playerPaddle.onPowerUpConsumed.addListener(this::paddle_onPowerUpConsumed);
-        playerSkillsHandler.linkPlayerPaddle(paddle.getComponent(PlayerPaddle.class));
-    }
-
-    /**
-     * Called when a power up triggers against this player's
-     * registered paddle.
-     *
-     * @param sender The caller, {@link PlayerPaddle}.
-     * @param e      The power up that was triggered.
-     */
-    private void paddle_onPowerUpConsumed(Object sender, PowerUp e) {
-        playerPowerUpHandler.apply(e);
-        e.onApplied();
-    }
 
     @Override
     protected void onDestroy() {
@@ -123,4 +91,14 @@ public class Player extends MonoBehaviour {
         this.attack = attack;
     }
 
+    /**
+     * <br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link }
+     * as part of component linking process.</i></b>
+     *
+     * @param playerPaddle .
+     */
+    public void linkPlayerPaddle(PlayerPaddle playerPaddle) {
+        this.playerPaddle = playerPaddle;
+    }
 }

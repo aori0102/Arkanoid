@@ -22,8 +22,6 @@ public class Border extends MonoBehaviour {
     public void awake() {
         var boxCollider = getComponent(BoxCollider.class);
         assignColliderSize(boxCollider);
-        System.out.println(boxCollider.getTransform().getGlobalPosition());
-        System.out.println( borderType + " size : " + boxCollider.getSize());
     }
 
     private void assignColliderSize(BoxCollider boxCollider) {
@@ -32,12 +30,7 @@ public class Border extends MonoBehaviour {
             case BorderTop, BorderBottom -> boxCollider.setLocalSize(new Vector2(20000.0, 1.0));
         }
     }
-
-    @Override
-    protected void destroyComponent() {
-
-    }
-
+    
     public BorderType getBorderType() {
         return borderType;
     }

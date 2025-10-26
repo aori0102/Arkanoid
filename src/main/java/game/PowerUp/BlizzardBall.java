@@ -41,8 +41,4 @@ public class BlizzardBall extends PowerUp {
         GameObjectManager.destroy(gameObject);
     }
 
-    @Override
-    protected void destroyComponent() {
-        blizzardBallEventActionID = null;
-    }
 }

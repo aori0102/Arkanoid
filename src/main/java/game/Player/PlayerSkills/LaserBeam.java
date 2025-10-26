@@ -59,12 +59,16 @@ public class LaserBeam extends Skill{
     @Override
     public void assignColliderInfo() {
         var collider = getComponent(BoxCollider.class);
-        System.out.println(Layer.combineLayerMask(colliderLayers));
         collider.setIncludeLayer(Layer.combineLayerMask(colliderLayers));
         collider.setLocalCenter(new Vector2(0, 0));
         collider.setLocalSize(new Vector2(32, 256));
 
         collider.setOnCollisionEnterCallback(this::handleCollision);
+    }
+
+    @Override
+    public void invoke() {
+        //TODO: Add event
     }
 
 

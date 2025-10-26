@@ -6,11 +6,14 @@ import game.PowerUp.Index.PowerUp;
 import javafx.scene.input.MouseButton;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
+import org.Rendering.ImageAsset;
+import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
 
@@ -34,7 +37,6 @@ public class PlayerPaddle extends MonoBehaviour {
     private Vector2 fireDirection = new Vector2();
 
     private boolean canInvoke;
-    private boolean isMoving = true;
     private boolean canStartStunnedCounter = false;
     private boolean canReduceSpeed = true;
     private double stunnedCounter = 0;
@@ -55,13 +57,8 @@ public class PlayerPaddle extends MonoBehaviour {
     public void awake() {
         // Assign components
         BoxCollider boxCollider = gameObject.getComponent(BoxCollider.class);
-
-        //Assign collider specs
-        boxCollider.setLocalCenter(new Vector2(0, 0));
-        boxCollider.setLocalSize(new Vector2(64, 16));
-
         //Assign line specs
-        boxCollider.setOnTriggerEnter(this::onTriggerEnter);
+        boxCollider.setOnTriggerEnterCallback(this::onTriggerEnter);
 
         ObstacleManager.getInstance().onPaddleCollidedWithObstacle.addListener((e, voi) -> {
             canStartStunnedCounter = true;
@@ -202,10 +199,5 @@ public class PlayerPaddle extends MonoBehaviour {
      */
     public void linkArrow(Arrow arrow) {
         this.arrow = arrow;
-    }
-
-    @Override
-    protected void destroyComponent() {
-
     }
 }

@@ -186,6 +186,9 @@ public class Transform extends MonoBehaviour {
         if (collider != null) {
 
             var collisionData = PhysicsManager.handlePhysicsCollision(collider, translation);
+            if (gameObject.isDestroyed()) {
+                return;
+            }
             if (collisionData != null && !collider.isTrigger()) {
                 destination = collisionData.contactPoint.subtract(collider.getLocalCenter());
             }
@@ -193,6 +196,9 @@ public class Transform extends MonoBehaviour {
             var movement = destination.subtract(getGlobalPosition());
             PhysicsManager.handleTriggerCollision(collider, movement);
 
+            if (gameObject.isDestroyed()) {
+                return;
+            }
         }
 
         setGlobalPosition(destination);

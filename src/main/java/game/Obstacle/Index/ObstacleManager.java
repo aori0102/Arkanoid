@@ -1,6 +1,7 @@
 package game.Obstacle.Index;
 
 
+import game.Player.Player;
 import game.Player.PlayerPaddle;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
@@ -61,6 +62,10 @@ public class ObstacleManager extends MonoBehaviour {
      * Event fired to paddle when it collides with obstacles.
      */
     public EventHandler<Void> onPaddleCollidedWithObstacle = new EventHandler<>(ObstacleManager.class);
+
+    public void awake() {
+        paddle = Player.getInstance().getPlayerPaddle();
+    }
 
     public ObstacleManager(GameObject gameObjectManager) {
         super(gameObjectManager);
@@ -223,15 +228,6 @@ public class ObstacleManager extends MonoBehaviour {
      */
     private int countActiveObstacles() {
         return obstacleSet.size();
-    }
-
-    /**
-     * Set the paddle
-     *
-     * @param chosenPaddle the set paddle
-     */
-    public void setPaddle(PlayerPaddle chosenPaddle) {
-        paddle = chosenPaddle;
     }
 
 }

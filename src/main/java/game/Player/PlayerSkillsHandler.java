@@ -43,7 +43,7 @@ public class PlayerSkillsHandler extends MonoBehaviour {
     public void awake() {
        Player.getInstance().getPlayerController().getActionMap().
                onKeyPressed.addListener(this::handleSkillRequest);
-
+       playerPaddle = getComponent(PlayerPaddle.class);
     }
 
     public void update() {
@@ -53,6 +53,8 @@ public class PlayerSkillsHandler extends MonoBehaviour {
     private void handleSkillRequest(Object o,ActionMap.Action action) {
         switch (action) {
             case Skill1 -> spawnSkill(LaserBeam.class);
+            case Skill2 -> {}
+            case Skill3 -> {}
         }
     }
 
@@ -80,6 +82,8 @@ public class PlayerSkillsHandler extends MonoBehaviour {
         }
     }
 
+    //TODO : Separate skill data and skillHandler
+
     private HashMap<Class<? extends Skill>, SkillData> createSkillDataMap() {
         HashMap<Class<? extends Skill>, SkillData> skillMap = new HashMap<>();
 
@@ -87,16 +91,4 @@ public class PlayerSkillsHandler extends MonoBehaviour {
 
         return skillMap;
     }
-
-
-    /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link PlayerSkillsHandler }
-     * as part of component linking process.</i></b>
-     * @param playerPaddle .
-     */
-    public void linkPlayerPaddle(PlayerPaddle playerPaddle) {
-        this.playerPaddle = playerPaddle;
-    }
-
 }

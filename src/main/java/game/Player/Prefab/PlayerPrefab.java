@@ -1,8 +1,13 @@
 package game.Player.Prefab;
 
+import game.GameObject.Arrow;
 import game.Player.*;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.Physics.BoxCollider;
+import org.Rendering.ImageAsset;
+import org.Rendering.SpriteRenderer;
+import utils.Vector2;
 
 /**
  * Prefab for the main Player object. Contains multiple core functioning
@@ -20,14 +25,31 @@ public class PlayerPrefab implements IPlayerPrefab {
     @Override
     public GameObject instantiatePrefab() {
 
-        return GameObjectManager.instantiate("Player")
-                .addComponent(Player.class)
-                .addComponent(PlayerSkillsHandler.class)
-                .addComponent(PlayerPowerUpHandler.class)
-                .addComponent(PlayerPaddle.class)
-                .addComponent(PlayerHealth.class)
-                .getGameObject();
 
+        var playerObject = GameObjectManager.instantiate("Player")
+            .addComponent(Player.class)
+            .addComponent(PlayerSkillsHandler.class)
+            .addComponent(PlayerPowerUpHandler.class)
+            .addComponent(PlayerHealth.class)
+            .getGameObject();
+
+        var player = playerObject.getComponent(Player.class);
+
+        // Health bar
+        var healthBarObject = new PlayerHealthBarPrefab().instantiatePrefab();
+        healthBarObject.setParent(playerObject);
+
+        // Health loss vignette
+        var healthLossVignetteObject = new PlayerHealthLossVignettePrefab().instantiatePrefab();
+        var healthLossVignette = healthLossVignetteObject.getComponent(PlayerHealthLossVignette.class);
+        healthLossVignette.linkPlayer(player);
+        healthLossVignetteObject.setParent(playerObject);
+
+        //Player paddle
+        var paddle = new PaddlePrefab().instantiatePrefab();
+        player.linkPlayerPaddle(paddle.getComponent(PlayerPaddle.class));
+
+        return playerObject;
     }
 
 }
