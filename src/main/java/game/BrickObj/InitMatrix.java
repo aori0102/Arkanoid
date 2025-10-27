@@ -24,9 +24,15 @@ public class InitMatrix {
     public final static int[] fy = {0, 0, 1, -1, 1, -1, 1, -1};
 
     public static Brick getNewBrick(BrickType brickType) {
-        var brick = BrickManager.getInstance().instantiateBrick();
-        brick.setType(brickType);
-        return brick;
+        var currentBrick = GameObjectManager.instantiate().addComponent(Brick.class);
+
+        var brickRenderer = currentBrick.addComponent(SpriteRenderer.class);
+        brickRenderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
+        brickRenderer.setSize(BRICK_SIZE);
+        brickRenderer.setPivot(new Vector2(0.5, 0.5));
+        currentBrick.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
+        return currentBrick;
+
     }
 
     public static boolean inBounds(int r, int c, int rows, int cols) {
@@ -145,17 +151,10 @@ public class InitMatrix {
             for (int r = 0; r < rows; r++) {
                 Vector<Brick> row = new Vector<>(columns);
                 for (int c = 0; c < columns; c++) {
-                    var currentBrick = GameObjectManager.instantiate().addComponent(Brick.class);
+                    var currentBrick = getNewBrick(val.getBrickType());
                     currentBrick.onBrickCollision.addListener(this::onBrickCollision);
                     currentBrick.setRowId(r);
                     currentBrick.setColID(c);
-                    currentBrick.setType(val.getBrickType());
-
-                    var brickRenderer = currentBrick.addComponent(SpriteRenderer.class);
-                    brickRenderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
-                    brickRenderer.setSize(BRICK_SIZE);
-                    brickRenderer.setPivot(new Vector2(0.5, 0.5));
-                    currentBrick.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
 
                     row.add(currentBrick);
                 }
@@ -195,9 +194,11 @@ public class InitMatrix {
         }
 
         public void set(int r, int c, Brick value) {
-            //GameObjectManager.destroy(matrix.get(r).get(c).getGameObject());
+            matrix.get(r).set(c, null);
+            GameObjectManager.destroy(matrix.get(r).get(c).getGameObject());
             value.setRowId(r);
             value.setColID(c);
+            value.onBrickCollision.addListener(this::onBrickCollision);
             matrix.get(r).set(c, value);
         }
 

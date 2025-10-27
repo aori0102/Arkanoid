@@ -18,9 +18,9 @@ public final class RandomStyle implements StyleGenerator {
         double density = lerp(0.55, 0.85, 1.0 - difficulty);
         for (int r = 0; r < rows; r++)
             for (int c = 0; c < cols; c++)
-                if (rng.nextDouble() < density)
-                    g.set(r, c, getNewBrick(TypePickers.pickByBias(rng, difficulty)));
-        SpecialsSprinkler.sprinkle(g, rng, difficulty);
+                if (rng.nextDouble() < density) {}
+                    //g.set(r, c, getNewBrick(TypePickers.pickByBias(rng, difficulty)));
+        //SpecialsSprinkler.sprinkle(g, rng, difficulty);
         return g;
     }
 }

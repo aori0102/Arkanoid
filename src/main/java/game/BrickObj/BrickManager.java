@@ -1,5 +1,6 @@
 package game.BrickObj;
 
+import game.BrickObj.BrickEvent.CollisionEvent;
 import game.BrickObj.BrickGenMap.MapStyle;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
@@ -30,20 +31,8 @@ public class BrickManager extends MonoBehaviour {
         if (instance != null) {
             throw new IllegalStateException("BrickManager is a singleton!");
         }
-        brickFactory = new BrickFactory(10, 10, MapStyle.CAVES, 0.3);
+        brickFactory = new BrickFactory(10, 10, MapStyle.RANDOM, 0.3);
         instance = this;
-    }
-
-    public Brick instantiateBrick() {
-
-        var brick = GameObjectManager.instantiate().addComponent(Brick.class);
-        var brickRenderer = brick.addComponent(SpriteRenderer.class);
-        brickRenderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
-        brickRenderer.setSize(BRICK_SIZE);
-        brickRenderer.setPivot(new Vector2(0.5, 0.5));
-        brick.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
-        return brick;
-
     }
 
     public static BrickManager getInstance() {

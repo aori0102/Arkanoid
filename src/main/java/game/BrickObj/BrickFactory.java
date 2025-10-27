@@ -33,7 +33,7 @@ public class BrickFactory {
         matrixObj = new BrickMatrix(rowData, colData, brickComponent);
 
 //        GenMap gen = new GenMap(rowData, colData);
-//        matrixObj = gen.generate(kindMap, difficult);
+//        BrickMatrix tmp = gen.generate(kindMap, difficult);
 
         endEvent = new EndEvent();
         waveEffect = new WaveEffect();
