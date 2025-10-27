@@ -2,6 +2,7 @@ package game.BrickObj;
 
 import game.BrickObj.BrickEvent.EndEvent;
 import game.BrickObj.BrickEvent.WaveEffect;
+import game.BrickObj.BrickGenMap.GenMap;
 import game.BrickObj.BrickGenMap.MapStyle;
 import org.GameObject.GameObjectManager;
 
@@ -31,10 +32,9 @@ public class BrickFactory {
         brickComponent.setType(BrickType.Normal);
         matrixObj = new BrickMatrix(rowData, colData, brickComponent);
 
-      /*  GenMap gen = new GenMap(rowData, colData);
-        matrixObj = gen.generate(kindMap, difficult);
+//        GenMap gen = new GenMap(rowData, colData);
+//        matrixObj = gen.generate(kindMap, difficult);
 
-*/
         endEvent = new EndEvent();
         waveEffect = new WaveEffect();
     }

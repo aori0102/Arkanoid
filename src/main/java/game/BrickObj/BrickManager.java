@@ -36,7 +36,7 @@ public class BrickManager extends MonoBehaviour {
 
     public Brick instantiateBrick() {
 
-        var brick = GameObjectManager.instantiate("Brick").addComponent(Brick.class);
+        var brick = GameObjectManager.instantiate().addComponent(Brick.class);
         var brickRenderer = brick.addComponent(SpriteRenderer.class);
         brickRenderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
         brickRenderer.setSize(BRICK_SIZE);

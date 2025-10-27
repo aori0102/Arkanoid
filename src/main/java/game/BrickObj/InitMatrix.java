@@ -2,10 +2,15 @@ package game.BrickObj;
 
 import game.BrickObj.BrickEvent.CollisionEvent;
 import org.GameObject.GameObjectManager;
+import org.Physics.BoxCollider;
+import org.Rendering.ImageAsset;
+import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 import game.BrickObj.BrickManager.*;
 
 import java.util.Vector;
+
+import static game.BrickObj.BrickManager.BRICK_SIZE;
 
 public class InitMatrix {
 
@@ -145,6 +150,13 @@ public class InitMatrix {
                     currentBrick.setRowId(r);
                     currentBrick.setColID(c);
                     currentBrick.setType(val.getBrickType());
+
+                    var brickRenderer = currentBrick.addComponent(SpriteRenderer.class);
+                    brickRenderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
+                    brickRenderer.setSize(BRICK_SIZE);
+                    brickRenderer.setPivot(new Vector2(0.5, 0.5));
+                    currentBrick.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
+
                     row.add(currentBrick);
                 }
                 matrix.add(row);
@@ -183,7 +195,7 @@ public class InitMatrix {
         }
 
         public void set(int r, int c, Brick value) {
-            GameObjectManager.destroy(matrix.get(r).get(c).getGameObject());
+            //GameObjectManager.destroy(matrix.get(r).get(c).getGameObject());
             value.setRowId(r);
             value.setColID(c);
             matrix.get(r).set(c, value);
@@ -208,7 +220,7 @@ public class InitMatrix {
             for (int r = 0; r < rows; r++) {
                 Vector<Brick> row = new Vector<>(columns);
                 for (int c = 0; c < columns; c++) {
-                    row.add(other.matrix.get(r).get(c));
+                    row.add(other.matrix.get(r).get(c)); // shallow phần tử
                 }
                 newMat.add(row);
             }
