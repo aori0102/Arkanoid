@@ -174,7 +174,7 @@ public class PhysicsManager {
 
             // Call collision callback on the first collider
             result = new CollisionData();
-            result.thisCollider = hitCollider;
+            result.thisCollider = collider;
             result.otherCollider = hitCollider;
             result.contactPoint = from.add(movement.multiply(collisionTime));
             result.hitNormal = hitNormal;
