@@ -17,9 +17,9 @@ public final class PowerUpPrefabGenerator {
 
     static {
         powerUpPrefabHashMap.put(FireBall.class, new FireBallPrefab());
-        powerUpPrefabHashMap.put(BlizzardBall.class, new BlizzardBallPrefab());
-        powerUpPrefabHashMap.put(TriplicateBall.class, new TriplicateBallPrefab());
-        powerUpPrefabHashMap.put(DuplicateBall.class, new DuplicateBallPrefab());
+        //powerUpPrefabHashMap.put(BlizzardBall.class, new BlizzardBallPrefab());
+        //powerUpPrefabHashMap.put(TriplicateBall.class, new TriplicateBallPrefab());
+        //powerUpPrefabHashMap.put(DuplicateBall.class, new DuplicateBallPrefab());
 
         registeredPowerUps = new ArrayList<>(powerUpPrefabHashMap.keySet());
     }

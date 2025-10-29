@@ -103,10 +103,10 @@ public class PowerUpManager extends MonoBehaviour {
 
 
         int target = 1;
-        if (Random.range(0, 10) == target) {
+        //if (Random.range(0, 1) == target) {
 
             var chosenKey = PowerUpPrefabGenerator.registeredPowerUps.get(
-                    Random.range(0, PowerUpPrefabGenerator.registeredPowerUps.size() - 1)
+                    Random.range(0, PowerUpPrefabGenerator.registeredPowerUps.size())
             );
 
             PowerUp chosen = PowerUpPrefabGenerator.powerUpPrefabHashMap.get(chosenKey)
@@ -114,7 +114,7 @@ public class PowerUpManager extends MonoBehaviour {
 
             assignPowerUpEvent(chosen);
 
-        }
+        //}
     }
 
 

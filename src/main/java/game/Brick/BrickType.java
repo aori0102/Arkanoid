@@ -2,7 +2,7 @@ package game.Brick;
 
 public enum  BrickType {
 
-    Normal(18),
+    Normal(90),
     Steel(36),
     Diamond(999999);
 

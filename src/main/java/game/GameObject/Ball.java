@@ -1,5 +1,6 @@
 package game.GameObject;
 
+import game.Brick.Brick;
 import game.Player.Player;
 import game.Player.PlayerPaddle;
 import game.PowerUp.StatusEffect;
@@ -89,9 +90,18 @@ public class Ball extends MonoBehaviour {
     }
 
     private void handleCollision(CollisionData collisionData) {
-        var target = collisionData.otherCollider.getComponent(ITakePlayerDamage.class);
-        if (target != null) {
-            target.takeDamage(BALL_DAMAGE);
+        if (isCollidedWith(collisionData, ITakePlayerDamage.class)) {
+            var target = collisionData.otherCollider.getComponent(ITakePlayerDamage.class);
+            if (target != null) {
+                if (target instanceof Brick brick) {
+                    if (currentStatusEffect != StatusEffect.None) {
+                        brick.setStatusBrickEffect(currentStatusEffect);
+                        currentStatusEffect = StatusEffect.None;
+                        changeBallVisual();
+                    }
+                }
+                target.takeDamage(BALL_DAMAGE);
+            }
         }
     }
 
@@ -106,11 +116,6 @@ public class Ball extends MonoBehaviour {
 
         // Normal vector to calculate reflect direction
         var normal = collisionData.hitNormal.normalize();
-        Vector2 dirNorm = direction.normalize();
-
-        if (Vector2.dot(dirNorm, normal) > 0) {
-            normal = normal.multiply(-1);
-        }
 
         // Dot product of the ball's direction with the surface
         double dotCoefficient = Vector2.dot(direction.normalize(), normal.normalize());
@@ -120,7 +125,7 @@ public class Ball extends MonoBehaviour {
                 (dotCoefficient >= -1 && dotCoefficient <= -0.95);
 
         // Reflect direction
-        Vector2 reflectDir = dirNorm.subtract(normal.multiply(2 * Vector2.dot(dirNorm, normal)));
+        Vector2 reflectDir = normal.add(normal).add(direction.normalize());
 
         // If the ball's direction is perpendicular then adding the offset vector to it in order to avoid horizontal movement
         if (nearlyParallel) {
@@ -129,10 +134,14 @@ public class Ball extends MonoBehaviour {
 
         // If the ball interacts with the moving paddle, the reflected direction will be different from the motionless paddle,
         // and it will be calculated by adding the moving vector to the reflected direction
-        if (isCollidedWith(collisionData, PlayerPaddle.class) && !paddle.movementVector.equals(Vector2.zero())) {
-            reflectDir = reflectDir.add(paddle.movementVector.normalize());
-        }
+        if (isCollidedWith(collisionData, PlayerPaddle.class)) {;;
+            if (Math.abs(normal.y) > Math.abs(normal.x)
+                    && !paddle.movementVector.equals(Vector2.zero())
+                    && !reflectDir.add(paddle.movementVector.normalize()).equals(Vector2.zero())) {
+                reflectDir = reflectDir.add(paddle.movementVector.normalize());
+            }
 
+        }
 
         direction = reflectDir.normalize();
     }
