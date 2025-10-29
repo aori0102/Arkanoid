@@ -98,7 +98,7 @@ public class ObstacleManager extends MonoBehaviour {
      * @return {@code true} if the obstacle can spawn
      */
     private boolean handleSpawningStatus() {
-        timeSinceLastSpawn += Time.deltaTime;
+        timeSinceLastSpawn += Time.getDeltaTime();
         // Expected number of spawned obstacles
         var level = 1;        // TODO: add a level system then change this part - Aori
         double lambda = (BASE_DENSITY_PER_MINUTE / 60) * (1 + level * 0.05);
@@ -114,7 +114,7 @@ public class ObstacleManager extends MonoBehaviour {
         double effectiveLambda = lambda * scale;
 
         // The poisson process result
-        double poissonProcess = effectiveLambda * Time.deltaTime;
+        double poissonProcess = effectiveLambda * Time.getDeltaTime();
         return Random.range(0.0, 1.0) < poissonProcess;
 
     }
