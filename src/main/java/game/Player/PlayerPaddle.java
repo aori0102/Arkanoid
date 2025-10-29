@@ -28,6 +28,7 @@ public class PlayerPaddle extends MonoBehaviour {
     private static final double BASE_PADDLE_SPEED = 1000;
     private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0);
 
+    private static final double DAMAGE_TAKEN_DELAY = 0.47;
 
     //Event
     public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(PlayerPaddle.class);
@@ -41,6 +42,8 @@ public class PlayerPaddle extends MonoBehaviour {
     private boolean canReduceSpeed = true;
     private double stunnedCounter = 0;
     private double currentSpeed = 1000;
+
+    private double previousDamagedTick = 0.0;
 
     public boolean isFired = false;
 
@@ -188,6 +191,23 @@ public class PlayerPaddle extends MonoBehaviour {
         var powerUp = collisionData.otherCollider.getComponent(PowerUp.class);
         if (powerUp != null) {
             onPowerUpConsumed.invoke(this, powerUp);
+            return;
+        }
+
+    }
+
+    private void processDamage() {
+
+        var overlappedList = PhysicsManager.getOverlapColliders(getComponent(BoxCollider.class), true);
+        for (var collider : overlappedList) {
+            var damageObject = collider.getComponent(ICanDamagePlayer.class);
+            if (damageObject != null) {
+                if (Time.getTime() > previousDamagedTick + DAMAGE_TAKEN_DELAY) {
+                    Player.getInstance().getPlayerHealth().damage(damageObject.getDamage());
+                    previousDamagedTick = Time.getTime();
+                }
+                damageObject.onDamagedPlayer();
+            }
         }
 
     }
