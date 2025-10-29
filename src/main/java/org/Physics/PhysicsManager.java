@@ -350,6 +350,74 @@ public class PhysicsManager {
     }
 
     /**
+     * Get all {@link BoxCollider} that is overlapping the provided collider. Note
+     * that only the colliders within the included layer of {@code collider} is processed.
+     *
+     * @param collider       The collider to be checked for overlapping.
+     * @param processTrigger Whether to process trigger {@link BoxCollider}s.
+     * @return A list containing all overlapped {@link BoxCollider}s.
+     */
+    public static List<BoxCollider> getOverlapColliders(BoxCollider collider, boolean processTrigger) {
+
+        List<BoxCollider> result = new ArrayList<>();
+
+        Vector2 center = collider.getGlobalCenter();
+        Vector2 extents = collider.getExtents();
+        var layerMask = collider.getIncludeLayer();
+        for (var other : colliderSet) {
+
+            // Skip if processing the same collider
+            if (other == collider) {
+                continue;
+            }
+
+            // Skip if processing a destroyed object.
+            if (other.getGameObject().isDestroyed()) {
+                continue;
+            }
+
+            // Skip if processing an inactive game object
+            if (!other.getGameObject().isActive()) {
+                continue;
+            }
+
+            // Skip if processing a collider of the same trigger (trigger collision only occurs between a
+            // trigger collider and a non-trigger collider, cannot occur when there are two trigger colliers)
+            if (!processTrigger && other.isTrigger()) {
+                continue;
+            }
+
+            // Skip if the other collider's layer is not included within this collider's constraint
+            if ((other.getGameObject().getLayerMask() & layerMask) == 0) {
+                continue;
+            }
+
+            // Skip if this collider's layer is not included within the other collider's constraint
+            if ((other.getIncludeLayer() & collider.getGameObject().getLayerMask()) == 0) {
+                continue;
+            }
+
+            if (isBoxesOverlap(center, other.getGlobalCenter(), extents, other.getExtents())) {
+                result.add(other);
+            }
+        }
+
+        return result;
+
+    }
+
+    private static boolean isBoxesOverlap(Vector2 firstCenter, Vector2 secondCenter, Vector2 firstExtents, Vector2 secondExtents) {
+        Vector2 firstMin = firstCenter.subtract(firstExtents);
+        Vector2 firstMax = firstCenter.add(firstExtents);
+        Vector2 secondMin = secondCenter.subtract(secondExtents);
+        Vector2 secondMax = secondCenter.add(secondExtents);
+        return firstMin.x <= secondMax.x
+                && firstMax.x >= secondMin.x
+                && firstMin.y <= secondMax.y
+                && firstMax.y >= secondMin.y;
+    }
+
+    /**
      * Check possible collision on one side of the bounding box.
      * <p>
      * This check follows after calculating the collider's path to determine whether a
