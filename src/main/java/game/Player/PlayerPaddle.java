@@ -88,7 +88,7 @@ public class PlayerPaddle extends MonoBehaviour {
 
         if (!movementVector.equals(Vector2.zero())) {
             movementVector = movementVector.normalize()
-                    .multiply(currentSpeed * Time.deltaTime);
+                    .multiply(currentSpeed * Time.getDeltaTime());
         }
 
         getTransform().translate(movementVector);
