@@ -1,5 +1,7 @@
 package game.Voltraxis.Object;
 
+import game.Voltraxis.Voltraxis;
+import game.Voltraxis.VoltraxisCharging;
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
 import org.GameObject.GameObject;
@@ -22,17 +24,34 @@ public class PowerCoreVisual extends MonoBehaviour {
     public void awake() {
         animator = getComponent(SpriteAnimator.class);
         animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle, null);
+        Voltraxis.getInstance().getVoltraxisCharging().onChargingPhaseChanged
+                .addListener(this::voltraxisCharging_onChargingPhaseChanged);
     }
 
-    public void animateLowCharging() {
+    /**
+     * Called when {@link VoltraxisCharging#onChargingPhaseChanged} is invoked.<br><br>
+     * This function animate the power core based on the charging phase of Voltraxis.
+     *
+     * @param sender Event caller {@link VoltraxisCharging}.
+     * @param e      Empty event argument
+     */
+    private void voltraxisCharging_onChargingPhaseChanged(Object sender, VoltraxisCharging.ChargingPhase e) {
+        switch (e) {
+            case Phase_1 -> animateLowCharging();
+            case Phase_3 -> animateMediumCharging();
+            case Phase_5 -> animateHighCharging();
+        }
+    }
+
+    private void animateLowCharging() {
         animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingLow, null);
     }
 
-    public void animateMediumCharging() {
+    private void animateMediumCharging() {
         animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingMedium, null);
     }
 
-    public void animateHighCharging() {
+    private void animateHighCharging() {
         animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle_ChargingHigh, null);
     }
 

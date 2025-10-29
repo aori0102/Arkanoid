@@ -10,7 +10,7 @@ public final class VoltraxisData {
 
     /// Stat
     public static final int BASE_ATTACK = 18;
-    public static final int BASE_MAX_HEALTH = 3125;
+    public static final int BASE_MAX_HEALTH = 1843125;
     public static final int BASE_DEFENSE = 36;
     public static final int DEFENSE_STRENGTH_SCALE = 67;
 
@@ -29,36 +29,21 @@ public final class VoltraxisData {
     public static final double GROGGY_DELTA = 0.08;
     public static final double GROGGY_DURATION = 18.0;
 
-    /// EX skill
-    public static final double EX_LOW_CHARGE_TIME = 7.0;
-    public static final double EX_MEDIUM_CHARGE_TIME = 16.0;
-    public static final double EX_HIGH_CHARGE_TIME = 20.0;
-
     /// Power core
     public static final double POWER_CORE_PROPORTIONAL_HEALTH = 0.36;
     public static final double POWER_CORE_DAMAGE_TAKEN_REDUCTION = 0.1;
     public static final double MIN_GROGGY_ON_POWER_CORE_DEPLOY = 0.5;
-    public static final Vector2 LEFT_CORE_POSITION = new Vector2(200.0, 400.0);
-    public static final Vector2 RIGHT_CORE_POSITION = new Vector2(800.0, 400.0);
+    public static final Vector2 LEFT_CORE_POSITION = new Vector2(350.0, 400.0);
+    public static final Vector2 RIGHT_CORE_POSITION = new Vector2(750.0, 400.0);
 
     /// Charging
     public static final double CHARGING_RATE = 9.1;
     public static final double CHARGING_HALT_DELAY = 1.2;
     public static final double CHARGING_HALT_AMOUNT = 42;
-    public static final double CHARGING_MAX = ChargingState.High.chargePoint;
+    public static final double CHARGING_MAX = 100;
 
-    public enum ChargingState {
-        None(0),
-        Low(30),
-        Medium(75),
-        High(108);
-
-        public final double chargePoint;
-
-        ChargingState(double chargePoint) {
-            this.chargePoint = chargePoint;
-        }
-    }
+    /// EX Laser
+    public static final double ULTIMATE_LASER_DAMAGE_PROPORTION = 0.27;
 
     /// Additional effects
     // TODO: can change this value - Aori to Kine

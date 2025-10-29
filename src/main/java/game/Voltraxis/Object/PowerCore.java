@@ -1,7 +1,6 @@
 package game.Voltraxis.Object;
 
 import game.Voltraxis.Interface.ITakePlayerDamage;
-import game.Voltraxis.Voltraxis;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -19,7 +18,6 @@ public class PowerCore extends MonoBehaviour implements ITakePlayerDamage {
 
     private int health;
     private int maxHealth;
-    private Voltraxis voltraxis = null;
     private PowerCoreVisual powerCoreVisual = null;
     private Vector2 defaultPosition = Vector2.zero();
 
@@ -40,7 +38,6 @@ public class PowerCore extends MonoBehaviour implements ITakePlayerDamage {
         health -= amount;
         onHealthChanged.invoke(this, null);
         if (health <= 0) {
-            onPowerCoreDestroyed.invoke(this, null);
             GameObjectManager.destroy(gameObject);
         }
     }
@@ -52,9 +49,14 @@ public class PowerCore extends MonoBehaviour implements ITakePlayerDamage {
 
     @Override
     public void update() {
-        var delta = Math.sin(CORE_FLUCTUATION_RATE * Time.time * Math.PI) * MAX_CORE_FLUCTUATION_DISTANCE;
+        var delta = Math.sin(CORE_FLUCTUATION_RATE * Time.getTime() * Math.PI) * MAX_CORE_FLUCTUATION_DISTANCE;
         var deltaVector = new Vector2(0.0, delta);
         getTransform().setGlobalPosition(defaultPosition.add(deltaVector));
+    }
+
+    @Override
+    public void onDestroy() {
+        onPowerCoreDestroyed.invoke(this, null);
     }
 
     /**
@@ -85,22 +87,6 @@ public class PowerCore extends MonoBehaviour implements ITakePlayerDamage {
     public void setHealth(int health) {
         this.health = health;
         this.maxHealth = health;
-    }
-
-    public void setVoltraxis(Voltraxis voltraxis) {
-        this.voltraxis = voltraxis;
-    }
-
-    public void onChargingLow(Object sender, Void e) {
-        powerCoreVisual.animateLowCharging();
-    }
-
-    public void onChargingMedium(Object sender, Void e) {
-        powerCoreVisual.animateMediumCharging();
-    }
-
-    public void onChargingHigh(Object sender, Void e) {
-        powerCoreVisual.animateHighCharging();
     }
 
     public void setPowerCoreVisual(PowerCoreVisual powerCoreVisual) {

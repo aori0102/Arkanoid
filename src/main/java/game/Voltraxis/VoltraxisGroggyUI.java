@@ -1,5 +1,6 @@
 package game.Voltraxis;
 
+import game.Voltraxis.Prefab.VoltraxisPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;
@@ -27,8 +28,25 @@ public class VoltraxisGroggyUI extends MonoBehaviour {
     }
 
     @Override
+    public void awake() {
+        Voltraxis.getInstance().getVoltraxisGroggy().onGroggyRatioChanged
+                .addListener(this::voltraxisGroggy_onGroggyRatioChanged);
+    }
+
+    /**
+     * Called when {@link VoltraxisGroggy#onGroggyRatioChanged} is invoked.<br><br>
+     * This function updates {@link #ratio}, consequently updates the groggy bar visual UI as the groggy changes.
+     *
+     * @param sender Event caller {@link VoltraxisGroggy}.
+     * @param e      Event argument represent the new ratio to set.
+     */
+    private void voltraxisGroggy_onGroggyRatioChanged(Object sender, Double e) {
+        targetRatio = e;
+    }
+
+    @Override
     public void update() {
-        ratio = MathUtils.lerp(ratio, targetRatio, Time.deltaTime * GROGGY_BAR_CHANGE_RATE);
+        ratio = MathUtils.lerp(ratio, targetRatio, Time.getDeltaTime() * GROGGY_BAR_CHANGE_RATE);
         fillRenderer.setFillAmount(ratio);
     }
 
@@ -39,18 +57,8 @@ public class VoltraxisGroggyUI extends MonoBehaviour {
      *
      * @param fill The fill bar renderer to set.
      */
-    protected void attachFillRenderer(SpriteRenderer fill) {
+    public void attachFillRenderer(SpriteRenderer fill) {
         this.fillRenderer = fill;
-    }
-
-    /**
-     * Set the target groggy ratio for groggy gauge UI update.<br><br>
-     * <b><i><u>NOTE</u> : Only call within {@link VoltraxisGroggy}.</i></b>
-     *
-     * @param targetRatio The target ratio of groggy.
-     */
-    public void setTargetRatio(double targetRatio) {
-        this.targetRatio = targetRatio;
     }
 
 }

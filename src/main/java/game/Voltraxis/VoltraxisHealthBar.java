@@ -1,5 +1,6 @@
 package game.Voltraxis;
 
+import game.Voltraxis.Prefab.VoltraxisPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;
@@ -18,9 +19,8 @@ public class VoltraxisHealthBar extends MonoBehaviour {
     private TextUI healthText = null;
     private SpriteRenderer healthLostImage = null;
     private SpriteRenderer healthRemainImage = null;
-    private Voltraxis voltraxis = null;
 
-    private double ratio = 1.0;
+    private double targetRatio = 1.0;
     private double healthLostRatio = 1.0;
     private double healthRemainRatio = 1.0;
     private double lastHealthChangeTick = 0.0;
@@ -36,24 +36,25 @@ public class VoltraxisHealthBar extends MonoBehaviour {
 
     @Override
     public void awake() {
-
         healthLostImage.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);
         healthRemainImage.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);
         healthLostImage.setFillAmount(healthLostRatio);
         healthRemainImage.setFillAmount(healthRemainRatio);
+        healthText.setText(VoltraxisData.BASE_MAX_HEALTH + " / " + VoltraxisData.BASE_MAX_HEALTH);
 
+        Voltraxis.getInstance().onHealthChanged.addListener(this::voltraxis_onHealthChanged);
     }
 
     @Override
     public void update() {
 
         healthLostRatio
-                = MathUtils.lerp(healthLostRatio, ratio, Time.deltaTime * HEALTH_BAR_UPDATE_RATE);
+                = MathUtils.lerp(healthLostRatio, targetRatio, Time.getDeltaTime() * HEALTH_BAR_UPDATE_RATE);
         healthRemainImage.setFillAmount(healthLostRatio);
 
-        if (Time.time > lastHealthChangeTick + HEALTH_LOST_UPDATE_DELAY) {
+        if (Time.getTime() > lastHealthChangeTick + HEALTH_LOST_UPDATE_DELAY) {
             healthRemainRatio
-                    = MathUtils.lerp(healthRemainRatio, ratio, Time.deltaTime * HEALTH_BAR_UPDATE_RATE);
+                    = MathUtils.lerp(healthRemainRatio, targetRatio, Time.getDeltaTime() * HEALTH_BAR_UPDATE_RATE);
             healthLostImage.setFillAmount(healthRemainRatio);
         }
 
@@ -96,20 +97,7 @@ public class VoltraxisHealthBar extends MonoBehaviour {
     }
 
     /**
-     * Set the central class {@link Voltraxis} of the boss and listen
-     * to {@link Voltraxis#onHealthChanged}. This function also
-     * initialize the health text according to Voltraxis' HP.
-     *
-     * @param voltraxis The central boss class.
-     */
-    public void setVoltraxis(Voltraxis voltraxis) {
-        this.voltraxis = voltraxis;
-        healthText.setText(voltraxis.getHealth() + " / " + VoltraxisData.BASE_MAX_HEALTH);
-        voltraxis.onHealthChanged.addListener(this::voltraxis_onHealthChanged);
-    }
-
-    /**
-     * Update {@link #ratio} between Voltraxis' current and max
+     * Update {@link #targetRatio} between Voltraxis' current and max
      * HP and modify {@link #healthText} accordingly.<br><br>
      * <b>Called when {@link Voltraxis#onHealthChanged} is invoked.</b>
      *
@@ -117,9 +105,9 @@ public class VoltraxisHealthBar extends MonoBehaviour {
      * @param e      Empty event argument.
      */
     private void voltraxis_onHealthChanged(Object sender, Void e) {
-        ratio = (double) voltraxis.getHealth() / VoltraxisData.BASE_MAX_HEALTH;
-        healthText.setText(voltraxis.getHealth() + " / " + VoltraxisData.BASE_MAX_HEALTH);
-        lastHealthChangeTick = Time.time;
+        targetRatio = (double) Voltraxis.getInstance().getHealth() / VoltraxisData.BASE_MAX_HEALTH;
+        healthText.setText(Voltraxis.getInstance().getHealth() + " / " + VoltraxisData.BASE_MAX_HEALTH);
+        lastHealthChangeTick = Time.getTime();
     }
 
 }

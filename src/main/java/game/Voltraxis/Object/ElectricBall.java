@@ -3,6 +3,8 @@ package game.Voltraxis.Object;
 import game.Player.PlayerPaddle;
 import game.Obstacle.ICanDamagePlayer;
 import game.Player.Player;
+import game.Voltraxis.Voltraxis;
+import game.Voltraxis.VoltraxisData;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -21,12 +23,6 @@ public class ElectricBall extends MonoBehaviour implements ICanDamagePlayer {
     private static final double BALL_LIFESPAN = 12.0;
 
     private Vector2 direction = new Vector2();
-    private int damage = 0;
-
-    /**
-     * Fired when this electric ball hits the {@link PlayerPaddle}.
-     */
-    public EventHandler<Void> onPaddleHit = new EventHandler<>(ElectricBall.class);
 
     /**
      * Create this MonoBehaviour.
@@ -35,31 +31,16 @@ public class ElectricBall extends MonoBehaviour implements ICanDamagePlayer {
      */
     public ElectricBall(GameObject owner) {
         super(owner);
-        addComponent(BoxCollider.class).setOnCollisionEnterCallback(this::onCollided);
     }
 
     @Override
     public void awake() {
-        Time.addCoroutine(this::onBallLifespanReached, Time.time + BALL_LIFESPAN);
+        Time.addCoroutine(this::onBallLifespanReached, Time.getTime() + BALL_LIFESPAN);
     }
 
     @Override
     public void update() {
-        getTransform().translate(direction.normalize().multiply(MOVEMENT_SPEED * Time.deltaTime));
-    }
-
-    /**
-     * Handle collision with {@link PlayerPaddle} and deal damage
-     * to {@link game.Player.Player} accordingly.
-     *
-     * @param data The collision data.
-     */
-    private void onCollided(CollisionData data) {
-        var paddle = data.otherCollider.getComponent(PlayerPaddle.class);
-        if (paddle != null) {
-            onPaddleHit.invoke(this, null);
-            GameObjectManager.destroy(gameObject);
-        }
+        getTransform().translate(direction.normalize().multiply(MOVEMENT_SPEED * Time.getDeltaTime()));
     }
 
     /**
@@ -80,8 +61,13 @@ public class ElectricBall extends MonoBehaviour implements ICanDamagePlayer {
     }
 
     @Override
-    public void damagePlayer() {
-        Player.getInstance().getPlayerHealth().damage(damage);
+    public int getDamage() {
+        return (int) (VoltraxisData.ELECTRIC_BALL_ATTACK_PROPORTION * Voltraxis.getInstance().getVoltraxisStatManager().getAttack());
+    }
+
+    @Override
+    public void onDamagedPlayer() {
+        GameObjectManager.destroy(gameObject);
     }
 
 }

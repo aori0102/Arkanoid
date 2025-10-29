@@ -3,6 +3,7 @@ package game.Voltraxis;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
+import utils.Time;
 
 /**
  * Central class to handle Voltraxis' groggy status.
@@ -10,16 +11,23 @@ import org.GameObject.MonoBehaviour;
 public class VoltraxisGroggy extends MonoBehaviour {
 
     private static final double MAX_GROGGY = 1.0;
+    private static final double GROGGY_DELAY_AFTER_CHARGING = 1.7;
 
-    private boolean isGroggyLocked = false;
     private double groggy = 0.0;
-    private VoltraxisGroggyUI voltraxisGroggyUI = null;
+    private boolean groggyLocked = false;
+    private Time.CoroutineID resetGroggyCoroutineID = null;
 
     /**
      * Fired when Voltraxis' groggy is full<br><br>
      * Use within {@link Voltraxis} to initiate groggy skill.
      */
     public EventHandler<Void> onGroggyReachedMax = new EventHandler<>(VoltraxisGroggy.class);
+
+    /**
+     * Fired when Voltraxis' groggy changes. This event's argument contains
+     * a single double representing the groggy's ratio in range {@code [0, 1]}.
+     */
+    public EventHandler<Double> onGroggyRatioChanged = new EventHandler<>(VoltraxisGroggy.class);
 
     /**
      * Fired when Voltraxis' groggy has surpassed the minimum
@@ -40,13 +48,16 @@ public class VoltraxisGroggy extends MonoBehaviour {
         super(owner);
     }
 
-    /**
-     * Listen to event {@link Voltraxis#onDamaged}.
-     *
-     * @param voltraxis The central class of the boss {@link Voltraxis}.
-     */
-    protected void setVoltraxis(Voltraxis voltraxis) {
-        voltraxis.onDamaged.addListener(this::voltraxis_onDamaged);
+    @Override
+    public void awake() {
+        Voltraxis.getInstance().onDamaged.addListener(this::voltraxis_onDamaged);
+        Voltraxis.getInstance().getVoltraxisCharging().onChargingTerminated
+                .addListener(this::voltraxisCharging_onChargingTerminated);
+    }
+
+    @Override
+    public void onDestroy() {
+        Time.removeCoroutine(resetGroggyCoroutineID);
     }
 
     /**
@@ -59,7 +70,7 @@ public class VoltraxisGroggy extends MonoBehaviour {
      */
     private void voltraxis_onDamaged(Object sender, Void e) {
 
-        if (isGroggyLocked) {
+        if (groggyLocked) {
             return;
         }
 
@@ -69,8 +80,9 @@ public class VoltraxisGroggy extends MonoBehaviour {
         }
         if (isMaxGroggy()) {
             onGroggyReachedMax.invoke(this, null);
+            groggyLocked = true;
         }
-        voltraxisGroggyUI.setTargetRatio(groggy / MAX_GROGGY);
+        onGroggyRatioChanged.invoke(this, groggy / MAX_GROGGY);
 
     }
 
@@ -99,31 +111,20 @@ public class VoltraxisGroggy extends MonoBehaviour {
     }
 
     /**
-     * Lock the ability to modify groggy.<br><br>
-     * <b>Control within {@link Voltraxis}.</b>
-     */
-    public void lockGroggy() {
-        isGroggyLocked = true;
-    }
-
-    /**
-     * Unlock the ability to modify groggy.<br><br>
-     * <b>Control within {@link Voltraxis}.</b>
-     */
-    public void unlockGroggy() {
-        isGroggyLocked = false;
-    }
-
-    /**
-     * Attach the object with {@link VoltraxisGroggyUI} to enable
-     * groggy UI update.<br><br>
-     * <b><i><u>NOTE:</u> Only use within {@link VoltraxisPrefab}
-     * as a component linking process.</i></b>
+     * Called when {@link VoltraxisCharging#onChargingTerminated} is invoked.<br><br>
+     * This function reset the groggy gauge for Voltraxis after charging is terminated.
      *
-     * @param voltraxisGroggyUI The UI component of the groggy.
+     * @param sender Event caller, {@link VoltraxisCharging}.
+     * @param e      Empty event argument.
      */
-    public void attachVoltraxisGroggyUI(VoltraxisGroggyUI voltraxisGroggyUI) {
-        this.voltraxisGroggyUI = voltraxisGroggyUI;
+    private void voltraxisCharging_onChargingTerminated(Object sender, Void e) {
+        groggy = 0.0;
+        onGroggyRatioChanged.invoke(this, 0.0);
+        resetGroggyCoroutineID = Time.addCoroutine(this::resetGroggy, Time.getTime() + GROGGY_DELAY_AFTER_CHARGING);
+    }
+
+    private void resetGroggy() {
+        groggyLocked = false;
     }
 
 }

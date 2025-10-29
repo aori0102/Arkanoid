@@ -1,6 +1,7 @@
 package game.Voltraxis;
 
 import game.Voltraxis.Object.ElectricBall;
+import game.Voltraxis.Prefab.ElectricBallPrefab;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -20,8 +21,6 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
     private static final double SEQUENCE_DELAY = 0.35;
     private static final double SHOOTING_DELAY = 0.4;
 
-    private Voltraxis voltraxis = null;
-    private final HashMap<ElectricBall, EventActionID> electricBallEventActionIDMap = new HashMap<>();
     private Time.CoroutineID normalAttackCoroutineID = null;
 
     public EventHandler<Void> onBasicAttackCommenced = new EventHandler<>(VoltraxisNormalAttackBrain.class);
@@ -37,11 +36,14 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
 
     @Override
     public void awake() {
-        normalAttackCoroutineID = Time.addCoroutine(this::basicSkill, Time.time + voltraxis.getBasicSkillCooldown());
+        normalAttackCoroutineID = Time.addCoroutine(
+                this::basicSkill,
+                Time.getTime() + Voltraxis.getInstance().getVoltraxisStatManager().getBasicSkillCooldown()
+        );
 
-        voltraxis.getVoltraxisCharging().onChargingEntered
+        Voltraxis.getInstance().getVoltraxisCharging().onChargingEntered
                 .addListener(this::voltraxisCharging_onChargingEntered);
-        voltraxis.getVoltraxisCharging().onChargingTerminated
+        Voltraxis.getInstance().getVoltraxisCharging().onChargingTerminated
                 .addListener(this::voltraxisCharging_onChargingTerminated);
     }
 
@@ -50,7 +52,10 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
      * This function re-enable normal attack function of Voltraxis after its EX.
      */
     private void voltraxisCharging_onChargingTerminated(Object sender, Void e) {
-        normalAttackCoroutineID = Time.addCoroutine(this::basicSkill, Time.time + voltraxis.getBasicSkillCooldown());
+        normalAttackCoroutineID = Time.addCoroutine(
+                this::basicSkill,
+                Time.getTime() + Voltraxis.getInstance().getVoltraxisStatManager().getBasicSkillCooldown()
+        );
     }
 
     /**
@@ -74,10 +79,13 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
 
         for (int i = 0; i < MAX_SHOT_SEQUENCE; i++) {
             var delay = SEQUENCE_DELAY * i + SHOOTING_DELAY;
-            Time.addCoroutine(this::shootBalls, Time.time + delay);
+            Time.addCoroutine(this::shootBalls, Time.getTime() + delay);
         }
         onBasicAttackCommenced.invoke(this, null);
-        normalAttackCoroutineID = Time.addCoroutine(this::basicSkill, Time.time + voltraxis.getBasicSkillCooldown());
+        normalAttackCoroutineID = Time.addCoroutine(
+                this::basicSkill,
+                Time.getTime() + Voltraxis.getInstance().getVoltraxisStatManager().getBasicSkillCooldown()
+        );
 
     }
 
@@ -93,47 +101,13 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
             var direction = Vector2.down().rotateBy(angle);
 
             // Instantiate electric ball
-            var electricBall = VoltraxisPrefab.instantiateElectricBall();
-
-            // Modify value
-            electricBallEventActionIDMap.put(
-                    electricBall,
-                    electricBall.onPaddleHit.addListener(this::electricBall_onPaddleHit)
-            );
+            var electricBall = new ElectricBallPrefab().instantiatePrefab()
+                    .getComponent(ElectricBall.class);
             electricBall.getTransform().setGlobalPosition(getTransform().getGlobalPosition());
             electricBall.setDirection(direction);
 
         }
 
-    }
-
-
-    /**
-     * Link the central brain of Voltraxis to this object.<br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link VoltraxisPrefab}
-     * as part of component linking process.</i></b>
-     *
-     * @param voltraxis The central brain of Voltraxis.
-     */
-    public void linkVoltraxis(Voltraxis voltraxis) {
-        this.voltraxis = voltraxis;
-    }
-
-    /**
-     * Called when {@link game.Voltraxis.Object.ElectricBall#onPaddleHit}
-     * is invoked. This function deals damage to {@link game.Player.Player}
-     * based on Voltraxis' current stat.
-     *
-     * @param sender {@link game.Voltraxis.Object.ElectricBall}.
-     * @param e      Empty event argument.
-     */
-    private void electricBall_onPaddleHit(Object sender, Void e) {
-        if (sender instanceof ElectricBall electricBall) {
-            // TODO: caution when removing listener. - Aori
-            electricBall.onPaddleHit
-                    .removeListener(electricBallEventActionIDMap.get(electricBall));
-            // TODO: damage player - Aori
-        }
     }
 
 }

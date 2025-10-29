@@ -1,5 +1,6 @@
 package game.Voltraxis;
 
+import game.Voltraxis.Prefab.VoltraxisPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;
@@ -26,26 +27,22 @@ public class VoltraxisChargingUI extends MonoBehaviour {
 
     @Override
     public void awake() {
+
         uiObject.setActive(false);
+
+        Voltraxis.getInstance().getVoltraxisCharging().onChargingEntered
+                .addListener(this::voltraxisCharging_onChargingStarted);
+        Voltraxis.getInstance().getVoltraxisCharging().onChargingTerminated
+                .addListener(this::voltraxisCharging_onChargingTerminated);
+        Voltraxis.getInstance().getVoltraxisCharging().onChargingRatioChanged
+                .addListener(this::voltraxisCharging_onChargingRatioChanged);
+
     }
 
     @Override
     public void update() {
-        ratio = MathUtils.lerp(ratio, targetRatio, Time.deltaTime * CHARGING_UI_CHANGE_RATE);
+        ratio = MathUtils.lerp(ratio, targetRatio, Time.getDeltaTime() * CHARGING_UI_CHANGE_RATE);
         fillRenderer.setFillAmount(ratio);
-    }
-
-    /**
-     * Link the charging manager of Voltraxis to this object.<br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link VoltraxisPrefab}
-     * as part of component linking process.</i></b>
-     *
-     * @param voltraxisCharging Charging manager of Voltraxis.
-     */
-    public void linkVoltraxisCharging(VoltraxisCharging voltraxisCharging) {
-        voltraxisCharging.onChargingEntered.addListener(this::voltraxisCharging_onChargingStarted);
-        voltraxisCharging.onChargingTerminated.addListener(this::voltraxisCharging_onChargingTerminated);
-        voltraxisCharging.onChargingRatioChanged.addListener(this::voltraxisCharging_onChargingRatioChanged);
     }
 
     /**

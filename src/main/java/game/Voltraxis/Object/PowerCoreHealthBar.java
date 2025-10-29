@@ -1,6 +1,6 @@
 package game.Voltraxis.Object;
 
-import game.Voltraxis.VoltraxisPrefab;
+import game.Voltraxis.Prefab.VoltraxisPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;
@@ -45,12 +45,12 @@ public class PowerCoreHealthBar extends MonoBehaviour {
     public void update() {
 
         healthRemainRatio
-                = MathUtils.lerp(healthRemainRatio, ratio, Time.deltaTime * HEALTH_BAR_UPDATE_RATE);
+                = MathUtils.lerp(healthRemainRatio, ratio, Time.getDeltaTime() * HEALTH_BAR_UPDATE_RATE);
         fillRemain.setFillAmount(healthRemainRatio);
 
-        if (Time.time > lastHealthChangeTick + HEALTH_LOST_UPDATE_DELAY) {
+        if (Time.getTime() > lastHealthChangeTick + HEALTH_LOST_UPDATE_DELAY) {
             healthLostRatio
-                    = MathUtils.lerp(healthLostRatio, ratio, Time.deltaTime * HEALTH_BAR_UPDATE_RATE);
+                    = MathUtils.lerp(healthLostRatio, ratio, Time.getDeltaTime() * HEALTH_BAR_UPDATE_RATE);
             fillLost.setFillAmount(healthLostRatio);
         }
 
@@ -65,7 +65,7 @@ public class PowerCoreHealthBar extends MonoBehaviour {
      */
     private void powerCore_onHealthChanged(Object sender, Void e) {
         ratio = (double) powerCore.getHealth() / powerCore.getMaxHealth();
-        lastHealthChangeTick = Time.time;
+        lastHealthChangeTick = Time.getTime();
     }
 
     /**

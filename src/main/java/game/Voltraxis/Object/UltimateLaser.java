@@ -1,5 +1,8 @@
 package game.Voltraxis.Object;
 
+import game.Obstacle.ICanDamagePlayer;
+import game.Voltraxis.Voltraxis;
+import game.Voltraxis.VoltraxisData;
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
 import org.GameObject.GameObject;
@@ -8,7 +11,7 @@ import org.Rendering.SpriteRenderer;
 import utils.MathUtils;
 import utils.Time;
 
-public class UltimateLaser extends MonoBehaviour {
+public class UltimateLaser extends MonoBehaviour implements ICanDamagePlayer {
 
     private static final double LASER_APPEAR_RATE = 23.013;
 
@@ -34,8 +37,17 @@ public class UltimateLaser extends MonoBehaviour {
 
     @Override
     public void update() {
-        ratio = MathUtils.lerp(ratio, 1.0, Time.deltaTime * LASER_APPEAR_RATE);
+        ratio = MathUtils.lerp(ratio, 1.0, Time.getDeltaTime() * LASER_APPEAR_RATE);
         renderer.setFillAmount(ratio);
+    }
+
+    @Override
+    public int getDamage() {
+        return (int) (VoltraxisData.ULTIMATE_LASER_DAMAGE_PROPORTION * Voltraxis.getInstance().getVoltraxisStatManager().getAttack());
+    }
+
+    @Override
+    public void onDamagedPlayer() {
     }
 
 }

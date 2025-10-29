@@ -1,5 +1,6 @@
 package game.Voltraxis;
 
+import game.Voltraxis.Prefab.VoltraxisPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;
@@ -8,7 +9,7 @@ import utils.Vector2;
 /**
  * Effect icon UI.
  */
-public class VoltraxisEffectIcon extends MonoBehaviour {
+public class VoltraxisEffectIconUI extends MonoBehaviour {
 
     private SpriteRenderer visualRenderer = null;
 
@@ -17,7 +18,7 @@ public class VoltraxisEffectIcon extends MonoBehaviour {
      *
      * @param owner The owner of this component.
      */
-    public VoltraxisEffectIcon(GameObject owner) {
+    public VoltraxisEffectIconUI(GameObject owner) {
         super(owner);
     }
 
@@ -59,7 +60,7 @@ public class VoltraxisEffectIcon extends MonoBehaviour {
      *
      * @param renderer The image renderer for this icon.
      */
-    void setVisualRenderer(SpriteRenderer renderer) {
+    public void setVisualRenderer(SpriteRenderer renderer) {
         visualRenderer = renderer;
     }
 

@@ -1,7 +1,7 @@
 package game.Voltraxis;
 
-import game.Voltraxis.Object.PowerCore;
 import game.Voltraxis.Object.UltimateLaser;
+import game.Voltraxis.Prefab.UltimateLaserPrefab;
 import org.Animation.AnimationClipData;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -9,6 +9,8 @@ import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import utils.Time;
 import utils.Vector2;
+
+import java.util.EnumMap;
 
 /**
  * Class to handling charging state for Voltraxis towards unleashing
@@ -22,12 +24,6 @@ public class VoltraxisCharging extends MonoBehaviour {
     private static final double FINISH_UNLEASH_DELAY = 0.7;
     private static final double ULTIMATE_LASER_OFFSET = 90.0;
 
-    private Voltraxis voltraxis = null;
-    private boolean isCharging = false;
-    private Time.CoroutineID haltDelayCoroutineID = null;
-    private Time.CoroutineID startCoroutineID = null;
-    private UltimateLaser ultimateLaser = null;
-
     public enum ChargingPhase {
         Phase_1(AnimationClipData.Voltraxis_Charging_Phase_1),
         Phase_2(AnimationClipData.Voltraxis_Charging_Phase_2),
@@ -38,12 +34,27 @@ public class VoltraxisCharging extends MonoBehaviour {
         None(AnimationClipData._None);
 
         public static final int MAX_PHASE = 6;
+
         public final AnimationClipData animationIndex;
 
         ChargingPhase(AnimationClipData animationIndex) {
             this.animationIndex = animationIndex;
         }
     }
+
+    private enum CoroutineIndex {
+        ToRechargeAfterHalt,
+        ToFinishCharging,
+        ToUnleashLaser,
+        ToTerminateCharging,
+        ToStartCharging,
+    }
+
+    private final EnumMap<CoroutineIndex, Time.CoroutineID> coroutineIDMap = new EnumMap<>(CoroutineIndex.class);
+
+    private boolean isCharging = false;
+    private UltimateLaser ultimateLaser = null;
+    private VoltraxisEffectManager.EffectID chargingEffectID = null;
 
     /**
      * <b>Read-only. Write via {@link #setCurrentCharge}.</b>
@@ -62,6 +73,8 @@ public class VoltraxisCharging extends MonoBehaviour {
     public EventHandler<Void> onStartUnleashing = new EventHandler<>(VoltraxisCharging.class);
     public EventHandler<Void> onUnleashingLaser = new EventHandler<>(VoltraxisCharging.class);
     public EventHandler<Void> onFinishUnleashing = new EventHandler<>(VoltraxisCharging.class);
+    public EventHandler<Void> onFullyCharged = new EventHandler<>(VoltraxisCharging.class);
+    public EventHandler<Void> onBossWeakened = new EventHandler<>(VoltraxisCharging.class);
 
     /**
      * Create this MonoBehaviour.
@@ -74,27 +87,28 @@ public class VoltraxisCharging extends MonoBehaviour {
 
     @Override
     public void awake() {
-        voltraxis.getVoltraxisGroggy().onGroggyReachedMax.addListener(this::voltraxisGroggy_onGroggyReachedMax);
-        voltraxis.getVoltraxisPowerCoreManager().onPowerCoreDestroyed
+        Voltraxis.getInstance().getVoltraxisGroggy().onGroggyReachedMax
+                .addListener(this::voltraxisGroggy_onGroggyReachedMax);
+        Voltraxis.getInstance().getVoltraxisPowerCoreManager().onPowerCoreDestroyed
                 .addListener(this::voltraxisPowerCoreManager_onPowerCoreDestroyed);
     }
 
     @Override
     public void update() {
-        if (isCharging) {
-            setCurrentCharge(_currentCharge + VoltraxisData.CHARGING_RATE * Time.deltaTime);
+        if (isCharging && !isFullyCharged()) {
+            setCurrentCharge(_currentCharge + VoltraxisData.CHARGING_RATE * Time.getDeltaTime());
         }
     }
 
-    /**
-     * Link the central brain of Voltraxis to this object.<br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link VoltraxisPrefab}
-     * as part of component linking process.</i></b>
-     *
-     * @param voltraxis The central brain of Voltraxis.
-     */
-    public void linkVoltraxis(Voltraxis voltraxis) {
-        this.voltraxis = voltraxis;
+    @Override
+    public void onDestroy() {
+        for (var coroutineID : coroutineIDMap.values()) {
+            Time.removeCoroutine(coroutineID);
+        }
+    }
+
+    public boolean isCharging() {
+        return isCharging;
     }
 
     /**
@@ -105,12 +119,27 @@ public class VoltraxisCharging extends MonoBehaviour {
      *     <li><b>Terminate</b> if there is no more power core.</li>
      * </ul>
      */
-    private void voltraxisPowerCoreManager_onPowerCoreDestroyed(Object sender, PowerCore e) {
-        if (voltraxis.getVoltraxisPowerCoreManager().hasPowerCore()) {
+    private void voltraxisPowerCoreManager_onPowerCoreDestroyed(Object sender, Void e) {
+
+        if (!isCharging || isFullyCharged()) {
+            return;
+        }
+
+        // Kill all coroutine in case the halt is in progress if terminated unexpectedly
+        if (coroutineIDMap.get(CoroutineIndex.ToRechargeAfterHalt) != null) {
+            Time.removeCoroutine(coroutineIDMap.remove(CoroutineIndex.ToRechargeAfterHalt));
+        }
+        if (coroutineIDMap.get(CoroutineIndex.ToStartCharging) != null) {
+            Time.removeCoroutine(coroutineIDMap.remove(CoroutineIndex.ToStartCharging));
+        }
+
+        if (Voltraxis.getInstance().getVoltraxisPowerCoreManager().hasPowerCore()) {
             haltCharging();
         } else {
+            weakenBoss();
             terminateCharging();
         }
+
     }
 
     /**
@@ -118,8 +147,13 @@ public class VoltraxisCharging extends MonoBehaviour {
      * This function initiate the charging phase after groggy is max.
      */
     private void voltraxisGroggy_onGroggyReachedMax(Object sender, Void e) {
+
         onChargingEntered.invoke(this, null);
-        startCoroutineID = Time.addCoroutine(this::startCharging, Time.time + STARTING_DELAY);
+        coroutineIDMap.put(
+                CoroutineIndex.ToStartCharging,
+                Time.addCoroutine(this::startCharging, Time.getTime() + STARTING_DELAY)
+        );
+
     }
 
     /**
@@ -128,8 +162,19 @@ public class VoltraxisCharging extends MonoBehaviour {
      * to start charging (when groggy is full).</i></b>
      */
     private void startCharging() {
+
         isCharging = true;
         setCurrentCharge(0.0);
+
+        // Add charging effect
+        var chargingEffectInfo = new VoltraxisEffectManager.EffectInputInfo();
+        chargingEffectInfo.index = VoltraxisData.EffectIndex.ChargingEX;
+        chargingEffectInfo.value = 0.0;
+        chargingEffectInfo.duration = Double.MAX_VALUE;
+        chargingEffectInfo.effectEndedCallback = null;
+        chargingEffectID
+                = Voltraxis.getInstance().getVoltraxisEffectManager().addEffect(chargingEffectInfo);
+
     }
 
     /**
@@ -146,7 +191,10 @@ public class VoltraxisCharging extends MonoBehaviour {
         setCurrentCharge(_currentCharge - VoltraxisData.CHARGING_HALT_AMOUNT);
 
         // Delay before charging again
-        haltDelayCoroutineID = Time.addCoroutine(() -> isCharging = true, Time.time + VoltraxisData.CHARGING_HALT_DELAY);
+        coroutineIDMap.put(
+                CoroutineIndex.ToRechargeAfterHalt,
+                Time.addCoroutine(() -> isCharging = true, Time.getTime() + VoltraxisData.CHARGING_HALT_DELAY)
+        );
 
     }
 
@@ -157,6 +205,9 @@ public class VoltraxisCharging extends MonoBehaviour {
      */
     private void setCurrentCharge(double amount) {
         _currentCharge = Math.clamp(amount, 0, VoltraxisData.CHARGING_MAX);
+        if (_currentCharge == VoltraxisData.CHARGING_MAX) {
+            onFullyCharged.invoke(this, null);
+        }
         double ratio = _currentCharge / VoltraxisData.CHARGING_MAX;
         var targetChargingPhase = ChargingPhase.values()[(int) (ratio * ChargingPhase.MAX_PHASE)];
         if (targetChargingPhase != _currentChargingPhase) {
@@ -170,24 +221,41 @@ public class VoltraxisCharging extends MonoBehaviour {
     }
 
     private void startUnleashing() {
+
         onStartUnleashing.invoke(this, null);
-        Time.addCoroutine(this::unleashLaser, Time.time + START_UNLEASH_DELAY);
         isCharging = false;
+        coroutineIDMap.put(
+                CoroutineIndex.ToUnleashLaser,
+                Time.addCoroutine(this::unleashLaser, Time.getTime() + START_UNLEASH_DELAY)
+        );
     }
 
     private void unleashLaser() {
+
         onUnleashingLaser.invoke(this, null);
-        ultimateLaser = VoltraxisPrefab.instantiateLaser();
+        ultimateLaser = new UltimateLaserPrefab().instantiatePrefab()
+                .getComponent(UltimateLaser.class);
         ultimateLaser.getTransform().setGlobalPosition(
                 getTransform().getGlobalPosition().add(Vector2.down().multiply(ULTIMATE_LASER_OFFSET))
         );
-        Time.addCoroutine(this::finishUnleashing, Time.time + UNLEASH_DURATION);
+        coroutineIDMap.put(
+                CoroutineIndex.ToFinishCharging,
+                Time.addCoroutine(this::finishUnleashing, Time.getTime() + UNLEASH_DURATION)
+        );
     }
 
     private void finishUnleashing() {
+
         onFinishUnleashing.invoke(this, null);
         GameObjectManager.destroy(ultimateLaser.getGameObject());
-        Time.addCoroutine(this::terminateCharging, Time.time + FINISH_UNLEASH_DELAY);
+        coroutineIDMap.put(
+                CoroutineIndex.ToTerminateCharging,
+                Time.addCoroutine(this::terminateCharging, Time.getTime() + FINISH_UNLEASH_DELAY)
+        );
+    }
+
+    private void weakenBoss() {
+        onBossWeakened.invoke(this, null);
     }
 
     /**
@@ -204,11 +272,17 @@ public class VoltraxisCharging extends MonoBehaviour {
         onChargingTerminated.invoke(this, null);
 
         // Remove delay coroutine in case this function is called within halting
-        if (haltDelayCoroutineID != null) {
-            Time.removeCoroutine(haltDelayCoroutineID);
-            haltDelayCoroutineID = null;
+        if (coroutineIDMap.containsKey(CoroutineIndex.ToRechargeAfterHalt)) {
+            Time.removeCoroutine(coroutineIDMap.remove(CoroutineIndex.ToRechargeAfterHalt));
         }
 
+        Voltraxis.getInstance().getVoltraxisEffectManager().removeEffect(chargingEffectID);
+        chargingEffectID = null;
+
+    }
+
+    private boolean isFullyCharged() {
+        return _currentCharge == VoltraxisData.CHARGING_MAX;
     }
 
 }
