@@ -37,7 +37,7 @@ public class LaserBeam extends Skill{
     }
 
     public void handleMovement() {
-        getTransform().translate(Vector2.up().multiply(LASER_SPEED * Time.deltaTime));
+        getTransform().translate(Vector2.up().multiply(LASER_SPEED * Time.getDeltaTime()));
     }
 
     public void handleCollision(CollisionData collisionData) {

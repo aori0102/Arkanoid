@@ -127,7 +127,7 @@ public abstract class Perk extends MonoBehaviour
     }
 
     private void idleAnimation() {
-        var delta = Math.sin(PERK_FLUCTUATION_RATE * Time.time * Math.PI + randomTime) * MAX_PERK_FLUCTUATION_DISTANCE;
+        var delta = Math.sin(PERK_FLUCTUATION_RATE * Time.getTime() * Math.PI + randomTime) * MAX_PERK_FLUCTUATION_DISTANCE;
         var deltaVector = new Vector2(getTransform().getGlobalPosition().x, oldPosition.y + delta);
         gameObject.getTransform().setGlobalPosition(deltaVector);
     }

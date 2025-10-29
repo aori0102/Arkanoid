@@ -23,7 +23,7 @@ public final class PlayerHealthLossVignette extends MonoBehaviour {
 
     @Override
     public void update() {
-        double fadeRatio = (Time.time - pulseStartTime) / PULSE_TIME;
+        double fadeRatio = (Time.getTime() - pulseStartTime) / PULSE_TIME;
         fadeRatio = Math.clamp(fadeRatio, 0, 1);
         double opacity = Math.pow(Math.sin(Math.PI * fadeRatio), 4);
         vignetteRenderer.setOpacity(opacity);
@@ -58,7 +58,7 @@ public final class PlayerHealthLossVignette extends MonoBehaviour {
     private void player_onHealthChanged(Object sender, PlayerHealth.OnHealthChangedEventArgs e) {
 
         if (e.amount < 0) {
-            pulseStartTime = Time.time;
+            pulseStartTime = Time.getTime();
         }
 
     }

@@ -44,7 +44,7 @@ public class Laser extends Obstacle implements ICanDamagePlayer {
 
     @Override
     protected void handleMovement() {
-        getTransform().translate(Vector2.down().multiply(LASER_SPEED * Time.deltaTime));
+        getTransform().translate(Vector2.down().multiply(LASER_SPEED * Time.getDeltaTime()));
     }
 
     @Override

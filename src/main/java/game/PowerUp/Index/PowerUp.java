@@ -49,7 +49,7 @@ public class PowerUp extends MonoBehaviour {
     }
 
     private void handleDroppingMotion() {
-        getTransform().translate(Vector2.down().multiply(TRAVEL_SPEED * Time.deltaTime));
+        getTransform().translate(Vector2.down().multiply(TRAVEL_SPEED * Time.getDeltaTime()));
     }
 
     /**

@@ -146,7 +146,7 @@ public class PlayerPaddle extends MonoBehaviour {
      */
     private void handleCollisionWithObstacles() {
         if (!canStartStunnedCounter) return;
-        stunnedCounter += Time.deltaTime;
+        stunnedCounter += Time.getDeltaTime();
 
         if (canReduceSpeed) {
             currentSpeed /= 10;

@@ -80,7 +80,7 @@ public class Ball extends MonoBehaviour {
         }
         // Moving the ball
         else {
-            getTransform().translate(direction.normalize().multiply(BASE_BALL_SPEED * Time.deltaTime));
+            getTransform().translate(direction.normalize().multiply(BASE_BALL_SPEED * Time.getDeltaTime()));
         }
 
         if (getTransform().getGlobalPosition().y > 1000) {

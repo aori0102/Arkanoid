@@ -38,7 +38,7 @@ public final class PlayerHealthUI extends MonoBehaviour {
 
     @Override
     public void update() {
-        ratio = MathUtils.lerp(ratio, targetRatio, Time.deltaTime * HEALTH_BAR_UPDATE_RATE);
+        ratio = MathUtils.lerp(ratio, targetRatio, Time.getDeltaTime() * HEALTH_BAR_UPDATE_RATE);
         fillRenderer.setFillAmount(ratio);
     }
 
