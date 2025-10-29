@@ -17,6 +17,7 @@ public class PaddlePrefab implements IPlayerPrefab{
         paddle.getTransform().setGlobalPosition(new Vector2(300,600));
         paddle.addComponent(PlayerPaddle.class)
                 .addComponent(BoxCollider.class);
+        paddle.setLayer(Layer.Player);
 
         var collider = paddle.getComponent(BoxCollider.class);
         collider.setLocalCenter(new Vector2(0, 0));

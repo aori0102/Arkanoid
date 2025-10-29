@@ -77,6 +77,7 @@ public class PlayerPaddle extends MonoBehaviour {
 
     public void update() {
         handleCollisionWithObstacles();
+        processDamage();
     }
 
     private void handlePaddleMovement(Object e, ActionMap.Action action) {
