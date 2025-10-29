@@ -57,7 +57,7 @@ public class Ball extends MonoBehaviour {
         });
 
         // Off set ball position when it follows the paddle in order to make it is in the surface
-        offsetBallPosition = new Vector2(0, -20);
+        offsetBallPosition = new Vector2(0, 0);
 
         if (pendingEffect != StatusEffect.None) {
             addEffect(pendingEffect);
@@ -105,7 +105,12 @@ public class Ball extends MonoBehaviour {
         if (direction == null) return;
 
         // Normal vector to calculate reflect direction
-        var normal = collisionData.hitNormal.normalize().multiply(2.0);
+        var normal = collisionData.hitNormal.normalize();
+        Vector2 dirNorm = direction.normalize();
+
+        if (Vector2.dot(dirNorm, normal) > 0) {
+            normal = normal.multiply(-1);
+        }
 
         // Dot product of the ball's direction with the surface
         double dotCoefficient = Vector2.dot(direction.normalize(), normal.normalize());
@@ -115,7 +120,7 @@ public class Ball extends MonoBehaviour {
                 (dotCoefficient >= -1 && dotCoefficient <= -0.95);
 
         // Reflect direction
-        Vector2 reflectDir = normal.add(direction.normalize());
+        Vector2 reflectDir = dirNorm.subtract(normal.multiply(2 * Vector2.dot(dirNorm, normal)));
 
         // If the ball's direction is perpendicular then adding the offset vector to it in order to avoid horizontal movement
         if (nearlyParallel) {
@@ -129,7 +134,7 @@ public class Ball extends MonoBehaviour {
         }
 
 
-        direction = reflectDir;
+        direction = reflectDir.normalize();
     }
 
     /**
