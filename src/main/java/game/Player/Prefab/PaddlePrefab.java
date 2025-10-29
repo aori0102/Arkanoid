@@ -4,17 +4,18 @@ import game.GameObject.Arrow;
 import game.Player.PlayerPaddle;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
-public class PaddlePrefab implements IPlayerPrefab{
+public class PaddlePrefab implements IPlayerPrefab {
     @Override
     public GameObject instantiatePrefab() {
         // Player paddle
         var paddle = GameObjectManager.instantiate("Paddle");
-        paddle.getTransform().setGlobalPosition(new Vector2(300,600));
+        paddle.getTransform().setGlobalPosition(new Vector2(300, 600));
         paddle.addComponent(PlayerPaddle.class)
                 .addComponent(BoxCollider.class);
         paddle.setLayer(Layer.Player);

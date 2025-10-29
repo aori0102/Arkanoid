@@ -31,7 +31,7 @@ public final class PlayerHealthLossVignette extends MonoBehaviour {
 
     /**
      * Link the main player component to this object.<br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link PlayerPrefabManager}
+     * <b><i><u>NOTE</u> : Only use within {@link game.Player.Prefab.PlayerPrefab}
      * as part of component linking process.</i></b>
      *
      * @param player The main player component.
@@ -42,7 +42,7 @@ public final class PlayerHealthLossVignette extends MonoBehaviour {
 
     /**
      * Link the vignette effect object to this object.<br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link PlayerPrefabManager}
+     * <b><i><u>NOTE</u> : Only use within {@link game.Player.Prefab.PlayerPrefab}
      * as part of component linking process.</i></b>
      *
      * @param vignetteRenderer The renderer of the vignette object.

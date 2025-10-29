@@ -1,22 +1,20 @@
 package game.Player;
 
 import game.GameObject.Arrow;
+import game.Obstacle.ICanDamagePlayer;
 import game.Obstacle.Index.ObstacleManager;
 import game.PowerUp.Index.PowerUp;
 import javafx.scene.input.MouseButton;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
-import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
+import org.Physics.PhysicsManager;
 import utils.Time;
 import utils.Vector2;
-
 
 import javafx.scene.input.MouseEvent;
 
@@ -57,6 +55,7 @@ public class PlayerPaddle extends MonoBehaviour {
     /**
      * Initialize paddle specs.
      */
+    @Override
     public void awake() {
         // Assign components
         BoxCollider boxCollider = gameObject.getComponent(BoxCollider.class);
@@ -75,6 +74,7 @@ public class PlayerPaddle extends MonoBehaviour {
                 onMouseReleased.addListener(this::handleRayReleased);
     }
 
+    @Override
     public void update() {
         handleCollisionWithObstacles();
         processDamage();
@@ -87,7 +87,8 @@ public class PlayerPaddle extends MonoBehaviour {
         switch (action) {
             case GoLeft -> movementVector = movementVector.add(new Vector2(-1, 0));
             case GoRight -> movementVector = movementVector.add(new Vector2(1, 0));
-            default -> {}
+            default -> {
+            }
         }
 
         if (!movementVector.equals(Vector2.zero())) {
@@ -164,7 +165,6 @@ public class PlayerPaddle extends MonoBehaviour {
             canStartStunnedCounter = false;
         }
     }
-
 
     /**
      * Check if the direction is in the valid range.

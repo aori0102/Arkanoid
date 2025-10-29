@@ -68,7 +68,7 @@ public final class PlayerHealthUI extends MonoBehaviour {
 
     /**
      * Link the health fill bar renderer to this object.<br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link PlayerPrefabManager}
+     * <b><i><u>NOTE</u> : Only use within {@link game.Player.Prefab.PlayerPrefab}
      * as part of component linking process.</i></b>
      *
      * @param fillRenderer The health fill bar renderer.

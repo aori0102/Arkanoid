@@ -63,6 +63,7 @@ public class ObstacleManager extends MonoBehaviour {
      */
     public EventHandler<Void> onPaddleCollidedWithObstacle = new EventHandler<>(ObstacleManager.class);
 
+    @Override
     public void awake() {
         paddle = Player.getInstance().getPlayerPaddle();
     }

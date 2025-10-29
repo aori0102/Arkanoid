@@ -10,6 +10,7 @@ import game.PowerUp.Index.PowerUpManager;
 import game.GameObject.Ball;
 import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
+import game.Voltraxis.Prefab.VoltraxisPrefab;
 import org.Physics.BoxCollider;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
@@ -55,8 +56,10 @@ public class Init {
     }
 
     public static void initGame() {
+
         GameObjectManager.instantiate("BrickMapManager").addComponent(BrickMapManager.class);
         BrickMapManager.getInstance().generateMap();
+
         new PlayerPrefab().instantiatePrefab();
 
         var ball = GameObjectManager.instantiate("ball");
@@ -81,7 +84,8 @@ public class Init {
         powerUpManager.addComponent(PowerUpManager.class);
         PowerUpManager.getInstance().linkPlayerPowerUp(Player.getInstance().getComponent(PlayerPowerUpHandler.class));
 
-//        VoltraxisPrefab.instantiate();
+        new VoltraxisPrefab().instantiatePrefab();
+
     }
 
     public static void initRecord() {

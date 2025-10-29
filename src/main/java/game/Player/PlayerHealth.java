@@ -3,7 +3,6 @@ package game.Player;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
-import utils.Time;
 
 /**
  * Class that handles player's health and lives as the game progresses.
@@ -59,7 +58,6 @@ public class PlayerHealth extends MonoBehaviour {
         var onPlayerHealthChangedEventArgs = new OnHealthChangedEventArgs();
         onPlayerHealthChangedEventArgs.amount = -amount;
         onHealthChanged.invoke(this, onPlayerHealthChangedEventArgs);
-        Time.addCoroutine(() -> damage(15), Time.time + 3);
     }
 
     public void resetLives() {
