@@ -57,6 +57,16 @@ public abstract class Renderable extends MonoBehaviour {
     public EventHandler<Void> onPivotChanged = new EventHandler<>(Renderable.class);
 
     /**
+     * Set the rendered image's opacity, with {@code 1} being fully
+     * opaque, {@code 0} being fully transparent.
+     *
+     * @param opacity The image opacity to set.
+     */
+    public void setOpacity(double opacity) {
+        getNode().setOpacity(opacity);
+    }
+
+    /**
      * Fired when the rendering position of this rendering
      * object changes. This also consider changes from
      * {@link Transform#getGlobalPosition()}.

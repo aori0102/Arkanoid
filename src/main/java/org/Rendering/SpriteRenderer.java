@@ -120,16 +120,6 @@ public class SpriteRenderer extends Renderable {
         updateRotationPivot();
     }
 
-    /**
-     * Set the rendered image's opacity, with {@code 1} being fully
-     * opaque, {@code 0} being fully transparent.
-     *
-     * @param opacity The image opacity to set.
-     */
-    public void setOpacity(Double opacity) {
-        sprite.setOpacity(opacity);
-    }
-
     private void updateRotationPivot() {
         var globalPivot = getPivotPoint();
         rotateProperty.setPivotX(globalPivot.x);
