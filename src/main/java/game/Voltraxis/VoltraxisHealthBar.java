@@ -41,8 +41,12 @@ public class VoltraxisHealthBar extends MonoBehaviour {
         healthLostImage.setFillAmount(healthLostRatio);
         healthRemainImage.setFillAmount(healthRemainRatio);
         healthText.setText(VoltraxisData.BASE_MAX_HEALTH + " / " + VoltraxisData.BASE_MAX_HEALTH);
+    }
 
-        Voltraxis.getInstance().onHealthChanged.addListener(this::voltraxis_onHealthChanged);
+    @Override
+    public void start(){
+        Voltraxis.getInstance().getVoltraxisHealth()
+                .onHealthChanged.addListener(this::voltraxis_onHealthChanged);
     }
 
     @Override
@@ -99,14 +103,14 @@ public class VoltraxisHealthBar extends MonoBehaviour {
     /**
      * Update {@link #targetRatio} between Voltraxis' current and max
      * HP and modify {@link #healthText} accordingly.<br><br>
-     * <b>Called when {@link Voltraxis#onHealthChanged} is invoked.</b>
+     * <b>Called when {@link VoltraxisHealth#onHealthChanged} is invoked.</b>
      *
      * @param sender {@link Voltraxis}.
      * @param e      Empty event argument.
      */
     private void voltraxis_onHealthChanged(Object sender, Void e) {
-        targetRatio = (double) Voltraxis.getInstance().getHealth() / VoltraxisData.BASE_MAX_HEALTH;
-        healthText.setText(Voltraxis.getInstance().getHealth() + " / " + VoltraxisData.BASE_MAX_HEALTH);
+        targetRatio = (double) Voltraxis.getInstance().getVoltraxisHealth().getHealth() / VoltraxisData.BASE_MAX_HEALTH;
+        healthText.setText(Voltraxis.getInstance().getVoltraxisHealth().getHealth() + " / " + VoltraxisData.BASE_MAX_HEALTH);
         lastHealthChangeTick = Time.getTime();
     }
 

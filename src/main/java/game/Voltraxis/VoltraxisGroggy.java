@@ -1,5 +1,6 @@
 package game.Voltraxis;
 
+import game.Voltraxis.Object.PowerCore.PowerCore;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -31,11 +32,11 @@ public class VoltraxisGroggy extends MonoBehaviour {
 
     /**
      * Fired when Voltraxis' groggy has surpassed the minimum
-     * amount to spawn {@link game.Voltraxis.Object.PowerCore}s,
+     * amount to spawn {@link PowerCore}s,
      * which is indicated by
      * {@link VoltraxisData#MIN_GROGGY_ON_POWER_CORE_DEPLOY}.<br><br>
      * Use within {@link Voltraxis} to spawn
-     * {@link game.Voltraxis.Object.PowerCore}s.
+     * {@link PowerCore}s.
      */
     public EventHandler<Void> onGroggyToDeployPowerCore = new EventHandler<>(VoltraxisGroggy.class);
 
@@ -49,8 +50,8 @@ public class VoltraxisGroggy extends MonoBehaviour {
     }
 
     @Override
-    public void awake() {
-        Voltraxis.getInstance().onDamaged.addListener(this::voltraxis_onDamaged);
+    public void start() {
+        Voltraxis.getInstance().getVoltraxisHealth().onDamaged.addListener(this::voltraxis_onDamaged);
         Voltraxis.getInstance().getVoltraxisCharging().onChargingTerminated
                 .addListener(this::voltraxisCharging_onChargingTerminated);
     }
@@ -61,7 +62,7 @@ public class VoltraxisGroggy extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link Voltraxis#onDamaged} is invoked. This function
+     * Called when {@link VoltraxisHealth#onDamaged} is invoked. This function
      * increment the groggy amount and fire {@link #onGroggyReachedMax}
      * or {@link #onGroggyToDeployPowerCore} if meets certain criteria.
      *
@@ -88,12 +89,12 @@ public class VoltraxisGroggy extends MonoBehaviour {
 
     /**
      * Utility class to determine the validity to spawn
-     * {@link game.Voltraxis.Object.PowerCore}s, or if
+     * {@link PowerCore}s, or if
      * the groggy has surpassed a certain amount to spawn
      * them, indicating by {@link VoltraxisData#MIN_GROGGY_ON_POWER_CORE_DEPLOY}.
      *
      * @return {@code true} if groggy is enough to spawn
-     * {@link game.Voltraxis.Object.PowerCore}s, otherwise
+     * {@link PowerCore}s, otherwise
      * {@code false}.
      */
     private boolean isGroggyToDeployPowerCore() {

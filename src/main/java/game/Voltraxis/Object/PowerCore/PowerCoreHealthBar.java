@@ -1,4 +1,4 @@
-package game.Voltraxis.Object;
+package game.Voltraxis.Object.PowerCore;
 
 import game.Voltraxis.Prefab.VoltraxisPrefab;
 import org.GameObject.GameObject;
@@ -57,14 +57,15 @@ public class PowerCoreHealthBar extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link PowerCore#onHealthChanged} is invoked. This function
+     * Called when {@link PowerCoreHealth#onHealthChanged} is invoked. This function
      * updates the ratio between health and max health for filling.
      *
      * @param sender {@link PowerCore}.
      * @param e      Empty event argument.
      */
     private void powerCore_onHealthChanged(Object sender, Void e) {
-        ratio = (double) powerCore.getHealth() / powerCore.getMaxHealth();
+        var powerCoreHealth = powerCore.getPowerCoreHealth();
+        ratio = (double) powerCoreHealth.getHealth() / powerCoreHealth.getMaxHealth();
         lastHealthChangeTick = Time.getTime();
     }
 
@@ -99,7 +100,7 @@ public class PowerCoreHealthBar extends MonoBehaviour {
      * @param powerCore The fill bar renderer to set.
      */
     public void setPowerCore(PowerCore powerCore) {
-        powerCore.onHealthChanged.addListener(this::powerCore_onHealthChanged);
+        powerCore.getPowerCoreHealth().onHealthChanged.addListener(this::powerCore_onHealthChanged);
         this.powerCore = powerCore;
     }
 

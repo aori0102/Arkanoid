@@ -1,4 +1,4 @@
-package game.Voltraxis.Object;
+package game.Voltraxis.Object.PowerCore;
 
 import game.Voltraxis.Voltraxis;
 import game.Voltraxis.VoltraxisCharging;

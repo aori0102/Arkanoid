@@ -2,20 +2,9 @@ package game.Voltraxis.Prefab;
 
 import game.Voltraxis.*;
 import game.Voltraxis.Object.*;
-import javafx.scene.paint.Color;
-import org.Animation.AnimationClipData;
-import org.Animation.SpriteAnimator;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
-import org.Layer.Layer;
-import org.Layer.RenderLayer;
 import org.Physics.BoxCollider;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
-import org.Text.FontDataIndex;
-import org.Text.TextHorizontalAlignment;
-import org.Text.TextUI;
-import org.Text.TextVerticalAlignment;
 import utils.Vector2;
 
 /**
@@ -41,6 +30,8 @@ public final class VoltraxisPrefab implements IVoltraxisPrefab {
                 .addComponent(VoltraxisStatManager.class)
                 .addComponent(VoltraxisPowerCoreManager.class)
                 .addComponent(BoxCollider.class)
+                .addComponent(VoltraxisDamageAcceptor.class)
+                .addComponent(VoltraxisHealth.class)
                 .getGameObject();
         voltraxis.setParent(bossObject);
 

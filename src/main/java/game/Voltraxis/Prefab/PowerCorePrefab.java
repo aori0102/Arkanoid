@@ -1,8 +1,6 @@
 package game.Voltraxis.Prefab;
 
-import game.Voltraxis.Object.PowerCore;
-import game.Voltraxis.Object.PowerCoreHealthBar;
-import game.Voltraxis.Object.PowerCoreVisual;
+import game.Voltraxis.Object.PowerCore.*;
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
 import org.GameObject.GameObject;
@@ -28,8 +26,13 @@ public final class PowerCorePrefab implements IVoltraxisPrefab {
         var centerPivot = new Vector2(0.5, 0.5);
 
         // Core object
-        var powerCoreObject = GameObjectManager.instantiate("PowerCore");
-        var powerCore = powerCoreObject.addComponent(PowerCore.class);
+        var powerCoreObject = GameObjectManager.instantiate("PowerCore")
+                .addComponent(PowerCore.class)
+                .addComponent(PowerCoreHealth.class)
+                .addComponent(PowerCoreDamageAcceptor.class)
+                .getGameObject();
+
+        // Collider
         var powerCoreCollider = powerCoreObject.addComponent(BoxCollider.class);
         powerCoreCollider.setLocalSize(POWER_CORE_COLLIDER_SIZE);
 
@@ -94,10 +97,9 @@ public final class PowerCorePrefab implements IVoltraxisPrefab {
         outlineObject.setParent(healthBarObject);
 
         // Link components
-        powerCore.setPowerCoreVisual(powerCoreVisual);
         healthBar.setFillLost(fillLostRenderer);
         healthBar.setFillRemain(fillRemainRenderer);
-        healthBar.setPowerCore(powerCore);
+        healthBar.setPowerCore(powerCoreObject.getComponent(PowerCore.class));
 
         return powerCoreObject;
 

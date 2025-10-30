@@ -1,6 +1,6 @@
 package game.Voltraxis;
 
-import game.Voltraxis.Object.PowerCore;
+import game.Voltraxis.Object.PowerCore.PowerCore;
 import game.Voltraxis.Prefab.PowerCorePrefab;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
@@ -106,7 +106,7 @@ public class VoltraxisPowerCoreManager extends MonoBehaviour {
                 .getComponent(PowerCore.class);
         newCore.getTransform().setGlobalPosition(powerCoreIndex.corePosition);
         int powerCoreHealth = (int) (VoltraxisData.BASE_MAX_HEALTH * VoltraxisData.POWER_CORE_PROPORTIONAL_HEALTH);
-        newCore.setHealth(powerCoreHealth);
+        newCore.getPowerCoreHealth().setHealth(powerCoreHealth);
 
         // Add power core effect
         var powerCoreEffectInfo = new VoltraxisEffectManager.EffectInputInfo();
