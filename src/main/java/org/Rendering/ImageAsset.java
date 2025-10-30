@@ -72,6 +72,8 @@ public class ImageAsset {
         /// Bricks
         GreenBrick("/Brick/GreenBrick.png"),
         PurpleBrick("/Brick/PurpleBrick.png"),
+        OrangeBrick("/Brick/OrangeBrick.png"),
+        CyanBrick("/Brick/CyanBrick.png"),
 
         /// Effects
         HealthLossVignette("/Effect/HealthLossVignette.png"),
