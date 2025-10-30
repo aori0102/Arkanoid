@@ -19,7 +19,6 @@ public class AttackPerk extends Perk {
     @Override
     public void awake() {
         super.awake();
-        randomTime = Random.range(0, 3);
     }
 
     @Override
