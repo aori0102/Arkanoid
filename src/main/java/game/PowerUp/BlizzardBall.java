@@ -32,7 +32,7 @@ public class BlizzardBall extends PowerUp {
     }
 
     public void handleOnBlizzardBallRequested(StatusEffect statusEffect) {
-        BallsManager.instance.applyStatusPowerUpEffect(statusEffect);
+        BallsManager.getInstance().applyStatusPowerUpEffect(statusEffect);
     }
 
     @Override

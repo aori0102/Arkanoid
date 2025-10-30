@@ -1,8 +1,14 @@
 package game.GameObject;
 
+import game.Player.Player;
 import game.PowerUp.StatusEffect;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import org.Physics.BoxCollider;
+import org.Rendering.ImageAsset;
+import org.Rendering.SpriteRenderer;
+import utils.Vector2;
 
 import java.util.HashSet;
 
@@ -10,7 +16,7 @@ public class BallsManager extends MonoBehaviour {
 
     // TODO: ball destroy after falling into the void
 
-    public static BallsManager instance;
+    private static BallsManager instance;
 
     private final HashSet<Ball> ballSet = new HashSet<>();
     public int index = 1;
@@ -32,6 +38,10 @@ public class BallsManager extends MonoBehaviour {
 
     public void removeBall(Ball ball){
         ballSet.remove(ball);
+
+        if (ballSet.isEmpty()){
+            spawnInitialBall();
+        }
     }
 
     public HashSet<Ball> getBallSet(){
@@ -53,14 +63,27 @@ public class BallsManager extends MonoBehaviour {
         }
     }
 
-    private void resetBallStatus() {
-        for (var ball : ballSet) {
-            ball.addEffect(StatusEffect.None);
-        }
+    public void spawnInitialBall() {
+        var ball = GameObjectManager.instantiate("ball").addComponent(Ball.class);
+        ball.addComponent(BoxCollider.class);
+        ball.getTransform().setGlobalPosition(new Vector2(584, 530));
+        ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
+
+        var ballVisual = GameObjectManager.instantiate("ballVisual");
+        ballVisual.setParent(ball.getGameObject());
+        ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
+        ballVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
+
+        Player.getInstance().getPlayerPaddle().isFired = false;
+
+        ballSet.add(ball);
     }
 
     public StatusEffect getCurrentEffect() {
         return currentEffect;
     }
 
+    public static BallsManager getInstance() {
+        return instance;
+    }
 }

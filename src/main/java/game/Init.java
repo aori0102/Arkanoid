@@ -59,20 +59,10 @@ public class Init {
         BrickMapManager.getInstance().generateMap();
         new PlayerPrefab().instantiatePrefab();
 
-        var ball = GameObjectManager.instantiate("ball");
-        ball.addComponent(Ball.class);
-        ball.addComponent(BoxCollider.class);
-        ball.getTransform().setGlobalPosition(new Vector2(584, 530));
-        ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
-
-        var ballVisual = GameObjectManager.instantiate("ballVisual");
-        ballVisual.setParent(ball);
-        ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
-        ballVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
 
         var ballsManager = GameObjectManager.instantiate("ballManager");
         ballsManager.addComponent(BallsManager.class);
-        BallsManager.instance.addBall(ball.getComponent(Ball.class));
+        BallsManager.getInstance().spawnInitialBall();
 
         var obstacleManager = GameObjectManager.instantiate("obstacleManager");
         obstacleManager.addComponent(ObstacleManager.class);

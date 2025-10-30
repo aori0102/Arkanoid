@@ -1,8 +1,11 @@
 package game.GameObject;
 
 import game.Brick.Brick;
+import game.GameObject.Border.Border;
+import game.GameObject.Border.BorderType;
 import game.Player.Player;
 import game.Player.PlayerPaddle;
+import game.PowerUp.Index.PowerUpManager;
 import game.PowerUp.StatusEffect;
 import game.Voltraxis.Interface.ITakePlayerDamage;
 import org.GameObject.GameObject;
@@ -76,7 +79,7 @@ public class Ball extends MonoBehaviour {
      */
     public void handleMovement() {
         // Make the ball follow the paddle position if player haven't fired it
-        if (!paddle.isFired) {
+        if (!paddle.isFired && direction == null) {
             getTransform().setGlobalPosition(paddle.getTransform().getGlobalPosition().add(offsetBallPosition));
         }
         // Moving the ball
@@ -84,9 +87,6 @@ public class Ball extends MonoBehaviour {
             getTransform().translate(direction.normalize().multiply(BASE_BALL_SPEED * Time.deltaTime));
         }
 
-        if (getTransform().getGlobalPosition().y > 1000) {
-            GameObjectManager.destroy(getGameObject());
-        }
     }
 
     private void handleCollision(CollisionData collisionData) {
@@ -101,6 +101,11 @@ public class Ball extends MonoBehaviour {
                     }
                 }
                 target.takeDamage(BALL_DAMAGE);
+            }
+        } else if (isCollidedWith(collisionData, Border.class)) {
+            var border = collisionData.otherCollider.getComponent(Border.class);
+            if (border != null && border.getBorderType() == BorderType.BorderBottom) {
+                GameObjectManager.destroy(gameObject);
             }
         }
     }
@@ -216,5 +221,8 @@ public class Ball extends MonoBehaviour {
         return currentStatusEffect;
     }
 
-
+    @Override
+    protected void onDestroy() {
+        BallsManager.getInstance().removeBall(this);
+    }
 }
