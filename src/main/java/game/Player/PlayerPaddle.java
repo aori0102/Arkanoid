@@ -1,7 +1,6 @@
 package game.Player;
 
 import game.GameObject.Arrow;
-import game.Obstacle.ICanDamagePlayer;
 import game.Obstacle.Index.ObstacleManager;
 import game.PowerUp.Index.PowerUp;
 import javafx.scene.input.MouseButton;
@@ -12,7 +11,6 @@ import org.InputAction.ActionMap;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
-import org.Physics.PhysicsManager;
 import utils.Time;
 import utils.Vector2;
 
@@ -26,8 +24,6 @@ public class PlayerPaddle extends MonoBehaviour {
     private static final double BASE_PADDLE_SPEED = 1000;
     private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0);
 
-    private static final double DAMAGE_TAKEN_DELAY = 0.47;
-
     //Event
     public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(PlayerPaddle.class);
     public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(PlayerPaddle.class);
@@ -40,8 +36,6 @@ public class PlayerPaddle extends MonoBehaviour {
     private boolean canReduceSpeed = true;
     private double stunnedCounter = 0;
     private double currentSpeed = 1000;
-
-    private double previousDamagedTick = 0.0;
 
     public boolean isFired = false;
 
@@ -77,7 +71,6 @@ public class PlayerPaddle extends MonoBehaviour {
     @Override
     public void update() {
         handleCollisionWithObstacles();
-        processDamage();
     }
 
     private void handlePaddleMovement(Object e, ActionMap.Action action) {
@@ -193,22 +186,6 @@ public class PlayerPaddle extends MonoBehaviour {
         if (powerUp != null) {
             onPowerUpConsumed.invoke(this, powerUp);
             return;
-        }
-
-    }
-
-    private void processDamage() {
-
-        var overlappedList = PhysicsManager.getOverlapColliders(getComponent(BoxCollider.class), true);
-        for (var collider : overlappedList) {
-            var damageObject = collider.getComponent(ICanDamagePlayer.class);
-            if (damageObject != null) {
-                if (Time.getTime() > previousDamagedTick + DAMAGE_TAKEN_DELAY) {
-                    Player.getInstance().getPlayerHealth().damage(damageObject.getDamage());
-                    previousDamagedTick = Time.getTime();
-                }
-                damageObject.onDamagedPlayer();
-            }
         }
 
     }

@@ -15,9 +15,6 @@ public class Player extends MonoBehaviour {
     /// Singleton
     private static Player instance = null;
 
-    /// Attributes
-    private int attack = 10;
-
     /// Player core components
     private final PlayerPowerUpHandler playerPowerUpHandler;
     private final PlayerHealth playerHealth;
@@ -52,6 +49,7 @@ public class Player extends MonoBehaviour {
     public PlayerHealth getPlayerHealth() {
         return playerHealth;
     }
+
     public PlayerSkillsHandler getPlayerSkillsHandler() {
         return playerSkillsHandler;
     }
@@ -64,7 +62,6 @@ public class Player extends MonoBehaviour {
         return playerController;
     }
 
-
     @Override
     protected void onDestroy() {
         instance = null;
@@ -72,23 +69,11 @@ public class Player extends MonoBehaviour {
 
     @Override
     public void awake() {
-        Time.addCoroutine(() -> playerHealth.damage(15), Time.time + 3);
-    }
-
-    private void onPlayerDead() {
-        // Tell health to regenerate
+        Time.addCoroutine(() -> playerHealth.damage(15), Time.getTime() + 3);
     }
 
     public static Player getInstance() {
         return instance;
-    }
-
-    public int getAttack() {
-        return attack;
-    }
-
-    public void setAttack(int attack) {
-        this.attack = attack;
     }
 
     /**
@@ -101,4 +86,5 @@ public class Player extends MonoBehaviour {
     public void linkPlayerPaddle(PlayerPaddle playerPaddle) {
         this.playerPaddle = playerPaddle;
     }
+
 }

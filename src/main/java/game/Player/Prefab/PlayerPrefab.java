@@ -1,13 +1,8 @@
 package game.Player.Prefab;
 
-import game.GameObject.Arrow;
 import game.Player.*;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
-import org.Physics.BoxCollider;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
-import utils.Vector2;
 
 /**
  * Prefab for the main Player object. Contains multiple core functioning
@@ -25,13 +20,12 @@ public class PlayerPrefab implements IPlayerPrefab {
     @Override
     public GameObject instantiatePrefab() {
 
-
         var playerObject = GameObjectManager.instantiate("Player")
-            .addComponent(Player.class)
-            .addComponent(PlayerSkillsHandler.class)
-            .addComponent(PlayerPowerUpHandler.class)
-            .addComponent(PlayerHealth.class)
-            .getGameObject();
+                .addComponent(Player.class)
+                .addComponent(PlayerSkillsHandler.class)
+                .addComponent(PlayerPowerUpHandler.class)
+                .addComponent(PlayerHealth.class)
+                .getGameObject();
 
         var player = playerObject.getComponent(Player.class);
 

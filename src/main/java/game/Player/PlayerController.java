@@ -1,12 +1,9 @@
 package game.Player;
 
-import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import org.InputAction.PlayerInput;
-
-import java.util.HashSet;
 
 /**
  * Control all the input from player
