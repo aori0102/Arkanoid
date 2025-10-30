@@ -28,6 +28,8 @@ public class ImageAsset {
         GeneralButtons("/UI/GeneralButtons.png"),
         PauseButton("/UI/PauseButton.png"),
         ResumeButton("/UI/ResumeButton.png"),
+        /// Game Title
+        GameTitle("/UI/GameTitle.png"),
         /// Perks
         Perks("/UI/Perks.png"),
 

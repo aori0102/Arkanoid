@@ -30,6 +30,10 @@ public class SceneManager {
     private static final HashMap<SceneKey, Scene> sceneMap = new HashMap<>();
     private static SceneKey currentSceneKey = SceneKey.Menu;
 
+
+    public static void init(Stage stage) {
+        mainStage = stage;
+    }
     /**
      * Initialize all scenes available within {@link SceneKey}.
      * Each scene will be provided with a {@code root} for per-scene

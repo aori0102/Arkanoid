@@ -21,9 +21,11 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 
         Random.init();
+        SceneManager.init(stage);
         var defaultScene = SceneManager.createScenes();
         RendererManager.initializeRenderSystem(stage, defaultScene);
         EditorView.init();
+        Init.initManager();
         Init.initMenu();
         Init.initGame();
         Init.initRecord();
@@ -31,6 +33,7 @@ public class Main extends Application {
         Init.Init_Duc();
         Init.Init_Dui();
         Init.Init_Kine();
+
         EditorView.wakeHierarchy();
 
         // --- Game/render loop ---
