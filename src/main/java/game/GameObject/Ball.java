@@ -1,9 +1,16 @@
 package game.GameObject;
 
+import game.Brick.BrickDamageAcceptor;
+import game.Damagable.DamageAcceptor;
+import game.Damagable.DamageInfo;
+import game.Damagable.DamageType;
+import game.Damagable.ICanDealDamage;
+import game.Player.PaddleDamageAcceptor;
 import game.Player.Player;
 import game.Player.PlayerPaddle;
 import game.PowerUp.StatusEffect;
-import game.Voltraxis.Interface.ITakePlayerDamage;
+import game.Voltraxis.Object.PowerCore.PowerCoreDamageAcceptor;
+import game.Voltraxis.VoltraxisDamageAcceptor;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
@@ -12,13 +19,16 @@ import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
+import utils.Random;
 import utils.Vector2;
 import utils.Time;
 
 // TODO: ur code stinky af man - Aori to Kine.
 
-public class Ball extends MonoBehaviour {
+public class Ball extends MonoBehaviour implements ICanDealDamage {
 
+    private static final double BALL_CRITICAL_CHANCE = 0.27;
+    private static final double BALL_CRITICAL_AMOUNT = 0.59;
     private static final int BALL_DAMAGE = 80;
     private static final double BASE_BALL_SPEED = 500;
     private static final Vector2 BOUNCE_OFFSET = new Vector2(0.2, 0.2);
@@ -45,10 +55,7 @@ public class Ball extends MonoBehaviour {
         ballCollider.setExcludeLayer(Layer.Ball.getUnderlyingValue());
         ballCollider.setLocalCenter(new Vector2(0, 0));
         ballCollider.setLocalSize(new Vector2(20, 16));
-        ballCollider.setOnCollisionEnterCallback(e -> {
-            handleAngleDirection(e);
-            handleCollision(e);
-        });
+        ballCollider.setOnCollisionEnterCallback(this::handleAngleDirection);
 
         // Add listener to paddle event
         paddle.onMouseReleased.addListener((e, vector2) -> {
@@ -85,13 +92,6 @@ public class Ball extends MonoBehaviour {
 
         if (getTransform().getGlobalPosition().y > 1000) {
             GameObjectManager.destroy(getGameObject());
-        }
-    }
-
-    private void handleCollision(CollisionData collisionData) {
-        var target = collisionData.otherCollider.getComponent(ITakePlayerDamage.class);
-        if (target != null) {
-            target.takeDamage(BALL_DAMAGE);
         }
     }
 
@@ -152,7 +152,7 @@ public class Ball extends MonoBehaviour {
     }
 
     public SpriteRenderer getBallVisual() {
-        for(var child : getTransform().getChildren()) {
+        for (var child : getTransform().getChildren()) {
             if (child.getComponent(SpriteRenderer.class) != null) {
                 return child.getComponent(SpriteRenderer.class);
             }
@@ -202,5 +202,30 @@ public class Ball extends MonoBehaviour {
         return currentStatusEffect;
     }
 
+    @Override
+    public DamageInfo getDamageInfo() {
+
+        var damageInfo = new DamageInfo();
+        if (Random.range(0.0, 1.0) < BALL_CRITICAL_CHANCE) {
+            damageInfo.amount = (int) (BALL_DAMAGE * (1.0 + BALL_CRITICAL_AMOUNT));
+            damageInfo.type = DamageType.Critical;
+        } else {
+            damageInfo.amount = BALL_DAMAGE;
+            damageInfo.type = DamageType.Normal;
+        }
+        return damageInfo;
+
+    }
+
+    @Override
+    public void onDamaged() {
+    }
+
+    @Override
+    public boolean isDamageTarget(DamageAcceptor damageAcceptor) {
+        return damageAcceptor instanceof VoltraxisDamageAcceptor
+                || damageAcceptor instanceof PowerCoreDamageAcceptor
+                || damageAcceptor instanceof BrickDamageAcceptor;
+    }
 
 }
