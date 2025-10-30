@@ -1,17 +1,19 @@
 package game.Obstacle.Object;
 
-import game.Obstacle.ICanDamagePlayer;
+import game.Damagable.DamageAcceptor;
+import game.Damagable.DamageInfo;
+import game.Damagable.DamageType;
+import game.Damagable.ICanDealDamage;
 import game.Obstacle.Index.Obstacle;
-import game.Player.Player;
+import game.Player.PaddleDamageAcceptor;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
-import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
 
-public class Laser extends Obstacle implements ICanDamagePlayer {
+public class Laser extends Obstacle implements ICanDealDamage {
 
     private static final double LASER_SPEED = 1000;
     private static final int LASER_DAMAGE = 10;
@@ -48,14 +50,21 @@ public class Laser extends Obstacle implements ICanDamagePlayer {
     }
 
     @Override
-    public int getDamage() {
-        return LASER_DAMAGE;
+    public DamageInfo getDamageInfo() {
+        var damageInfo = new DamageInfo();
+        damageInfo.amount = LASER_DAMAGE;
+        damageInfo.type = DamageType.HitPlayer;
+        return damageInfo;
     }
 
     @Override
-    public void onDamagedPlayer() {
+    public void onDamaged() {
         GameObjectManager.destroy(gameObject);
     }
 
-}
+    @Override
+    public boolean isDamageTarget(DamageAcceptor damageAcceptor) {
+        return damageAcceptor instanceof PaddleDamageAcceptor;
+    }
 
+}
