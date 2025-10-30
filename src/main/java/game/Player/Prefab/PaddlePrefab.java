@@ -14,7 +14,7 @@ public class PaddlePrefab implements IPlayerPrefab{
     public GameObject instantiatePrefab() {
         // Player paddle
         var paddle = GameObjectManager.instantiate("Paddle");
-        paddle.getTransform().setGlobalPosition(new Vector2(300,600));
+        paddle.getTransform().setGlobalPosition(new Vector2(300,700));
         paddle.addComponent(PlayerPaddle.class)
                 .addComponent(BoxCollider.class);
 

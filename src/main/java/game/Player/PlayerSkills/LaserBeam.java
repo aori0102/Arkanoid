@@ -15,7 +15,7 @@ import utils.Vector2;
 public class LaserBeam extends Skill{
 
     private static final double LASER_SPEED = 1000;
-    private static final int LASER_DAMAGE = 36;
+    private static final int LASER_DAMAGE = 500;
     private final Layer[] colliderLayers = {Layer.Boss, Layer.Brick};
 
     /**

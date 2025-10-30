@@ -25,7 +25,6 @@ public class PlayerPaddle extends MonoBehaviour {
     private static final double DOT_LIMIT_ANGLE_RIGHT = 30;
     private static final double DOT_LIMIT_ANGLE_LEFT = 150;
     private static final double STUNNED_TIME = 3.6;
-    private static final double BASE_PADDLE_SPEED = 1000;
     private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0);
 
 
@@ -40,7 +39,6 @@ public class PlayerPaddle extends MonoBehaviour {
     private boolean canStartStunnedCounter = false;
     private boolean canReduceSpeed = true;
     private double stunnedCounter = 0;
-    private double currentSpeed = 1000;
 
     public boolean isFired = false;
 
@@ -67,6 +65,9 @@ public class PlayerPaddle extends MonoBehaviour {
         Player.getInstance().getPlayerController().getActionMap().
                 onKeyHeld.addListener(this::handlePaddleMovement);
         Player.getInstance().getPlayerController().getActionMap().
+                onKeyReleased.addListener((_, action) ->{
+                });
+        Player.getInstance().getPlayerController().getActionMap().
                 onMouseHeld.addListener(this::handleRayDirection);
         Player.getInstance().getPlayerController().getActionMap().
                 onMouseReleased.addListener(this::handleRayReleased);
@@ -88,7 +89,7 @@ public class PlayerPaddle extends MonoBehaviour {
 
         if (!movementVector.equals(Vector2.zero())) {
             movementVector = movementVector.normalize()
-                    .multiply(currentSpeed * Time.deltaTime);
+                    .multiply(Player.getInstance().getCurrentSpeed() * Time.deltaTime);
         }
 
         getTransform().translate(movementVector);
@@ -149,12 +150,13 @@ public class PlayerPaddle extends MonoBehaviour {
         stunnedCounter += Time.deltaTime;
 
         if (canReduceSpeed) {
-            currentSpeed /= 10;
+            int currentSpeed = Player.getInstance().getCurrentSpeed() / 10;
+            Player.getInstance().setCurrentSpeed(currentSpeed);
             canReduceSpeed = false;
         }
 
         if (stunnedCounter >= STUNNED_TIME) {
-            currentSpeed = BASE_PADDLE_SPEED;
+            Player.getInstance().setCurrentSpeed(Player.getInstance().getBaseSpeed());
             canReduceSpeed = true;
             stunnedCounter = 0;
             canStartStunnedCounter = false;

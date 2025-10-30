@@ -61,6 +61,7 @@ public class Brick extends MonoBehaviour implements ITakePlayerDamage {
         health -= damageMultiplier * amount;
         if (statusBrickEffect == StatusEffect.FrostBite) {
             resetStatusBrickEffect();
+            return;
         }
         if (health <= 0) {
             GameObjectManager.destroy(gameObject);
@@ -88,6 +89,7 @@ public class Brick extends MonoBehaviour implements ITakePlayerDamage {
         this.statusBrickEffect = statusBrickEffect;
         handleStatusEffect(statusBrickEffect);
         changeBrickVisual(statusBrickEffect);
+        System.out.println(statusBrickEffect);
     }
 
     private void handleStatusEffect(StatusEffect statusEffect) {
@@ -113,7 +115,7 @@ public class Brick extends MonoBehaviour implements ITakePlayerDamage {
 
             case FrostBite -> {
                 SpriteRenderer renderer = getComponent(SpriteRenderer.class);
-                renderer.setImage(ImageAsset.ImageIndex.CyanBrick.getImage());
+                renderer.setImage(ImageAsset.ImageIndex.PurpleBrick.getImage());
                 renderer.setSize(BRICK_SIZE);
                 renderer.setPivot(new Vector2(0.5, 0.5));
             }

@@ -19,19 +19,22 @@ import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 import utils.Time;
 
-// TODO: ur code stinky af man - Aori to Kine.
 
 public class Ball extends MonoBehaviour {
 
-    private static final int BALL_DAMAGE = 80;
     private static final double BASE_BALL_SPEED = 500;
     private static final Vector2 BOUNCE_OFFSET = new Vector2(0.2, 0.2);
+
+    private int ballDamage = Player.getInstance().getAttack();
 
     private Vector2 direction;
     private PlayerPaddle paddle;
     private Vector2 offsetBallPosition;
     private StatusEffect currentStatusEffect = StatusEffect.None;
     private StatusEffect pendingEffect = StatusEffect.None;
+
+    private boolean hasCollidedWithPaddle = false;
+
 
     public Ball(GameObject owner) {
         super(owner);
@@ -100,7 +103,7 @@ public class Ball extends MonoBehaviour {
                         changeBallVisual();
                     }
                 }
-                target.takeDamage(BALL_DAMAGE);
+                target.takeDamage(ballDamage);
             }
         } else if (isCollidedWith(collisionData, Border.class)) {
             var border = collisionData.otherCollider.getComponent(Border.class);
@@ -111,45 +114,55 @@ public class Ball extends MonoBehaviour {
     }
 
     /**
-     * Calculating the direction of the ball.
-     *
-     * @param collisionData : the collision data of the interacted surface.
+     * Calculating the direction of the ball.<br>
+     * The reflected direction is calculated by the formular : <br>
+     * {@code r = d - 2 * (d,n) * n} <br>
+     * In that formular: <br>
+     * r is reflected direction <br>
+     * d is the previous direction <br>
+     * n is the normal vector (base on which side the ball interacts with) <br>
+     * If the direction is vertical with the surface, the reflected direction will be added <br>
+     * an offset vector to avoid stuck.
+     * @param collisionData : the hit object's collision data
      */
     private void handleAngleDirection(CollisionData collisionData) {
-
         if (direction == null) return;
 
-        // Normal vector to calculate reflect direction
-        var normal = collisionData.hitNormal.normalize();
+        Vector2 normal = collisionData.hitNormal.normalize();
 
-        // Dot product of the ball's direction with the surface
-        double dotCoefficient = Vector2.dot(direction.normalize(), normal.normalize());
+        if (Math.abs(normal.x) > Math.abs(normal.y)) {
+            normal = new Vector2(Math.signum(normal.x), 0);
+        } else {
+            normal = new Vector2(0, Math.signum(normal.y));
+        }
 
-        // Check if the ball is perpendicular with the surface
-        boolean nearlyParallel = (dotCoefficient <= 1 && dotCoefficient >= 0.95) ||
-                (dotCoefficient >= -1 && dotCoefficient <= -0.95);
+        Vector2 dirNorm = direction.normalize();
 
-        // Reflect direction
-        Vector2 reflectDir = normal.add(normal).add(direction.normalize());
+        double dot = Vector2.dot(dirNorm, normal);
+        Vector2 reflectDirection = dirNorm.subtract(normal.multiply(2 * dot)).normalize();
 
-        // If the ball's direction is perpendicular then adding the offset vector to it in order to avoid horizontal movement
+        double dotCoefficient = Vector2.dot(dirNorm, normal);
+
+        boolean nearlyParallel = dotCoefficient == 1;
+
         if (nearlyParallel) {
-            reflectDir = reflectDir.add(BOUNCE_OFFSET.normalize());
+            reflectDirection = reflectDirection.add(BOUNCE_OFFSET.multiply(0.3).normalize());
         }
 
-        // If the ball interacts with the moving paddle, the reflected direction will be different from the motionless paddle,
-        // and it will be calculated by adding the moving vector to the reflected direction
-        if (isCollidedWith(collisionData, PlayerPaddle.class)) {;;
-            if (Math.abs(normal.y) > Math.abs(normal.x)
-                    && !paddle.movementVector.equals(Vector2.zero())
-                    && !reflectDir.add(paddle.movementVector.normalize()).equals(Vector2.zero())) {
-                reflectDir = reflectDir.add(paddle.movementVector.normalize());
+        if (isCollidedWith(collisionData, PlayerPaddle.class)) {
+            Vector2 paddleVel = paddle.movementVector;
+            if (!paddleVel.equals(Vector2.zero())) {
+                reflectDirection = reflectDirection.add(paddleVel.normalize().multiply(0.3)).normalize();
             }
-
         }
 
-        direction = reflectDir.normalize();
+        Vector2 offset = getTransform().getGlobalPosition().add(normal.inverse().multiply(1));
+        getTransform().setGlobalPosition(offset);
+
+        direction = reflectDirection;
     }
+
+
 
     /**
      * Set the ball's direction.
@@ -171,7 +184,7 @@ public class Ball extends MonoBehaviour {
     }
 
     public SpriteRenderer getBallVisual() {
-        for(var child : getTransform().getChildren()) {
+        for (var child : getTransform().getChildren()) {
             if (child.getComponent(SpriteRenderer.class) != null) {
                 return child.getComponent(SpriteRenderer.class);
             }
@@ -225,4 +238,5 @@ public class Ball extends MonoBehaviour {
     protected void onDestroy() {
         BallsManager.getInstance().removeBall(this);
     }
+
 }
