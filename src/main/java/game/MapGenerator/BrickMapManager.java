@@ -1,14 +1,12 @@
 package game.MapGenerator;
 
 import game.Brick.Brick;
+import game.Brick.BrickPrefab;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
-import org.Physics.BoxCollider;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
 import java.util.ArrayList;
@@ -19,9 +17,8 @@ public final class BrickMapManager extends MonoBehaviour {
 
     private static final int ROW_COUNT = 10;
     private static final int COLUMN_COUNT = 10;
-    private static final Vector2 BRICK_SIZE = new Vector2(64.0, 32.0);
     private static final Vector2 BRICK_MAP_ANCHOR = new Vector2(300.0, 100.0);
-    private static final Vector2 BRICK_OFFSET = new Vector2(2.0, 2.0);
+    private static final Vector2 BRICK_OFFSET = new Vector2(68.0, 36.0);
 
     private record Cell(int row, int column) {
     }
@@ -65,8 +62,8 @@ public final class BrickMapManager extends MonoBehaviour {
             for (int j = 0; j < COLUMN_COUNT; j++) {
 
                 var cell = new Cell(i, j);
-                var brick = instantiateBrick();
-                var position = BRICK_MAP_ANCHOR.add((BRICK_OFFSET.add(BRICK_SIZE)).scaleUp(new Vector2(j, i)));
+                var brick = BrickPrefab.instantiateBrick();
+                var position = BRICK_MAP_ANCHOR.add((BRICK_OFFSET).scaleUp(new Vector2(j, i)));
                 brick.getTransform().setGlobalPosition(position);
                 brickGrid.get(i).set(j, brick);
                 brickCoordinateMap.put(brick, cell);
@@ -96,20 +93,6 @@ public final class BrickMapManager extends MonoBehaviour {
                 onMapCleared.invoke(this, null);
             }
         }
-
-    }
-
-    public Brick instantiateBrick() {
-
-        var brick = GameObjectManager.instantiate("Brick")
-                .addComponent(Brick.class);
-        var brickRenderer = brick.addComponent(SpriteRenderer.class);
-        brickRenderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
-        brickRenderer.setSize(BRICK_SIZE);
-        brickRenderer.setPivot(new Vector2(0.5, 0.5));
-        brick.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
-
-        return brick;
 
     }
 

@@ -1,7 +1,6 @@
 package game.Brick;
 
 import game.PowerUp.Index.PowerUpManager;
-import game.Voltraxis.Interface.ITakePlayerDamage;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -9,7 +8,7 @@ import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
 import utils.Vector2;
 
-public class Brick extends MonoBehaviour implements ITakePlayerDamage {
+public class Brick extends MonoBehaviour {
 
     private int health = 0;
     private BrickType brickType = BrickType.Normal;
@@ -38,8 +37,7 @@ public class Brick extends MonoBehaviour implements ITakePlayerDamage {
         onBrickDestroyed.invoke(this, onBrickDestroyedEventArgs);
     }
 
-    @Override
-    public void takeDamage(int amount) {
+    public void damage(int amount) {
         health -= amount;
         if (health <= 0) {
             PowerUpManager.getInstance().spawnPowerUp(getTransform().getGlobalPosition());
