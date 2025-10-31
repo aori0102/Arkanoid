@@ -9,8 +9,8 @@ public final class PowerCoreHealth extends MonoBehaviour {
     private int health = 0;
     private int maxHealth = 0;
 
-    public EventHandler<Void> onHealthReachedZero = new EventHandler<>(PowerCore.class);
-    public EventHandler<Void> onHealthChanged = new EventHandler<>(PowerCore.class);
+    public EventHandler<Void> onHealthReachedZero = new EventHandler<>(PowerCoreHealth.class);
+    public EventHandler<Void> onHealthChanged = new EventHandler<>(PowerCoreHealth.class);
 
     /**
      * Create this MonoBehaviour.
