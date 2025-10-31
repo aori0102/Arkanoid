@@ -2,7 +2,7 @@ package game.BrickObj.BrickGenMap;
 
 import static game.BrickObj.BrickGenMap.Mathx.*;
 
-import game.BrickObj.InitMatrix.BrickMatrix;
+import game.BrickObj.Init.Matrix;
 import game.BrickObj.BrickGenMap.style.*;
 
 import java.util.EnumMap;
@@ -52,7 +52,7 @@ public final class GenMap {
    * Return a new BrickMatrix for the chosen style.
    * Strategy pattern design for genMap structure.
    */
-  public BrickMatrix generate(MapStyle style, double difficulty) {
+  public Matrix generate(MapStyle style, double difficulty) {
     StyleGenerator gen = strategies.get(style);
     return gen.generate(rows, cols, keep01(difficulty), rng);
   }

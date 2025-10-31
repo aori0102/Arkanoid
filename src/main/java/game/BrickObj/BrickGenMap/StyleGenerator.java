@@ -1,8 +1,8 @@
 package game.BrickObj.BrickGenMap;
 
-import game.BrickObj.InitMatrix.BrickMatrix;
+import game.BrickObj.Init.Matrix;
 import java.util.Random;
 
 public interface StyleGenerator {
-  BrickMatrix generate(int rows, int cols, double difficulty, Random rng);
+  Matrix generate(int rows, int cols, double difficulty, Random rng);
 }

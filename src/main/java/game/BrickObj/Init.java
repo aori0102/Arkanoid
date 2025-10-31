@@ -3,18 +3,18 @@ package game.BrickObj;
 import game.BrickObj.BrickEvent.CollisionEvent;
 import org.GameObject.GameObjectManager;
 import org.Physics.BoxCollider;
-import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
-import game.BrickObj.BrickManager.*;
 
 import java.util.Vector;
 
+import static game.BrickObj.BrickGenMap.TransTypeNumBer.transNumberToType;
 import static game.BrickObj.BrickManager.BRICK_SIZE;
+import static game.BrickObj.Render.setRender;
 
-public class InitMatrix {
+public class Init {
 
-    private InitMatrix() {
+    private Init() {
     }
 
     public static record IntPair(int fi, int se) {
@@ -25,14 +25,9 @@ public class InitMatrix {
 
     public static Brick getNewBrick(BrickType brickType) {
         var currentBrick = GameObjectManager.instantiate().addComponent(Brick.class);
-
-        var brickRenderer = currentBrick.addComponent(SpriteRenderer.class);
-        brickRenderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
-        brickRenderer.setSize(BRICK_SIZE);
-        brickRenderer.setPivot(new Vector2(0.5, 0.5));
-        currentBrick.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
+        currentBrick.setType(brickType);
+        setRender(currentBrick);
         return currentBrick;
-
     }
 
     public static boolean inBounds(int r, int c, int rows, int cols) {
@@ -194,8 +189,8 @@ public class InitMatrix {
         }
 
         public void set(int r, int c, Brick value) {
+            beDestroy(r, c);
             matrix.get(r).set(c, null);
-            GameObjectManager.destroy(matrix.get(r).get(c).getGameObject());
             value.setRowId(r);
             value.setColID(c);
             value.onBrickCollision.addListener(this::onBrickCollision);
@@ -243,48 +238,124 @@ public class InitMatrix {
             }
         }
 
+        public boolean invalid(int r, int c) {
+            return matrix.get(r).get(c) == null;
+        }
+
         public void hitDamage(int r, int c, int damge) {
+            if(invalid(r, c)) return;
             matrix.get(r).get(c).hitDamage(damge);
         }
 
         public void incHealth(int r, int c, int inc) {
+            if(invalid(r, c)) return;
             matrix.get(r).get(c).heal(inc);
         }
 
         public void decHealth(int r, int c, int inc) {
+            if(invalid(r, c)) return;
             matrix.get(r).get(c).decreaseHealth(inc);
         }
 
         public boolean isDestroyed(int r, int c) {
+            if(invalid(r, c)) return true;
             return matrix.get(r).get(c).isDestroyed();
         }
 
         public int getHealth(int r, int c) {
+            if(invalid(r, c)) return 0;
             return matrix.get(r).get(c).getHealth();
         }
 
         public BrickType getObjType(int r, int c) {
+            if(invalid(r, c)) return BrickType.Normal;
             return matrix.get(r).get(c).getBrickType();
         }
 
         public void beDestroy(int r, int c) {
+            if(invalid(r, c)) return;
             matrix.get(r).get(c).beDestroy();
         }
 
         public boolean getIsNewDeath(int r, int c) {
+            if(invalid(r, c)) return false;
             return matrix.get(r).get(c).isObjNewDeath();
         }
 
         public void setObjDeathStatus(int r, int c) {
+            if(invalid(r, c)) return;
             matrix.get(r).get(c).setObjDeathState();
         }
 
         public boolean isJustDamaged(int r, int c) {
+            if(invalid(r, c)) return false;
             return matrix.get(r).get(c).isJustDamaged();
         }
 
         public void resetJustDamaged(int r, int c) {
+            if(invalid(r, c)) return;
             matrix.get(r).get(c).resetIsDamaged();
+        }
+
+        public void setWaveIndex(int r, int c, int val) {
+            if(invalid(r, c)) return;
+            matrix.get(r).get(c).setWaveIndex(val);
+        }
+
+        public int getWaveIndex(int r, int c) {
+            if(invalid(r, c)) return 0;
+            return matrix.get(r).get(c).getWaveIndex();
+        }
+
+        public void setType(int r, int c, BrickType type) {
+            get(r, c).setType(type);
+            setRender(get(r, c));
+        }
+
+        public void transIntToBrick(Matrix that) {
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < columns; c++) {
+                    System.out.println("beforeTransIntToBrick: r=" + r + " c=" +
+                            c + " " + that.get(r, c) + " " + transNumberToType(that.get(r, c))
+                            + " " + getObjType(r, c));
+                    setType(r, c, transNumberToType(that.get(r, c)));
+                    System.out.println("transIntToBrick: r=" + r + " c=" +
+                            c + " " + that.get(r, c) + " " + transNumberToType(that.get(r, c))
+                            + " " + getObjType(r, c));
+                }
+            }
+        }
+
+        public void deleted() {
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < columns; c++) {
+                    if(!invalid(r, c)) {
+                        System.out.println("Destroy: " + r + " " + c);
+                        beDestroy(r, c);
+                    }
+                }
+            }
+        }
+
+        public void setWaveIndex(Matrix that) {
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < columns; c++) {
+                    if(invalid(r, c)) continue;
+                    setWaveIndex(r, c, that.get(r, c));
+                }
+            }
+        }
+
+        public Matrix getWaveIndex() {
+            Matrix matrix = new Matrix(rows, columns);
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < columns; c++) {
+                    if(invalid(r, c)) continue;
+                    matrix.set(r, c, getWaveIndex(r, c));
+                }
+            }
+
+            return matrix.clone();
         }
 
     }

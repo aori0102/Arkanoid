@@ -7,12 +7,11 @@ import org.GameObject.GameObjectManager;
 import java.util.Collections;
 import java.util.Vector;
 
-import static game.BrickObj.InitMatrix.*;
+import static game.BrickObj.Init.*;
 
 public final class CollisionEvent {
 
     private final static int damage = 10;
-
     public static void ColliEvent(int r, int c, BrickType brickType) {
         if (!matrixObj.inBounds(r, c)) return;
 
@@ -21,9 +20,6 @@ public final class CollisionEvent {
         else return;
 
         switch (brickType) {
-            case Ball -> {
-                // để trống
-            }
 
             case Bomb -> {
                 int splash = Math.max(1, damage / 2);
@@ -49,9 +45,6 @@ public final class CollisionEvent {
                     for (int i = 0; i < revive; i++) {
                         int x = died.get(i).fi();
                         int y = died.get(i).se();
-
-                        var brickObject = GameObjectManager.instantiate("Brick");
-                        var brickComponent = brickObject.addComponent(Brick.class);
 
                         matrixObj.set(x, y, getNewBrick(BrickType.Normal));
                     }

@@ -1,10 +1,10 @@
 package game.BrickObj.BrickGenMap.style;
 
-import static game.BrickObj.InitMatrix.getNewBrick;
+import static game.BrickObj.BrickGenMap.TransTypeNumBer.transTypeToNumber;
 import static game.BrickObj.BrickGenMap.Mathx.*;
 
 import game.BrickObj.BrickType;
-import game.BrickObj.InitMatrix.BrickMatrix;
+import game.BrickObj.Init.Matrix;
 import game.BrickObj.BrickGenMap.SpecialsSprinkler;
 import game.BrickObj.BrickGenMap.StyleGenerator;
 import game.BrickObj.BrickGenMap.TypePickers;
@@ -13,7 +13,7 @@ import java.util.Random;
 /** CAVES: cellular automata smoothing of random walls. */
 public final class CavesStyle implements StyleGenerator {
     @Override
-    public BrickMatrix generate(int rows, int cols, double difficulty, Random rng) {
+    public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);
 
         boolean[][] wall = new boolean[rows][cols];
@@ -33,11 +33,11 @@ public final class CavesStyle implements StyleGenerator {
             wall = nw;
         }
 
-        BrickMatrix g = new BrickMatrix(rows, cols);
+        Matrix g = new Matrix(rows, cols);
         for (int r = 0; r < rows; r++)
             for (int c = 0; c < cols; c++)
-                if (wall[r][c]) g.set(r, c, getNewBrick(TypePickers.pickFromTopHard(rng, 0.5 + 0.45 * difficulty)));
-                else if (rng.nextDouble() < 0.15) g.set(r, c, getNewBrick(BrickType.Normal));
+                if (wall[r][c]) g.set(r, c, transTypeToNumber(TypePickers.pickFromTopHard(rng, 0.5 + 0.45 * difficulty)));
+                else if (rng.nextDouble() < 0.15) g.set(r, c, transTypeToNumber(BrickType.Normal));
 
         SpecialsSprinkler.sprinkle(g, rng, difficulty);
         return g;

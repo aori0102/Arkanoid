@@ -3,7 +3,6 @@ package game;
 import game.BrickObj.Brick;
 import game.BrickObj.BrickManager;
 import game.GameObject.BallsManager;
-import game.MapGenerator.BrickMapManager;
 import game.Obstacle.Object.Laser;
 import game.Obstacle.Index.ObstacleManager;
 import game.PowerUp.BlizzardBall;

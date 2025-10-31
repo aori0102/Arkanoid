@@ -1,10 +1,10 @@
 package game.BrickObj.BrickGenMap.style;
 
 import static game.BrickObj.BrickGenMap.Mathx.*;
-import static game.BrickObj.BrickGenMap.GridUtils.*;
+import static game.BrickObj.BrickGenMap.TransTypeNumBer.transTypeToNumber;
 
 import game.BrickObj.BrickType;
-import game.BrickObj.InitMatrix.BrickMatrix;
+import game.BrickObj.Init.Matrix;
 import game.BrickObj.BrickGenMap.SpecialsSprinkler;
 import game.BrickObj.BrickGenMap.StyleGenerator;
 import game.BrickObj.BrickGenMap.TypePickers;
@@ -13,9 +13,9 @@ import java.util.Random;
 /** ROOMS: hollow rooms with sparse interior. */
 public final class RoomsStyle implements StyleGenerator {
     @Override
-    public BrickMatrix generate(int rows, int cols, double difficulty, Random rng) {
+    public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);
-        BrickMatrix g = new BrickMatrix(rows, cols);
+        Matrix g = new Matrix(rows, cols);
 
         int roomCount = 3 + (int)Math.round(lerp(2, 5, difficulty));
         for (int k = 0; k < roomCount; k++) {
@@ -26,8 +26,21 @@ public final class RoomsStyle implements StyleGenerator {
             int c0 = rng.nextInt(Math.max(1, cols - w + 1));
             BrickType wall = TypePickers.pickFromTopHard(rng, 0.5 + 0.5 * difficulty);
             BrickType fill = TypePickers.pickByBias(rng, 0.25 + 0.5 * difficulty);
-            drawRect(g, r0, c0, h, w, wall, true);
-            fillRect(g, r0 + 1, c0 + 1, Math.max(0, h - 2), Math.max(0, w - 2), fill);
+
+            for (int r = r0; r < r0 + h && r < rows; r++) {
+                for (int c = c0; c < c0 + w && c < cols; c++) {
+                    boolean isBorder = (r == r0 || r == r0 + h - 1 || c == c0 || c == c0 + w - 1);
+                    if (isBorder) {
+                        g.set(r, c, transTypeToNumber(wall));
+                    }
+                }
+            }
+
+            for (int r = r0; r < r0 + h && r < rows; r++) {
+                for (int c = c0; c < c0 + w && c < cols; c++) {
+                    g.set(r, c, transTypeToNumber(fill));
+                }
+            }
         }
         SpecialsSprinkler.sprinkle(g, rng, difficulty);
         return g;

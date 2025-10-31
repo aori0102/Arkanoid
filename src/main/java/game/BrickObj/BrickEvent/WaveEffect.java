@@ -1,7 +1,7 @@
 package game.BrickObj.BrickEvent;
 
 import java.util.*;
-import static game.BrickObj.InitMatrix.*;
+import static game.BrickObj.Init.*;
 
 public final class WaveEffect {
 
@@ -29,11 +29,11 @@ public final class WaveEffect {
 
     public void collectJustDamaged() {
         justDamaged.clear();
-        for (int i = 0; i < rowData; i++) {
-            for (int j = 0; j < colData; j++) {
-                if (matrixObj.isJustDamaged(i, j)) {
-                    justDamaged.add(new IntPair(i, j));
-                    matrixObj.resetJustDamaged(i, j);
+        for (int r = 0; r < rowData; r++) {
+            for (int c = 0; c < colData; c++) {
+                if (!matrixObj.invalid(r, c) && matrixObj.isJustDamaged(r, c)) {
+                    justDamaged.add(new IntPair(r, c));
+                    matrixObj.resetJustDamaged(r, c);
                 }
             }
         }
@@ -50,51 +50,72 @@ public final class WaveEffect {
             }
         }
 
-        for (IntPair p : justDamaged) {
-            WaveLayer w = new WaveLayer();
-            w.layer3.add(p);
-            activeWaves.add(w);
-        }
-
         List<WaveLayer> nextWaves = new ArrayList<>();
 
         for (WaveLayer wave : activeWaves) {
             boolean[][] visited = new boolean[rowData][colData];
 
-            for (IntPair p : wave.layer1) {
-                for (int k = 0; k < 8; k++) {
-                    int x = p.fi() + fx[k];
-                    int y = p.se() + fy[k];
-                    if (state.valid(x, y) && !visited[x][y] && state.get(x, y) != DESTROYED) {
-                        visited[x][y] = true;
-                        wave.layer3.add(new IntPair(x, y));
-                    }
-                }
+            for (IntPair u : wave.layer2) {
+                visited[u.fi()][u.se()] = true;
+            }
+
+            for (IntPair u : wave.layer3) {
+                visited[u.fi()][u.se()] = true;
+            }
+
+            for (IntPair u : wave.layer1) {
+                visited[u.fi()][u.se()] = true;
             }
 
             WaveLayer newWave = new WaveLayer();
             newWave.layer1.addAll(wave.layer2);
             newWave.layer2.addAll(wave.layer3);
 
+            for (IntPair p : wave.layer3) {
+                for (int k = 0; k < 8; k++) {
+                    int x = p.fi() + fx[k];
+                    int y = p.se() + fy[k];
+                    if (state.valid(x, y) && !visited[x][y] && state.get(x, y) != DESTROYED) {
+                        visited[x][y] = true;
+                        newWave.layer3.add(new IntPair(x, y));
+                    }
+                }
+            }
+
+
             if (!newWave.layer1.isEmpty() || !newWave.layer2.isEmpty())
                 nextWaves.add(newWave);
         }
 
+
         activeWaves.clear();
         activeWaves.addAll(nextWaves);
+
+        for (IntPair p : justDamaged) {
+            WaveLayer w = new WaveLayer();
+            w.layer3.add(p);
+            activeWaves.add(w);
+        }
 
         for (WaveLayer wave : activeWaves) {
             for (IntPair p : wave.layer1)
                 if (state.get(p.fi(), p.se()) != DESTROYED)
-                    state.set(p.fi(), p.se(), 1);
+                    state.set(p.fi(), p.se(), 3);
             for (IntPair p : wave.layer2)
                 if (state.get(p.fi(), p.se()) > 2 || state.get(p.fi(), p.se()) == EMPTY)
                     state.set(p.fi(), p.se(), 2);
             for (IntPair p : wave.layer3)
                 if (state.get(p.fi(), p.se()) == EMPTY)
-                    state.set(p.fi(), p.se(), 3);
+                    state.set(p.fi(), p.se(), 1);
         }
 
-        matrixOfObj.assignFrom(state);
+        matrixObj.setWaveIndex(state);
+    }
+
+    public static double mapWaveToBrightness(int index, int maxWave) {
+        index += 2;
+        double minB = -0.4;
+        double maxB =  0.8;
+        return minB + (maxB - minB) * ((double) index / maxWave);
     }
 }

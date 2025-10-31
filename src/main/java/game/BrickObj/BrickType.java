@@ -3,14 +3,13 @@ package game.BrickObj;
 public enum BrickType {
 
     Normal(50, 10),
-    Steel(1000, 1000),
+    Steel(100, 50),
     Diamond(1000000000, 1000000000),
     Rocket(50, 10),
     Rock(50, 30),
     Bomb(50, 30),
     Gift(10, 10),
     Reborn(10, 10),
-    Ball(10, 10),
     Angel(10, 10);
 
 

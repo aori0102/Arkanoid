@@ -1,10 +1,10 @@
 package game.BrickObj.BrickGenMap.style;
 
 import static game.BrickObj.BrickGenMap.Mathx.*;
-import static game.BrickObj.BrickGenMap.GridUtils.*;
-import static game.BrickObj.InitMatrix.inBounds;
+import static game.BrickObj.BrickGenMap.TransTypeNumBer.transTypeToNumber;
+import static game.BrickObj.Init.inBounds;
 
-import game.BrickObj.InitMatrix.BrickMatrix;
+import game.BrickObj.Init.Matrix;
 import game.BrickObj.BrickGenMap.SpecialsSprinkler;
 import game.BrickObj.BrickGenMap.StyleGenerator;
 import game.BrickObj.BrickGenMap.TypePickers;
@@ -15,9 +15,9 @@ public final class DungeonStyle implements StyleGenerator {
     private static final class Room { final int r0,c0,h,w; Room(int r0,int c0,int h,int w){this.r0=r0;this.c0=c0;this.h=h;this.w=w;} }
 
     @Override
-    public BrickMatrix generate(int rows, int cols, double difficulty, Random rng) {
+    public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);
-        BrickMatrix g = new BrickMatrix(rows, cols);
+        Matrix g = new Matrix(rows, cols);
 
         int rooms = 4 + (int)Math.round(lerp(1, 4, difficulty));
         Room[] rs = new Room[rooms];
@@ -28,8 +28,8 @@ public final class DungeonStyle implements StyleGenerator {
             h = Math.min(h, rows); w = Math.min(w, cols);
             int r0 = rng.nextInt(Math.max(1, rows - h + 1));
             int c0 = rng.nextInt(Math.max(1, cols - w + 1));
-            drawRect(g, r0, c0, h, w, TypePickers.pickFromTopHard(rng, 0.55 + 0.45 * difficulty), true);
-            if (rng.nextDouble() < 0.6) fillRect(g, r0+1, c0+1, Math.max(0,h-2), Math.max(0,w-2), TypePickers.pickByBias(rng, 0.25 + 0.5 * difficulty));
+//            drawRect(g, r0, c0, h, w, TypePickers.pickFromTopHard(rng, 0.55 + 0.45 * difficulty), true);
+//            if (rng.nextDouble() < 0.6) fillRect(g, r0+1, c0+1, Math.max(0,h-2), Math.max(0,w-2), TypePickers.pickByBias(rng, 0.25 + 0.5 * difficulty));
             rs[k] = new Room(r0,c0,h,w);
         }
 
@@ -68,20 +68,20 @@ public final class DungeonStyle implements StyleGenerator {
         return !(a.r0 + a.h < b.r0 || b.r0 + b.h < a.r0 || a.c0 + a.w < b.c0 || b.c0 + b.w < a.c0);
     }
 
-    private static void carveH(BrickMatrix g, int row, int cStart, int cEnd, int doorW, double diff, Random rng) {
+    private static void carveH(Matrix g, int row, int cStart, int cEnd, int doorW, double diff, Random rng) {
         int mid = (cStart + cEnd) / 2;
         for (int dc = -doorW / 2; dc <= doorW / 2; dc++) {
             int cc = mid + dc;
             if (inBounds(row, cc, g.rows(), g.columns()))
-                g.set(row, cc, game.BrickObj.InitMatrix.getNewBrick(TypePickers.pickFromWeak(rng, diff)));
+                g.set(row, cc, transTypeToNumber(TypePickers.pickFromWeak(rng, diff)));
         }
     }
-    private static void carveV(BrickMatrix g, int col, int rStart, int rEnd, int doorW, double diff, Random rng) {
+    private static void carveV(Matrix g, int col, int rStart, int rEnd, int doorW, double diff, Random rng) {
         int mid = (rStart + rEnd) / 2;
         for (int dr = -doorW / 2; dr <= doorW / 2; dr++) {
             int rr = mid + dr;
             if (inBounds(rr, col, g.rows(), g.columns()))
-                g.set(rr, col, game.BrickObj.InitMatrix.getNewBrick(TypePickers.pickFromWeak(rng, diff)));
+                g.set(rr, col, transTypeToNumber(TypePickers.pickFromWeak(rng, diff)));
         }
     }
 }

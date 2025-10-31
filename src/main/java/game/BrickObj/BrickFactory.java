@@ -6,7 +6,8 @@ import game.BrickObj.BrickGenMap.GenMap;
 import game.BrickObj.BrickGenMap.MapStyle;
 import org.GameObject.GameObjectManager;
 
-import static game.BrickObj.InitMatrix.*;
+import static game.BrickObj.Init.*;
+import static game.BrickObj.Init.getNewBrick;
 
 public class BrickFactory {
 
@@ -32,11 +33,15 @@ public class BrickFactory {
         brickComponent.setType(BrickType.Normal);
         matrixObj = new BrickMatrix(rowData, colData, brickComponent);
 
-//        GenMap gen = new GenMap(rowData, colData);
-//        BrickMatrix tmp = gen.generate(kindMap, difficult);
+        GenMap gen = new GenMap(rowData, colData);
+        matrixObj.transIntToBrick(gen.generate(kindMap, difficult));
 
         endEvent = new EndEvent();
         waveEffect = new WaveEffect();
+    }
+
+    public void deleted() {
+        matrixObj.deleted();
     }
 
 
@@ -46,7 +51,7 @@ public class BrickFactory {
 
     public void runProgress() {
         gameTime++;
-        if(gameTime % 100 == 0) {
+        if(gameTime % 20 == 0) {
             waveEffect.collectJustDamaged();
             waveEffect.runAllWave();
         }
@@ -62,22 +67,6 @@ public class BrickFactory {
 
     public Matrix getWaveMatrix() {
         return waveEffect.getStateMatrix().clone();
-    }
-
-    /**
-     * Return the wave status of the given cell.
-     *
-     * @param x The x coordinate of the cell.
-     * @param y The y coordinate of the cell.
-     * @return An integer representing the state of the cell.
-     * <ul>
-     *     <li>-1 means that object is doing nothing.</li>
-     *     <li>-2 means that object is dead.</li>
-     *     <li>1, 2, 3 means that object is in waveType1, 2, 3 respectively.</li>
-     * </ul>
-     */
-    public int getStateWaveCell(int x, int y) {
-        return waveEffect.getStateMatrix().get(x, y);
     }
 
     public void printBrickTypes() {
