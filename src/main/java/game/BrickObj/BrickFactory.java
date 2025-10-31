@@ -51,7 +51,7 @@ public class BrickFactory {
 
     public void runProgress() {
         gameTime++;
-        if(gameTime % 20 == 0) {
+        if(gameTime % 15 == 0) {
             waveEffect.collectJustDamaged();
             waveEffect.runAllWave();
         }

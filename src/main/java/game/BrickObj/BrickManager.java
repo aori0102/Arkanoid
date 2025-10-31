@@ -26,13 +26,12 @@ public class BrickManager extends MonoBehaviour {
         if (instance != null) {
             throw new IllegalStateException("BrickManager is a singleton!");
         }
-        brickFactory = new BrickFactory(10, 10, MapStyle.RANDOM, 0.3);
-        brickFactory.printBrickTypes();
+//        brickFactory = new BrickFactory(10, 10, MapStyle.HEART, 0.3);
+//        brickFactory.printBrickTypes();
         instance = this;
     }
 
     public void buildMap(int row, int col, MapStyle mapStyle, double diff) {
-        brickFactory.deleted();
         brickFactory = new BrickFactory(row, col, mapStyle, diff);
         brickFactory.printBrickTypes();
     }
@@ -43,6 +42,10 @@ public class BrickManager extends MonoBehaviour {
 
     public void deleted() {
         brickFactory.deleted();
+    }
+
+    public void setUpBrick(int x, int y, BrickType brickType) {
+        brickFactory.setupNewBrick(x, y, brickType);
     }
 
     @Override
