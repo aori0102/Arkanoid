@@ -3,6 +3,7 @@ package game.MapGenerator;
 import game.Brick.Brick;
 import game.Brick.BrickPrefab;
 import game.Brick.BrickType;
+import game.BrickObj.BrickGenMap.GenMap;
 import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
@@ -18,8 +19,8 @@ import java.util.List;
 
 public final class BrickMapManager extends MonoBehaviour {
 
-    private static final int ROW_COUNT = 10;
-    private static final int COLUMN_COUNT = 10;
+    public static final int ROW_COUNT = 10;
+    public static final int COLUMN_COUNT = 10;
     private static final Vector2 BRICK_MAP_ANCHOR = new Vector2(300.0, 100.0);
     private static final Vector2 BRICK_OFFSET = new Vector2(68.0, 36.0);
 
@@ -27,6 +28,8 @@ public final class BrickMapManager extends MonoBehaviour {
     }
 
     private static BrickMapManager instance = null;
+
+    private final GenMap mapGenerator = new GenMap(ROW_COUNT, COLUMN_COUNT);
 
     private final List<List<Brick>> brickGrid = new ArrayList<>();
     private final HashMap<Brick, Cell> brickCoordinateMap = new HashMap<>();
@@ -61,16 +64,18 @@ public final class BrickMapManager extends MonoBehaviour {
 
         clearMap();
 
-        for (int i = 0; i < ROW_COUNT; i++) {
+        var typeGrid = mapGenerator.generate();
 
-            for (int j = 0; j < COLUMN_COUNT; j++) {
+        for (int row = 0; row < ROW_COUNT; row++) {
 
-                var cell = new Cell(i, j);
+            for (int column = 0; column < COLUMN_COUNT; column++) {
+
+                var cell = new Cell(row, column);
                 var brick = BrickPrefab.instantiateBrick();
-                brick.setBrickType(Random.range(0.0, 1.0) < 0.17 ? BrickType.Steel : BrickType.Normal);
-                var position = BRICK_MAP_ANCHOR.add((BRICK_OFFSET).scaleUp(new Vector2(j, i)));
+                brick.setBrickType(typeGrid.get(row).get(column));
+                var position = BRICK_MAP_ANCHOR.add((BRICK_OFFSET).scaleUp(new Vector2(column, row)));
                 brick.getTransform().setGlobalPosition(position);
-                brickGrid.get(i).set(j, brick);
+                brickGrid.get(row).set(column, brick);
                 brickCoordinateMap.put(brick, cell);
                 brick.onBrickDestroyed.addListener(this::brick_onBrickDestroyed);
 
