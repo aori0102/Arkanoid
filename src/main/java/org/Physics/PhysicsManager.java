@@ -1,10 +1,10 @@
 package org.Physics;
 
+import org.Event.EventActionID;
+import org.GameObject.Transform;
 import utils.Vector2;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Central logic class to handle basic physical collision.<br><br>
@@ -13,7 +13,34 @@ import java.util.List;
  */
 public class PhysicsManager {
 
+    private static final double CELL_PARTITION_SIZE = 32.0;
+
+    private static class CellRange {
+        public int fromRow;
+        public int toRow;
+        public int fromColumn;
+        public int toColumn;
+
+        public CellRange(int fromRow, int fromColumn, int toRow, int toColumn) {
+            this.fromRow = fromRow;
+            this.toRow = toRow;
+            this.fromColumn = fromColumn;
+            this.toColumn = toColumn;
+        }
+    }
+
     private static final HashSet<BoxCollider> colliderSet = new HashSet<>();
+    private static final HashMap<BoxCollider, CellRange> registeredCellRange = new HashMap<>();
+    private static final HashMap<Long, HashSet<BoxCollider>> spatialPartitioningMap = new HashMap<>();
+
+    private enum BoxColliderChangedEventID {
+        Position,
+        Scale,
+        Center,
+        Size,
+    }
+
+    private static final HashMap<BoxCollider, EnumMap<BoxColliderChangedEventID, EventActionID>> colliderEventActionIDMap = new HashMap<>();
 
     /**
      * Register a collider.<br><br>
@@ -24,6 +51,22 @@ public class PhysicsManager {
      */
     protected static void registerCollider(BoxCollider collider) {
         colliderSet.add(collider);
+        EnumMap<BoxColliderChangedEventID, EventActionID> eventActionIDMap = new EnumMap<>(BoxColliderChangedEventID.class);
+        eventActionIDMap.put(BoxColliderChangedEventID.Position, collider.getTransform().onPositionChanged.addListener(
+                PhysicsManager::boxCollider_onPositionChanged
+        ));
+        eventActionIDMap.put(BoxColliderChangedEventID.Scale, collider.getTransform().onScaleChanged.addListener(
+                PhysicsManager::boxCollider_onScaleChanged
+        ));
+        eventActionIDMap.put(BoxColliderChangedEventID.Center, collider.onCenterChanged.addListener(
+                PhysicsManager::boxCollider_onCenterChanged
+        ));
+        eventActionIDMap.put(BoxColliderChangedEventID.Size, collider.onSizeChanged.addListener(
+                PhysicsManager::boxCollider_onSizeChanged
+        ));
+        colliderEventActionIDMap.put(collider, eventActionIDMap);
+
+        assignColliderSpatialPartitioning(collider);
     }
 
     /**
@@ -35,6 +78,174 @@ public class PhysicsManager {
      */
     protected static void unregisterCollider(BoxCollider collider) {
         colliderSet.remove(collider);
+        var eventActionIDMap = colliderEventActionIDMap.remove(collider);
+        collider.getTransform().onPositionChanged.removeListener(
+                eventActionIDMap.remove(BoxColliderChangedEventID.Position)
+        );
+        collider.getTransform().onScaleChanged.removeListener(
+                eventActionIDMap.remove(BoxColliderChangedEventID.Scale)
+        );
+        collider.onCenterChanged.removeListener(
+                eventActionIDMap.remove(BoxColliderChangedEventID.Center)
+        );
+        collider.onSizeChanged.removeListener(
+                eventActionIDMap.remove(BoxColliderChangedEventID.Size)
+        );
+        removeColliderSpatialPartitioning(collider);
+    }
+
+    /**
+     * Called when {@link org.GameObject.Transform#onPositionChanged} is invoked.<br><br>
+     * This function handles changes in collider's position for spatial partitioning.
+     *
+     * @param sender Event caller {@link BoxCollider}.
+     * @param e      Empty event argument.
+     */
+    private static void boxCollider_onPositionChanged(Object sender, Void e) {
+        if (sender instanceof Transform transform) {
+            var collider = transform.getComponent(BoxCollider.class);
+            removeColliderSpatialPartitioning(collider);
+            assignColliderSpatialPartitioning(collider);
+        }
+    }
+
+    /**
+     * Called when {@link org.GameObject.Transform#onScaleChanged} is invoked.<br><br>
+     * This function handles changes in collider's position for spatial partitioning.
+     *
+     * @param sender Event caller {@link BoxCollider}.
+     * @param e      Empty event argument.
+     */
+    private static void boxCollider_onScaleChanged(Object sender, Void e) {
+        if (sender instanceof Transform transform) {
+            var collider = transform.getComponent(BoxCollider.class);
+            removeColliderSpatialPartitioning(collider);
+            assignColliderSpatialPartitioning(collider);
+        }
+    }
+
+    /**
+     * Called when {@link BoxCollider#onCenterChanged} is invoked.<br><br>
+     * This function handles changes in collider's position for spatial partitioning.
+     *
+     * @param sender Event caller {@link BoxCollider}.
+     * @param e      Empty event argument.
+     */
+    private static void boxCollider_onCenterChanged(Object sender, Void e) {
+        if (sender instanceof BoxCollider collider) {
+            removeColliderSpatialPartitioning(collider);
+            assignColliderSpatialPartitioning(collider);
+        }
+    }
+
+    /**
+     * Called when {@link BoxCollider#onSizeChanged} is invoked.<br><br>
+     * This function handles changes in collider's position for spatial partitioning.
+     *
+     * @param sender Event caller {@link BoxCollider}.
+     * @param e      Empty event argument.
+     */
+    private static void boxCollider_onSizeChanged(Object sender, Void e) {
+        if (sender instanceof BoxCollider collider) {
+            removeColliderSpatialPartitioning(collider);
+            assignColliderSpatialPartitioning(collider);
+        }
+    }
+
+    private static long getCellKey(int row, int column) {
+        return ((long) row << 32) | (column & 0xFFFFFFFFL);
+    }
+
+    private static void removeColliderSpatialPartitioning(BoxCollider collider) {
+
+        if (registeredCellRange.containsKey(collider)) {
+            // Remove collider's current hashing if present
+            var cellRange = registeredCellRange.remove(collider);
+            for (int row = cellRange.fromRow; row <= cellRange.toRow; row++) {
+                for (int column = cellRange.fromColumn; column <= cellRange.toColumn; column++) {
+                    var cellKey = getCellKey(row, column);
+                    if (!spatialPartitioningMap.containsKey(cellKey) || !spatialPartitioningMap.get(cellKey).remove(collider)) {
+                        throw new RuntimeException("Spatial partitioning not detected for collider " + collider);
+                    }
+                }
+            }
+        }
+
+    }
+
+    private static void assignColliderSpatialPartitioning(BoxCollider collider) {
+
+        var range = getCellRangeFromBound(collider.getMinBound(), collider.getMaxBound());
+        registeredCellRange.put(collider, range);
+
+        for (int row = range.fromRow; row <= range.toRow; row++) {
+            for (int column = range.fromColumn; column <= range.toColumn; column++) {
+
+                var assigningCellKey = getCellKey(row, column);
+
+                if (!spatialPartitioningMap.containsKey(assigningCellKey)) {
+                    spatialPartitioningMap.put(assigningCellKey, new HashSet<>());
+                }
+                spatialPartitioningMap.get(assigningCellKey).add(collider);
+
+            }
+        }
+
+    }
+
+    private static HashSet<BoxCollider> getColliderWithinRange(CellRange cellRange) {
+        HashSet<BoxCollider> result = new HashSet<>();
+        for (int row = cellRange.fromRow; row <= cellRange.toRow; row++) {
+            for (int column = cellRange.fromColumn; column <= cellRange.toColumn; column++) {
+                var key = getCellKey(row, column);
+                if (spatialPartitioningMap.containsKey(key)) {
+                    result.addAll(spatialPartitioningMap.get(key));
+                }
+            }
+        }
+        return result;
+    }
+
+    private static CellRange getMovementOccupationRange(Vector2 from, Vector2 to, Vector2 extents) {
+        var minFrom = from.subtract(extents);
+        var minTo = to.subtract(extents);
+        var maxFrom = from.add(extents);
+        var maxTo = to.add(extents);
+        var minCheckingBound = new Vector2(
+                Math.min(minFrom.x, minTo.x),
+                Math.min(minFrom.y, minTo.y)
+        );
+        var maxCheckingBound = new Vector2(
+                Math.max(maxFrom.x, maxTo.x),
+                Math.max(maxFrom.y, maxTo.y)
+        );
+        return getCellRangeFromBound(minCheckingBound, maxCheckingBound);
+    }
+
+    private static CellRange getStaticOccupationRange(Vector2 center, Vector2 extents) {
+        var minBound = center.subtract(extents);
+        var maxBound = center.add(extents);
+        var minCheckingBound = new Vector2(
+                minBound.x,
+                minBound.y
+        );
+        var maxCheckingBound = new Vector2(
+                maxBound.x,
+                maxBound.y
+        );
+        return getCellRangeFromBound(minCheckingBound, maxCheckingBound);
+    }
+
+    private static CellRange getCellRangeFromBound(Vector2 minBound, Vector2 maxBound) {
+
+        double epsilon = 0.000001;
+        var fromRow = (int) ((minBound.y + epsilon) / CELL_PARTITION_SIZE);
+        var fromColumn = (int) ((minBound.x + epsilon) / CELL_PARTITION_SIZE);
+        var toRow = (int) ((maxBound.y + epsilon) / CELL_PARTITION_SIZE);
+        var toColumn = (int) ((maxBound.x + epsilon) / CELL_PARTITION_SIZE);
+
+        return new CellRange(fromRow, fromColumn, toRow, toColumn);
+
     }
 
     /**
@@ -57,12 +268,12 @@ public class PhysicsManager {
      */
     public static CollisionData handlePhysicsCollision(BoxCollider collider, Vector2 movement) {
 
-        CollisionData result = null;
-
         // Only proceed if collider is valid
         if (collider == null || collider.getGameObject().isDestroyed()) {
-            return result;
+            return null;
         }
+
+        CollisionData result = null;
 
         // Define collision movement attributes
         var from = collider.getGlobalCenter();
@@ -74,8 +285,14 @@ public class PhysicsManager {
         Vector2 hitNormal = null;
         int layerMask = collider.getIncludeLayer();
 
+        // Get cell range to check for
+        var cellRange = getMovementOccupationRange(from, to, extents);
+
+        // All checked colliders
+        HashSet<BoxCollider> processColliderSet = getColliderWithinRange(cellRange);
+
         // Process all non-trigger colliders
-        for (var other : colliderSet) {
+        for (var other : processColliderSet) {
 
             // Skip if processing the same collider
             if (other == collider) {
@@ -234,7 +451,11 @@ public class PhysicsManager {
         List<CollisionData> dataList = new ArrayList<>();
         var layerMask = collider.getIncludeLayer();
 
-        for (var other : colliderSet) {
+        // Get cell range
+        var cellRange = getMovementOccupationRange(from, to, extents);
+        var processColliderSet = getColliderWithinRange(cellRange);
+
+        for (var other : processColliderSet) {
 
             // Skip if processing the same collider
             if (other == collider) {
@@ -363,8 +584,10 @@ public class PhysicsManager {
 
         Vector2 center = collider.getGlobalCenter();
         Vector2 extents = collider.getExtents();
+        var cellRange = getStaticOccupationRange(center, extents);
+        var processColliderSet = getColliderWithinRange(cellRange);
         var layerMask = collider.getIncludeLayer();
-        for (var other : colliderSet) {
+        for (var other : processColliderSet) {
 
             // Skip if processing the same collider
             if (other == collider) {

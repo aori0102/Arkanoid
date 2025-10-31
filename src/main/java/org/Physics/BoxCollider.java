@@ -1,6 +1,8 @@
 package org.Physics;
 
+import org.Event.EventHandler;
 import org.GameObject.GameObject;
+import org.GameObject.Transform;
 import org.Layer.Layer;
 import org.GameObject.MonoBehaviour;
 import utils.Vector2;
@@ -15,6 +17,9 @@ public class BoxCollider extends MonoBehaviour {
     protected Consumer<CollisionData> onCollisionEnter = null;
     protected Consumer<CollisionData> onTriggerEnter = null;
 
+    public EventHandler<Void> onCenterChanged = new EventHandler<>(BoxCollider.class);
+    public EventHandler<Void> onSizeChanged = new EventHandler<>(BoxCollider.class);
+
     /**
      * Read-only field. Can only be written to via {@link #setLocalCenter}.
      */
@@ -27,6 +32,7 @@ public class BoxCollider extends MonoBehaviour {
      */
     public void setLocalCenter(Vector2 center) {
         this._localCenter = center;
+        onCenterChanged.invoke(this, null);
     }
 
     /**
@@ -41,6 +47,7 @@ public class BoxCollider extends MonoBehaviour {
      */
     public void setLocalSize(Vector2 size) {
         this._localSize = size;
+        onSizeChanged.invoke(this, null);
     }
 
     private boolean isTrigger = false;

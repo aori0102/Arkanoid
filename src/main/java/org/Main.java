@@ -5,6 +5,7 @@ import org.GameObject.GameObjectManager;
 import org.Rendering.RendererManager;
 import org.Scene.SceneManager;
 import org.Utils.EditorView;
+import org.Utils.FPSCounter;
 import utils.Random;
 import utils.Time;
 import javafx.application.Application;
@@ -24,6 +25,7 @@ public class Main extends Application {
         var defaultScene = SceneManager.createScenes();
         RendererManager.initializeRenderSystem(stage, defaultScene);
         EditorView.init();
+        FPSCounter.init();
         Init.initMenu();
         Init.initGame();
         Init.initRecord();
@@ -54,6 +56,7 @@ public class Main extends Application {
     private void update() {
         Time.update();
         GameObjectManager.runCycle();
+        FPSCounter.update();
     }
 
     /**

@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.Objects;
+
 public class Vector2 {
 
     /**
@@ -216,14 +218,20 @@ public class Vector2 {
         return new Vector2(-x, -y);
     }
 
-    /**
-     * Check if two vectors are equal.
-     *
-     * @param other The other vector to check.
-     * @return {@code true} if two vectors are identical, otherwise {@code false}.
-     */
-    public boolean equals(Vector2 other) {
-        return x == other.x && y == other.y;
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object instanceof Vector2 other) {
+            return x == other.x && y == other.y;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
     public static double distance(Vector2 a, Vector2 b) {

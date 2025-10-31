@@ -4,12 +4,15 @@ import game.Voltraxis.Voltraxis;
 import game.Voltraxis.VoltraxisCharging;
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
+import org.Event.EventActionID;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 
 public class PowerCoreVisual extends MonoBehaviour {
 
     private SpriteAnimator animator = null;
+
+    private EventActionID chargingPhaseChangedEventID = null;
 
     /**
      * Create this MonoBehaviour.
@@ -24,8 +27,16 @@ public class PowerCoreVisual extends MonoBehaviour {
     public void awake() {
         animator = getComponent(SpriteAnimator.class);
         animator.playAnimation(AnimationClipData.Voltraxis_PowerCore_Idle, null);
-        Voltraxis.getInstance().getVoltraxisCharging().onChargingPhaseChanged
+        chargingPhaseChangedEventID = Voltraxis.getInstance().getVoltraxisCharging().onChargingPhaseChanged
                 .addListener(this::voltraxisCharging_onChargingPhaseChanged);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (chargingPhaseChangedEventID != null) {
+            Voltraxis.getInstance().getVoltraxisCharging().onChargingPhaseChanged
+                    .removeListener(chargingPhaseChangedEventID);
+        }
     }
 
     /**
