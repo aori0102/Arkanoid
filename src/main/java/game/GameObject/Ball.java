@@ -5,14 +5,11 @@ import game.Damagable.DamageAcceptor;
 import game.Damagable.DamageInfo;
 import game.Damagable.DamageType;
 import game.Damagable.ICanDealDamage;
-import game.Player.PaddleDamageAcceptor;
-import game.Brick.Brick;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import game.Player.Player;
 import game.Player.PlayerPaddle;
-import game.PowerUp.Index.PowerUpManager;
-import game.PowerUp.StatusEffect;
+import game.Effect.StatusEffect;
 import game.Voltraxis.Object.PowerCore.PowerCoreDamageAcceptor;
 import game.Voltraxis.VoltraxisDamageAcceptor;
 import org.GameObject.GameObject;
@@ -27,20 +24,16 @@ import utils.Random;
 import utils.Vector2;
 import utils.Time;
 
-
 public class Ball extends MonoBehaviour implements ICanDealDamage {
 
     private static final double BALL_CRITICAL_CHANCE = 0.27;
     private static final double BALL_CRITICAL_AMOUNT = 0.59;
-    private static final int BALL_DAMAGE = 80;
+    private static final int BALL_DAMAGE = 16;
     private static final double BASE_BALL_SPEED = 500;
     private static final Vector2 BOUNCE_OFFSET = new Vector2(0.2, 0.2);
 
-    private int ballDamage = Player.getInstance().getAttack();
-
     private Vector2 direction;
     private PlayerPaddle paddle;
-    private Vector2 offsetBallPosition;
     private StatusEffect currentStatusEffect = StatusEffect.None;
     private StatusEffect pendingEffect = StatusEffect.None;
 
@@ -52,6 +45,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
     /**
      * Assign collider specs and function to other aspects.
      */
+    @Override
     public void awake() {
         paddle = Player.getInstance().getPlayerPaddle();
 
@@ -60,7 +54,10 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
         ballCollider.setExcludeLayer(Layer.Ball.getUnderlyingValue());
         ballCollider.setLocalCenter(new Vector2(0, 0));
         ballCollider.setLocalSize(new Vector2(20, 16));
-        ballCollider.setOnCollisionEnterCallback(this::handleAngleDirection);
+        ballCollider.setOnCollisionEnterCallback((data)->{
+            handleAngleDirection(data);
+            handleCollision(data);
+        });
 
         // Add listener to paddle event
         paddle.onMouseReleased.addListener((e, vector2) -> {
@@ -85,7 +82,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
     public void handleMovement() {
         // Make the ball follow the paddle position if player haven't fired it
         if (!paddle.isFired && direction == null) {
-            getTransform().setGlobalPosition(paddle.getTransform().getGlobalPosition().add(offsetBallPosition));
+            getTransform().setGlobalPosition(paddle.getTransform().getGlobalPosition());
         }
         // Moving the ball
         else {
@@ -95,19 +92,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
     }
 
     private void handleCollision(CollisionData collisionData) {
-        if (isCollidedWith(collisionData, ITakePlayerDamage.class)) {
-            var target = collisionData.otherCollider.getComponent(ITakePlayerDamage.class);
-            if (target != null) {
-                if (target instanceof Brick brick) {
-                    if (currentStatusEffect != StatusEffect.None) {
-                        brick.setStatusBrickEffect(currentStatusEffect);
-                        currentStatusEffect = StatusEffect.None;
-                        changeBallVisual();
-                    }
-                }
-                target.takeDamage(ballDamage);
-            }
-        } else if (isCollidedWith(collisionData, Border.class)) {
+        if (isCollidedWith(collisionData, Border.class)) {
             var border = collisionData.otherCollider.getComponent(Border.class);
             if (border != null && border.getBorderType() == BorderType.BorderBottom) {
                 GameObjectManager.destroy(gameObject);
@@ -125,6 +110,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
      * n is the normal vector (base on which side the ball interacts with) <br>
      * If the direction is vertical with the surface, the reflected direction will be added <br>
      * an offset vector to avoid stuck.
+     *
      * @param collisionData : the hit object's collision data
      */
     private void handleAngleDirection(CollisionData collisionData) {
@@ -163,8 +149,6 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
 
         direction = reflectDirection;
     }
-
-
 
     /**
      * Set the ball's direction.
@@ -240,6 +224,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
     protected void onDestroy() {
         BallsManager.getInstance().removeBall(this);
     }
+
     @Override
     public DamageInfo getDamageInfo() {
 
@@ -253,6 +238,11 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
         }
         return damageInfo;
 
+    }
+
+    @Override
+    public StatusEffect getEffect() {
+        return currentStatusEffect;
     }
 
     @Override

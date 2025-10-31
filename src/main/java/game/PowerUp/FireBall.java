@@ -1,5 +1,6 @@
 package game.PowerUp;
 
+import game.Effect.StatusEffect;
 import game.GameObject.BallsManager;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpIndex;
@@ -7,7 +8,6 @@ import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventActionID;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
-import org.GameObject.MonoBehaviour;
 
 public class FireBall extends PowerUp {
 

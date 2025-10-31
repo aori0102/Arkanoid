@@ -1,4 +1,4 @@
-package game.PowerUp;
+package game.Effect;
 
 public enum StatusEffect {
 

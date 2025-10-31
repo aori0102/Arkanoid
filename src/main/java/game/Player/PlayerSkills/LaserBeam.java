@@ -4,6 +4,7 @@ import game.Damagable.DamageAcceptor;
 import game.Damagable.DamageInfo;
 import game.Damagable.DamageType;
 import game.Damagable.ICanDealDamage;
+import game.Effect.StatusEffect;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import game.Voltraxis.Object.PowerCore.PowerCoreDamageAcceptor;
@@ -49,7 +50,6 @@ public class LaserBeam extends Skill implements ICanDealDamage {
         var border = collisionData.otherCollider.getComponent(Border.class);
         if (border != null && border.getBorderType() == BorderType.BorderTop) {
             GameObjectManager.destroy(gameObject);
-            return;
         }
     }
 
@@ -75,6 +75,11 @@ public class LaserBeam extends Skill implements ICanDealDamage {
         damageInfo.amount = LASER_DAMAGE;
         damageInfo.type = DamageType.Normal;
         return damageInfo;
+    }
+
+    @Override
+    public StatusEffect getEffect() {
+        return null;
     }
 
     @Override

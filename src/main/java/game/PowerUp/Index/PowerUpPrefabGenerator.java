@@ -13,13 +13,12 @@ public final class PowerUpPrefabGenerator {
     public static final List<Class<? extends PowerUp>> registeredPowerUps;
 
     static {
-        //powerUpPrefabHashMap.put(FireBall.class, new FireBallPrefab());
-        //powerUpPrefabHashMap.put(BlizzardBall.class, new BlizzardBallPrefab());
-        //powerUpPrefabHashMap.put(TriplicateBall.class, new TriplicateBallPrefab());
-        //powerUpPrefabHashMap.put(DuplicateBall.class, new DuplicateBallPrefab());
-        //powerUpPrefabHashMap.put(ShieldPowerUp.class, new ShieldPrefab());
-
-        powerUpPrefabHashMap.put(Recovery.class, new RecoveryPrefab());
+        powerUpPrefabHashMap.put(FireBall.class, new FireBallPrefab());
+//        powerUpPrefabHashMap.put(BlizzardBall.class, new BlizzardBallPrefab());
+//        powerUpPrefabHashMap.put(TriplicateBall.class, new TriplicateBallPrefab());
+//        powerUpPrefabHashMap.put(DuplicateBall.class, new DuplicateBallPrefab());
+//        powerUpPrefabHashMap.put(ShieldPowerUp.class, new ShieldPrefab());
+//        powerUpPrefabHashMap.put(Recovery.class, new RecoveryPrefab());
 
         registeredPowerUps = new ArrayList<>(powerUpPrefabHashMap.keySet());
     }

@@ -19,7 +19,7 @@ public abstract class Skill extends MonoBehaviour {
     public Skill(GameObject owner) {
         super(owner);
         owner.setLayer(Layer.Skill);
-        addComponent(BoxCollider.class);
+        addComponent(BoxCollider.class).setTrigger(true);
         addComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
 
     }

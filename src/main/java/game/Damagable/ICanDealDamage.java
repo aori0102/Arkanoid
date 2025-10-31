@@ -1,5 +1,7 @@
 package game.Damagable;
 
+import game.Effect.StatusEffect;
+
 public interface ICanDealDamage {
     /**
      * Return the amount of damage by this object.
@@ -7,6 +9,8 @@ public interface ICanDealDamage {
      * @return This object's damage.
      */
     DamageInfo getDamageInfo();
+
+    StatusEffect getEffect();
 
     /**
      * Handle whatever happens to the object after dealing damage.

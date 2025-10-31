@@ -4,6 +4,7 @@ import game.Damagable.DamageAcceptor;
 import game.Damagable.DamageInfo;
 import game.Damagable.DamageType;
 import game.Damagable.ICanDealDamage;
+import game.Effect.StatusEffect;
 import game.Player.PaddleDamageAcceptor;
 import game.Voltraxis.Voltraxis;
 import game.Voltraxis.VoltraxisData;
@@ -65,6 +66,11 @@ public class ElectricBall extends MonoBehaviour implements ICanDealDamage {
         damageInfo.amount = (int) (VoltraxisData.ELECTRIC_BALL_ATTACK_PROPORTION * Voltraxis.getInstance().getVoltraxisStatManager().getAttack());
         damageInfo.type = DamageType.HitPlayer;
         return damageInfo;
+    }
+
+    @Override
+    public StatusEffect getEffect() {
+        return null;
     }
 
     @Override

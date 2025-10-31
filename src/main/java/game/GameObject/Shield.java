@@ -47,7 +47,7 @@ public class Shield extends MonoBehaviour {
     }
 
     private void handleShieldDuration(double duration) {
-        counter += Time.deltaTime;
+        counter += Time.getDeltaTime();
 
         if (counter >= duration) {
             turnOff();

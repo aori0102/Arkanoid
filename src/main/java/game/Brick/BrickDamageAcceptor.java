@@ -2,6 +2,7 @@ package game.Brick;
 
 import game.Damagable.DamageAcceptor;
 import game.Damagable.DamageInfo;
+import game.Effect.StatusEffect;
 import org.GameObject.GameObject;
 
 public final class BrickDamageAcceptor extends DamageAcceptor {
@@ -25,7 +26,13 @@ public final class BrickDamageAcceptor extends DamageAcceptor {
 
     @Override
     protected void takeDamage(DamageInfo damageInfo) {
+        super.takeDamage(damageInfo);
         brick.damage(damageInfo.amount);
+    }
+
+    @Override
+    protected void applyEffect(StatusEffect effect) {
+        brick.setStatusBrickEffect(effect);
     }
 
 }

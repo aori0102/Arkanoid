@@ -4,6 +4,7 @@ import game.Damagable.DamageAcceptor;
 import game.Damagable.DamageInfo;
 import game.Damagable.DamageType;
 import game.Damagable.ICanDealDamage;
+import game.Effect.StatusEffect;
 import game.Obstacle.Index.Obstacle;
 import game.Player.PaddleDamageAcceptor;
 import org.GameObject.GameObject;
@@ -55,6 +56,11 @@ public class Laser extends Obstacle implements ICanDealDamage {
         damageInfo.amount = LASER_DAMAGE;
         damageInfo.type = DamageType.HitPlayer;
         return damageInfo;
+    }
+
+    @Override
+    public StatusEffect getEffect() {
+        return null;
     }
 
     @Override

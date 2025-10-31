@@ -2,7 +2,7 @@ package game.Player;
 
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpIndex;
-import game.PowerUp.StatusEffect;
+import game.Effect.StatusEffect;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;

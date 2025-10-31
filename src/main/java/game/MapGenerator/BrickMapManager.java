@@ -94,6 +94,7 @@ public final class BrickMapManager extends MonoBehaviour {
             var cell = brickCoordinateMap.remove(brick);
             brickGrid.get(cell.row).set(cell.column, null);
             brick.onBrickDestroyed.removeAllListeners();
+            PowerUpManager.getInstance().spawnPowerUp(e.brickPosition);
             onBrickDestroyed.invoke(this, brick.getBrickType());
             if (brickCoordinateMap.isEmpty()) {
                 onMapCleared.invoke(this, null);

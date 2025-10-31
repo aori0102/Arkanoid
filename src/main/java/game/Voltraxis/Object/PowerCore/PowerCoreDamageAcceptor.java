@@ -2,6 +2,7 @@ package game.Voltraxis.Object.PowerCore;
 
 import game.Damagable.DamageAcceptor;
 import game.Damagable.DamageInfo;
+import game.Effect.StatusEffect;
 import org.GameObject.GameObject;
 
 public final class PowerCoreDamageAcceptor extends DamageAcceptor {
@@ -25,7 +26,13 @@ public final class PowerCoreDamageAcceptor extends DamageAcceptor {
 
     @Override
     protected void takeDamage(DamageInfo damageInfo) {
+        super.takeDamage(damageInfo);
         powerCore.getPowerCoreHealth().damage(damageInfo.amount);
+    }
+
+    @Override
+    protected void applyEffect(StatusEffect effect) {
+
     }
 
 }

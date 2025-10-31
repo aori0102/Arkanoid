@@ -1,8 +1,8 @@
 package game.Brick;
 
-import game.PowerUp.Index.PowerUpManager;
-import game.PowerUp.StatusEffect;
-import game.Voltraxis.Interface.ITakePlayerDamage;
+import game.Damagable.DamageInfo;
+import game.Damagable.DamageType;
+import game.Effect.StatusEffect;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -10,7 +10,6 @@ import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
 import org.Rendering.SpriteRenderer;
 import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
 
@@ -28,6 +27,7 @@ public class Brick extends MonoBehaviour {
     private double burnStartTime = 0.0;
     private double frostStartTime = 0.0;
     private int damageMultiplier = 1;
+    private BrickDamageAcceptor brickDamageAcceptor = null;
 
     public EventHandler<OnBrickDestroyedEventArgs> onBrickDestroyed = new EventHandler<>(Brick.class);
     private Time.CoroutineID burnCoroutineID = null;
@@ -61,11 +61,14 @@ public class Brick extends MonoBehaviour {
         onBrickDestroyed.invoke(this, onBrickDestroyedEventArgs);
 
         Time.removeCoroutine(burnCoroutineID);
-
     }
 
     @Override
-    public void takeDamage(int amount) {
+    public void awake() {
+        brickDamageAcceptor = getComponent(BrickDamageAcceptor.class);
+    }
+
+    public void damage(int amount) {
         health -= damageMultiplier * amount;
 
         if (health <= 0) {
@@ -76,20 +79,22 @@ public class Brick extends MonoBehaviour {
     @Override
     public void update() {
         if (statusBrickEffect == StatusEffect.FrostBite) {
-            if (Time.time > frostStartTime + FROSTBITE_TIME) {
+            if (Time.getTime() > frostStartTime + FROSTBITE_TIME) {
                 resetStatusBrickEffect();
             }
         }
     }
 
-
-    private void reduceHealth() {
-        health -= 5;
-        if (health <= 0) {
-            GameObjectManager.destroy(gameObject);
+    private void takeBurnDamage() {
+        var damageInfo = new DamageInfo();
+        damageInfo.type = DamageType.Burn;
+        damageInfo.amount = 5;
+        brickDamageAcceptor.takeDamage(damageInfo);
+        if (gameObject.isDestroyed()) {
+            return;
         }
-        if (Time.time < burnStartTime + BURN_TIME) {
-            burnCoroutineID = Time.addCoroutine(this::reduceHealth, Time.time + BURN_EXISTED_TICKS);
+        if (Time.getTime() < burnStartTime + BURN_TIME) {
+            burnCoroutineID = Time.addCoroutine(this::takeBurnDamage, Time.getTime() + BURN_EXISTED_TICKS);
         } else {
             resetStatusBrickEffect();
         }
@@ -108,15 +113,15 @@ public class Brick extends MonoBehaviour {
         changeBrickVisual(statusBrickEffect);
     }
 
-    private void handleStatusEffect(StatusEffect statusEffect) {
+    public void handleStatusEffect(StatusEffect statusEffect) {
         switch (statusEffect) {
             case Burn -> {
-                burnCoroutineID = Time.addCoroutine(this::reduceHealth, Time.time + 2);
-                burnStartTime = Time.time;
+                burnCoroutineID = Time.addCoroutine(this::takeBurnDamage, Time.getTime() + 2);
+                burnStartTime = Time.getTime();
             }
             case FrostBite -> {
                 damageMultiplier = 2;
-                frostStartTime = Time.time;
+                frostStartTime = Time.getTime();
             }
         }
     }

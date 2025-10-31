@@ -1,5 +1,6 @@
 package game.PowerUp.Index;
 
+import game.Effect.StatusEffect;
 import game.GameObject.Ball;
 import game.Player.Player;
 import game.Player.PlayerPaddle;

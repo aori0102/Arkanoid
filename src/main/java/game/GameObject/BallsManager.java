@@ -1,7 +1,7 @@
 package game.GameObject;
 
 import game.Player.Player;
-import game.PowerUp.StatusEffect;
+import game.Effect.StatusEffect;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;

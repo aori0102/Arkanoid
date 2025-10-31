@@ -4,8 +4,8 @@ import org.Rendering.ImageAsset;
 
 public enum BrickType {
 
-    Normal(18, 100, ImageAsset.ImageIndex.GreenBrick),
-    Steel(36, 320, ImageAsset.ImageIndex.PurpleBrick),
+    Normal(36, 100, ImageAsset.ImageIndex.GreenBrick),
+    Steel(80, 320, ImageAsset.ImageIndex.PurpleBrick),
     Diamond(999999, 0, ImageAsset.ImageIndex.None);
 
     public final int maxHealth;

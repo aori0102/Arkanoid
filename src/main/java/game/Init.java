@@ -1,7 +1,6 @@
 package game;
 
 import game.GameManager.GameManager;
-import game.GameManager.Score.ScoreManager;
 import game.GameManager.Score.ScoreManagerPrefab;
 import game.GameObject.BallsManager;
 import game.GameObject.Border.Border;
@@ -11,12 +10,8 @@ import game.MapGenerator.BrickMapManager;
 import game.Obstacle.Index.ObstacleManager;
 import game.Player.Prefab.PlayerPrefab;
 import game.PowerUp.Index.PowerUpManager;
-import game.GameObject.Ball;
 import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
-import org.Physics.BoxCollider;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
 import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 import utils.Vector2;
@@ -71,11 +66,11 @@ public class Init {
 
         var borderLeft = GameObjectManager.instantiate("Border_Left");
         borderLeft.addComponent(Border.class).setBorderType(BorderType.BorderLeft);
-
+        borderLeft.getTransform().setLocalPosition(new Vector2(250.0, 0));
 
         var borderRight = GameObjectManager.instantiate("Border_Right");
         borderRight.addComponent(Border.class).setBorderType(BorderType.BorderRight);
-        borderRight.getTransform().setLocalPosition(new Vector2(1190.0, 0));
+        borderRight.getTransform().setLocalPosition(new Vector2(950.0, 0));
 
         var borderTop = GameObjectManager.instantiate("Border_Top");
         borderTop.addComponent(Border.class).setBorderType(BorderType.BorderTop);

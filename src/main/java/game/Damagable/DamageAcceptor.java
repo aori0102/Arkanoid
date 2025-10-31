@@ -1,5 +1,7 @@
 package game.Damagable;
 
+import game.Effect.StatusEffect;
+import game.Effect.StatusEffectInfo;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -47,19 +49,24 @@ public abstract class DamageAcceptor extends MonoBehaviour {
                 if (Time.getTime() > previousDamagedTick + DAMAGE_TAKEN_DELAY) {
 
                     var damageInfo = damageObject.getDamageInfo();
+                    if (damageInfo != null) {
 
-                    // Fire damaged event
-                    var onDamageTakenEventArgs = new OnDamageTakenEventArgs();
-                    onDamageTakenEventArgs.damageInfo = damageInfo;
-                    onDamageTakenEventArgs.position = getTransform().getGlobalPosition();
-                    onDamageTaken.invoke(this, onDamageTakenEventArgs);
-
-                    // Apply damage
-                    takeDamage(damageInfo); // Potentially kills object
-                    if (gameObject.isDestroyed()) {
-                        return;
+                        // Apply damage
+                        takeDamage(damageInfo); // Potentially kills object
+                        if (gameObject.isDestroyed()) {
+                            return;
+                        }
+                        previousDamagedTick = Time.getTime();
                     }
-                    previousDamagedTick = Time.getTime();
+
+                    // Apply effect
+                    var effectInfo = damageObject.getEffect();
+                    if (effectInfo != null) {
+                        applyEffect(effectInfo);
+                        if (gameObject.isDestroyed()) {
+                            return;
+                        }
+                    }
 
                 }
                 damageObject.onDamaged();
@@ -68,6 +75,17 @@ public abstract class DamageAcceptor extends MonoBehaviour {
 
     }
 
-    protected abstract void takeDamage(DamageInfo damageInfo);
+    protected void takeDamage(DamageInfo damageInfo) {
+        if (gameObject.isDestroyed()) {
+            return;
+        }
+        // Fire damaged event
+        var onDamageTakenEventArgs = new OnDamageTakenEventArgs();
+        onDamageTakenEventArgs.damageInfo = damageInfo;
+        onDamageTakenEventArgs.position = getTransform().getGlobalPosition();
+        onDamageTaken.invoke(this, onDamageTakenEventArgs);
+    }
+
+    protected abstract void applyEffect(StatusEffect effect);
 
 }

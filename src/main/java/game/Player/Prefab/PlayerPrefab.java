@@ -3,6 +3,7 @@ package game.Player.Prefab;
 import game.Player.*;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import utils.Vector2;
 
 /**
  * Prefab for the main Player object. Contains multiple core functioning

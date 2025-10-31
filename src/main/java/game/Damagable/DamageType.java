@@ -6,6 +6,7 @@ public enum DamageType {
 
     Normal(Color.LIGHTGRAY),
     Critical(Color.YELLOW),
+    Burn(Color.ORANGERED),
     HitPlayer(Color.RED);
 
     public final Color damageColor;
