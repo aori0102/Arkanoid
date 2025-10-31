@@ -19,7 +19,7 @@ import java.util.HashMap;
  * GameObjects are registered into a scene by recursively collecting their nodes
  * (using {@link NodeUtils#collectNodes}) and attaching them to the scene’s Group.</p>
  *
- * <p>Only one stage (window) is managed by this class. Call {@link #createScenes()}
+ * <p>Only one stage (window) is managed by this class. Call {@link #createScenes}
  * once at application startup to set up.</p>
  */
 public class SceneManager {
@@ -37,13 +37,14 @@ public class SceneManager {
      *
      * @return The default scene.
      */
-    public static Scene createScenes() {
+    public static Scene createScenes(Stage stage) {
 
         var sceneKeyArray = SceneKey.values();
         for (var sceneKey : sceneKeyArray) {
             var root = new Group();
             sceneMap.put(sceneKey, new Scene(root, Main.STAGE_WIDTH, Main.STAGE_HEIGHT));
         }
+        mainStage = stage;
 
         return sceneMap.get(DEFAULT_SCENE_KEY);
 

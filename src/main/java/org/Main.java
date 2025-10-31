@@ -1,5 +1,6 @@
 package org;
 
+import game.GameManager.GameManager;
 import game.Init;
 import org.GameObject.GameObjectManager;
 import org.Rendering.RendererManager;
@@ -22,7 +23,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 
         Random.init();
-        var defaultScene = SceneManager.createScenes();
+        var defaultScene = SceneManager.createScenes(stage);
         RendererManager.initializeRenderSystem(stage, defaultScene);
         EditorView.init();
         FPSCounter.init();
