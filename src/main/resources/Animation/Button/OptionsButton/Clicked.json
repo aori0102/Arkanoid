@@ -3,8 +3,20 @@
   "frameList": [
     {
       "clipAnchor": {
-        "x": 1677,
-        "y": 239
+        "x": 839,
+        "y": 120
+      },
+      "clipSize": {
+        "x": 418,
+        "y": 118
+      },
+      "duration": 0.1,
+      "rotationAngle": 0
+    },
+    {
+      "clipAnchor": {
+        "x": 839,
+        "y": 1
       },
       "clipSize": {
         "x": 418,
@@ -19,8 +31,8 @@
     "y": 78.6667
   },
   "pivot": {
-    "x": 0,
-    "y": 0
+    "x": 0.5,
+    "y": 0.5
   },
-  "loop": true
+  "loop": false
 }

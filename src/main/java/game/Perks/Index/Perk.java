@@ -1,8 +1,10 @@
 package game.Perks.Index;
 
+import com.sun.javafx.util.Utils;
 import game.Interface.IPointerClickHandler;
 import game.Interface.IPointerEnterHandler;
 import game.Interface.IPointerExitHandler;
+import game.UI.Buttons.BaseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.Animation.AnimationClipData;
@@ -33,15 +35,22 @@ public abstract class Perk extends MonoBehaviour
     private static final double HOVER_OFFSET = 100;
     private static final double FLUCTUATION_RANDOM_MAX = 3.6;
     protected double randomTime = Random.range(0, FLUCTUATION_RANDOM_MAX);
-    public Vector2 oldPosition;
 
     protected TextUI textUI;
     protected SpriteAnimator spriteAnimator;
 
     protected AnimationClipData perkKey;
-    private static final Vector2 PERK_SIZE = new Vector2(198, 288);
-    private static final double TEXT_OFFSET = 150.0;
     private static final double TEXT_SIZE = 20.0;
+
+    private Vector2 targetPosition;
+    private final Vector2 TARGET_OFFSET = new Vector2(0, 50);
+    private Vector2 ORIGIN_POSITION;
+    private final double HOVER_SPEED = 8;
+
+    //ButtonState
+    protected enum ButtonState {Idle, Hover, Pressed, Released, Clicked}
+
+    protected ButtonState buttonState = ButtonState.Idle;
 
     /**
      * Create this MonoBehaviour.
@@ -62,6 +71,10 @@ public abstract class Perk extends MonoBehaviour
         attachPointerEnter(getTransform());
         attachPointerExited(getTransform());
 
+        attachPointerClick(textUI.getTransform());
+        attachPointerEnter(textUI.getTransform());
+        attachPointerEnter(textUI.getTransform());
+
     }
 
     @Override
@@ -79,27 +92,35 @@ public abstract class Perk extends MonoBehaviour
 
     @Override
     public void start() {
-        oldPosition = getTransform().getGlobalPosition();
         spriteAnimator.playAnimation(perkKey, null);
+        ORIGIN_POSITION = getTransform().getGlobalPosition();
+        targetPosition = new Vector2(ORIGIN_POSITION);
+
     }
 
     @Override
     public void update() {
-        idleAnimation();
+        hoverAnimation();
     }
 
     protected abstract void setUpVisual();
 
-    protected abstract void perk_onPointerClicked(Object sender, MouseEvent e);
+    protected void perk_onPointerClicked(Object sender, MouseEvent e){
+
+    }
 
     protected void perk_onPointerEntered(Object sender, MouseEvent e) {
-//        gameObject.getTransform().translate(new Vector2(0, -hoverOffset));
-        System.out.println("onPointerEntered");
+        targetPosition = new Vector2(ORIGIN_POSITION.x - TARGET_OFFSET.x
+                , ORIGIN_POSITION.y - TARGET_OFFSET.y) ;
+        buttonState = ButtonState.Hover;
+        System.out.println("[Perk] Hover");
 
     }
 
     protected void perk_onPointerExited(Object sender, MouseEvent e) {
-        gameObject.getTransform().translate(new Vector2(0, HOVER_OFFSET));
+        targetPosition = new Vector2(ORIGIN_POSITION) ;
+        buttonState = ButtonState.Idle;
+        System.out.println("[Perk] Idle");
     }
 
     @Override
@@ -122,13 +143,14 @@ public abstract class Perk extends MonoBehaviour
         textUI.setHorizontalAlignment(TextHorizontalAlignment.Center);
         textUI.setFontSize(TEXT_SIZE);
         textUI.getText().setFill(Color.YELLOW);
-        Vector2 pos = new Vector2(PERK_SIZE.x / 2, TEXT_OFFSET);
-        textUI.getTransform().setLocalPosition(pos);
     }
 
-    private void idleAnimation() {
-        var delta = Math.sin(PERK_FLUCTUATION_RATE * Time.getTime() * Math.PI + randomTime) * MAX_PERK_FLUCTUATION_DISTANCE;
-        var deltaVector = new Vector2(getTransform().getGlobalPosition().x, oldPosition.y + delta);
-        gameObject.getTransform().setGlobalPosition(deltaVector);
+
+    private void hoverAnimation() {
+        Vector2 currentPos = getTransform().getGlobalPosition();
+        double newX = currentPos.x + (targetPosition.x - currentPos.x) * HOVER_SPEED * Time.deltaTime;
+        double newY = currentPos.y + (targetPosition.y - currentPos.y) * HOVER_SPEED * Time.deltaTime;
+        getTransform().setGlobalPosition(new Vector2(newX, newY));
     }
+
 }

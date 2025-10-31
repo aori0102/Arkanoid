@@ -3,12 +3,12 @@
   "frameList": [
     {
       "clipAnchor": {
-        "x": 1,
-        "y": 120
+        "x": 2,
+        "y": 121
       },
       "clipSize": {
-        "x": 418,
-        "y": 118
+        "x": 416,
+        "y": 116
       },
       "duration": 0.1,
       "rotationAngle": 0
@@ -19,8 +19,8 @@
     "y": 78.6667
   },
   "pivot": {
-    "x": 0,
-    "y": 0
+    "x": 0.5,
+    "y": 0.5
   },
   "loop": true
 }

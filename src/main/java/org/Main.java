@@ -27,6 +27,7 @@ public class Main extends Application {
         RendererManager.initializeRenderSystem(stage, defaultScene);
         EditorView.init();
         FPSCounter.init();
+        Init.initManager();
         Init.initMenu();
         Init.initGame();
         Init.initRecord();
@@ -34,6 +35,7 @@ public class Main extends Application {
         Init.Init_Duc();
         Init.Init_Dui();
         Init.Init_Kine();
+
         EditorView.wakeHierarchy();
 
         // --- Game/render loop ---
