@@ -108,7 +108,6 @@ public class GameManager extends MonoBehaviour {
     }
 
     public void quitGame() {
-        Platform.exit();
     }
 
     public void giveUp() {

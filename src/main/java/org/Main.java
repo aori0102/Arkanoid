@@ -1,9 +1,9 @@
 package org;
 
-import game.GameManager.GameManager;
-import game.Init;
 import org.GameObject.GameObjectManager;
 import org.Rendering.RendererManager;
+import org.Rendering.VideoAsset;
+import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 import org.Utils.EditorView;
 import org.Utils.FPSCounter;
@@ -22,19 +22,15 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        VideoAsset.initializeVideoMedia();
+
         Random.init();
         var defaultScene = SceneManager.createScenes(stage);
         RendererManager.initializeRenderSystem(stage, defaultScene);
         EditorView.init();
         FPSCounter.init();
-        Init.initManager();
-        Init.initMenu();
-        Init.initGame();
-        Init.initRecord();
-        Init.Init_Aori();
-        Init.Init_Duc();
-        Init.Init_Dui();
-        Init.Init_Kine();
+
+        SceneManager.loadScene(SceneKey.Menu);
 
         EditorView.wakeHierarchy();
 

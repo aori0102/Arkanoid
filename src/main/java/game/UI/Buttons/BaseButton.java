@@ -122,7 +122,7 @@ public abstract class BaseButton extends MonoBehaviour {
     }
 
     private void scaleAnimation(){
-        scale += (targetScale - scale) * SCALE_SPEED * utils.Time.deltaTime;
+        scale += (targetScale - scale) * SCALE_SPEED * utils.Time.getDeltaTime();
         getTransform().setGlobalScale(new Vector2(scale, scale));
     }
 

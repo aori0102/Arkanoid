@@ -73,11 +73,6 @@ public class Player extends MonoBehaviour {
         instance = null;
     }
 
-    @Override
-    public void awake() {
-        Time.addCoroutine(() -> playerHealth.damage(15), Time.getTime() + 3);
-    }
-
     public static Player getInstance() {
         return instance;
     }

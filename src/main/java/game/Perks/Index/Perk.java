@@ -148,8 +148,8 @@ public abstract class Perk extends MonoBehaviour
 
     private void hoverAnimation() {
         Vector2 currentPos = getTransform().getGlobalPosition();
-        double newX = currentPos.x + (targetPosition.x - currentPos.x) * HOVER_SPEED * Time.deltaTime;
-        double newY = currentPos.y + (targetPosition.y - currentPos.y) * HOVER_SPEED * Time.deltaTime;
+        double newX = currentPos.x + (targetPosition.x - currentPos.x) * HOVER_SPEED * Time.getDeltaTime();
+        double newY = currentPos.y + (targetPosition.y - currentPos.y) * HOVER_SPEED * Time.getDeltaTime();
         getTransform().setGlobalPosition(new Vector2(newX, newY));
     }
 

@@ -2,6 +2,8 @@ package org.GameObject;
 
 import org.Event.EventHandler;
 import org.Main;
+import org.Scene.SceneBuilder.SceneBuilder;
+import org.Scene.SceneManager;
 
 import java.util.*;
 
@@ -18,12 +20,16 @@ public class GameObjectManager {
     public static EventHandler<GameObject> onGameObjectInstantiated = new EventHandler<>(GameObjectManager.class);
     public static EventHandler<GameObject> onGameObjectDestroyed = new EventHandler<>(GameObjectManager.class);
 
+    private static boolean sceneUpdateAbortion = false;
+
     /**
      * Run the cycle for all {@link GameObject} for the current frame in the
      * order Awake - Start - Update - Late Update - Clean Up.<br><br>
      * <b><i><u>NOTE</u> : Only call within {@link Main}.</i></b>
      */
     public static void runCycle() {
+
+        sceneUpdateAbortion = false;
 
         awake();
         start();
@@ -41,6 +47,10 @@ public class GameObjectManager {
 
         for (var object : gameObjectSet) {
 
+            if (sceneUpdateAbortion) {
+                return;
+            }
+
             if (!object.isDestroyed() && object.isActive()) {
                 object.handleAwake();
             }
@@ -55,6 +65,10 @@ public class GameObjectManager {
     private static void start() {
 
         for (var object : gameObjectSet) {
+
+            if (sceneUpdateAbortion) {
+                return;
+            }
 
             if (!object.isDestroyed() && object.isActive()) {
                 object.handleStart();
@@ -71,6 +85,10 @@ public class GameObjectManager {
 
         for (var object : gameObjectSet) {
 
+            if (sceneUpdateAbortion) {
+                return;
+            }
+
             if (!object.isDestroyed() && object.isActive()) {
                 object.handleUpdate();
             }
@@ -86,6 +104,10 @@ public class GameObjectManager {
 
         for (var object : gameObjectSet) {
 
+            if (sceneUpdateAbortion) {
+                return;
+            }
+
             if (!object.isDestroyed() && object.isActive()) {
                 object.handleLateUpdate();
             }
@@ -100,6 +122,11 @@ public class GameObjectManager {
     private static void cleanUpDestroyed() {
 
         while (!removedObjectQueue.isEmpty()) {
+
+            if (sceneUpdateAbortion) {
+                return;
+            }
+
             var destroyed = removedObjectQueue.poll();
             destroyed.clearData();
             onGameObjectDestroyed.invoke(null, destroyed);
@@ -204,6 +231,15 @@ public class GameObjectManager {
             }
         }
         return null;
+    }
+
+    public static void clearCurrentScene() {
+
+        for (var object : gameObjectSet) {
+            object.markDestroyed();
+            object.clearData();
+        }
+        sceneUpdateAbortion = true;
     }
 
 }

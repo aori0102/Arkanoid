@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.GameObject.GameObject;
 import org.Main;
+import org.Scene.SceneBuilder.SceneBuilderManager;
 import utils.NodeUtils;
 
 import java.util.HashMap;
@@ -34,6 +35,7 @@ public class SceneManager {
     public static void init(Stage stage) {
         mainStage = stage;
     }
+
     /**
      * Initialize all scenes available within {@link SceneKey}.
      * Each scene will be provided with a {@code root} for per-scene
@@ -75,6 +77,7 @@ public class SceneManager {
 
             mainStage.setScene(sceneMap.get(sceneKey));
             currentSceneKey = sceneKey;
+            SceneBuilderManager.buildScene(sceneKey);
 
         } catch (Exception e) {
             System.err.println(SceneManager.class.getSimpleName() + " | Error while loading scene: " + e.getMessage());

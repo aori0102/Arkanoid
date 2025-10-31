@@ -39,7 +39,7 @@ public class GameTitle extends MonoBehaviour {
     private void idleAnimation() {
         double GAME_TITLE_FLUCTUATION_RATE = 0.6;
         double MAX_GAME_TITLE_FLUCTUATION_DISTANCE = 5;
-        var delta = Math.sin(GAME_TITLE_FLUCTUATION_RATE * Time.time * Math.PI + randomTime) * MAX_GAME_TITLE_FLUCTUATION_DISTANCE;
+        var delta = Math.sin(GAME_TITLE_FLUCTUATION_RATE * Time.getTime() * Math.PI + randomTime) * MAX_GAME_TITLE_FLUCTUATION_DISTANCE;
         var deltaVector = new Vector2(getTransform().getGlobalPosition().x, oldPosition.y + delta);
         gameObject.getTransform().setGlobalPosition(deltaVector);
     }
