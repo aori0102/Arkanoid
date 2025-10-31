@@ -8,13 +8,15 @@ import game.PowerUp.TriplicateBall;
 import org.GameObject.GameObjectManager;
 import utils.Vector2;
 
+import java.awt.*;
+
 public class TriplicateBallPrefab extends PowerUpPrefab {
     @Override
     public PowerUp generatePowerUp(Vector2 position, PlayerPaddle playerPaddle) {
 
         var triplicateBall = GameObjectManager.instantiate("triplicateBall" + PowerUpManager.count++).
                 addComponent(TriplicateBall.class);
-        triplicateBall.getTransform().setGlobalPosition(new Vector2(300, 0));
+        triplicateBall.getTransform().setGlobalPosition(position);
         triplicateBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
         triplicateBall.linkPaddle(playerPaddle);
         triplicateBall.linkPlayerPowerUp(Player.getInstance().getPlayerPowerUpHandler());

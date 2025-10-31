@@ -15,6 +15,8 @@ public class ImageAsset {
         BlizzardBall("/PowerUp/BlizzardBall.png"),
         BlizzardBallIcon("/PowerUp/BlizzardBallIcon.png"),
         LaserBeam("/PowerUp/LaserBeam.png"),
+        ShieldIcon("/PowerUp/ShieldIcon.png"),
+        HealIcon("/PowerUp/HealIcon.png"),
 
         /// Player object
         Ball("/ball.png"),

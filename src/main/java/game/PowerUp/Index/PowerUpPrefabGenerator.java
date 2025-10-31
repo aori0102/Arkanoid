@@ -1,10 +1,7 @@
 package game.PowerUp.Index;
 
-import game.PowerUp.BlizzardBall;
-import game.PowerUp.DuplicateBall;
-import game.PowerUp.FireBall;
+import game.PowerUp.*;
 import game.PowerUp.Index.PowerUpPrefab.*;
-import game.PowerUp.TriplicateBall;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,9 +14,12 @@ public final class PowerUpPrefabGenerator {
 
     static {
         //powerUpPrefabHashMap.put(FireBall.class, new FireBallPrefab());
-        powerUpPrefabHashMap.put(BlizzardBall.class, new BlizzardBallPrefab());
+        //powerUpPrefabHashMap.put(BlizzardBall.class, new BlizzardBallPrefab());
         //powerUpPrefabHashMap.put(TriplicateBall.class, new TriplicateBallPrefab());
         //powerUpPrefabHashMap.put(DuplicateBall.class, new DuplicateBallPrefab());
+        //powerUpPrefabHashMap.put(ShieldPowerUp.class, new ShieldPrefab());
+
+        powerUpPrefabHashMap.put(Recovery.class, new RecoveryPrefab());
 
         registeredPowerUps = new ArrayList<>(powerUpPrefabHashMap.keySet());
     }

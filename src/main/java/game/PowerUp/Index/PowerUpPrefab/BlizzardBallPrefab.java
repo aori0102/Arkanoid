@@ -11,7 +11,7 @@ public class BlizzardBallPrefab extends PowerUpPrefab {
     public PowerUp generatePowerUp(Vector2 position, PlayerPaddle playerPaddle) {
 
         var blizzardBall = GameObjectManager.instantiate("blizzardBall").addComponent(BlizzardBall.class);
-        blizzardBall.getTransform().setGlobalPosition(new Vector2(500, 100));
+        blizzardBall.getTransform().setGlobalPosition(position);
         blizzardBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
 
         return blizzardBall;

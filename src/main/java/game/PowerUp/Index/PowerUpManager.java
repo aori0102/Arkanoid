@@ -47,6 +47,10 @@ public class PowerUpManager extends MonoBehaviour {
      */
     public EventHandler<StatusEffect> onBlizzardBall = new EventHandler<>(PowerUpManager.class);
 
+    public EventHandler<Double> onShieldSpawn = new EventHandler<>(PowerUpManager.class);
+
+    public EventHandler<Integer> onRecovery = new EventHandler<>(PowerUpManager.class);
+
     private PlayerPowerUpHandler playerPowerUpHandler;
 
     /**
@@ -93,6 +97,16 @@ public class PowerUpManager extends MonoBehaviour {
                 playerPowerUpHandler.onBlizzardBallRequested.addListener((_, effect) ->
                         onBlizzardBall.invoke(this, effect));
             }
+            case ShieldPowerUp ignored -> {
+                playerPowerUpHandler.onShieldSpawnRequested.removeAllListeners();
+                playerPowerUpHandler.onShieldSpawnRequested.addListener((_, duration) ->
+                        onShieldSpawn.invoke(this, duration));
+            }
+            case Recovery ignored -> {
+                playerPowerUpHandler.onRecoveryRequested.removeAllListeners();
+                playerPowerUpHandler.onRecoveryRequested.addListener((_, healAmount) ->
+                        onRecovery.invoke(this, healAmount));
+            }
             default -> {
                 throw new IllegalArgumentException("You have to add listener to a power up event");
             }
@@ -103,7 +117,7 @@ public class PowerUpManager extends MonoBehaviour {
 
 
         int target = 1;
-        //if (Random.range(0, 1) == target) {
+       //if (Random.range(0, 1) == target) {
 
             var chosenKey = PowerUpPrefabGenerator.registeredPowerUps.get(
                     Random.range(0, PowerUpPrefabGenerator.registeredPowerUps.size())

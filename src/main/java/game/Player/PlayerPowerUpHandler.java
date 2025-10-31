@@ -17,7 +17,8 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
     private static final double EXPLOSION_MAX_DURATION = 5.0;
     private static final int EXPLOSION_MAX_HIT = 3;
     private static final double PADDLE_EXPANSION_SCALE = 1.5;
-    private static final double SHIELD_MAX_DURATION = 7.0;
+    private static final double SHIELD_MAX_DURATION = 5.0;
+    private static final int HEAL_AMOUNT = 20;
 
     /**
      * Upon called, all {@link game.GameObject.Ball} duplicate itself
@@ -72,6 +73,8 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
      */
     public EventHandler<StatusEffect> onBlizzardBallRequested = new EventHandler<>(PlayerPowerUpHandler.class);
 
+    public EventHandler<Integer> onRecoveryRequested = new EventHandler<>(PlayerPowerUpHandler.class);
+
     /**
      * Create this MonoBehaviour.
      *
@@ -100,6 +103,8 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
                     .invoke(this, StatusEffect.Burn);
             case Blizzard ->  onBlizzardBallRequested
                     .invoke(this, StatusEffect.FrostBite);
+            case Recovery -> onRecoveryRequested
+                    .invoke(this, HEAL_AMOUNT);
 
         }
 

@@ -1,6 +1,7 @@
 package game.MapGenerator;
 
 import game.Brick.Brick;
+import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
@@ -89,6 +90,7 @@ public final class BrickMapManager extends MonoBehaviour {
     private void brick_onBrickDestroyed(Object sender, Brick.OnBrickDestroyedEventArgs e) {
 
         if (sender instanceof Brick brick) {
+            PowerUpManager.getInstance().spawnPowerUp(e.brickPosition);
             var cell = brickCoordinateMap.remove(brick);
             brickGrid.get(cell.row).set(cell.column, null);
             brick.onBrickDestroyed.removeAllListeners();

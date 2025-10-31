@@ -16,6 +16,7 @@ import utils.Vector2;
 public class Brick extends MonoBehaviour implements ITakePlayerDamage {
 
     private static final double BURN_TIME = 3.0;
+    private static final double FROSTBITE_TIME = 3.0;
     private static final int BURN_EXISTED_TICKS = 1;
     private static final Vector2 BRICK_SIZE = new Vector2(64, 32);
     private static final int BASE_DAMAGE_MULTIPLIER = 1;
@@ -23,6 +24,7 @@ public class Brick extends MonoBehaviour implements ITakePlayerDamage {
     private int health = 100;
     private BrickType brickType = BrickType.Normal;
     private double burnStartTime = 0.0;
+    private double frostStartTime = 0.0;
     private int damageMultiplier = 1;
 
     public EventHandler<OnBrickDestroyedEventArgs> onBrickDestroyed = new EventHandler<>(Brick.class);
@@ -43,6 +45,7 @@ public class Brick extends MonoBehaviour implements ITakePlayerDamage {
         super(owner);
         setBrickType(BrickType.Normal);
         owner.setLayer(Layer.Brick);
+
     }
 
     @Override
@@ -50,7 +53,6 @@ public class Brick extends MonoBehaviour implements ITakePlayerDamage {
         var onBrickDestroyedEventArgs = new OnBrickDestroyedEventArgs();
         onBrickDestroyedEventArgs.brickPosition = getTransform().getGlobalPosition();
         onBrickDestroyed.invoke(this, onBrickDestroyedEventArgs);
-        PowerUpManager.getInstance().spawnPowerUp(getTransform().getGlobalPosition());
 
         Time.removeCoroutine(burnCoroutineID);
 
@@ -59,14 +61,21 @@ public class Brick extends MonoBehaviour implements ITakePlayerDamage {
     @Override
     public void takeDamage(int amount) {
         health -= damageMultiplier * amount;
-        if (statusBrickEffect == StatusEffect.FrostBite) {
-            resetStatusBrickEffect();
-            return;
-        }
+
         if (health <= 0) {
             GameObjectManager.destroy(gameObject);
         }
     }
+
+    @Override
+    public void update() {
+        if (statusBrickEffect == StatusEffect.FrostBite) {
+            if (Time.time > frostStartTime + FROSTBITE_TIME) {
+                resetStatusBrickEffect();
+            }
+        }
+    }
+
 
     private void reduceHealth() {
         health -= 5;
@@ -89,7 +98,6 @@ public class Brick extends MonoBehaviour implements ITakePlayerDamage {
         this.statusBrickEffect = statusBrickEffect;
         handleStatusEffect(statusBrickEffect);
         changeBrickVisual(statusBrickEffect);
-        System.out.println(statusBrickEffect);
     }
 
     private void handleStatusEffect(StatusEffect statusEffect) {
@@ -100,6 +108,7 @@ public class Brick extends MonoBehaviour implements ITakePlayerDamage {
             }
             case FrostBite -> {
                 damageMultiplier = 2;
+                frostStartTime = Time.time;
             }
         }
     }

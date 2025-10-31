@@ -3,6 +3,7 @@ package game.Player;
 import game.GameObject.Arrow;
 import game.Obstacle.Index.ObstacleManager;
 import game.PowerUp.Index.PowerUp;
+import game.PowerUp.Recovery;
 import javafx.scene.input.MouseButton;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -184,14 +185,19 @@ public class PlayerPaddle extends MonoBehaviour {
      */
     private void onTriggerEnter(CollisionData collisionData) {
 
-        if (!isFired) {
-            return;
-        }
         var powerUp = collisionData.otherCollider.getComponent(PowerUp.class);
-        if (powerUp != null) {
-            onPowerUpConsumed.invoke(this, powerUp);
-        }
 
+        if (powerUp instanceof Recovery) {
+            onPowerUpConsumed.invoke(this, powerUp);
+        } else {
+            if (!isFired) {
+                return;
+            }
+
+            if (powerUp != null) {
+                onPowerUpConsumed.invoke(this, powerUp);
+            }
+        }
     }
 
     /**

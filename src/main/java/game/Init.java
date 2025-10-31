@@ -3,6 +3,7 @@ package game;
 import game.GameObject.BallsManager;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
+import game.GameObject.Shield;
 import game.MapGenerator.BrickMapManager;
 import game.Obstacle.Index.ObstacleManager;
 import game.Player.Prefab.PlayerPrefab;
@@ -19,6 +20,7 @@ import org.GameObject.GameObjectManager;
 public class Init {
 
     public static void Init_Kine() {
+        var shield = GameObjectManager.instantiate("Shield").addComponent(Shield.class);
     }
 
     public static void Init_Dui() {
