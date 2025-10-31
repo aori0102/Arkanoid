@@ -18,13 +18,13 @@ public final class BrickPrefab {
                 .addComponent(Brick.class)
                 .getGameObject();
 
-        // Damage visualizer
-
         // Renderer
         var brickRenderer = brickObject.addComponent(SpriteRenderer.class);
         brickRenderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
         brickRenderer.setSize(BRICK_SIZE);
         brickRenderer.setPivot(new Vector2(0.5, 0.5));
+
+        // Collider
         brickObject.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
 
         return brickObject.getComponent(Brick.class);
