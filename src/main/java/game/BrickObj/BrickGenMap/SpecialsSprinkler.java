@@ -1,11 +1,11 @@
 package game.BrickObj.BrickGenMap;
 
-import static game.BrickObj.InitMatrix.getNewBrick;
+import static game.BrickObj.BrickGenMap.TransTypeNumBer.transNumberToType;
+import static game.BrickObj.BrickGenMap.TransTypeNumBer.transTypeToNumber;
 import static game.BrickObj.BrickGenMap.Mathx.*;
 
-import game.BrickObj.Brick;
 import game.BrickObj.BrickType;
-import game.BrickObj.InitMatrix.BrickMatrix;
+import game.BrickObj.Init.Matrix;
 import java.util.Random;
 
 public final class SpecialsSprinkler {
@@ -32,7 +32,6 @@ public final class SpecialsSprinkler {
                 case Gift   -> gift++;
                 case Rocket -> rocket++;
                 case Angel  -> angel++;
-                case Ball   -> ball++;
                 default     -> {}
             }
         }
@@ -45,7 +44,6 @@ public final class SpecialsSprinkler {
                 case Gift   -> gift   = Math.max(0, gift   - 1);
                 case Rocket -> rocket = Math.max(0, rocket - 1);
                 case Angel  -> angel  = Math.max(0, angel  - 1);
-                case Ball   -> ball   = Math.max(0, ball   - 1);
                 default     -> {}
             }
         }
@@ -63,7 +61,6 @@ public final class SpecialsSprinkler {
                 case Gift   -> gift   < maxGift;
                 case Rocket -> rocket < maxOtherEach;
                 case Angel  -> angel  < maxOtherEach;
-                case Ball   -> ball   < maxOtherEach;
                 default     -> true;
             };
         }
@@ -78,21 +75,21 @@ public final class SpecialsSprinkler {
         }
     }
 
-    public static void openDimondGate(BrickMatrix matrix, Random rng) {
+    public static void openDimondGate(Matrix matrix, Random rng) {
         final int row = matrix.rows();
         final int col = matrix.columns();
 
         boolean[][] isDimond  = new boolean[row][col];
         for (int r = 0; r < row; r++) {
             for (int c = 0; c < col; c++) {
-                if(matrix.getObjType(r, c) == BrickType.Diamond) {
+                if(transNumberToType(matrix.get(r, c)) == BrickType.Diamond) {
                     isDimond[r][c] = true;
                 }
             }
         }
     }
 
-    public static void sprinkle(BrickMatrix g, Random rng, double difficulty) {
+    public static void sprinkle(Matrix g, Random rng, double difficulty) {
         if (g == null || rng == null) return;
 
         final double bombP = keep01(0.2 - 6 * difficulty);
@@ -113,8 +110,8 @@ public final class SpecialsSprinkler {
 
         for (int r = 0; r < g.rows(); r++) {
             for (int c = 0; c < g.columns(); c++) {
-                Brick b = g.get(r, c);
-                if (b != null) cnt.inc(b.getBrickType());
+                BrickType tmp = transNumberToType(g.get(r, c));
+                if(tmp != null) cnt.inc(tmp);
             }
         }
 
@@ -124,9 +121,7 @@ public final class SpecialsSprinkler {
             for (int c = 0; c < g.columns(); c++) {
                 if (cnt.allReached()) break outer;
 
-                Brick cur = g.get(r, c);
-                if (cur == null) continue;
-                BrickType current = cur.getBrickType();
+                BrickType current = transNumberToType(g.get(r, c));
                 if (current == null) continue;
 
                 if (current == BrickType.Steel || current == BrickType.Diamond) continue;
@@ -135,7 +130,7 @@ public final class SpecialsSprinkler {
 
                 if (x < bombP) {
                     if (current != BrickType.Bomb && cnt.canPlace(BrickType.Bomb)) {
-                        g.set(r, c, getNewBrick(BrickType.Bomb));
+                        g.set(r, c, transTypeToNumber(BrickType.Bomb));
                         cnt.applyReplaceDelta(current, BrickType.Bomb);
                     }
                     continue;
@@ -143,7 +138,7 @@ public final class SpecialsSprinkler {
 
                 if (x < bombP + rockP) {
                     if (current != BrickType.Rock && cnt.canPlace(BrickType.Rock)) {
-                        g.set(r, c, getNewBrick(BrickType.Rock));
+                        g.set(r, c, transTypeToNumber(BrickType.Rock));
                         cnt.applyReplaceDelta(current, BrickType.Rock);
                     }
                     continue;
@@ -151,7 +146,7 @@ public final class SpecialsSprinkler {
 
                 if (x < bombP + rockP + rebornP) {
                     if (current != BrickType.Reborn && cnt.canPlace(BrickType.Reborn)) {
-                        g.set(r, c, getNewBrick(BrickType.Reborn));
+                        g.set(r, c, transTypeToNumber(BrickType.Reborn));
                         cnt.applyReplaceDelta(current, BrickType.Reborn);
                     }
                     continue;
@@ -159,27 +154,25 @@ public final class SpecialsSprinkler {
 
                 if (x < bombP + rockP + rebornP + giftP) {
                     if (current != BrickType.Gift && cnt.canPlace(BrickType.Gift)) {
-                        g.set(r, c, getNewBrick(BrickType.Gift));
+                        g.set(r, c,  transTypeToNumber(BrickType.Gift));
                         cnt.applyReplaceDelta(current, BrickType.Gift);
                     }
                     continue;
                 }
 
                 if (x < bombP + rockP + rebornP + giftP + otherP) {
-                    BrickType[] pool = { BrickType.Rocket, BrickType.Angel, BrickType.Ball };
+                    BrickType[] pool = { BrickType.Rocket, BrickType.Angel};
                     int start = rng.nextInt(pool.length);
                     for (int i = 0; i < pool.length; i++) {
                         BrickType pick = pool[(start + i) % pool.length];
                         if (current == pick) break;
                         if (!cnt.canPlace(pick)) continue;
-                        g.set(r, c, getNewBrick(pick));
+                        g.set(r, c, transTypeToNumber(pick));
                         cnt.applyReplaceDelta(current, pick);
                         break;
                     }
                 }
             }
         }
-
-        openDimondGate(g, rng);
     }
 }

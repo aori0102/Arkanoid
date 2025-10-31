@@ -1,11 +1,10 @@
 package game.BrickObj.BrickGenMap.style;
 
-import static game.BrickObj.InitMatrix.*;
+import static game.BrickObj.BrickGenMap.TransTypeNumBer.transTypeToNumber;
+import static game.BrickObj.Init.*;
 import static game.BrickObj.BrickGenMap.Mathx.*;
-import static game.BrickObj.BrickGenMap.GridUtils.*;
 
 import game.BrickObj.BrickType;
-import game.BrickObj.InitMatrix.BrickMatrix;
 import game.BrickObj.BrickGenMap.SpecialsSprinkler;
 import game.BrickObj.BrickGenMap.StyleGenerator;
 import game.BrickObj.BrickGenMap.TypePickers;
@@ -14,10 +13,9 @@ import java.util.Random;
 /** SINE: a sinusoidal hard band across the grid. */
 public final class SineStyle implements StyleGenerator {
     @Override
-    public BrickMatrix generate(int rows, int cols, double difficulty, Random rng) {
+    public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);
-        BrickMatrix g = new BrickMatrix(rows, cols);
-        fillAll(g, BrickType.Normal);
+        Matrix g = new Matrix(rows, cols);
 
         double amp = lerp(3, 6, difficulty);
         double freq = lerp(0.8, 1.6, difficulty);
@@ -28,7 +26,7 @@ public final class SineStyle implements StyleGenerator {
             double x = (2 * Math.PI * c / cols) * freq;
             int r0 = (int) Math.round(rows / 2.0 + amp * Math.sin(x));
             for (int t = -thickness; t <= thickness; t++)
-                if (inBounds(r0 + t, c, rows, cols)) g.set(r0 + t, c, getNewBrick(wall));
+                if (inBounds(r0 + t, c, rows, cols)) g.set(r0 + t, c, transTypeToNumber(wall));
         }
 
         SpecialsSprinkler.sprinkle(g, rng, difficulty);

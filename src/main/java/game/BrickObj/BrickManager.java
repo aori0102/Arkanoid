@@ -1,13 +1,9 @@
 package game.BrickObj;
-
 import game.BrickObj.BrickGenMap.MapStyle;
 import org.GameObject.GameObject;
-import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
-import org.Physics.BoxCollider;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
 import utils.Vector2;
+
 
 public class BrickManager extends MonoBehaviour {
 
@@ -17,6 +13,8 @@ public class BrickManager extends MonoBehaviour {
     private static BrickManager instance = null;
 
     private BrickFactory brickFactory = null;
+
+    int timeFrame = 0;
 
     /**
      * Create this MonoBehaviour.
@@ -28,31 +26,39 @@ public class BrickManager extends MonoBehaviour {
         if (instance != null) {
             throw new IllegalStateException("BrickManager is a singleton!");
         }
+//        brickFactory = new BrickFactory(10, 10, MapStyle.HEART, 0.3);
+//        brickFactory.printBrickTypes();
         instance = this;
-        brickFactory = new BrickFactory(10, 10, MapStyle.CAVES, 0.3);
-        brickFactory.setup();
     }
 
-    public Brick instantiateBrick() {
-
-        var brick = GameObjectManager.instantiate("Brick").addComponent(Brick.class);
-        var renderer = brick.addComponent(SpriteRenderer.class);
-        renderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
-        renderer.setPivot(new Vector2(0.5, 0.5));
-        renderer.setSize(BRICK_SIZE);
-        brick.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
-
-        return brick;
-
+    public void buildMap(int row, int col, MapStyle mapStyle, double diff) {
+        brickFactory = new BrickFactory(row, col, mapStyle, diff);
+        brickFactory.printBrickTypes();
     }
 
     public static BrickManager getInstance() {
         return instance;
     }
 
+    public void deleted() {
+        brickFactory.deleted();
+    }
+
+    public void setUpBrick(int x, int y, BrickType brickType) {
+        brickFactory.setupNewBrick(x, y, brickType);
+    }
+
     @Override
     public void update() {
         brickFactory.runProgress();
+//            timeFrame++;
+//            if(timeFrame == 600) {
+//                brickFactory.deleted();
+//            }
+//
+//            if(timeFrame == 1200) {
+//                brickFactory = new BrickFactory(10, 10, MapStyle.RANDOM, 0.3);
+//            }
     }
 
 

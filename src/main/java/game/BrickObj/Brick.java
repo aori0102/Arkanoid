@@ -8,9 +8,8 @@ import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
 import utils.Vector2;
+import static game.BrickObj.Render.setBrightness;
 
 public final class Brick extends MonoBehaviour {
 
@@ -24,6 +23,8 @@ public final class Brick extends MonoBehaviour {
 
     private final int width = 64;
     private final int height = 32;
+
+    private int waveIndex = 0;
 
     // Create a
     public EventHandler<Void> onBrickDestroyed = new EventHandler<>(Brick.class);
@@ -45,14 +46,13 @@ public final class Brick extends MonoBehaviour {
         var collider = addComponent(BoxCollider.class);
         collider.setLocalSize(new Vector2(width, height));
         collider.setOnCollisionEnterCallback(this::onCollisionEnter);
-
-
         owner.setLayer(Layer.Brick);
     }
 
     public void awake() {
-        setType(BrickType.Normal);
-        System.out.printf("%3d %3d\n", colID, rowID);
+        setType(brickType);
+        System.out.printf("%3d %3d %3d\n", colID, rowID, health);
+        System.out.println(gameObject);
     }
 
     public void update() {
@@ -83,7 +83,9 @@ public final class Brick extends MonoBehaviour {
             return;
         }
 
+        System.out.println(rowID + " " + colID + " " + health + " " + brickType);
         this.health -= damge;
+        System.out.println("After" + rowID + " " + colID + " " + health + " " + brickType);
         this.isDamaged = true;
 
         if (this.health <= 0) {
@@ -105,6 +107,10 @@ public final class Brick extends MonoBehaviour {
     }
 
     public void decreaseHealth(int decreaseAmount) {
+        if (this.health <= 0) {
+            return;
+        }
+
         this.health -= decreaseAmount;
 
         if (health <= 0) {
@@ -115,6 +121,8 @@ public final class Brick extends MonoBehaviour {
     public void beDestroy() {
         this.health = 0;
         this.isNewDeath = true;
+        System.out.println(gameObject + " " + "Where destroy");
+        GameObjectManager.destroy(gameObject);
     }
 
     public boolean isDestroyed() {
@@ -174,5 +182,18 @@ public final class Brick extends MonoBehaviour {
 
     public String getType() {
         return brickType.toString();
+    }
+
+    public void setWaveIndex(int u) {
+        waveIndex = u;
+        if (u == -2) {
+           return;
+        }
+
+        setBrightness(u, this);
+    }
+
+    public int getWaveIndex() {
+        return waveIndex;
     }
 }

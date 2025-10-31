@@ -84,6 +84,17 @@ public class ImageAsset {
 
         /// Effects
         HealthLossVignette("/Effect/HealthLossVignette.png"),
+        brick_normal("/Brick/brick_normal.png"),
+        brick_steel("/Brick/brick_steel.png"),
+        brick_diamond("/Brick/brick_diamond.png"),
+        brick_gift("/Brick/brick_gift.png"),
+        brick_reborn("/Brick/brick_reborn.png"),
+        brick_rock("/Brick/brick_rock.png"),
+        brick_rocket("/Brick/brick_rocket.png"),
+        brick_angel("/Brick/brick_angel.png"),
+        brick_bomb("/Brick/brick_bomb.png"),
+        BlueBrick("/Brick/BlueBrick.png"),
+
 
         None("");
 
