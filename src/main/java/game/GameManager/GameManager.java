@@ -1,6 +1,6 @@
 package game.GameManager;
 
-import game.Player.Player;
+import game.MapGenerator.BrickMapManager;
 import javafx.application.Platform;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -12,9 +12,9 @@ public class GameManager extends MonoBehaviour {
 
     private static GameState gameState = GameState.MainMenu;
     private int currentLevel = 1;
-    private boolean hasSave =  false;
+    private boolean hasSave = false;
 
-    private static GameManager instance=null;
+    private static GameManager instance = null;
 
     /**
      * Create this MonoBehaviour.
@@ -23,37 +23,46 @@ public class GameManager extends MonoBehaviour {
      */
     public GameManager(GameObject owner) {
         super(owner);
-        if(instance == null) {
+        if (instance == null) {
             instance = this;
         }
+    }
+
+    @Override
+    public void start() {
+        System.out.println("Starting GameManager");
+        BrickMapManager.getInstance().onMapCleared
+                .addListener(this::brickMapManager_onMapCleared);
+
+        startNewGame();
+    }
+
+    /**
+     * Called when {@link BrickMapManager#onMapCleared} is invoked.<br><br>
+     * This function loads a new map upon the old map is cleared.
+     *
+     * @param sender Event caller {@link BrickMapManager}.
+     * @param e      Empty event argument.
+     */
+    private void brickMapManager_onMapCleared(Object sender, Void e) {
+        System.out.println("brickMapManager_onMapCleared");
+        loadNextLevel();
     }
 
     public static GameManager getInstance() {
         return instance;
     }
 
-    @Override
-    public void awake() {
-    }
-    private void player_onNodeHealthReachZero(Object sender, Void e) {
-        gameOver();
+    public void startNewGame() {
+        currentLevel = 0;
+        loadNextLevel();
     }
 
-    public void startNewGame(){
-        System.out.println("[GameManager] Starting New Game");
-
-        currentLevel = 1;
-        loadLevel(currentLevel);
-        gameState = GameState.Playing;
-
-        hasSave = true;
-    }
-
-    public void continueGame(){
-        if(hasSave) {
+    public void continueGame() {
+        if (hasSave) {
             System.out.println("[GameManager] Continuing Game");
 
-            loadLevel(currentLevel);
+            loadNextLevel();
             gameState = GameState.Playing;
         }
 
@@ -61,62 +70,62 @@ public class GameManager extends MonoBehaviour {
 
     }
 
-    public void restartGame(){
+    public void restartGame() {
         System.out.println("[GameManager] Restarting Game");
 
-        loadLevel(currentLevel);
+        loadNextLevel();
     }
 
-    public void returnToMainMenu(){
+    public void returnToMainMenu() {
         System.out.println("[GameManager] Returning to Main Menu");
 
         SceneManager.loadScene(SceneKey.Menu);
     }
 
-    public void loadLevel(int level){
-        System.out.println("[GameManager] Loading Level " + level);
+    public void loadNextLevel() {
+        currentLevel++;
 
-        currentLevel = level;
-        SceneManager.loadScene(SceneKey.values()[currentLevel]);
+        LevelUIPrefab.instantiate().setLevel(currentLevel);
+        BrickMapManager.getInstance().generateMap();
     }
 
-    public void onLevelCompleted(){
+    public void onLevelCompleted() {
         System.out.println("[GameManager] Level Completed");
     }
 
-    public void gameOver(){
+    public void gameOver() {
         gameState = GameState.GameOver;
     }
 
-    public void pauseGame(){
+    public void pauseGame() {
         Time.setTimeScale(0);
         //showPauseUI
     }
 
-    public void resumeGame(){
+    public void resumeGame() {
         Time.setTimeScale(1);
         //hidePauseUI
     }
 
-    public void quitGame(){
+    public void quitGame() {
         Platform.exit();
     }
 
-    public void giveUp(){
+    public void giveUp() {
         System.out.println("[GameManager] Giving Up");
 
         hasSave = false;
         SceneManager.loadScene(SceneKey.Menu);
     }
 
-    public void toNextLevel(){
+    public void toNextLevel() {
         System.out.println("[GameManager] To Next Level");
 
         currentLevel++;
-        loadLevel(currentLevel);
+        loadNextLevel();
     }
 
-    private void brickManager_onLevelComplete(){
+    private void brickManager_onLevelComplete() {
         System.out.println("[GameManager] Brick Manager onLevelComplete");
 
     }

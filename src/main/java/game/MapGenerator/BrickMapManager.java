@@ -2,11 +2,13 @@ package game.MapGenerator;
 
 import game.Brick.Brick;
 import game.Brick.BrickPrefab;
+import game.Brick.BrickType;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import utils.Random;
 import utils.Vector2;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public final class BrickMapManager extends MonoBehaviour {
     private final HashMap<Brick, Cell> brickCoordinateMap = new HashMap<>();
 
     public EventHandler<Void> onMapCleared = new EventHandler<>(BrickMapManager.class);
+    public EventHandler<BrickType> onBrickDestroyed = new EventHandler<>(BrickMapManager.class);
 
     /**
      * Create this MonoBehaviour.
@@ -63,6 +66,7 @@ public final class BrickMapManager extends MonoBehaviour {
 
                 var cell = new Cell(i, j);
                 var brick = BrickPrefab.instantiateBrick();
+                brick.setBrickType(Random.range(0.0, 1.0) < 0.17 ? BrickType.Steel : BrickType.Normal);
                 var position = BRICK_MAP_ANCHOR.add((BRICK_OFFSET).scaleUp(new Vector2(j, i)));
                 brick.getTransform().setGlobalPosition(position);
                 brickGrid.get(i).set(j, brick);
@@ -89,6 +93,7 @@ public final class BrickMapManager extends MonoBehaviour {
             var cell = brickCoordinateMap.remove(brick);
             brickGrid.get(cell.row).set(cell.column, null);
             brick.onBrickDestroyed.removeAllListeners();
+            onBrickDestroyed.invoke(this, brick.getBrickType());
             if (brickCoordinateMap.isEmpty()) {
                 onMapCleared.invoke(this, null);
             }
@@ -98,11 +103,12 @@ public final class BrickMapManager extends MonoBehaviour {
 
     private void clearMap() {
 
-        for (int i = 0; i < ROW_COUNT; i++) {
+        for (int row = 0; row < ROW_COUNT; row++) {
 
-            for (int j = 0; j < COLUMN_COUNT; j++) {
-                var brick = brickGrid.get(i).get(j);
-                brickGrid.get(i).set(j, null);
+            for (int column = 0; column < COLUMN_COUNT; column++) {
+                var brick = brickGrid.get(row).get(column);
+                brickCoordinateMap.remove(brick);
+                brickGrid.get(row).set(column, null);
                 if (brick != null) {
                     GameObjectManager.destroy(brick.getGameObject());
                 }

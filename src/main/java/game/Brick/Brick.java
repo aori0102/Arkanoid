@@ -6,12 +6,14 @@ import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
+import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
 public class Brick extends MonoBehaviour {
 
     private int health = 0;
     private BrickType brickType = BrickType.Normal;
+    private SpriteRenderer spriteRenderer = null;
 
     public EventHandler<OnBrickDestroyedEventArgs> onBrickDestroyed = new EventHandler<>(Brick.class);
 
@@ -26,8 +28,12 @@ public class Brick extends MonoBehaviour {
      */
     public Brick(GameObject owner) {
         super(owner);
-        setBrickType(BrickType.Normal);
+        spriteRenderer = addComponent(SpriteRenderer.class);
         owner.setLayer(Layer.Brick);
+    }
+
+    public BrickType getBrickType() {
+        return brickType;
     }
 
     @Override
@@ -48,5 +54,7 @@ public class Brick extends MonoBehaviour {
     public void setBrickType(BrickType brickType) {
         this.brickType = brickType;
         this.health = brickType.maxHealth;
+        spriteRenderer.setImage(brickType.imageIndex.getImage());
+        spriteRenderer.setSize(BrickPrefab.BRICK_SIZE);
     }
 }

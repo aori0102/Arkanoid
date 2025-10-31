@@ -1,14 +1,21 @@
 package game.Brick;
 
-public enum  BrickType {
+import org.Rendering.ImageAsset;
 
-    Normal(18),
-    Steel(36),
-    Diamond(999999);
+public enum BrickType {
+
+    Normal(18, 100, ImageAsset.ImageIndex.GreenBrick),
+    Steel(36, 320, ImageAsset.ImageIndex.PurpleBrick),
+    Diamond(999999, 0, ImageAsset.ImageIndex.None);
 
     public final int maxHealth;
-    private BrickType(int maxHealth) {
+    public final int score;
+    public final ImageAsset.ImageIndex imageIndex;
+
+    BrickType(int maxHealth, int score, ImageAsset.ImageIndex imageIndex) {
         this.maxHealth = maxHealth;
+        this.score = score;
+        this.imageIndex = imageIndex;
     }
 
 }
