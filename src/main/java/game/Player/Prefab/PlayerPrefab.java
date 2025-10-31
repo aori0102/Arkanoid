@@ -41,6 +41,7 @@ public class PlayerPrefab implements IPlayerPrefab {
 
         //Player paddle
         var paddle = new PaddlePrefab().instantiatePrefab();
+        paddle.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
         player.linkPlayerPaddle(paddle.getComponent(PlayerPaddle.class));
 
         return playerObject;

@@ -6,8 +6,12 @@ import game.Damagable.DamageInfo;
 import game.Damagable.DamageType;
 import game.Damagable.ICanDealDamage;
 import game.Player.PaddleDamageAcceptor;
+import game.Brick.Brick;
+import game.GameObject.Border.Border;
+import game.GameObject.Border.BorderType;
 import game.Player.Player;
 import game.Player.PlayerPaddle;
+import game.PowerUp.Index.PowerUpManager;
 import game.PowerUp.StatusEffect;
 import game.Voltraxis.Object.PowerCore.PowerCoreDamageAcceptor;
 import game.Voltraxis.VoltraxisDamageAcceptor;
@@ -23,7 +27,6 @@ import utils.Random;
 import utils.Vector2;
 import utils.Time;
 
-// TODO: ur code stinky af man - Aori to Kine.
 
 public class Ball extends MonoBehaviour implements ICanDealDamage {
 
@@ -32,6 +35,8 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
     private static final int BALL_DAMAGE = 80;
     private static final double BASE_BALL_SPEED = 500;
     private static final Vector2 BOUNCE_OFFSET = new Vector2(0.2, 0.2);
+
+    private int ballDamage = Player.getInstance().getAttack();
 
     private Vector2 direction;
     private PlayerPaddle paddle;
@@ -63,9 +68,6 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
             paddle.isFired = true;
         });
 
-        // Off set ball position when it follows the paddle in order to make it is in the surface
-        offsetBallPosition = new Vector2(0, -20);
-
         if (pendingEffect != StatusEffect.None) {
             addEffect(pendingEffect);
             pendingEffect = StatusEffect.None;
@@ -82,7 +84,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
      */
     public void handleMovement() {
         // Make the ball follow the paddle position if player haven't fired it
-        if (!paddle.isFired) {
+        if (!paddle.isFired && direction == null) {
             getTransform().setGlobalPosition(paddle.getTransform().getGlobalPosition().add(offsetBallPosition));
         }
         // Moving the ball
@@ -90,47 +92,79 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
             getTransform().translate(direction.normalize().multiply(BASE_BALL_SPEED * Time.getDeltaTime()));
         }
 
-        if (getTransform().getGlobalPosition().y > 1000) {
-            GameObjectManager.destroy(getGameObject());
+    }
+
+    private void handleCollision(CollisionData collisionData) {
+        if (isCollidedWith(collisionData, ITakePlayerDamage.class)) {
+            var target = collisionData.otherCollider.getComponent(ITakePlayerDamage.class);
+            if (target != null) {
+                if (target instanceof Brick brick) {
+                    if (currentStatusEffect != StatusEffect.None) {
+                        brick.setStatusBrickEffect(currentStatusEffect);
+                        currentStatusEffect = StatusEffect.None;
+                        changeBallVisual();
+                    }
+                }
+                target.takeDamage(ballDamage);
+            }
+        } else if (isCollidedWith(collisionData, Border.class)) {
+            var border = collisionData.otherCollider.getComponent(Border.class);
+            if (border != null && border.getBorderType() == BorderType.BorderBottom) {
+                GameObjectManager.destroy(gameObject);
+            }
         }
     }
 
     /**
-     * Calculating the direction of the ball.
-     *
-     * @param collisionData : the collision data of the interacted surface.
+     * Calculating the direction of the ball.<br>
+     * The reflected direction is calculated by the formular : <br>
+     * {@code r = d - 2 * (d,n) * n} <br>
+     * In that formular: <br>
+     * r is reflected direction <br>
+     * d is the previous direction <br>
+     * n is the normal vector (base on which side the ball interacts with) <br>
+     * If the direction is vertical with the surface, the reflected direction will be added <br>
+     * an offset vector to avoid stuck.
+     * @param collisionData : the hit object's collision data
      */
     private void handleAngleDirection(CollisionData collisionData) {
-
         if (direction == null) return;
 
-        // Normal vector to calculate reflect direction
-        var normal = collisionData.hitNormal.normalize().multiply(2.0);
+        Vector2 normal = collisionData.hitNormal.normalize();
 
-        // Dot product of the ball's direction with the surface
-        double dotCoefficient = Vector2.dot(direction.normalize(), normal.normalize());
+        if (Math.abs(normal.x) > Math.abs(normal.y)) {
+            normal = new Vector2(Math.signum(normal.x), 0);
+        } else {
+            normal = new Vector2(0, Math.signum(normal.y));
+        }
 
-        // Check if the ball is perpendicular with the surface
-        boolean nearlyParallel = (dotCoefficient <= 1 && dotCoefficient >= 0.95) ||
-                (dotCoefficient >= -1 && dotCoefficient <= -0.95);
+        Vector2 dirNorm = direction.normalize();
 
-        // Reflect direction
-        Vector2 reflectDir = normal.add(direction.normalize());
+        double dot = Vector2.dot(dirNorm, normal);
+        Vector2 reflectDirection = dirNorm.subtract(normal.multiply(2 * dot)).normalize();
 
-        // If the ball's direction is perpendicular then adding the offset vector to it in order to avoid horizontal movement
+        double dotCoefficient = Vector2.dot(dirNorm, normal);
+
+        boolean nearlyParallel = dotCoefficient == 1;
+
         if (nearlyParallel) {
-            reflectDir = reflectDir.add(BOUNCE_OFFSET.normalize());
+            reflectDirection = reflectDirection.add(BOUNCE_OFFSET.multiply(0.3).normalize());
         }
 
-        // If the ball interacts with the moving paddle, the reflected direction will be different from the motionless paddle,
-        // and it will be calculated by adding the moving vector to the reflected direction
-        if (isCollidedWith(collisionData, PlayerPaddle.class) && !paddle.movementVector.equals(Vector2.zero())) {
-            reflectDir = reflectDir.add(paddle.movementVector.normalize());
+        if (isCollidedWith(collisionData, PlayerPaddle.class)) {
+            Vector2 paddleVel = paddle.movementVector;
+            if (!paddleVel.equals(Vector2.zero())) {
+                reflectDirection = reflectDirection.add(paddleVel.normalize().multiply(0.3)).normalize();
+            }
         }
 
+        Vector2 offset = getTransform().getGlobalPosition().add(normal.inverse().multiply(1));
+        getTransform().setGlobalPosition(offset);
 
-        direction = reflectDir;
+        direction = reflectDirection;
     }
+
+
 
     /**
      * Set the ball's direction.
@@ -202,6 +236,10 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
         return currentStatusEffect;
     }
 
+    @Override
+    protected void onDestroy() {
+        BallsManager.getInstance().removeBall(this);
+    }
     @Override
     public DamageInfo getDamageInfo() {
 

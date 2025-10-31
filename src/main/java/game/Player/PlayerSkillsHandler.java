@@ -87,7 +87,7 @@ public class PlayerSkillsHandler extends MonoBehaviour {
     private HashMap<Class<? extends Skill>, SkillData> createSkillDataMap() {
         HashMap<Class<? extends Skill>, SkillData> skillMap = new HashMap<>();
 
-        skillMap.put(LaserBeam.class, new SkillData(3, 5.0, 3, 5.0));
+        skillMap.put(LaserBeam.class, new SkillData(100, 5.0, 100, 5.0));
 
         return skillMap;
     }

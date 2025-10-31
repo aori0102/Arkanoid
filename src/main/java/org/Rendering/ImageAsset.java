@@ -15,6 +15,8 @@ public class ImageAsset {
         BlizzardBall("/PowerUp/BlizzardBall.png"),
         BlizzardBallIcon("/PowerUp/BlizzardBallIcon.png"),
         LaserBeam("/PowerUp/LaserBeam.png"),
+        ShieldIcon("/PowerUp/ShieldIcon.png"),
+        HealIcon("/PowerUp/HealIcon.png"),
 
         /// Player object
         Ball("/ball.png"),
@@ -75,6 +77,8 @@ public class ImageAsset {
         /// Bricks
         GreenBrick("/Brick/GreenBrick.png"),
         PurpleBrick("/Brick/PurpleBrick.png"),
+        OrangeBrick("/Brick/OrangeBrick.png"),
+        CyanBrick("/Brick/CyanBrick.png"),
 
         /// Effects
         HealthLossVignette("/Effect/HealthLossVignette.png"),

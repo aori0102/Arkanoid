@@ -3,6 +3,7 @@ package game.Player;
 import game.GameObject.Arrow;
 import game.Obstacle.Index.ObstacleManager;
 import game.PowerUp.Index.PowerUp;
+import game.PowerUp.Recovery;
 import javafx.scene.input.MouseButton;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -21,7 +22,6 @@ public class PlayerPaddle extends MonoBehaviour {
     private static final double DOT_LIMIT_ANGLE_RIGHT = 30;
     private static final double DOT_LIMIT_ANGLE_LEFT = 150;
     private static final double STUNNED_TIME = 3.6;
-    private static final double BASE_PADDLE_SPEED = 1000;
     private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0);
 
     //Event
@@ -35,7 +35,6 @@ public class PlayerPaddle extends MonoBehaviour {
     private boolean canStartStunnedCounter = false;
     private boolean canReduceSpeed = true;
     private double stunnedCounter = 0;
-    private double currentSpeed = 1000;
 
     public boolean isFired = false;
 
@@ -63,6 +62,9 @@ public class PlayerPaddle extends MonoBehaviour {
         Player.getInstance().getPlayerController().getActionMap().
                 onKeyHeld.addListener(this::handlePaddleMovement);
         Player.getInstance().getPlayerController().getActionMap().
+                onKeyReleased.addListener((_, action) ->{
+                });
+        Player.getInstance().getPlayerController().getActionMap().
                 onMouseHeld.addListener(this::handleRayDirection);
         Player.getInstance().getPlayerController().getActionMap().
                 onMouseReleased.addListener(this::handleRayReleased);
@@ -86,7 +88,7 @@ public class PlayerPaddle extends MonoBehaviour {
 
         if (!movementVector.equals(Vector2.zero())) {
             movementVector = movementVector.normalize()
-                    .multiply(currentSpeed * Time.getDeltaTime());
+                    .multiply(Player.getInstance().getCurrentSpeed() * Time.getDeltaTime());
         }
 
         getTransform().translate(movementVector);
@@ -147,12 +149,13 @@ public class PlayerPaddle extends MonoBehaviour {
         stunnedCounter += Time.getDeltaTime();
 
         if (canReduceSpeed) {
-            currentSpeed /= 10;
+            int currentSpeed = Player.getInstance().getCurrentSpeed() / 10;
+            Player.getInstance().setCurrentSpeed(currentSpeed);
             canReduceSpeed = false;
         }
 
         if (stunnedCounter >= STUNNED_TIME) {
-            currentSpeed = BASE_PADDLE_SPEED;
+            Player.getInstance().setCurrentSpeed(Player.getInstance().getBaseSpeed());
             canReduceSpeed = true;
             stunnedCounter = 0;
             canStartStunnedCounter = false;
@@ -179,15 +182,19 @@ public class PlayerPaddle extends MonoBehaviour {
      */
     private void onTriggerEnter(CollisionData collisionData) {
 
-        if (!isFired) {
-            return;
-        }
         var powerUp = collisionData.otherCollider.getComponent(PowerUp.class);
-        if (powerUp != null) {
-            onPowerUpConsumed.invoke(this, powerUp);
-            return;
-        }
 
+        if (powerUp instanceof Recovery) {
+            onPowerUpConsumed.invoke(this, powerUp);
+        } else {
+            if (!isFired) {
+                return;
+            }
+
+            if (powerUp != null) {
+                onPowerUpConsumed.invoke(this, powerUp);
+            }
+        }
     }
 
     /**

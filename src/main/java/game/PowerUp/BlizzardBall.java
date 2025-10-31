@@ -26,13 +26,13 @@ public class BlizzardBall extends PowerUp {
     }
 
     public void start() {
-        PowerUpManager.getInstance().onBlizzardBall.addListener((sender, powerEffect) -> {
+        blizzardBallEventActionID = PowerUpManager.getInstance().onBlizzardBall.addListener((sender, powerEffect) -> {
             handleOnBlizzardBallRequested(powerEffect);
         });
     }
 
     public void handleOnBlizzardBallRequested(StatusEffect statusEffect) {
-        BallsManager.instance.applyStatusPowerUpEffect(statusEffect);
+        BallsManager.getInstance().applyStatusPowerUpEffect(statusEffect);
     }
 
     @Override

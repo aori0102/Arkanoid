@@ -6,6 +6,7 @@ import game.GameManager.Score.ScoreManagerPrefab;
 import game.GameObject.BallsManager;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
+import game.GameObject.Shield;
 import game.MapGenerator.BrickMapManager;
 import game.Obstacle.Index.ObstacleManager;
 import game.Player.Prefab.PlayerPrefab;
@@ -24,6 +25,7 @@ import org.GameObject.GameObjectManager;
 public class Init {
 
     public static void Init_Kine() {
+        var shield = GameObjectManager.instantiate("Shield").addComponent(Shield.class);
     }
 
     public static void Init_Dui() {
@@ -53,20 +55,10 @@ public class Init {
 
         new PlayerPrefab().instantiatePrefab();
 
-        var ball = GameObjectManager.instantiate("ball");
-        ball.addComponent(Ball.class);
-        ball.addComponent(BoxCollider.class);
-        ball.getTransform().setGlobalPosition(new Vector2(584, 530));
-        ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
-
-        var ballVisual = GameObjectManager.instantiate("ballVisual");
-        ballVisual.setParent(ball);
-        ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
-        ballVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
 
         var ballsManager = GameObjectManager.instantiate("ballManager");
         ballsManager.addComponent(BallsManager.class);
-        BallsManager.instance.addBall(ball.getComponent(Ball.class));
+        BallsManager.getInstance().spawnInitialBall();
 
         var obstacleManager = GameObjectManager.instantiate("obstacleManager");
         obstacleManager.addComponent(ObstacleManager.class);

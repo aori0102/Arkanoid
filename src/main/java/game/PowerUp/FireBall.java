@@ -33,7 +33,7 @@ public class FireBall extends PowerUp {
     }
 
     private void handleOnFireBallRequested(StatusEffect statusEffect) {
-        BallsManager.instance.applyStatusPowerUpEffect(statusEffect);
+        BallsManager.getInstance().applyStatusPowerUpEffect(statusEffect);
     }
 
     @Override

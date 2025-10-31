@@ -15,6 +15,11 @@ public class Player extends MonoBehaviour {
     /// Singleton
     private static Player instance = null;
 
+    /// Attributes
+    private static final int ATTACK = 80;
+    private static final int BASE_SPEED = 1000;
+    private int currentSpeed;
+
     /// Player core components
     private final PlayerPowerUpHandler playerPowerUpHandler;
     private final PlayerHealth playerHealth;
@@ -35,6 +40,7 @@ public class Player extends MonoBehaviour {
             throw new ReinitializedSingletonException("Player is a singleton");
         }
         instance = this;
+        currentSpeed = BASE_SPEED;
 
         playerPowerUpHandler = addComponent(PlayerPowerUpHandler.class);
         playerSkillsHandler = addComponent(PlayerSkillsHandler.class);
@@ -74,6 +80,22 @@ public class Player extends MonoBehaviour {
 
     public static Player getInstance() {
         return instance;
+    }
+
+    public int getAttack() {
+        return ATTACK;
+    }
+
+    public int getBaseSpeed() {
+        return BASE_SPEED;
+    }
+
+    public int getCurrentSpeed() {
+        return currentSpeed;
+    }
+
+    public void setCurrentSpeed(int currentSpeed) {
+        this.currentSpeed = currentSpeed;
     }
 
     /**

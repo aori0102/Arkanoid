@@ -3,6 +3,7 @@ package game.MapGenerator;
 import game.Brick.Brick;
 import game.Brick.BrickPrefab;
 import game.Brick.BrickType;
+import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;

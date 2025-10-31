@@ -46,14 +46,14 @@ public class DuplicateBall extends MultipleBall {
      */
     @Override
     protected void handleOnMultipleRequest() {
-        HashSet<Ball> ballHashSet = new HashSet<>(BallsManager.instance.getBallSet());
+        HashSet<Ball> ballHashSet = new HashSet<>(BallsManager.getInstance().getBallSet());
 
         for (var ball : ballHashSet) {
             Vector2 normalVector = new Vector2(-ball.getDirection().y, ball.getDirection().x).normalize();
             Vector2 direction = ball.getDirection().add(normalVector).normalize();
 
             var newBall = spawnBall(ball.getTransform());
-            BallsManager.instance.addBall(newBall);
+            BallsManager.getInstance().addBall(newBall);
             newBall.setDirection(direction);
         }
 

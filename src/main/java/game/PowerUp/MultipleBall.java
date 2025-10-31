@@ -43,13 +43,13 @@ public abstract class MultipleBall extends PowerUp {
      * @return the spawned ball
      */
     protected Ball spawnBall(Transform spawnPos) {
-        var ball = GameObjectManager.instantiate(BallsManager.instance.ballNameBuilder());
-        ball.addComponent(Ball.class).setPendingEffect(BallsManager.instance.getCurrentEffect());
+        var ball = GameObjectManager.instantiate(BallsManager.getInstance().ballNameBuilder());
+        ball.addComponent(Ball.class).setPendingEffect(BallsManager.getInstance().getCurrentEffect());
         ball.addComponent(BoxCollider.class);
         ball.getTransform().setGlobalPosition(spawnPos.getGlobalPosition());
         ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
 
-        var ballVisual = GameObjectManager.instantiate(BallsManager.instance.ballVisualNameBuilder());
+        var ballVisual = GameObjectManager.instantiate(BallsManager.getInstance().ballVisualNameBuilder());
         ballVisual.setParent(ball);
         ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
         ballVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));

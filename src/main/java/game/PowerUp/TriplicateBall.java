@@ -48,7 +48,7 @@ public class TriplicateBall extends MultipleBall {
      */
     @Override
     protected void handleOnMultipleRequest() {
-        HashSet<Ball> ballHashSet = new HashSet<>(BallsManager.instance.getBallSet());
+        HashSet<Ball> ballHashSet = new HashSet<>(BallsManager.getInstance().getBallSet());
 
         for(Ball ball : ballHashSet) {
             Vector2 normalVector = new Vector2(-ball.getDirection().y, ball.getDirection().x).normalize();
@@ -56,11 +56,11 @@ public class TriplicateBall extends MultipleBall {
             Vector2 secondDirection = ball.getDirection().add(normalVector.multiply(-1)).normalize();
 
             var ball1 = spawnBall(ball.getTransform());
-            BallsManager.instance.addBall(ball1);
+            BallsManager.getInstance().addBall(ball1);
             ball1.setDirection(firstDirection);
 
             var ball2 = spawnBall(ball.getTransform());
-            BallsManager.instance.addBall(ball2);
+            BallsManager.getInstance().addBall(ball2);
             ball2.setDirection(secondDirection);
         }
 
