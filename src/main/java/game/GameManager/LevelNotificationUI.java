@@ -13,7 +13,7 @@ import org.Text.TextVerticalAlignment;
 import utils.Time;
 import utils.Vector2;
 
-public final class LevelUI extends MonoBehaviour {
+public final class LevelNotificationUI extends MonoBehaviour {
 
     private static final double STARTING_RATIO = -0.5;
     private static final double ENDING_RATIO = 1.9;
@@ -29,7 +29,7 @@ public final class LevelUI extends MonoBehaviour {
      *
      * @param owner The owner of this component.
      */
-    public LevelUI(GameObject owner) {
+    public LevelNotificationUI(GameObject owner) {
         super(owner);
 
         levelText.setFontSize(LEVEL_TEXT_SIZE);

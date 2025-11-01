@@ -1,4 +1,4 @@
-package game.GameManager.Score;
+package game.Score;
 
 import javafx.scene.paint.Color;
 import org.GameObject.GameObject;

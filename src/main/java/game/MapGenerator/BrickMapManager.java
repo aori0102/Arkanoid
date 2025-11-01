@@ -1,8 +1,6 @@
 package game.MapGenerator;
 
 import game.Brick.Brick;
-import game.Brick.BrickPrefab;
-import game.Brick.BrickType;
 import game.BrickObj.BrickGenMap.GenMap;
 import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventActionID;
@@ -11,6 +9,8 @@ import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import utils.Vector2;
 
 import java.util.ArrayList;

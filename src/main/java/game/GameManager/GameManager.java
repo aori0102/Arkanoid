@@ -1,9 +1,11 @@
 package game.GameManager;
 
 import game.MapGenerator.BrickMapManager;
-import javafx.application.Platform;
+import org.Event.EventActionID;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 import utils.Time;
@@ -13,6 +15,8 @@ public class GameManager extends MonoBehaviour {
     private static GameState gameState = GameState.MainMenu;
     private int currentLevel = 1;
     private boolean hasSave = false;
+
+    private EventActionID brickMapManager_onMapCleared_ID = null;
 
     private static GameManager instance = null;
 
@@ -31,10 +35,18 @@ public class GameManager extends MonoBehaviour {
     @Override
     public void start() {
         System.out.println("Starting GameManager");
-        BrickMapManager.getInstance().onMapCleared
+        brickMapManager_onMapCleared_ID = BrickMapManager.getInstance().onMapCleared
                 .addListener(this::brickMapManager_onMapCleared);
 
         startNewGame();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (BrickMapManager.getInstance() != null) {
+            BrickMapManager.getInstance().onMapCleared
+                    .removeListener(brickMapManager_onMapCleared_ID);
+        }
     }
 
     /**
@@ -91,12 +103,8 @@ public class GameManager extends MonoBehaviour {
         BrickMapManager.getInstance().generateMap();
     }
 
-    public void onLevelCompleted() {
-        System.out.println("[GameManager] Level Completed");
-    }
-
     public void gameOver() {
-        gameState = GameState.GameOver;
+        SceneManager.loadScene(SceneKey.Menu);
     }
 
     public void pauseGame() {
@@ -119,15 +127,4 @@ public class GameManager extends MonoBehaviour {
         SceneManager.loadScene(SceneKey.Menu);
     }
 
-    public void toNextLevel() {
-        System.out.println("[GameManager] To Next Level");
-
-        currentLevel++;
-        loadNextLevel();
-    }
-
-    private void brickManager_onLevelComplete() {
-        System.out.println("[GameManager] Brick Manager onLevelComplete");
-
-    }
 }

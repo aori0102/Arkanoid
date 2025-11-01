@@ -1,8 +1,10 @@
-package game.GameManager.Score;
+package game.Score;
 
 import org.Event.EventActionID;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import org.Text.TextUI;
 import utils.Time;
 import utils.Vector2;
@@ -61,7 +63,8 @@ public final class ScoreUI extends MonoBehaviour {
      */
     private void scoreManager_onScoreChanged(Object sender, Integer e) {
         scoreText.setText(String.valueOf(e));
-        var popUp = ScorePopUpPrefab.instantiate();
+        var popUp = PrefabManager.instantiatePrefab(PrefabIndex.PlayerInfoBoard_ScoreUI_PopUp)
+                .getComponent(ScorePopUp.class);
         popUp.setAmount(e);
         popUp.setEntryPoint(scoreText.getTransform().getGlobalPosition());
     }

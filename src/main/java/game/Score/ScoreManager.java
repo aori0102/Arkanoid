@@ -1,4 +1,4 @@
-package game.GameManager.Score;
+package game.Score;
 
 import game.Brick.Brick;
 import game.GameObject.Ball;
@@ -153,7 +153,7 @@ public final class ScoreManager extends MonoBehaviour {
      * @param e      Event argument indicating the type of brick.
      */
     private void brick_onAnyBrickDestroyed(Object sender, Brick.OnBrickDestroyedEventArgs e) {
-        setScore(e.brickType.score + _combo);
+        setScore(_score + e.brickType.score + _combo);
     }
 
     public static ScoreManager getInstance() {
