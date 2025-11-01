@@ -16,6 +16,7 @@ public final class BrickPrefab {
         var brickObject = GameObjectManager.instantiate("Brick")
                 .addComponent(BrickDamageAcceptor.class)
                 .addComponent(Brick.class)
+                .addComponent(ExperienceHolder.class)
                 .getGameObject();
 
         // Renderer

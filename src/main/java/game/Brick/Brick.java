@@ -3,6 +3,7 @@ package game.Brick;
 import game.Damagable.DamageInfo;
 import game.Damagable.DamageType;
 import game.Effect.StatusEffect;
+import game.Rank.ExperienceHolder;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -21,9 +22,11 @@ public class Brick extends MonoBehaviour {
     private static final Vector2 BRICK_SIZE = new Vector2(64, 32);
     private static final int BASE_DAMAGE_MULTIPLIER = 1;
 
+    private final SpriteRenderer spriteRenderer = addComponent(SpriteRenderer.class);
+    private final ExperienceHolder experienceHolder = addComponent(ExperienceHolder.class);
+
     private int health = 100;
     private BrickType brickType = BrickType.Normal;
-    private SpriteRenderer spriteRenderer = null;
     private double burnStartTime = 0.0;
     private double frostStartTime = 0.0;
     private int damageMultiplier = 1;
@@ -47,9 +50,7 @@ public class Brick extends MonoBehaviour {
      */
     public Brick(GameObject owner) {
         super(owner);
-        spriteRenderer = addComponent(SpriteRenderer.class);
         owner.setLayer(Layer.Brick);
-
     }
 
     public BrickType getBrickType() {
@@ -108,6 +109,7 @@ public class Brick extends MonoBehaviour {
         this.health = brickType.maxHealth;
         spriteRenderer.setImage(brickType.imageIndex.getImage());
         spriteRenderer.setSize(BrickPrefab.BRICK_SIZE);
+        experienceHolder.setExp(brickType.exp);
     }
 
     public void setStatusBrickEffect(StatusEffect statusBrickEffect) {
