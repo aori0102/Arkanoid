@@ -75,6 +75,10 @@ public class ImageAsset {
 
         /// Player scoreboard
         Player_UI_Scoreboard_Background("/Player/UI/Scoreboard/Background.png"),
+        Player_UI_Rank_Background("/Player/UI/Scoreboard/Rank/Background.png"),
+        Player_UI_Rank_Fill("/Player/UI/Scoreboard/Rank/Fill.png"),
+        Player_UI_Rank_Outline("/Player/UI/Scoreboard/Rank/Outline.png"),
+        Player_UI_Rank_LevelUpIcon("/Player/UI/Scoreboard/Rank/LevelUpIcon.png"),
 
         /// Bricks
         GreenBrick("/Brick/GreenBrick.png"),
