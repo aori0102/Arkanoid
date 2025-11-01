@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.GameObject.GameObject;
-import org.GameObject.MonoBehaviour;
+import org.GameObject.Transform;
 import org.Rendering.Renderable;
 import utils.Vector2;
 
@@ -16,7 +16,6 @@ public class TextUI extends Renderable {
     private static final double DEFAULT_FONT_SIZE = 12.0;
 
     private Text text = new Text();
-    private String registeredSceneKey;
     private double fontSize = DEFAULT_FONT_SIZE;
     private String fontName = DEFAULT_FONT_FACE;
     private TextVerticalAlignment verticalAlignment = TextVerticalAlignment.Top;
@@ -27,8 +26,20 @@ public class TextUI extends Renderable {
         super(owner);
 
         onRenderPositionChanged.addListener(this::renderer_onRenderPositionChanged);
+        onRenderSizeChanged.addListener(this::renderable_onRenderSizeChanged);
         text.setTextOrigin(VPos.TOP);
 
+    }
+
+    /**
+     * Called when {@link Renderable#onRenderSizeChanged} is invoked.<br><br>
+     * This function adjust the text size to match with the object's scale.
+     *
+     * @param sender Event caller {@link Renderable}.
+     * @param e      Empty event argument.
+     */
+    private void renderable_onRenderSizeChanged(Object sender, Void e) {
+        updateFont();
     }
 
     /**
@@ -47,7 +58,8 @@ public class TextUI extends Renderable {
      * Update the current font based on the set name and size.
      */
     private void updateFont() {
-        text.setFont(Font.font(fontName, fontSize));
+        var scale = getTransform().getLocalScale();
+        text.setFont(Font.font(fontName, fontSize * Math.max(scale.x, scale.y)));
         text.setFill(textColor);
         updateRenderPosition();
     }
@@ -128,7 +140,9 @@ public class TextUI extends Renderable {
     }
 
     /**
-     * Set the font size for this text.
+     * Set the font size for this text. The text's font size is also affected
+     * by the objects local scale, via {@link Transform#getLocalScale()}. The
+     * scale based on whichever value between {@code x} and {@code y} is greater.
      *
      * @param size The size of the displayed font.
      */

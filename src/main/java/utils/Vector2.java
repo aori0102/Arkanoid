@@ -269,4 +269,11 @@ public class Vector2 {
         );
     }
 
+    public static Vector2 lerp(Vector2 from, Vector2 to, double t) {
+        return new Vector2(
+                MathUtils.lerp(from.x, to.x, t),
+                MathUtils.lerp(from.y, to.y, t)
+        );
+    }
+
 }
