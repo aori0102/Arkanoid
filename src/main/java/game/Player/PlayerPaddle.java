@@ -38,7 +38,7 @@ public class PlayerPaddle extends MonoBehaviour {
 
     public boolean isFired = false;
 
-    public Vector2 movementVector = new Vector2(0, 0);
+    private Vector2 movementVector = new Vector2(0, 0);
 
     public PlayerPaddle(GameObject owner) {
         super(owner);
@@ -73,6 +73,10 @@ public class PlayerPaddle extends MonoBehaviour {
     @Override
     public void update() {
         handleCollisionWithObstacles();
+    }
+
+    public Vector2 getMovementVector() {
+        return movementVector;
     }
 
     private void handlePaddleMovement(Object e, ActionMap.Action action) {

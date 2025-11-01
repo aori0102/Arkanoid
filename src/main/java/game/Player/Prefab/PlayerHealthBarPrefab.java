@@ -4,6 +4,7 @@ import game.Player.PlayerHealthUI;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.RenderLayer;
+import org.Prefab.Prefab;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
@@ -12,7 +13,7 @@ import utils.Vector2;
  * Prefab of the player's health bar UI. Attached with {@link PlayerHealthUI}
  * with multiple UI elements as children.
  */
-public class PlayerHealthBarPrefab implements IPlayerPrefab {
+public class PlayerHealthBarPrefab extends Prefab {
 
     private static final Vector2 HEALTH_BAR_POSITION = new Vector2(600.0, 750.0);
     private static final Vector2 HEALTH_BAR_SIZE = new Vector2(246.0, 16.0);

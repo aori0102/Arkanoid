@@ -3,6 +3,9 @@ package game.Player.Prefab;
 import game.Player.*;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.Prefab.Prefab;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import utils.Vector2;
 
 /**
@@ -16,7 +19,7 @@ import utils.Vector2;
  *     <li>{@link PlayerHealth}</li>
  * </ul>
  */
-public class PlayerPrefab implements IPlayerPrefab {
+public class PlayerPrefab extends Prefab {
 
     @Override
     public GameObject instantiatePrefab() {
@@ -31,17 +34,17 @@ public class PlayerPrefab implements IPlayerPrefab {
         var player = playerObject.getComponent(Player.class);
 
         // Health bar
-        var healthBarObject = new PlayerHealthBarPrefab().instantiatePrefab();
+        var healthBarObject = PrefabManager.instantiatePrefab(PrefabIndex.Player_HealthBar);
         healthBarObject.setParent(playerObject);
 
         // Health loss vignette
-        var healthLossVignetteObject = new PlayerHealthLossVignettePrefab().instantiatePrefab();
+        var healthLossVignetteObject = PrefabManager.instantiatePrefab(PrefabIndex.Player_HealthLossVignette);
         var healthLossVignette = healthLossVignetteObject.getComponent(PlayerHealthLossVignette.class);
         healthLossVignette.linkPlayer(player);
         healthLossVignetteObject.setParent(playerObject);
 
         //Player paddle
-        var paddle = new PaddlePrefab().instantiatePrefab();
+        var paddle = PrefabManager.instantiatePrefab(PrefabIndex.Player_Paddle);
         paddle.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
         player.linkPlayerPaddle(paddle.getComponent(PlayerPaddle.class));
 

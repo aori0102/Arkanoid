@@ -7,11 +7,12 @@ import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
+import org.Prefab.Prefab;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
-public class PaddlePrefab implements IPlayerPrefab {
+public class PaddlePrefab extends Prefab {
     @Override
     public GameObject instantiatePrefab() {
 

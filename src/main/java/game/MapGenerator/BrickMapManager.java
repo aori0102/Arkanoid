@@ -84,7 +84,8 @@ public final class BrickMapManager extends MonoBehaviour {
             for (int column = 0; column < COLUMN_COUNT; column++) {
 
                 var cell = new Cell(row, column);
-                var brick = BrickPrefab.instantiateBrick();
+                var brick = PrefabManager.instantiatePrefab(PrefabIndex.Brick)
+                        .getComponent(Brick.class);
                 brick.setBrickType(typeGrid.get(row).get(column));
                 var position = BRICK_MAP_ANCHOR.add((BRICK_OFFSET).scaleUp(new Vector2(column, row)));
                 brick.getTransform().setGlobalPosition(position);

@@ -1,15 +1,15 @@
-package game.GameManager;
+package game.Score;
 
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Prefab.Prefab;
 
-public final class LevelUIPrefab extends Prefab {
+public final class ScorePopUpPrefab extends Prefab {
 
     @Override
     public GameObject instantiatePrefab() {
-        return GameObjectManager.instantiate("LevelUI")
-                .addComponent(LevelNotificationUI.class)
+        return GameObjectManager.instantiate("ScorePopUpPrefab")
+                .addComponent(ScorePopUp.class)
                 .getGameObject();
     }
 

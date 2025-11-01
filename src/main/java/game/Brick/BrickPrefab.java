@@ -1,16 +1,20 @@
 package game.Brick;
 
+import game.Rank.ExperienceHolder;
+import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Physics.BoxCollider;
+import org.Prefab.Prefab;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
-public final class BrickPrefab {
+public final class BrickPrefab extends Prefab {
 
     public static final Vector2 BRICK_SIZE = new Vector2(64.0, 32.0);
 
-    public static Brick instantiateBrick(){
+    @Override
+    public GameObject instantiatePrefab() {
 
         // Core object
         var brickObject = GameObjectManager.instantiate("Brick")
@@ -28,7 +32,7 @@ public final class BrickPrefab {
         // Collider
         brickObject.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
 
-        return brickObject.getComponent(Brick.class);
+        return brickObject;
 
     }
 

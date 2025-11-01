@@ -4,6 +4,7 @@ import game.Player.PlayerHealthLossVignette;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Main;
+import org.Prefab.Prefab;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
@@ -12,7 +13,7 @@ import utils.Vector2;
  * Prefab of the vignette visual effect upon player taking damage. Attached
  * with {@link PlayerHealthLossVignette} controlling the visual effect.
  */
-public class PlayerHealthLossVignettePrefab implements IPlayerPrefab {
+public class PlayerHealthLossVignettePrefab extends Prefab {
 
     @Override
     public GameObject instantiatePrefab() {

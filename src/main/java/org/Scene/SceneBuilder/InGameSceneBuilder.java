@@ -1,7 +1,7 @@
 package org.Scene.SceneBuilder;
 
 import game.GameManager.GameManager;
-import game.GameManager.Score.ScoreManagerPrefab;
+import game.Rank.RankManager;
 import game.GameObject.BallsManager;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
@@ -14,6 +14,9 @@ import game.Player.Prefab.PlayerPrefab;
 import game.PowerUp.Index.PowerUpManager;
 import game.UI.UIManager;
 import org.GameObject.GameObjectManager;
+import org.Prefab.Prefab;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import utils.Vector2;
 
 public final class InGameSceneBuilder extends SceneBuilder {
@@ -21,13 +24,16 @@ public final class InGameSceneBuilder extends SceneBuilder {
     @Override
     protected void build() {
 
-        GameObjectManager.instantiate("PerkManager").addComponent(PerkManager.class);
-        GameObjectManager.instantiate("UIManager").addComponent(UIManager.class);
-        GameObjectManager.instantiate("GameManager").addComponent(GameManager.class);
-        GameObjectManager.instantiate("BrickMapManager").addComponent(BrickMapManager.class);
-        ScoreManagerPrefab.instantiate();
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_UIManager);
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_PerkManager);
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_GameManager);
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_BrickMapManager);
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_RankManager);
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_ScoreManager);
 
-        new PlayerPrefab().instantiatePrefab();
+        PrefabManager.instantiatePrefab(PrefabIndex.Player);
+
+        PrefabManager.instantiatePrefab(PrefabIndex.PlayerInfoBoard);
 
         var ballsManager = GameObjectManager.instantiate("ballManager");
         ballsManager.addComponent(BallsManager.class);

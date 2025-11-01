@@ -85,7 +85,9 @@ public class GameManager extends MonoBehaviour {
     public void loadNextLevel() {
         currentLevel++;
 
-        LevelUIPrefab.instantiate().setLevel(currentLevel);
+        var levelNotificationUI = PrefabManager.instantiatePrefab(PrefabIndex.LevelNotification)
+                .getComponent(LevelNotificationUI.class);
+        levelNotificationUI.setLevel(currentLevel);
         BrickMapManager.getInstance().generateMap();
     }
 
