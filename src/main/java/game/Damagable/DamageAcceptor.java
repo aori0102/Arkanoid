@@ -52,7 +52,7 @@ public abstract class DamageAcceptor extends MonoBehaviour {
                     if (damageInfo != null) {
 
                         // Apply damage
-                        takeDamage(damageInfo); // Potentially kills object
+                        takeDamage(damageInfo, damageObject); // Potentially kills object
                         if (gameObject.isDestroyed()) {
                             return;
                         }
@@ -75,7 +75,7 @@ public abstract class DamageAcceptor extends MonoBehaviour {
 
     }
 
-    protected void takeDamage(DamageInfo damageInfo) {
+    protected void takeDamage(DamageInfo damageInfo, ICanDealDamage damageObject) {
         if (gameObject.isDestroyed()) {
             return;
         }

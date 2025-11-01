@@ -1,5 +1,6 @@
 package game.GameObject;
 
+import game.Brick.Brick;
 import game.Brick.BrickDamageAcceptor;
 import game.Damagable.DamageAcceptor;
 import game.Damagable.DamageInfo;
@@ -12,6 +13,8 @@ import game.Player.PlayerPaddle;
 import game.Effect.StatusEffect;
 import game.Voltraxis.Object.PowerCore.PowerCoreDamageAcceptor;
 import game.Voltraxis.VoltraxisDamageAcceptor;
+import org.Event.EventActionID;
+import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
@@ -36,6 +39,13 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
     private PlayerPaddle paddle;
     private StatusEffect currentStatusEffect = StatusEffect.None;
     private StatusEffect pendingEffect = StatusEffect.None;
+    private boolean hitPaddle = false;
+
+    private EventActionID ball_onAnyBallHitBrick_ID = null;
+
+    public static EventHandler<Void> onAnyBallHitBrick = new EventHandler<>(Ball.class);
+    public static EventHandler<Void> onAnyBallJustHitPaddle = new EventHandler<>(Ball.class);
+    public static EventHandler<Void> onAnyBallDestroyed = new EventHandler<>(Ball.class);
 
     public Ball(GameObject owner) {
         super(owner);
@@ -54,7 +64,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
         ballCollider.setExcludeLayer(Layer.Ball.getUnderlyingValue());
         ballCollider.setLocalCenter(new Vector2(0, 0));
         ballCollider.setLocalSize(new Vector2(20, 16));
-        ballCollider.setOnCollisionEnterCallback((data)->{
+        ballCollider.setOnCollisionEnterCallback((data) -> {
             handleAngleDirection(data);
             handleCollision(data);
         });
@@ -72,8 +82,69 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
 
     }
 
+    @Override
+    public void start() {
+        ball_onAnyBallHitBrick_ID = Ball.onAnyBallHitBrick
+                .addListener(this::ball_onAnyBallHitBrick);
+    }
+
+    @Override
     public void update() {
         handleMovement();
+    }
+
+    @Override
+    protected void onDestroy() {
+        //TODO: let ball manager listen to event
+        BallsManager.getInstance().removeBall(this);
+        Ball.onAnyBallHitBrick.removeListener(ball_onAnyBallHitBrick_ID);
+        onAnyBallDestroyed.invoke(this, null);
+    }
+
+    @Override
+    public DamageInfo getDamageInfo() {
+
+        var damageInfo = new DamageInfo();
+        if (Random.range(0.0, 1.0) < BALL_CRITICAL_CHANCE) {
+            damageInfo.amount = (int) (BALL_DAMAGE * (1.0 + BALL_CRITICAL_AMOUNT));
+            damageInfo.type = DamageType.Critical;
+        } else {
+            damageInfo.amount = BALL_DAMAGE;
+            damageInfo.type = DamageType.Normal;
+        }
+        return damageInfo;
+
+    }
+
+    @Override
+    public StatusEffect getEffect() {
+        return currentStatusEffect;
+    }
+
+    @Override
+    public void onDamaged() {
+    }
+
+    @Override
+    public boolean isDamageTarget(DamageAcceptor damageAcceptor) {
+        return damageAcceptor instanceof VoltraxisDamageAcceptor
+                || damageAcceptor instanceof PowerCoreDamageAcceptor
+                || damageAcceptor instanceof BrickDamageAcceptor;
+    }
+
+    public boolean isHitPaddle() {
+        return hitPaddle;
+    }
+
+    /**
+     * Called when {@link Ball#onAnyBallHitBrick} is invoked.<br><br>
+     * This function resets {@link #hitPaddle} when any other ball hits a brick.
+     *
+     * @param sender Event caller {@link Ball}.
+     * @param e      Empty event argument.
+     */
+    private void ball_onAnyBallHitBrick(Object sender, Void e) {
+        hitPaddle = false;
     }
 
     /**
@@ -96,6 +167,13 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
             var border = collisionData.otherCollider.getComponent(Border.class);
             if (border != null && border.getBorderType() == BorderType.BorderBottom) {
                 GameObjectManager.destroy(gameObject);
+            }
+        } else if (isCollidedWith(collisionData, Brick.class)) {
+            onAnyBallHitBrick.invoke(this, null);
+        } else if (isCollidedWith(collisionData, PlayerPaddle.class)) {
+            if (!hitPaddle) {
+                hitPaddle = true;
+                onAnyBallJustHitPaddle.invoke(this, null);
             }
         }
     }
@@ -186,8 +264,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
      * @return true if the object matches with the desired type.
      */
     private boolean isCollidedWith(CollisionData collisionData, Class<?> type) {
-        GameObject collidedObject = collisionData.otherCollider.getGameObject();
-        return collidedObject.getComponent(type) != null;
+        return collisionData.otherCollider.getComponent(type) != null;
     }
 
     public void changeBallVisual() {
@@ -218,42 +295,6 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
 
     public StatusEffect getCurrentStatusEffect() {
         return currentStatusEffect;
-    }
-
-    @Override
-    protected void onDestroy() {
-        BallsManager.getInstance().removeBall(this);
-    }
-
-    @Override
-    public DamageInfo getDamageInfo() {
-
-        var damageInfo = new DamageInfo();
-        if (Random.range(0.0, 1.0) < BALL_CRITICAL_CHANCE) {
-            damageInfo.amount = (int) (BALL_DAMAGE * (1.0 + BALL_CRITICAL_AMOUNT));
-            damageInfo.type = DamageType.Critical;
-        } else {
-            damageInfo.amount = BALL_DAMAGE;
-            damageInfo.type = DamageType.Normal;
-        }
-        return damageInfo;
-
-    }
-
-    @Override
-    public StatusEffect getEffect() {
-        return currentStatusEffect;
-    }
-
-    @Override
-    public void onDamaged() {
-    }
-
-    @Override
-    public boolean isDamageTarget(DamageAcceptor damageAcceptor) {
-        return damageAcceptor instanceof VoltraxisDamageAcceptor
-                || damageAcceptor instanceof PowerCoreDamageAcceptor
-                || damageAcceptor instanceof BrickDamageAcceptor;
     }
 
 }

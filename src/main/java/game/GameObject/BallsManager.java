@@ -2,6 +2,7 @@ package game.GameObject;
 
 import game.Player.Player;
 import game.Effect.StatusEffect;
+import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
@@ -22,6 +23,8 @@ public class BallsManager extends MonoBehaviour {
     public int index = 1;
     private StatusEffect currentEffect = StatusEffect.None;
 
+    public EventHandler<Void> onBallCountChanged = new EventHandler<>(BallsManager.class);
+
     /**
      * Create this MonoBehaviour.
      *
@@ -32,19 +35,20 @@ public class BallsManager extends MonoBehaviour {
         instance = this;
     }
 
-    public void addBall(Ball ball){
+    public void addBall(Ball ball) {
         ballSet.add(ball);
+        onBallCountChanged.invoke(this, null);
     }
 
-    public void removeBall(Ball ball){
+    public void removeBall(Ball ball) {
         ballSet.remove(ball);
-
-        if (ballSet.isEmpty()){
+        onBallCountChanged.invoke(this, null);
+        if (ballSet.isEmpty()) {
             spawnInitialBall();
         }
     }
 
-    public HashSet<Ball> getBallSet(){
+    public HashSet<Ball> getBallSet() {
         return ballSet;
     }
 
@@ -77,6 +81,10 @@ public class BallsManager extends MonoBehaviour {
         Player.getInstance().getPlayerPaddle().isFired = false;
 
         ballSet.add(ball);
+    }
+
+    public int getBallCount() {
+        return ballSet.size();
     }
 
     public StatusEffect getCurrentEffect() {

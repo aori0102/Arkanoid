@@ -23,11 +23,11 @@ public final class ScoreManagerPrefab {
 
         var scoreManager = GameObjectManager.instantiate("ScoreManager")
                 .addComponent(ScoreManager.class);
-        instantiateScoreboard().setParent(scoreManager.getGameObject());
+        instantiateScoreUI().setParent(scoreManager.getGameObject());
 
     }
 
-    private static GameObject instantiateScoreboard() {
+    private static GameObject instantiateScoreUI() {
 
         var scoreUI = GameObjectManager.instantiate("Scoreboard")
                 .addComponent(ScoreUI.class);
@@ -68,8 +68,22 @@ public final class ScoreManagerPrefab {
         levelText.getGameObject().setParent(scoreUI.getGameObject());
         levelText.getTransform().setGlobalPosition(new Vector2(1075.0, 32.0));
 
+        // Combo text
+        var comboText = GameObjectManager.instantiate("ComboText")
+                .addComponent(TextUI.class);
+        comboText.setFont(FontDataIndex.Jersey_25);
+        comboText.setFontSize(SCORE_TEXT_SIZE);
+        comboText.setTextColor(TEXT_COLOR);
+        comboText.setText("x0");
+        comboText.setHorizontalAlignment(TextHorizontalAlignment.Center);
+        comboText.setVerticalAlignment(TextVerticalAlignment.Middle);
+        comboText.setRenderLayer(RenderLayer.UI);
+        comboText.getGameObject().setParent(scoreUI.getGameObject());
+        comboText.getTransform().setGlobalPosition(new Vector2(1075.0, 348.0));
+
         // Link component to score manager
         scoreUI.linkScoreText(scoreText);
+        scoreUI.linkComboText(comboText);
 
         return scoreUI.getGameObject();
 

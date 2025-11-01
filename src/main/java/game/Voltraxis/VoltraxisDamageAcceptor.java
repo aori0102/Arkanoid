@@ -2,6 +2,7 @@ package game.Voltraxis;
 
 import game.Damagable.DamageAcceptor;
 import game.Damagable.DamageInfo;
+import game.Damagable.ICanDealDamage;
 import game.Effect.StatusEffect;
 import org.GameObject.GameObject;
 
@@ -17,8 +18,8 @@ public final class VoltraxisDamageAcceptor extends DamageAcceptor {
     }
 
     @Override
-    protected void takeDamage(DamageInfo damageInfo) {
-        super.takeDamage(damageInfo);
+    protected void takeDamage(DamageInfo damageInfo, ICanDealDamage damageObject) {
+        super.takeDamage(damageInfo, damageObject);
         var voltraxisStatManager = Voltraxis.getInstance().getVoltraxisStatManager();
         int finalDamage = (int) (damageInfo.amount * ((double) voltraxisStatManager.getDefence() / (voltraxisStatManager.getDefence() + VoltraxisData.DEFENSE_STRENGTH_SCALE)));
         Voltraxis.getInstance().getVoltraxisHealth().damage(finalDamage);

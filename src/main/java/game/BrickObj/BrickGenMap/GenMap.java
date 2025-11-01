@@ -53,7 +53,7 @@ public final class GenMap {
         for (int row = 0; row < rows; row++) {
             List<BrickType> rowList = new ArrayList<>();
             for (int col = 0; col < cols; col++) {
-                rowList.add(BrickType.Steel);
+                rowList.add(BrickType.Normal);
             }
             result.add(rowList);
         }

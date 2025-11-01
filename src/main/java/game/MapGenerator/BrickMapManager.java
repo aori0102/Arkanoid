@@ -5,12 +5,12 @@ import game.Brick.BrickPrefab;
 import game.Brick.BrickType;
 import game.BrickObj.BrickGenMap.GenMap;
 import game.PowerUp.Index.PowerUpManager;
+import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
-import utils.Random;
 import utils.Vector2;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public final class BrickMapManager extends MonoBehaviour {
 
     public static final int ROW_COUNT = 10;
     public static final int COLUMN_COUNT = 10;
-    private static final Vector2 BRICK_MAP_ANCHOR = new Vector2(300.0, 100.0);
+    private static final Vector2 BRICK_MAP_ANCHOR = new Vector2(300.0, 5.0);
     private static final Vector2 BRICK_OFFSET = new Vector2(68.0, 36.0);
 
     private record Cell(int row, int column) {
@@ -34,8 +34,9 @@ public final class BrickMapManager extends MonoBehaviour {
     private final List<List<Brick>> brickGrid = new ArrayList<>();
     private final HashMap<Brick, Cell> brickCoordinateMap = new HashMap<>();
 
+    private EventActionID brick_onAnyBrickDestroyed_ID = null;
+
     public EventHandler<Void> onMapCleared = new EventHandler<>(BrickMapManager.class);
-    public EventHandler<BrickType> onBrickDestroyed = new EventHandler<>(BrickMapManager.class);
 
     /**
      * Create this MonoBehaviour.
@@ -60,6 +61,18 @@ public final class BrickMapManager extends MonoBehaviour {
 
     }
 
+    @Override
+    public void start() {
+        brick_onAnyBrickDestroyed_ID = Brick.onAnyBrickDestroyed.addListener(
+                this::brick_onAnyBrickDestroyed
+        );
+    }
+
+    @Override
+    protected void onDestroy() {
+        Brick.onAnyBrickDestroyed.removeListener(brick_onAnyBrickDestroyed_ID);
+    }
+
     public void generateMap() {
 
         clearMap();
@@ -77,7 +90,6 @@ public final class BrickMapManager extends MonoBehaviour {
                 brick.getTransform().setGlobalPosition(position);
                 brickGrid.get(row).set(column, brick);
                 brickCoordinateMap.put(brick, cell);
-                brick.onBrickDestroyed.addListener(this::brick_onBrickDestroyed);
 
             }
 
@@ -90,17 +102,15 @@ public final class BrickMapManager extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link Brick#onBrickDestroyed} is invoked.<br><br>
+     * Called when {@link Brick#onAnyBrickDestroyed} is invoked.<br><br>
      * This function clears the brick data inside the grid.
      */
-    private void brick_onBrickDestroyed(Object sender, Brick.OnBrickDestroyedEventArgs e) {
+    private void brick_onAnyBrickDestroyed(Object sender, Brick.OnBrickDestroyedEventArgs e) {
 
         if (sender instanceof Brick brick) {
             var cell = brickCoordinateMap.remove(brick);
             brickGrid.get(cell.row).set(cell.column, null);
-            brick.onBrickDestroyed.removeAllListeners();
             PowerUpManager.getInstance().spawnPowerUp(e.brickPosition);
-            onBrickDestroyed.invoke(this, brick.getBrickType());
             if (brickCoordinateMap.isEmpty()) {
                 onMapCleared.invoke(this, null);
             }

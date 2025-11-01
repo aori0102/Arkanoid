@@ -29,11 +29,13 @@ public class Brick extends MonoBehaviour {
     private int damageMultiplier = 1;
     private BrickDamageAcceptor brickDamageAcceptor = null;
 
-    public EventHandler<OnBrickDestroyedEventArgs> onBrickDestroyed = new EventHandler<>(Brick.class);
     private Time.CoroutineID burnCoroutineID = null;
+
+    public static EventHandler<OnBrickDestroyedEventArgs> onAnyBrickDestroyed = new EventHandler<>(Brick.class);
 
     public static class OnBrickDestroyedEventArgs {
         public Vector2 brickPosition;
+        public BrickType brickType;
     }
 
     public StatusEffect statusBrickEffect = StatusEffect.None;
@@ -58,7 +60,8 @@ public class Brick extends MonoBehaviour {
     protected void onDestroy() {
         var onBrickDestroyedEventArgs = new OnBrickDestroyedEventArgs();
         onBrickDestroyedEventArgs.brickPosition = getTransform().getGlobalPosition();
-        onBrickDestroyed.invoke(this, onBrickDestroyedEventArgs);
+        onBrickDestroyedEventArgs.brickType = brickType;
+        onAnyBrickDestroyed.invoke(this, onBrickDestroyedEventArgs);
 
         Time.removeCoroutine(burnCoroutineID);
     }
@@ -89,7 +92,7 @@ public class Brick extends MonoBehaviour {
         var damageInfo = new DamageInfo();
         damageInfo.type = DamageType.Burn;
         damageInfo.amount = 5;
-        brickDamageAcceptor.takeDamage(damageInfo);
+        brickDamageAcceptor.takeDamage(damageInfo, null);
         if (gameObject.isDestroyed()) {
             return;
         }

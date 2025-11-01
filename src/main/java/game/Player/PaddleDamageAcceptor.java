@@ -2,6 +2,7 @@ package game.Player;
 
 import game.Damagable.DamageAcceptor;
 import game.Damagable.DamageInfo;
+import game.Damagable.ICanDealDamage;
 import game.Effect.StatusEffect;
 import org.GameObject.GameObject;
 
@@ -17,8 +18,8 @@ public final class PaddleDamageAcceptor extends DamageAcceptor {
     }
 
     @Override
-    protected void takeDamage(DamageInfo damageInfo) {
-        super.takeDamage(damageInfo);
+    protected void takeDamage(DamageInfo damageInfo, ICanDealDamage damageObject) {
+        super.takeDamage(damageInfo, damageObject);
         Player.getInstance().getPlayerHealth().damage(damageInfo.amount);
     }
 
