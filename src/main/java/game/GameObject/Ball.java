@@ -35,7 +35,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
     private static final double BASE_BALL_SPEED = 500;
     private static final Vector2 BOUNCE_OFFSET = new Vector2(0.2, 0.2);
 
-    private Vector2 direction;
+    private Vector2 direction = Vector2.zero();
     private PlayerPaddle paddle;
     private StatusEffect currentStatusEffect = StatusEffect.None;
     private StatusEffect pendingEffect = StatusEffect.None;
@@ -65,7 +65,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
         ballCollider.setLocalCenter(new Vector2(0, 0));
         ballCollider.setLocalSize(new Vector2(20, 16));
         ballCollider.setOnCollisionEnterCallback((data) -> {
-            handleAngleDirection(data);
+            handleHitHandle(data);
             handleCollision(data);
         });
 
@@ -178,6 +178,20 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
         }
     }
 
+    private void handleHitHandle(CollisionData collisionData) {
+        direction = collisionData.hitNormal.normalize().multiply(2.0).add(direction.normalize());
+        var paddle = collisionData.otherCollider.getComponent(PlayerPaddle.class);
+        if (paddle != null) {
+            direction = direction.normalize().add(paddle.getMovementVector().normalize().multiply(0.2));
+        }
+        direction = direction.normalize();
+        if (Vector2.dot(direction, Vector2.left()) < 0.1) {
+            direction = direction.rotateBy(Random.range(-0.019, 0.078));
+        } else if (Vector2.dot(direction, Vector2.right()) < 0.1) {
+            direction = direction.rotateBy(Random.range(-0.078, 0.019));
+        }
+    }
+
     /**
      * Calculating the direction of the ball.<br>
      * The reflected direction is calculated by the formular : <br>
@@ -216,7 +230,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
         }
 
         if (isCollidedWith(collisionData, PlayerPaddle.class)) {
-            Vector2 paddleVel = paddle.movementVector;
+            Vector2 paddleVel = paddle.getMovementVector();
             if (!paddleVel.equals(Vector2.zero())) {
                 reflectDirection = reflectDirection.add(paddleVel.normalize().multiply(0.3)).normalize();
             }
