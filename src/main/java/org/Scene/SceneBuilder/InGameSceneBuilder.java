@@ -5,11 +5,10 @@ import game.GameManager.Score.ScoreManagerPrefab;
 import game.GameObject.BallsManager;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
+import game.GameObject.Shield;
 import game.MapGenerator.BrickMapManager;
 import game.Obstacle.Index.ObstacleManager;
 import game.Perks.Index.PerkManager;
-import game.Player.Player;
-import game.Player.PlayerPowerUpHandler;
 import game.Player.Prefab.PlayerPrefab;
 import game.PowerUp.Index.PowerUpManager;
 import game.UI.UIManager;
@@ -20,6 +19,7 @@ public final class InGameSceneBuilder extends SceneBuilder {
 
     @Override
     protected void build() {
+        var shield = GameObjectManager.instantiate("Shield").addComponent(Shield.class);
 
         GameObjectManager.instantiate("PerkManager").addComponent(PerkManager.class);
         GameObjectManager.instantiate("UIManager").addComponent(UIManager.class);
@@ -38,7 +38,6 @@ public final class InGameSceneBuilder extends SceneBuilder {
 
         var powerUpManager = GameObjectManager.instantiate("powerUpManager");
         powerUpManager.addComponent(PowerUpManager.class);
-        PowerUpManager.getInstance().linkPlayerPowerUp(Player.getInstance().getComponent(PlayerPowerUpHandler.class));
 
         //new VoltraxisPrefab().instantiatePrefab();
 

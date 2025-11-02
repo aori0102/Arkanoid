@@ -51,8 +51,12 @@ public abstract class DamageAcceptor extends MonoBehaviour {
                     var damageInfo = damageObject.getDamageInfo();
                     if (damageInfo != null) {
 
+                        // Apply onDamaged action
+                        damageObject.onDamaged();
+
                         // Apply damage
                         takeDamage(damageInfo); // Potentially kills object
+
                         if (gameObject.isDestroyed()) {
                             return;
                         }
@@ -69,7 +73,6 @@ public abstract class DamageAcceptor extends MonoBehaviour {
                     }
 
                 }
-                damageObject.onDamaged();
             }
         }
 

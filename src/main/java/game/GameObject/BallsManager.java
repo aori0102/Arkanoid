@@ -14,7 +14,7 @@ import java.util.HashSet;
 
 public class BallsManager extends MonoBehaviour {
 
-    // TODO: ball destroy after falling into the void
+    private static final int MAX_BALL_EXISTED = 30;
 
     private static BallsManager instance;
 
@@ -85,5 +85,9 @@ public class BallsManager extends MonoBehaviour {
 
     public static BallsManager getInstance() {
         return instance;
+    }
+
+    public int getMaxBallExisted() {
+        return MAX_BALL_EXISTED;
     }
 }

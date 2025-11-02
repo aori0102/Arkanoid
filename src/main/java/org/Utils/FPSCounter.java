@@ -14,7 +14,7 @@ public final class FPSCounter {
     public static void update() {
         fpsCount++;
         if (Time.getRealTime() - previousCheckedTick >= 1) {
-            System.out.println("FPS: " + fpsCount);
+            //System.out.println("FPS: " + fpsCount);
             fpsCount = 0;
             previousCheckedTick = Time.getRealTime();
         }

@@ -28,7 +28,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
 
     private static final double BALL_CRITICAL_CHANCE = 0.27;
     private static final double BALL_CRITICAL_AMOUNT = 0.59;
-    private static final int BALL_DAMAGE = 16;
+    private static final int BALL_DAMAGE = 100;
     private static final double BASE_BALL_SPEED = 500;
     private static final Vector2 BOUNCE_OFFSET = new Vector2(0.2, 0.2);
 
@@ -131,7 +131,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
 
         double dotCoefficient = Vector2.dot(dirNorm, normal);
 
-        boolean nearlyParallel = dotCoefficient == 1;
+        boolean nearlyParallel = Math.abs(dotCoefficient) == 1;
 
         if (nearlyParallel) {
             reflectDirection = reflectDirection.add(BOUNCE_OFFSET.multiply(0.3).normalize());
@@ -220,6 +220,14 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
         return currentStatusEffect;
     }
 
+    private void resetCurrentStatusEffect() {
+        if (currentStatusEffect != StatusEffect.None) {
+            System.out.println("This is called by Ball");
+            currentStatusEffect = StatusEffect.None;
+            changeBallVisual();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         BallsManager.getInstance().removeBall(this);
@@ -247,6 +255,8 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
 
     @Override
     public void onDamaged() {
+        System.out.println("Damaged");
+        resetCurrentStatusEffect();
     }
 
     @Override

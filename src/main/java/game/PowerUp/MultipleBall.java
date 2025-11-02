@@ -1,7 +1,6 @@
 package game.PowerUp;
 
 import game.GameObject.BallsManager;
-import game.Player.PlayerPowerUpHandler;
 import game.PowerUp.Index.PowerUp;
 import game.GameObject.Ball;
 import game.Player.PlayerPaddle;
@@ -18,7 +17,6 @@ import utils.Vector2;
  */
 public abstract class MultipleBall extends PowerUp {
 
-    protected PlayerPowerUpHandler playerPowerUpHandler;
     protected PlayerPaddle paddle;
 
     /**
@@ -57,14 +55,6 @@ public abstract class MultipleBall extends PowerUp {
         return ball.getComponent(Ball.class);
     }
 
-    /**
-     * Link the player power up
-     *
-     * @param playerPowerUpHandler : the linked playerPowerUpHandler
-     */
-    public void linkPlayerPowerUp(PlayerPowerUpHandler playerPowerUpHandler) {
-        this.playerPowerUpHandler = playerPowerUpHandler;
-    }
 
     /**
      * Link the paddle

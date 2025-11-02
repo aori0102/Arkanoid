@@ -27,9 +27,6 @@ public class FireBall extends PowerUp {
     }
 
     public void start() {
-        PowerUpManager.getInstance().onFireBall.addListener((sender, fireBall) -> {
-            handleOnFireBallRequested(fireBall);
-        });
     }
 
     private void handleOnFireBallRequested(StatusEffect statusEffect) {
@@ -38,7 +35,7 @@ public class FireBall extends PowerUp {
 
     @Override
     public void onApplied() {
-        PowerUpManager.getInstance().onFireBall.removeListener(fireBallEventActionID);
+        handleOnFireBallRequested(StatusEffect.Burn);
         GameObjectManager.destroy(gameObject);
     }
 }

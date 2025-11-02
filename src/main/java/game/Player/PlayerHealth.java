@@ -11,6 +11,7 @@ public class PlayerHealth extends MonoBehaviour {
 
     public static final int MAX_HEALTH = 100;
     public static final int MAX_LIVES = 3;
+    private static final int HEAL_AMOUNT = 20;
 
     private int lives = MAX_LIVES;
     private int health = MAX_HEALTH;
@@ -60,13 +61,13 @@ public class PlayerHealth extends MonoBehaviour {
         onHealthChanged.invoke(this, onPlayerHealthChangedEventArgs);
     }
 
-    public void heal(int amount) {
-        health += amount;
+    public void heal() {
+        health += HEAL_AMOUNT;
 
         if (health >= MAX_HEALTH) {
             health = MAX_HEALTH;
             var onPlayerHealthChangedEventArgs = new OnHealthChangedEventArgs();
-            onPlayerHealthChangedEventArgs.amount = +amount;
+            onPlayerHealthChangedEventArgs.amount = +HEAL_AMOUNT;
             onHealthChanged.invoke(this, onPlayerHealthChangedEventArgs);
         }
     }

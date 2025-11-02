@@ -21,6 +21,7 @@ public class ActionMap extends MonoBehaviour {
         Skill1,
         Skill2,
         Skill3,
+        Dash,
         None
     }
 
@@ -62,6 +63,7 @@ public class ActionMap extends MonoBehaviour {
         keyActionMap.put(KeyCode.DIGIT1, Action.Skill1);
         keyActionMap.put(KeyCode.DIGIT2, Action.Skill2);
         keyActionMap.put(KeyCode.DIGIT3, Action.Skill3);
+        keyActionMap.put(KeyCode.Q, Action.Dash);
         mouseActionMap.put(MouseButton.PRIMARY, Action.MousePressed);
 
     }

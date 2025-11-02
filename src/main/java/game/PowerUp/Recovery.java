@@ -22,15 +22,14 @@ public class Recovery extends PowerUp{
     }
 
     public void awake() {
-        recoveryEventActionID = PowerUpManager.getInstance().onRecovery.addListener(this ::handleOnRecoveryRequested);
     }
 
-    private void handleOnRecoveryRequested(Object o, int healAmount) {
-        Player.getInstance().getPlayerHealth().heal(healAmount);
+    private void handleOnRecoveryRequested() {
+        Player.getInstance().getPlayerHealth().heal();
     }
 
     @Override
     protected void onDestroy() {
-        PowerUpManager.getInstance().onRecovery.removeListener(recoveryEventActionID);
+        handleOnRecoveryRequested();
     }
 }

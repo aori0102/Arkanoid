@@ -17,7 +17,6 @@ public class DuplicateBallPrefab extends PowerUpPrefab {
         duplicateBall.getTransform().setGlobalPosition(position);
         duplicateBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
         duplicateBall.linkPaddle(playerPaddle);
-        duplicateBall.linkPlayerPowerUp(Player.getInstance().getPlayerPowerUpHandler());
 
         return duplicateBall;
     }

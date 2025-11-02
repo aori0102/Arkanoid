@@ -1,5 +1,6 @@
 package game.Player.PlayerSkills;
 
+import game.Brick.BrickDamageAcceptor;
 import game.Damagable.DamageAcceptor;
 import game.Damagable.DamageInfo;
 import game.Damagable.DamageType;
@@ -89,8 +90,9 @@ public class LaserBeam extends Skill implements ICanDealDamage {
 
     @Override
     public boolean isDamageTarget(DamageAcceptor damageAcceptor) {
-        return damageAcceptor instanceof PowerCoreDamageAcceptor
-                || damageAcceptor instanceof VoltraxisDamageAcceptor;
+        return damageAcceptor instanceof VoltraxisDamageAcceptor
+                || damageAcceptor instanceof PowerCoreDamageAcceptor
+                || damageAcceptor instanceof BrickDamageAcceptor;
     }
 
 }

@@ -11,7 +11,6 @@ import utils.Vector2;
  * <ul>
  *     <li>{@link Player}</li>
  *     <li>{@link PlayerSkillsHandler}</li>
- *     <li>{@link PlayerPowerUpHandler}</li>
  *     <li>{@link PlayerPaddle}</li>
  *     <li>{@link PlayerHealth}</li>
  * </ul>
@@ -24,7 +23,6 @@ public class PlayerPrefab implements IPlayerPrefab {
         var playerObject = GameObjectManager.instantiate("Player")
                 .addComponent(Player.class)
                 .addComponent(PlayerSkillsHandler.class)
-                .addComponent(PlayerPowerUpHandler.class)
                 .addComponent(PlayerHealth.class)
                 .getGameObject();
 
