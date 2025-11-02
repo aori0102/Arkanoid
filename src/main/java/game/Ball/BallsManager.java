@@ -1,4 +1,4 @@
-package game.GameObject;
+package game.Ball;
 
 import game.Player.Player;
 import game.Effect.StatusEffect;
@@ -7,6 +7,8 @@ import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Physics.BoxCollider;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
@@ -68,16 +70,9 @@ public class BallsManager extends MonoBehaviour {
     }
 
     public void spawnInitialBall() {
-        var ball = GameObjectManager.instantiate("ball").addComponent(Ball.class);
-        ball.addComponent(BoxCollider.class);
-        ball.getTransform().setGlobalPosition(new Vector2(584, 530));
-        ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
 
-        var ballVisual = GameObjectManager.instantiate("ballVisual");
-        ballVisual.setParent(ball.getGameObject());
-        ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
-        ballVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
-
+        var ball = PrefabManager.instantiatePrefab(PrefabIndex.Ball)
+                .getComponent(Ball.class);
         Player.getInstance().getPlayerPaddle().isFired = false;
 
         ballSet.add(ball);

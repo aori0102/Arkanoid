@@ -1,5 +1,7 @@
 package game.Player;
 
+import game.Ball.Ball;
+import game.Player.Paddle.PlayerPaddle;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpIndex;
 import game.Effect.StatusEffect;
@@ -21,19 +23,34 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
     private static final int HEAL_AMOUNT = 20;
 
     /**
-     * Upon called, all {@link game.GameObject.Ball} duplicate itself
+     * Create this MonoBehaviour.
+     *
+     * @param owner The owner of this component.
+     */
+    public PlayerPowerUpHandler(GameObject owner) {
+        super(owner);
+    }
+
+    @Override
+    public void start() {
+        Player.getInstance().getPlayerPaddle().onPowerUpConsumed
+                .addListener(this::paddle_onPowerUpConsumed);
+    }
+
+    /**
+     * Upon called, all {@link Ball} duplicate itself
      * by the multiple provided within the event argument.
      */
     public EventHandler<Integer> onDuplicateBallRequested = new EventHandler<>(PlayerPowerUpHandler.class);
 
     /**
-     * Upon called, all {@link game.GameObject.Ball} triplicate itself
+     * Upon called, all {@link Ball} triplicate itself
      * by the multiple provided within the event argument.
      */
     public EventHandler<Integer> onTriplicateBallRequested = new EventHandler<>(PlayerPowerUpHandler.class);
 
     /**
-     * Upon called, all {@link game.GameObject.Ball} turns into explosive
+     * Upon called, all {@link Ball} turns into explosive
      * with the constraints provided.
      */
     public EventHandler<OnBallToExplosiveEventArgs> onBallToExplosiveRequested = new EventHandler<>(PlayerPowerUpHandler.class);
@@ -75,15 +92,6 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
 
     public EventHandler<Integer> onRecoveryRequested = new EventHandler<>(PlayerPowerUpHandler.class);
 
-    /**
-     * Create this MonoBehaviour.
-     *
-     * @param owner The owner of this component.
-     */
-    public PlayerPowerUpHandler(GameObject owner) {
-        super(owner);
-    }
-
     private void apply(PowerUp powerUp) {
 
         switch (powerUp.getPowerUpIndex()) {
@@ -101,7 +109,7 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
                     .invoke(this, SHIELD_MAX_DURATION);
             case FireBall -> onFireBallRequested
                     .invoke(this, StatusEffect.Burn);
-            case Blizzard ->  onBlizzardBallRequested
+            case Blizzard -> onBlizzardBallRequested
                     .invoke(this, StatusEffect.FrostBite);
             case Recovery -> onRecoveryRequested
                     .invoke(this, HEAL_AMOUNT);
@@ -120,12 +128,6 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
     private void paddle_onPowerUpConsumed(Object sender, PowerUp e) {
         apply(e);
         e.onApplied();
-    }
-
-
-    @Override
-    public void awake() {
-        Player.getInstance().getPlayerPaddle().onPowerUpConsumed.addListener(this::paddle_onPowerUpConsumed);
     }
 
 }

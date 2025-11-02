@@ -1,10 +1,10 @@
 package game.Score;
 
 import game.Brick.Brick;
-import game.GameObject.Ball;
-import game.GameObject.BallsManager;
+import game.Ball.Ball;
+import game.Ball.BallsManager;
 import game.MapGenerator.BrickMapManager;
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;

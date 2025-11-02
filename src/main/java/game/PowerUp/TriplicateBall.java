@@ -1,13 +1,14 @@
 package game.PowerUp;
 
-import game.GameObject.BallsManager;
+import game.Ball.BallsManager;
 import game.PowerUp.Index.PowerUpIndex;
 import game.PowerUp.Index.PowerUpManager;
-import game.GameObject.Ball;
-import game.Player.PlayerPaddle;
+import game.Ball.Ball;
 import org.Event.EventActionID;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import utils.Vector2;
 
 import java.util.HashSet;
@@ -50,18 +51,22 @@ public class TriplicateBall extends MultipleBall {
     protected void handleOnMultipleRequest() {
         HashSet<Ball> ballHashSet = new HashSet<>(BallsManager.getInstance().getBallSet());
 
-        for(Ball ball : ballHashSet) {
+        for (Ball ball : ballHashSet) {
             Vector2 normalVector = new Vector2(-ball.getDirection().y, ball.getDirection().x).normalize();
             Vector2 firstDirection = ball.getDirection().add(normalVector).normalize();
             Vector2 secondDirection = ball.getDirection().add(normalVector.multiply(-1)).normalize();
 
-            var ball1 = spawnBall(ball.getTransform());
-            BallsManager.getInstance().addBall(ball1);
-            ball1.setDirection(firstDirection);
+            var firstBall = PrefabManager.instantiatePrefab(PrefabIndex.Ball)
+                    .getComponent(Ball.class);
+            firstBall.getTransform().setGlobalPosition(ball.getTransform().getGlobalPosition());
+            BallsManager.getInstance().addBall(firstBall);
+            firstBall.setDirection(firstDirection);
 
-            var ball2 = spawnBall(ball.getTransform());
-            BallsManager.getInstance().addBall(ball2);
-            ball2.setDirection(secondDirection);
+            var secondBall = PrefabManager.instantiatePrefab(PrefabIndex.Ball)
+                    .getComponent(Ball.class);
+            secondBall.getTransform().setGlobalPosition(ball.getTransform().getGlobalPosition());
+            BallsManager.getInstance().addBall(secondBall);
+            secondBall.setDirection(secondDirection);
         }
 
         // TODO : fix this shit too

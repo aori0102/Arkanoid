@@ -1,18 +1,11 @@
-package game.GameObject;
+package game.Ball;
 
 import game.Brick.Brick;
-import game.Brick.BrickDamageAcceptor;
-import game.Damagable.DamageAcceptor;
-import game.Damagable.DamageInfo;
-import game.Damagable.DamageType;
-import game.Damagable.ICanDealDamage;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import game.Player.Player;
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import game.Effect.StatusEffect;
-import game.Voltraxis.Object.PowerCore.PowerCoreDamageAcceptor;
-import game.Voltraxis.VoltraxisDamageAcceptor;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -27,16 +20,13 @@ import utils.Random;
 import utils.Vector2;
 import utils.Time;
 
-public class Ball extends MonoBehaviour implements ICanDealDamage {
+public class Ball extends MonoBehaviour {
 
-    private static final double BALL_CRITICAL_CHANCE = 0.27;
-    private static final double BALL_CRITICAL_AMOUNT = 0.59;
-    private static final int BALL_DAMAGE = 160;
     private static final double BASE_BALL_SPEED = 500;
     private static final Vector2 BOUNCE_OFFSET = new Vector2(0.2, 0.2);
 
     private Vector2 direction = Vector2.zero();
-    private PlayerPaddle paddle;
+    private PlayerPaddle playerPaddle;
     private StatusEffect currentStatusEffect = StatusEffect.None;
     private StatusEffect pendingEffect = StatusEffect.None;
     private boolean hitPaddle = false;
@@ -57,7 +47,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
      */
     @Override
     public void awake() {
-        paddle = Player.getInstance().getPlayerPaddle();
+        playerPaddle = Player.getInstance().getPlayerPaddle();
 
         // Assign collider specs and the function
         var ballCollider = getComponent(BoxCollider.class);
@@ -70,9 +60,9 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
         });
 
         // Add listener to paddle event
-        paddle.onMouseReleased.addListener((e, vector2) -> {
+        playerPaddle.onMouseReleased.addListener((e, vector2) -> {
             setDirection(vector2);
-            paddle.isFired = true;
+            playerPaddle.isFired = true;
         });
 
         if (pendingEffect != StatusEffect.None) {
@@ -101,37 +91,6 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
         onAnyBallDestroyed.invoke(this, null);
     }
 
-    @Override
-    public DamageInfo getDamageInfo() {
-
-        var damageInfo = new DamageInfo();
-        if (Random.range(0.0, 1.0) < BALL_CRITICAL_CHANCE) {
-            damageInfo.amount = (int) (BALL_DAMAGE * (1.0 + BALL_CRITICAL_AMOUNT));
-            damageInfo.type = DamageType.Critical;
-        } else {
-            damageInfo.amount = BALL_DAMAGE;
-            damageInfo.type = DamageType.Normal;
-        }
-        return damageInfo;
-
-    }
-
-    @Override
-    public StatusEffect getEffect() {
-        return currentStatusEffect;
-    }
-
-    @Override
-    public void onDamaged() {
-    }
-
-    @Override
-    public boolean isDamageTarget(DamageAcceptor damageAcceptor) {
-        return damageAcceptor instanceof VoltraxisDamageAcceptor
-                || damageAcceptor instanceof PowerCoreDamageAcceptor
-                || damageAcceptor instanceof BrickDamageAcceptor;
-    }
-
     public boolean isHitPaddle() {
         return hitPaddle;
     }
@@ -152,8 +111,8 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
      */
     public void handleMovement() {
         // Make the ball follow the paddle position if player haven't fired it
-        if (!paddle.isFired && direction == null) {
-            getTransform().setGlobalPosition(paddle.getTransform().getGlobalPosition());
+        if (!playerPaddle.isFired && direction == null) {
+            getTransform().setGlobalPosition(playerPaddle.getTransform().getGlobalPosition());
         }
         // Moving the ball
         else {
@@ -230,7 +189,7 @@ public class Ball extends MonoBehaviour implements ICanDealDamage {
         }
 
         if (isCollidedWith(collisionData, PlayerPaddle.class)) {
-            Vector2 paddleVel = paddle.getMovementVector();
+            Vector2 paddleVel = playerPaddle.getMovementVector();
             if (!paddleVel.equals(Vector2.zero())) {
                 reflectDirection = reflectDirection.add(paddleVel.normalize().multiply(0.3)).normalize();
             }

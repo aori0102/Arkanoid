@@ -1,7 +1,7 @@
 package game.PowerUp.Index.PowerUpPrefab;
 
 import game.Player.Player;
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import game.PowerUp.DuplicateBall;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpManager;

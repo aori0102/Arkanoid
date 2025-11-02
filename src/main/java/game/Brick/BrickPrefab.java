@@ -1,10 +1,13 @@
 package game.Brick;
 
+import game.Damagable.HealthChangeVisualizer;
 import game.Rank.ExperienceHolder;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Physics.BoxCollider;
 import org.Prefab.Prefab;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
@@ -18,9 +21,10 @@ public final class BrickPrefab extends Prefab {
 
         // Core object
         var brickObject = GameObjectManager.instantiate("Brick")
-                .addComponent(BrickDamageAcceptor.class)
+                .addComponent(BrickHealth.class)
                 .addComponent(Brick.class)
                 .addComponent(ExperienceHolder.class)
+                .addComponent(BrickStat.class)
                 .getGameObject();
 
         // Renderer
@@ -31,6 +35,12 @@ public final class BrickPrefab extends Prefab {
 
         // Collider
         brickObject.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
+
+        // Health visualizer
+        var healthVisualizer = PrefabManager.instantiatePrefab(PrefabIndex.HealthChange_VisualizeHandler)
+                .getComponent(HealthChangeVisualizer.class);
+        healthVisualizer.linkEntityHealth(brickObject.getComponent(BrickHealth.class));
+        healthVisualizer.getGameObject().setParent(brickObject);
 
         return brickObject;
 

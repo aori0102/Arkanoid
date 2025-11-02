@@ -2,7 +2,7 @@ package game.Obstacle.Index;
 
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;

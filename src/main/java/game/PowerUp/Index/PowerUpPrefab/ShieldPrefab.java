@@ -1,6 +1,6 @@
 package game.PowerUp.Index.PowerUpPrefab;
 
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.ShieldPowerUp;
 import org.GameObject.GameObjectManager;

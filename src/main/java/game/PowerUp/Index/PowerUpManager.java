@@ -1,9 +1,9 @@
 package game.PowerUp.Index;
 
 import game.Effect.StatusEffect;
-import game.GameObject.Ball;
+import game.Ball.Ball;
 import game.Player.Player;
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import game.Player.PlayerPowerUpHandler;
 import game.PowerUp.*;
 import org.Event.EventHandler;

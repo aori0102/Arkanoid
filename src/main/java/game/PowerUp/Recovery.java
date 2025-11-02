@@ -1,14 +1,14 @@
 package game.PowerUp;
 
+import game.Entity.EntityHealthAlterType;
 import game.Player.Player;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpIndex;
 import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventActionID;
 import org.GameObject.GameObject;
-import org.GameObject.GameObjectManager;
 
-public class Recovery extends PowerUp{
+public class Recovery extends PowerUp {
     private EventActionID recoveryEventActionID = null;
 
     /**
@@ -22,11 +22,12 @@ public class Recovery extends PowerUp{
     }
 
     public void awake() {
-        recoveryEventActionID = PowerUpManager.getInstance().onRecovery.addListener(this ::handleOnRecoveryRequested);
+        recoveryEventActionID = PowerUpManager.getInstance().onRecovery.addListener(this::handleOnRecoveryRequested);
     }
 
     private void handleOnRecoveryRequested(Object o, int healAmount) {
-        Player.getInstance().getPlayerHealth().heal(healAmount);
+        Player.getInstance().getPlayerPaddle().getPaddleHealth()
+                .alterHealth(EntityHealthAlterType.Regeneration, healAmount);
     }
 
     @Override

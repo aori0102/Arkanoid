@@ -1,20 +1,13 @@
 package org.Scene.SceneBuilder;
 
-import game.GameManager.GameManager;
-import game.Rank.RankManager;
-import game.GameObject.BallsManager;
+import game.Ball.BallsManager;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
-import game.MapGenerator.BrickMapManager;
 import game.Obstacle.Index.ObstacleManager;
-import game.Perks.Index.PerkManager;
 import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
-import game.Player.Prefab.PlayerPrefab;
 import game.PowerUp.Index.PowerUpManager;
-import game.UI.UIManager;
 import org.GameObject.GameObjectManager;
-import org.Prefab.Prefab;
 import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
 import utils.Vector2;

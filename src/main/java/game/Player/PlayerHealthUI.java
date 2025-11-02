@@ -1,6 +1,11 @@
 package game.Player;
 
+import game.Entity.EntityHealth;
+import game.Entity.EntityHealthAlterType;
+import game.Player.Paddle.PlayerPaddle;
+import game.Player.Paddle.PaddleHealth;
 import game.Player.Prefab.PlayerHealthBarPrefab;
+import org.Event.EventActionID;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.ImageAsset;
@@ -10,7 +15,7 @@ import utils.Time;
 
 /**
  * UI class to render health bar and lives based on information
- * from {@link PlayerHealth}.
+ * from {@link PlayerLives}.
  */
 public final class PlayerHealthUI extends MonoBehaviour {
 
@@ -19,7 +24,7 @@ public final class PlayerHealthUI extends MonoBehaviour {
     private double ratio = 1.0;
     private double targetRatio = 1.0;
     private SpriteRenderer fillRenderer = null;
-    private SpriteRenderer[] livesRendererArray = new SpriteRenderer[PlayerHealth.MAX_LIVES];
+    private SpriteRenderer[] livesRendererArray = new SpriteRenderer[PlayerData.MAX_LIVES];
 
     /**
      * Create this MonoBehaviour.
@@ -31,9 +36,11 @@ public final class PlayerHealthUI extends MonoBehaviour {
     }
 
     @Override
-    public void awake() {
-        Player.getInstance().getPlayerHealth().onHealthChanged.addListener(this::player_onHealthChanged);
-        Player.getInstance().getPlayerHealth().onLivesChanged.addListener(this::player_onLivesChanged);
+    public void start() {
+        Player.getInstance().getPlayerLives().onLivesChanged
+                .addListener(this::playerLives_onLivesChanged);
+        Player.getInstance().getPlayerPaddle().getPaddleHealth().onHealthChanged
+                .addListener(this::paddleHealth_onHealthChanged);
     }
 
     @Override
@@ -43,12 +50,12 @@ public final class PlayerHealthUI extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link PlayerHealth#onLivesChanged} is invoked.<br><br>
+     * Called when {@link PlayerLives#onLivesChanged} is invoked.<br><br>
      * This function updates the health UI as player lives change.
      */
-    private void player_onLivesChanged(Object sender, Void e) {
-        var lives = Player.getInstance().getPlayerHealth().getLives();
-        for (int i = 0; i < PlayerHealth.MAX_LIVES; i++) {
+    private void playerLives_onLivesChanged(Object sender, Void e) {
+        var lives = Player.getInstance().getPlayerLives().getLives();
+        for (int i = 0; i < PlayerData.MAX_LIVES; i++) {
             if (i < lives) {
                 livesRendererArray[i].setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_LifeRemain.getImage());
             } else {
@@ -59,11 +66,17 @@ public final class PlayerHealthUI extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link PlayerHealth#onHealthChanged} is invoked.<br><br>
-     * This function updates the health UI as player health changes.
+     * Called when {@link PaddleHealth#onHealthChanged} is invoked.<br><br>
+     * This function display the vignette for a split moment when the paddle takes damage.
+     *
+     * @param sender Event caller {@link PaddleHealth}.
+     * @param e      Empty event argument.
      */
-    private void player_onHealthChanged(Object sender, PlayerHealth.OnHealthChangedEventArgs e) {
-        targetRatio = (double) Player.getInstance().getPlayerHealth().getHealth() / PlayerHealth.MAX_HEALTH;
+    private void paddleHealth_onHealthChanged(Object sender, EntityHealth.OnHealthChangedEventArgs e) {
+        if (e.alterType == EntityHealthAlterType.PlayerTakeDamage) {
+            var currentHealth = Player.getInstance().getPlayerPaddle().getPaddleHealth().getHealth();
+            targetRatio = (double) currentHealth / PlayerData.MAX_HEALTH;
+        }
     }
 
     /**

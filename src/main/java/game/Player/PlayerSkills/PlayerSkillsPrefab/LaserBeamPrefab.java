@@ -1,7 +1,7 @@
 package game.Player.PlayerSkills.PlayerSkillsPrefab;
 
 import game.Player.Player;
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import game.Player.PlayerSkills.LaserBeam;
 import game.Player.PlayerSkills.Skill;
 import org.GameObject.GameObjectManager;

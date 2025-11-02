@@ -1,6 +1,7 @@
 package game.Player.Prefab;
 
 import game.Player.*;
+import game.Player.Paddle.PlayerPaddle;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Prefab.Prefab;
@@ -16,7 +17,7 @@ import utils.Vector2;
  *     <li>{@link PlayerSkillsHandler}</li>
  *     <li>{@link PlayerPowerUpHandler}</li>
  *     <li>{@link PlayerPaddle}</li>
- *     <li>{@link PlayerHealth}</li>
+ *     <li>{@link PlayerLives}</li>
  * </ul>
  */
 public class PlayerPrefab extends Prefab {
@@ -28,7 +29,7 @@ public class PlayerPrefab extends Prefab {
                 .addComponent(Player.class)
                 .addComponent(PlayerSkillsHandler.class)
                 .addComponent(PlayerPowerUpHandler.class)
-                .addComponent(PlayerHealth.class)
+                .addComponent(PlayerLives.class)
                 .getGameObject();
 
         var player = playerObject.getComponent(Player.class);
@@ -39,8 +40,6 @@ public class PlayerPrefab extends Prefab {
 
         // Health loss vignette
         var healthLossVignetteObject = PrefabManager.instantiatePrefab(PrefabIndex.Player_HealthLossVignette);
-        var healthLossVignette = healthLossVignetteObject.getComponent(PlayerHealthLossVignette.class);
-        healthLossVignette.linkPlayer(player);
         healthLossVignetteObject.setParent(playerObject);
 
         //Player paddle

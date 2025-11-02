@@ -1,13 +1,17 @@
 package game.Player.Prefab;
 
+import game.Damagable.HealthChangeVisualizer;
 import game.GameObject.Arrow;
-import game.Player.PaddleDamageAcceptor;
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PaddleHealth;
+import game.Player.Paddle.PaddleStat;
+import game.Player.Paddle.PlayerPaddle;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Prefab.Prefab;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
@@ -18,10 +22,11 @@ public class PaddlePrefab extends Prefab {
 
         // Main object
         var paddle = GameObjectManager.instantiate("Paddle");
-        paddle.getTransform().setGlobalPosition(new Vector2(300,700));
+        paddle.getTransform().setGlobalPosition(new Vector2(300, 700));
         paddle.addComponent(PlayerPaddle.class)
-                .addComponent(BoxCollider.class)
-                .addComponent(PaddleDamageAcceptor.class);
+                .addComponent(PaddleHealth.class)
+                .addComponent(PaddleStat.class)
+                .addComponent(BoxCollider.class);
         paddle.setLayer(Layer.Player);
 
         // Collider
@@ -43,6 +48,12 @@ public class PaddlePrefab extends Prefab {
         arrow.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Arrow.getImage());
         arrow.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
         paddle.getComponent(PlayerPaddle.class).linkArrow(arrow.getComponent(Arrow.class));
+
+        // Health change visualizer
+        var healthChangeVisualizer = PrefabManager.instantiatePrefab(PrefabIndex.HealthChange_VisualizeHandler)
+                .getComponent(HealthChangeVisualizer.class);
+        healthChangeVisualizer.getGameObject().setParent(paddle);
+        healthChangeVisualizer.linkEntityHealth(paddle.getComponent(PaddleHealth.class));
 
         return paddle;
 

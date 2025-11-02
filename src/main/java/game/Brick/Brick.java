@@ -1,12 +1,10 @@
 package game.Brick;
 
-import game.Damagable.DamageInfo;
-import game.Damagable.DamageType;
 import game.Effect.StatusEffect;
+import game.Entity.EntityHealthAlterType;
 import game.Rank.ExperienceHolder;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
-import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
 import org.Rendering.SpriteRenderer;
@@ -19,18 +17,19 @@ public class Brick extends MonoBehaviour {
     private static final double BURN_TIME = 3.0;
     private static final double FROSTBITE_TIME = 3.0;
     private static final int BURN_EXISTED_TICKS = 1;
+    private static final int BURN_DAMAGE = 5;
     private static final Vector2 BRICK_SIZE = new Vector2(64, 32);
     private static final int BASE_DAMAGE_MULTIPLIER = 1;
+    private static final int FROSTBITE_DAMAGE_MULTIPLIER = 2;
 
     private final SpriteRenderer spriteRenderer = addComponent(SpriteRenderer.class);
     private final ExperienceHolder experienceHolder = addComponent(ExperienceHolder.class);
+    private final BrickHealth brickHealth = addComponent(BrickHealth.class);
+    private final BrickStat brickStat = addComponent(BrickStat.class);
 
-    private int health = 100;
     private BrickType brickType = BrickType.Normal;
     private double burnStartTime = 0.0;
     private double frostStartTime = 0.0;
-    private int damageMultiplier = 1;
-    private BrickDamageAcceptor brickDamageAcceptor = null;
 
     private Time.CoroutineID burnCoroutineID = null;
 
@@ -68,19 +67,6 @@ public class Brick extends MonoBehaviour {
     }
 
     @Override
-    public void awake() {
-        brickDamageAcceptor = getComponent(BrickDamageAcceptor.class);
-    }
-
-    public void damage(int amount) {
-        health -= damageMultiplier * amount;
-
-        if (health <= 0) {
-            GameObjectManager.destroy(gameObject);
-        }
-    }
-
-    @Override
     public void update() {
         if (statusBrickEffect == StatusEffect.FrostBite) {
             if (Time.getTime() > frostStartTime + FROSTBITE_TIME) {
@@ -90,10 +76,7 @@ public class Brick extends MonoBehaviour {
     }
 
     private void takeBurnDamage() {
-        var damageInfo = new DamageInfo();
-        damageInfo.type = DamageType.Burn;
-        damageInfo.amount = 5;
-        brickDamageAcceptor.takeDamage(damageInfo, null);
+        brickHealth.alterHealth(EntityHealthAlterType.BurnDamage, BURN_DAMAGE);
         if (gameObject.isDestroyed()) {
             return;
         }
@@ -106,7 +89,6 @@ public class Brick extends MonoBehaviour {
 
     public void setBrickType(BrickType brickType) {
         this.brickType = brickType;
-        this.health = brickType.maxHealth;
         spriteRenderer.setImage(brickType.imageIndex.getImage());
         spriteRenderer.setSize(BrickPrefab.BRICK_SIZE);
         experienceHolder.setExp(brickType.exp);
@@ -125,7 +107,7 @@ public class Brick extends MonoBehaviour {
                 burnStartTime = Time.getTime();
             }
             case FrostBite -> {
-                damageMultiplier = 2;
+                brickStat.setDamageTakenMultiplier(FROSTBITE_DAMAGE_MULTIPLIER);
                 frostStartTime = Time.getTime();
             }
         }
@@ -151,7 +133,7 @@ public class Brick extends MonoBehaviour {
 
     public void resetStatusBrickEffect() {
         this.statusBrickEffect = StatusEffect.None;
-        damageMultiplier = BASE_DAMAGE_MULTIPLIER;
+        brickStat.setDamageTakenMultiplier(BASE_DAMAGE_MULTIPLIER);
         SpriteRenderer renderer = getComponent(SpriteRenderer.class);
         renderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
         renderer.setSize(BRICK_SIZE);

@@ -1,17 +1,9 @@
 package game.PowerUp;
 
-import game.GameObject.BallsManager;
 import game.Player.PlayerPowerUpHandler;
 import game.PowerUp.Index.PowerUp;
-import game.GameObject.Ball;
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import org.GameObject.GameObject;
-import org.GameObject.GameObjectManager;
-import org.GameObject.Transform;
-import org.Physics.BoxCollider;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
-import utils.Vector2;
 
 /**
  * Base class for all the multiple ball power up
@@ -19,7 +11,7 @@ import utils.Vector2;
 public abstract class MultipleBall extends PowerUp {
 
     protected PlayerPowerUpHandler playerPowerUpHandler;
-    protected PlayerPaddle paddle;
+    protected PlayerPaddle playerPaddle;
 
     /**
      * Create this MonoBehaviour.
@@ -37,27 +29,6 @@ public abstract class MultipleBall extends PowerUp {
     protected abstract void handleOnMultipleRequest();
 
     /**
-     * Spawning the ball
-     *
-     * @param spawnPos : the spawn position
-     * @return the spawned ball
-     */
-    protected Ball spawnBall(Transform spawnPos) {
-        var ball = GameObjectManager.instantiate(BallsManager.getInstance().ballNameBuilder());
-        ball.addComponent(Ball.class).setPendingEffect(BallsManager.getInstance().getCurrentEffect());
-        ball.addComponent(BoxCollider.class);
-        ball.getTransform().setGlobalPosition(spawnPos.getGlobalPosition());
-        ball.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
-
-        var ballVisual = GameObjectManager.instantiate(BallsManager.getInstance().ballVisualNameBuilder());
-        ballVisual.setParent(ball);
-        ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
-        ballVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
-
-        return ball.getComponent(Ball.class);
-    }
-
-    /**
      * Link the player power up
      *
      * @param playerPowerUpHandler : the linked playerPowerUpHandler
@@ -69,10 +40,10 @@ public abstract class MultipleBall extends PowerUp {
     /**
      * Link the paddle
      *
-     * @param paddle: the linked paddle
+     * @param playerPaddle: the linked paddle
      */
-    public void linkPaddle(PlayerPaddle paddle) {
-        this.paddle = paddle;
+    public void linkPaddle(PlayerPaddle playerPaddle) {
+        this.playerPaddle = playerPaddle;
     }
 
 }

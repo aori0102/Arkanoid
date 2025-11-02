@@ -1,6 +1,6 @@
 package game.PowerUp.Index;
 
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;

@@ -1,14 +1,20 @@
-package game.Player;
+package game.Player.Paddle;
 
+import game.Ball.Ball;
+import game.Entity.EntityHealthAlterType;
 import game.GameManager.GameManager;
 import game.GameManager.GameState;
 import game.GameObject.Arrow;
 import game.Obstacle.Index.ObstacleManager;
+import game.Player.Player;
+import game.Player.PlayerData;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Recovery;
 import javafx.scene.input.MouseButton;
+import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import org.Layer.Layer;
@@ -20,15 +26,15 @@ import utils.Vector2;
 import javafx.scene.input.MouseEvent;
 
 public class PlayerPaddle extends MonoBehaviour {
-    //The constant specs of the ball
+
+    // The constant specs of the ball
     private static final double DOT_LIMIT_ANGLE_RIGHT = 30;
     private static final double DOT_LIMIT_ANGLE_LEFT = 150;
     private static final double STUNNED_TIME = 3.6;
     private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0);
 
-    //Event
-    public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(PlayerPaddle.class);
-    public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(PlayerPaddle.class);
+    private final PaddleHealth paddleHealth = addComponent(PaddleHealth.class);
+    private final PaddleStat paddleStat = addComponent(PaddleStat.class);
 
     private Arrow arrow;
     private Vector2 fireDirection = new Vector2();
@@ -37,6 +43,12 @@ public class PlayerPaddle extends MonoBehaviour {
     private boolean canStartStunnedCounter = false;
     private boolean canReduceSpeed = true;
     private double stunnedCounter = 0;
+
+    // Event
+    public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(PlayerPaddle.class);
+    public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(PlayerPaddle.class);
+
+    private EventActionID ball_onAnyBallDestroyed_ID = null;
 
     public boolean isFired = false;
 
@@ -64,7 +76,7 @@ public class PlayerPaddle extends MonoBehaviour {
         Player.getInstance().getPlayerController().getActionMap().
                 onKeyHeld.addListener(this::handlePaddleMovement);
         Player.getInstance().getPlayerController().getActionMap().
-                onKeyReleased.addListener((_, action) ->{
+                onKeyReleased.addListener((_, action) -> {
                 });
         Player.getInstance().getPlayerController().getActionMap().
                 onMouseHeld.addListener(this::handleRayDirection);
@@ -73,12 +85,61 @@ public class PlayerPaddle extends MonoBehaviour {
     }
 
     @Override
+    public void start() {
+        paddleHealth.onPaddleHealthReachesZero
+                .addListener(this::playerPaddleHealth_onPaddleHealthReachesZero);
+        ball_onAnyBallDestroyed_ID = Ball.onAnyBallDestroyed
+                .addListener(this::ball_onAnyBallDestroyed);
+    }
+
+    @Override
     public void update() {
         handleCollisionWithObstacles();
     }
 
+    @Override
+    public void onDestroy() {
+        Ball.onAnyBallDestroyed
+                .removeListener(ball_onAnyBallDestroyed_ID);
+    }
+
+    /**
+     * Called when {@link Ball#onAnyBallDestroyed} is invoked.<br><br>
+     * This function decreases the player's health when a ball is destroyed.
+     *
+     * @param sender Event caller {@link Ball}.
+     * @param e      Empty event argument.
+     */
+    private void ball_onAnyBallDestroyed(Object sender, Void e) {
+        paddleHealth.alterHealth(EntityHealthAlterType.PlayerTakeDamage, PlayerData.HEALTH_LOST_ON_BALL_DESTROYED);
+    }
+
+    /**
+     * Called when {@link PaddleHealth#onPaddleHealthReachesZero} is invoked.<br><br>
+     * This function destroys the paddle when paddle's health reaches zero.
+     *
+     * @param sender Event caller {@link PaddleHealth}.
+     * @param e      Empty event argument.
+     */
+    private void playerPaddleHealth_onPaddleHealthReachesZero(Object sender, Void e) {
+        GameObjectManager.destroy(gameObject);
+    }
+
+    /**
+     * Get the paddle's current movement vector.
+     *
+     * @return The paddle's current movement vector.
+     */
     public Vector2 getMovementVector() {
         return movementVector;
+    }
+
+    public PaddleHealth getPaddleHealth() {
+        return paddleHealth;
+    }
+
+    public PaddleStat getPaddleStat() {
+        return paddleStat;
     }
 
     private void handlePaddleMovement(Object e, ActionMap.Action action) {
@@ -214,4 +275,5 @@ public class PlayerPaddle extends MonoBehaviour {
     public void linkArrow(Arrow arrow) {
         this.arrow = arrow;
     }
+
 }

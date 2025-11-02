@@ -1,13 +1,5 @@
 package game.Voltraxis.Object;
 
-import game.Damagable.DamageAcceptor;
-import game.Damagable.DamageInfo;
-import game.Damagable.DamageType;
-import game.Damagable.ICanDealDamage;
-import game.Effect.StatusEffect;
-import game.Player.PaddleDamageAcceptor;
-import game.Voltraxis.Voltraxis;
-import game.Voltraxis.VoltraxisData;
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
 import org.GameObject.GameObject;
@@ -16,7 +8,7 @@ import org.Rendering.SpriteRenderer;
 import utils.MathUtils;
 import utils.Time;
 
-public class UltimateLaser extends MonoBehaviour implements ICanDealDamage {
+public class UltimateLaser extends MonoBehaviour {
 
     private static final double LASER_APPEAR_RATE = 23.013;
 
@@ -44,28 +36,6 @@ public class UltimateLaser extends MonoBehaviour implements ICanDealDamage {
     public void update() {
         ratio = MathUtils.lerp(ratio, 1.0, Time.getDeltaTime() * LASER_APPEAR_RATE);
         renderer.setFillAmount(ratio);
-    }
-
-    @Override
-    public DamageInfo getDamageInfo() {
-        var damageInfo = new DamageInfo();
-        damageInfo.amount = (int) (VoltraxisData.ULTIMATE_LASER_DAMAGE_PROPORTION * Voltraxis.getInstance().getVoltraxisStatManager().getAttack());
-        damageInfo.type = DamageType.HitPlayer;
-        return damageInfo;
-    }
-
-    @Override
-    public StatusEffect getEffect() {
-        return null;
-    }
-
-    @Override
-    public void onDamaged() {
-    }
-
-    @Override
-    public boolean isDamageTarget(DamageAcceptor damageAcceptor) {
-        return damageAcceptor instanceof PaddleDamageAcceptor;
     }
 
 }

@@ -19,7 +19,7 @@ public class EventHandler<T> {
     private final HashMap<EventActionID, BiConsumer<Object, T>> listeners = new HashMap<>();
 
     public EventHandler(Class<?> callerClass) {
-        if(callerClass == null) {
+        if (callerClass == null) {
             throw new IllegalArgumentException("callerClass cannot be null");
         }
         this.callerClass = callerClass;
@@ -59,11 +59,22 @@ public class EventHandler<T> {
      * @param argument : the data we want to pass into the action.
      */
     public void invoke(Object sender, T argument) {
+        
+        if (sender != null) {
 
-        if (sender != null && !callerClass.isInstance(sender)) {
-            throw new IllegalArgumentException(
-                    "This event can only be called within " + callerClass.getName() + "."
-            );
+            if (sender instanceof Class<?> clazz) {
+                if (!callerClass.isAssignableFrom(clazz)) {
+                    throw new IllegalArgumentException(
+                            "Static event call sender must inherit from " + callerClass.getName()
+                    );
+                }
+            } else {
+                if (!callerClass.isInstance(sender)) {
+                    throw new IllegalArgumentException(
+                            "This event can only be called within " + callerClass.getName()
+                    );
+                }
+            }
         }
 
         if (!listeners.isEmpty()) {

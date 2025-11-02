@@ -29,7 +29,6 @@ public final class PowerCorePrefab implements IVoltraxisPrefab {
         var powerCoreObject = GameObjectManager.instantiate("PowerCore")
                 .addComponent(PowerCore.class)
                 .addComponent(PowerCoreHealth.class)
-                .addComponent(PowerCoreDamageAcceptor.class)
                 .getGameObject();
 
         // Collider

@@ -1,6 +1,9 @@
 package org.Prefab;
 
+import game.Ball.BallPrefab;
 import game.Brick.BrickPrefab;
+import game.Damagable.HealthChangePopUpUIPrefab;
+import game.Damagable.HealthChangeVisualizerPrefab;
 import game.GameManager.GameManagerPrefab;
 import game.GameManager.LevelUIPrefab;
 import game.MapGenerator.BrickMapManagerPrefab;
@@ -39,10 +42,20 @@ public enum PrefabIndex {
     Manager_PerkManager(new PerkManagerPrefab()),
     Manager_UIManager(new UIManagerPrefab()),
 
+    /// Health change visualization
+    HealthChange_PopUp(new HealthChangePopUpUIPrefab()),
+    HealthChange_VisualizeHandler(new HealthChangeVisualizerPrefab()),
+
+    /// Ball
+    Ball(new BallPrefab()),
+
     /// Player
     Player(new PlayerPrefab()),
+
     Player_Paddle(new PaddlePrefab()),
+
     Player_HealthBar(new PlayerHealthBarPrefab()),
+
     Player_HealthLossVignette(new PlayerHealthLossVignettePrefab()),
 
     None(null);

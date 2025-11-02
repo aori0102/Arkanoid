@@ -1,9 +1,8 @@
 package game.PowerUp.Index.PowerUpPrefab;
 
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Recovery;
-import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import utils.Vector2;
 

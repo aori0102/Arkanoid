@@ -1,6 +1,6 @@
 package game.PowerUp.Index.PowerUpPrefab;
 
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import game.PowerUp.BlizzardBall;
 import game.PowerUp.Index.PowerUp;
 import org.GameObject.GameObjectManager;

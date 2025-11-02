@@ -1,6 +1,6 @@
 package game.BrickObj;
 
-import game.GameObject.Ball;
+import game.Ball.Ball;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;

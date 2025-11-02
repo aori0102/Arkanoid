@@ -2,7 +2,7 @@ package game.Obstacle.Index;
 
 
 import game.Player.Player;
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
@@ -54,7 +54,7 @@ public class ObstacleManager extends MonoBehaviour {
     private static ObstacleManager instance;
 
     private double timeSinceLastSpawn = 0;
-    private PlayerPaddle paddle;
+    private PlayerPaddle playerPaddle;
 
     private final HashSet<Obstacle> obstacleSet = new HashSet<>();
 
@@ -65,7 +65,7 @@ public class ObstacleManager extends MonoBehaviour {
 
     @Override
     public void awake() {
-        paddle = Player.getInstance().getPlayerPaddle();
+        playerPaddle = Player.getInstance().getPlayerPaddle();
     }
 
     public ObstacleManager(GameObject gameObjectManager) {
@@ -203,7 +203,7 @@ public class ObstacleManager extends MonoBehaviour {
      * @return {@code true} if the pos is too close to the paddle
      */
     private boolean isTooCloseToPaddle(Vector2 position) {
-        Vector2 paddlePosition = paddle.getTransform().getGlobalPosition();
+        Vector2 paddlePosition = playerPaddle.getTransform().getGlobalPosition();
         return Vector2.distance(position, paddlePosition) < SAFE_RADIUS_FROM_PADDLE;
     }
 

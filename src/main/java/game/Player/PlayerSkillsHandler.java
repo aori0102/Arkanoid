@@ -1,5 +1,6 @@
 package game.Player;
 
+import game.Player.Paddle.PlayerPaddle;
 import game.Player.PlayerSkills.LaserBeam;
 import game.Player.PlayerSkills.Skill;
 import game.Player.PlayerSkills.SkillPrefabGenerator;

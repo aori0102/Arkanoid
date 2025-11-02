@@ -17,6 +17,7 @@ public class GameObject {
 
     private static final String DEFAULT_NAME = "GameObject";
 
+    private final HashSet<Class<? extends MonoBehaviour>> registeredComponentSet = new HashSet<>();
     private final Queue<MonoBehaviour> preAwakeMonoBehaviourQueue = new LinkedList<>();
     private final Queue<MonoBehaviour> preStartMonoBehaviourQueue = new LinkedList<>();
     private final Queue<GameObject> childRemovalQueue = new LinkedList<>();
@@ -360,6 +361,7 @@ public class GameObject {
         monoBehaviourSet.clear();
         preStartMonoBehaviourQueue.clear();
         preAwakeMonoBehaviourQueue.clear();
+        registeredComponentSet.clear();
 
         // Clear children
         for (var child : childSet) {
@@ -436,13 +438,15 @@ public class GameObject {
 
         validateObjectLife();
 
-        var comp = getComponent(type);
-        if (comp == null) {
+        if (!registeredComponentSet.contains(type)) {
 
+            registeredComponentSet.add(type);
             try {
-                comp = type.getDeclaredConstructor(GameObject.class).newInstance(this);
+                var comp = type.getDeclaredConstructor(GameObject.class).newInstance(this);
                 preAwakeMonoBehaviourQueue.offer(comp);
                 monoBehaviourSet.add(comp);
+
+                return comp;
 
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException("No such method: " + e.getMessage());
@@ -461,9 +465,9 @@ public class GameObject {
             } catch (Exception e) {
                 throw new RuntimeException("Cannot create component of type " + type, e);
             }
+        } else {
+            return getComponent(type);
         }
-
-        return comp;
 
     }
 

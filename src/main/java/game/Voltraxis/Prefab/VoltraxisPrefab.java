@@ -30,7 +30,6 @@ public final class VoltraxisPrefab implements IVoltraxisPrefab {
                 .addComponent(VoltraxisStatManager.class)
                 .addComponent(VoltraxisPowerCoreManager.class)
                 .addComponent(BoxCollider.class)
-                .addComponent(VoltraxisDamageAcceptor.class)
                 .addComponent(VoltraxisHealth.class)
                 .getGameObject();
         voltraxis.setParent(bossObject);

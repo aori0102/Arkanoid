@@ -1,10 +1,10 @@
 package game.Player;
 
+import game.Player.Paddle.PlayerPaddle;
 import game.PowerUp.Index.PowerUp;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
-import utils.Time;
 
 /**
  * Central logic for player. Control {@link PowerUp}'s effects
@@ -16,16 +16,15 @@ public class Player extends MonoBehaviour {
     private static Player instance = null;
 
     /// Attributes
-    private static final int ATTACK = 80;
     private static final int BASE_SPEED = 1000;
     private int currentSpeed;
+    private PlayerPaddle playerPaddle = null;
 
     /// Player core components
-    private final PlayerPowerUpHandler playerPowerUpHandler;
-    private final PlayerHealth playerHealth;
-    private final PlayerSkillsHandler playerSkillsHandler;
-    private PlayerPaddle playerPaddle;
-    private PlayerController playerController = null;
+    private final PlayerPowerUpHandler playerPowerUpHandler = addComponent(PlayerPowerUpHandler.class);
+    private final PlayerLives playerLives = addComponent(PlayerLives.class);
+    private final PlayerSkillsHandler playerSkillsHandler = addComponent(PlayerSkillsHandler.class);
+    private final PlayerController playerController = addComponent(PlayerController.class);
 
     /**
      * Create this MonoBehaviour.
@@ -42,30 +41,10 @@ public class Player extends MonoBehaviour {
         instance = this;
         currentSpeed = BASE_SPEED;
 
-        playerPowerUpHandler = addComponent(PlayerPowerUpHandler.class);
-        playerSkillsHandler = addComponent(PlayerSkillsHandler.class);
-        playerHealth = addComponent(PlayerHealth.class);
-        playerController = addComponent(PlayerController.class);
     }
 
-    public PlayerPowerUpHandler getPlayerPowerUpHandler() {
-        return playerPowerUpHandler;
-    }
-
-    public PlayerHealth getPlayerHealth() {
-        return playerHealth;
-    }
-
-    public PlayerSkillsHandler getPlayerSkillsHandler() {
-        return playerSkillsHandler;
-    }
-
-    public PlayerPaddle getPlayerPaddle() {
-        return playerPaddle;
-    }
-
-    public PlayerController getPlayerController() {
-        return playerController;
+    public static Player getInstance() {
+        return instance;
     }
 
     @Override
@@ -73,12 +52,35 @@ public class Player extends MonoBehaviour {
         instance = null;
     }
 
-    public static Player getInstance() {
-        return instance;
+    public PlayerPaddle getPlayerPaddle() {
+        return playerPaddle;
     }
 
-    public int getAttack() {
-        return ATTACK;
+    /**
+     * Called when {@link PlayerPaddle#onPaddleDestroyed} is invoked.<br><br>
+     * This function unlinks the current paddle when it's destroyed.
+     *
+     * @param sender Event caller {@link PlayerPaddle}.
+     * @param e      Empty event argument.
+     */
+    private void paddle_onPaddleDestroyed(Object sender, Void e) {
+        playerPaddle = null;
+    }
+
+    public PlayerPowerUpHandler getPlayerPowerUpHandler() {
+        return playerPowerUpHandler;
+    }
+
+    public PlayerLives getPlayerLives() {
+        return playerLives;
+    }
+
+    public PlayerSkillsHandler getPlayerSkillsHandler() {
+        return playerSkillsHandler;
+    }
+
+    public PlayerController getPlayerController() {
+        return playerController;
     }
 
     public int getBaseSpeed() {

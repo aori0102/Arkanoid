@@ -1,14 +1,12 @@
 package game.PowerUp.Index.PowerUpPrefab;
 
 import game.Player.Player;
-import game.Player.PlayerPaddle;
+import game.Player.Paddle.PlayerPaddle;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpManager;
 import game.PowerUp.TriplicateBall;
 import org.GameObject.GameObjectManager;
 import utils.Vector2;
-
-import java.awt.*;
 
 public class TriplicateBallPrefab extends PowerUpPrefab {
     @Override

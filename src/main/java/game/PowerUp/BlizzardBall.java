@@ -1,7 +1,7 @@
 package game.PowerUp;
 
 import game.Effect.StatusEffect;
-import game.GameObject.BallsManager;
+import game.Ball.BallsManager;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpIndex;
 import game.PowerUp.Index.PowerUpManager;
