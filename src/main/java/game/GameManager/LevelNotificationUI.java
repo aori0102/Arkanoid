@@ -15,13 +15,12 @@ import utils.Vector2;
 
 public final class LevelNotificationUI extends MonoBehaviour {
 
-    private static final double STARTING_RATIO = -0.5;
-    private static final double ENDING_RATIO = 1.9;
-    private static final double DURATION = 3.2;
     private static final String LEVEL_PREFIX = "Level ";
+    private static final String LEVEL_SUFFIX = " cleared!";
     private static final double LEVEL_TEXT_SIZE = 80.0;
 
-    private TextUI levelText = addComponent(TextUI.class);
+    private final TextUI levelText = addComponent(TextUI.class);
+
     private double startTick = 0.0;
 
     /**
@@ -43,21 +42,22 @@ public final class LevelNotificationUI extends MonoBehaviour {
     @Override
     public void awake() {
         startTick = Time.getTime();
+        Time.addCoroutine(() -> GameObjectManager.destroy(gameObject), Time.getTime() + GameManager.LEVEL_INTRODUCTION_TIME);
     }
 
     @Override
     public void update() {
-        var delta = (Time.getTime() - startTick) / DURATION + STARTING_RATIO;
-        var positionRatio = Math.pow(1.6 * delta - 0.8, 3.0) + 0.5;
-        if (delta > ENDING_RATIO) {
-            GameObjectManager.destroy(gameObject);
-        } else {
-            getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH * positionRatio, Main.STAGE_HEIGHT / 2.0));
-        }
+        var delta = (Time.getTime() - startTick) / GameManager.LEVEL_INTRODUCTION_TIME;
+        var positionRatio = Math.pow(1.92 * delta - 0.9, 3.0) + 0.5;
+        getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH * positionRatio, Main.STAGE_HEIGHT / 2.0));
     }
 
     public void setLevel(int level) {
-        levelText.setText(String.format("%s%d", LEVEL_PREFIX, level));
+        levelText.setText(LEVEL_PREFIX + level);
+    }
+
+    public void setLevelClear(int level) {
+        levelText.setText(LEVEL_PREFIX + level + LEVEL_SUFFIX);
     }
 
 }

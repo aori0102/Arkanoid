@@ -10,13 +10,35 @@ import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 import utils.Time;
 
+/**
+ * Class that manages every aspect of game levels, decides what to do when starting,
+ * continuing or losing.
+ */
 public class GameManager extends MonoBehaviour {
 
-    private static GameState gameState = GameState.MainMenu;
+    public static final double LEVEL_INTRODUCTION_TIME = 3.2;
+    public static final double LEVEL_CONCLUDING_TIME = 3.2;
+
+    /**
+     * <b>Read-only. Write via {@link #setGameState}.</b>
+     */
+    private GameState _gameState = GameState.IntroducingLevel;
+
+    /**
+     * Setter for read-only field {@link #_gameState}
+     *
+     * @param gameState The value to set.
+     */
+    private void setGameState(GameState gameState) {
+        this._gameState = gameState;
+    }
+
     private int currentLevel = 1;
     private boolean hasSave = false;
 
     private EventActionID brickMapManager_onMapCleared_ID = null;
+
+    private Time.CoroutineID enterPlaying_coroutineID = null;
 
     private static GameManager instance = null;
 
@@ -32,12 +54,14 @@ public class GameManager extends MonoBehaviour {
         }
     }
 
+    public static GameManager getInstance() {
+        return instance;
+    }
+
     @Override
     public void start() {
-        System.out.println("Starting GameManager");
         brickMapManager_onMapCleared_ID = BrickMapManager.getInstance().onMapCleared
                 .addListener(this::brickMapManager_onMapCleared);
-
         startNewGame();
     }
 
@@ -47,6 +71,11 @@ public class GameManager extends MonoBehaviour {
             BrickMapManager.getInstance().onMapCleared
                     .removeListener(brickMapManager_onMapCleared_ID);
         }
+        Time.removeCoroutine(enterPlaying_coroutineID);
+    }
+
+    public GameState getGameState() {
+        return _gameState;
     }
 
     /**
@@ -57,12 +86,7 @@ public class GameManager extends MonoBehaviour {
      * @param e      Empty event argument.
      */
     private void brickMapManager_onMapCleared(Object sender, Void e) {
-        System.out.println("brickMapManager_onMapCleared");
-        loadNextLevel();
-    }
-
-    public static GameManager getInstance() {
-        return instance;
+        concludeLevel();
     }
 
     public void startNewGame() {
@@ -75,7 +99,7 @@ public class GameManager extends MonoBehaviour {
             System.out.println("[GameManager] Continuing Game");
 
             loadNextLevel();
-            gameState = GameState.Playing;
+            setGameState(GameState.Playing);
         }
 
         System.out.println("[GameManager] No progress has been saved!");
@@ -94,13 +118,52 @@ public class GameManager extends MonoBehaviour {
         SceneManager.loadScene(SceneKey.Menu);
     }
 
+    /**
+     * Load the next level.
+     * <p>
+     * This function displays a level notification for the next level, building
+     * the level before allowing the player to play.
+     * </p>
+     */
     public void loadNextLevel() {
+
+        setGameState(GameState.IntroducingLevel);
         currentLevel++;
 
+        // Display level
         var levelNotificationUI = PrefabManager.instantiatePrefab(PrefabIndex.LevelNotification)
                 .getComponent(LevelNotificationUI.class);
         levelNotificationUI.setLevel(currentLevel);
+
+        // Build map
         BrickMapManager.getInstance().generateMap();
+
+        // Delay before allowing to play
+        enterPlaying_coroutineID
+                = Time.addCoroutine(this::enterPlaying, Time.getTime() + LEVEL_INTRODUCTION_TIME);
+
+    }
+
+    /**
+     * Handles when the level is completed.
+     */
+    public void concludeLevel() {
+
+        setGameState(GameState.ConcludingLevel);
+
+        // Display cleared
+        var levelNotificationUI = PrefabManager.instantiatePrefab(PrefabIndex.LevelNotification)
+                .getComponent(LevelNotificationUI.class);
+        levelNotificationUI.setLevelClear(currentLevel);
+
+        // Delay before loading new level
+        enterPlaying_coroutineID
+                = Time.addCoroutine(this::loadNextLevel, Time.getTime() + LEVEL_INTRODUCTION_TIME);
+
+    }
+
+    private void enterPlaying() {
+        setGameState(GameState.Playing);
     }
 
     public void gameOver() {

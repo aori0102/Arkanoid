@@ -1,8 +1,9 @@
 package game.GameManager;
 
 public enum GameState {
-    MainMenu,
+    IntroducingLevel,
     Playing,
+    ConcludingLevel,
     PerkSelection,
     GameOver,
 }

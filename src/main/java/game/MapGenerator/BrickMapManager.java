@@ -19,9 +19,9 @@ import java.util.List;
 
 public final class BrickMapManager extends MonoBehaviour {
 
-    public static final int ROW_COUNT = 10;
+    public static final int ROW_COUNT = 8;
     public static final int COLUMN_COUNT = 10;
-    private static final Vector2 BRICK_MAP_ANCHOR = new Vector2(300.0, 5.0);
+    private static final Vector2 BRICK_MAP_ANCHOR = new Vector2(300.0, 29.0);
     private static final Vector2 BRICK_OFFSET = new Vector2(68.0, 36.0);
 
     private record Cell(int row, int column) {

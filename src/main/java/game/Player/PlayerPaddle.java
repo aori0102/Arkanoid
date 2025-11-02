@@ -1,5 +1,7 @@
 package game.Player;
 
+import game.GameManager.GameManager;
+import game.GameManager.GameState;
 import game.GameObject.Arrow;
 import game.Obstacle.Index.ObstacleManager;
 import game.PowerUp.Index.PowerUp;
@@ -99,6 +101,9 @@ public class PlayerPaddle extends MonoBehaviour {
     }
 
     private void handleRayReleased(Object e, ActionMap.Action action) {
+        if (GameManager.getInstance().getGameState() != GameState.Playing) {
+            return;
+        }
         arrow.turnOff();
         if (isDirectionValid(fireDirection) && canInvoke) {
             onMouseReleased.invoke(this, fireDirection);
@@ -110,7 +115,7 @@ public class PlayerPaddle extends MonoBehaviour {
      * Handle the direction ray.
      */
     private void handleRayDirection(Object e, ActionMap.Action action) {
-        if (isFired) {
+        if (isFired || GameManager.getInstance().getGameState() != GameState.Playing) {
             return;
         }
 
