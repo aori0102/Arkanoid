@@ -13,6 +13,7 @@ public class GameManager extends MonoBehaviour {
     private static GameState gameState = GameState.MainMenu;
     private int currentLevel = 1;
     private boolean hasSave = false;
+    private boolean isBossFight = false;
 
     private static GameManager instance = null;
 
@@ -127,5 +128,13 @@ public class GameManager extends MonoBehaviour {
     private void brickManager_onLevelComplete() {
         System.out.println("[GameManager] Brick Manager onLevelComplete");
 
+    }
+
+    public boolean isGameOver() {
+        return gameState == GameState.GameOver;
+    }
+
+    public boolean isBossFight() {
+        return isBossFight;
     }
 }

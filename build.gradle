@@ -25,8 +25,9 @@ dependencies {
 
     implementation 'org.openjfx:javafx-controls:24.0.2'
     implementation 'org.openjfx:javafx-media:24.0.2'
+    // https://mvnrepository.com/artifact/uk.co.caprica/vlcj
+    implementation 'uk.co.caprica:vlcj:4.11.0'
 }
-
 test {
     useJUnitPlatform()
 }

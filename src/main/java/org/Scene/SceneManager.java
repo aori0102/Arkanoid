@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.Main;
 import org.Scene.SceneBuilder.SceneBuilderManager;
@@ -31,6 +32,7 @@ public class SceneManager {
     private static final HashMap<SceneKey, Scene> sceneMap = new HashMap<>();
     private static SceneKey currentSceneKey = SceneKey.Menu;
 
+    public static EventHandler<SceneKey> OnSceneChanged = new EventHandler<SceneKey>(SceneManager.class);
 
     public static void init(Stage stage) {
         mainStage = stage;
@@ -78,6 +80,9 @@ public class SceneManager {
             mainStage.setScene(sceneMap.get(sceneKey));
             currentSceneKey = sceneKey;
             SceneBuilderManager.buildScene(sceneKey);
+
+            System.out.println("[Scene Manager]Scene " + sceneMap.get(sceneKey) + " loaded!");
+            OnSceneChanged.invoke(SceneManager.class, currentSceneKey);
 
         } catch (Exception e) {
             System.err.println(SceneManager.class.getSimpleName() + " | Error while loading scene: " + e.getMessage());
