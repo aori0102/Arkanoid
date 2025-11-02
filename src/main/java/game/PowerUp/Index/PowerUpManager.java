@@ -1,7 +1,10 @@
 package game.PowerUp.Index;
 
+import game.GameObject.BallsManager;
 import game.Player.Player;
 import game.Player.PlayerPaddle;
+import game.PowerUp.DuplicateBall;
+import game.PowerUp.TriplicateBall;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import utils.Random;
@@ -45,6 +48,13 @@ public class PowerUpManager extends MonoBehaviour {
             var chosenKey = PowerUpPrefabGenerator.registeredPowerUps.get(
                     Random.range(0, PowerUpPrefabGenerator.registeredPowerUps.size())
             );
+
+            if (chosenKey.equals(DuplicateBall.class) || chosenKey.equals(TriplicateBall.class)) {
+                if (BallsManager.getInstance().getBallSet().size()
+                        < BallsManager.getInstance().getMaxBallExisted()) {
+                    return;
+                }
+            }
 
             PowerUp chosen = PowerUpPrefabGenerator.powerUpPrefabHashMap.get(chosenKey)
                     .generatePowerUp(position, playerPaddle);

@@ -23,6 +23,7 @@ public class PlayerPaddle extends MonoBehaviour {
     private static final double DOT_LIMIT_ANGLE_LEFT = 150;
     private static final double STUNNED_TIME = 3.6;
     private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0);
+    private static final int DASH_SPEED = 2500;
 
     //Event
     public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(PlayerPaddle.class);
@@ -39,6 +40,8 @@ public class PlayerPaddle extends MonoBehaviour {
     public boolean isFired = false;
 
     public Vector2 movementVector = new Vector2(0, 0);
+
+    private Time.CoroutineID dashCoroutineID = null;
 
     public PlayerPaddle(GameObject owner) {
         super(owner);

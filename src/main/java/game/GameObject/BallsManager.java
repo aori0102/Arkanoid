@@ -14,7 +14,7 @@ import java.util.HashSet;
 
 public class BallsManager extends MonoBehaviour {
 
-    private static final int MAX_BALL_EXISTED = 30;
+    private static final int MAX_BALL_EXISTED = 100;
 
     private static BallsManager instance;
 

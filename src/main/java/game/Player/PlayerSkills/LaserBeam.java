@@ -18,6 +18,8 @@ import org.Physics.CollisionData;
 import utils.Time;
 import utils.Vector2;
 
+import javax.swing.*;
+
 public class LaserBeam extends Skill implements ICanDealDamage {
 
     private static final double LASER_SPEED = 1000;
@@ -35,7 +37,9 @@ public class LaserBeam extends Skill implements ICanDealDamage {
 
     public void awake() {
         setSkillIndex(SkillIndex.LaserBeam);
-        assignColliderInfo();
+        getComponent(BoxCollider.class).setIncludeLayer(Layer.combineLayerMask(colliderLayers));
+        getComponent(BoxCollider.class).setOnCollisionEnterCallback(this::handleCollision);
+
     }
 
     public void update() {
@@ -52,16 +56,6 @@ public class LaserBeam extends Skill implements ICanDealDamage {
         if (border != null && border.getBorderType() == BorderType.BorderTop) {
             GameObjectManager.destroy(gameObject);
         }
-    }
-
-    @Override
-    public void assignColliderInfo() {
-        var collider = getComponent(BoxCollider.class);
-        collider.setIncludeLayer(Layer.combineLayerMask(colliderLayers));
-        collider.setLocalCenter(new Vector2(0, 0));
-        collider.setLocalSize(new Vector2(32, 256));
-
-        collider.setOnCollisionEnterCallback(this::handleCollision);
     }
 
     @Override

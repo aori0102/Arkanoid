@@ -1,6 +1,7 @@
 package game.Player;
 
 import game.Player.PlayerSkills.LaserBeam;
+import game.Player.PlayerSkills.PlayerSkillsPrefab.Dash;
 import game.Player.PlayerSkills.Skill;
 import game.Player.PlayerSkills.SkillPrefabGenerator;
 import org.GameObject.GameObject;
@@ -8,28 +9,15 @@ import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import utils.Time;
 
-import java.util.HashMap;
+import static game.Player.PlayerSkills.SkillPrefabGenerator.skillDataMap;
 
 public class PlayerSkillsHandler extends MonoBehaviour {
 
-    private final HashMap<Class<? extends Skill>, SkillData> skillDataMap = createSkillDataMap();
-
-    private class SkillData{
-        public int skillCharge;
-        public double skillCooldownTime;
-        public final int maxSkillCharge;
-        public final double baseSkillCooldown;
-
-        public SkillData(int skillCharge, double skillCooldownTime, int maxSkillCharge, double baseSkillCooldown) {
-            this.skillCharge = skillCharge;
-            this.skillCooldownTime = skillCooldownTime;
-            this.maxSkillCharge = maxSkillCharge;
-            this.baseSkillCooldown = baseSkillCooldown;
-        }
-
-    }
+    private static final int DASH_SPEED = 2500;
+    private static final double DASH_TIME = 0.2;
 
     private PlayerPaddle playerPaddle;
+    private Time.CoroutineID dashCoroutineID;
 
     /**
      * Create this MonoBehaviour.
@@ -55,6 +43,17 @@ public class PlayerSkillsHandler extends MonoBehaviour {
             case Skill1 -> spawnSkill(LaserBeam.class);
             case Skill2 -> {}
             case Skill3 -> {}
+            case Dash -> {
+                var dashData = skillDataMap.get(Dash.class);
+                if (dashData.skillCharge > 0) {
+                    dashData.skillCharge--;
+                    dashData.skillCooldownTime = dashData.baseSkillCooldown;
+
+                    Player.getInstance().setCurrentSpeed(DASH_SPEED);
+                    dashCoroutineID = Time.addCoroutine(this::resetDashSpeed, Time.getTime() + DASH_TIME);
+                }
+            }
+
         }
     }
 
@@ -82,13 +81,8 @@ public class PlayerSkillsHandler extends MonoBehaviour {
         }
     }
 
-    //TODO : Separate skill data and skillHandler
-
-    private HashMap<Class<? extends Skill>, SkillData> createSkillDataMap() {
-        HashMap<Class<? extends Skill>, SkillData> skillMap = new HashMap<>();
-
-        skillMap.put(LaserBeam.class, new SkillData(100, 5.0, 100, 5.0));
-
-        return skillMap;
+    private void resetDashSpeed() {
+        Player.getInstance().setCurrentSpeed(Player.getInstance().getBaseSpeed());
+        Time.removeCoroutine(dashCoroutineID);
     }
 }
