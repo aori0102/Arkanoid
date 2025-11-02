@@ -1,10 +1,10 @@
-package game.BrickObj.BrickGenMap.style;
+package game.Brick.BrickGenMap.style;
 
-import static game.BrickObj.BrickGenMap.Mathx.*;
+import static game.Brick.BrickGenMap.Mathx.*;
 
-import game.BrickObj.Init.Matrix;
-import game.BrickObj.BrickGenMap.SpecialsSprinkler;
-import game.BrickObj.BrickGenMap.StyleGenerator;
+import game.Brick.Init.Matrix;
+import game.Brick.BrickGenMap.SpecialsSprinkler;
+import game.Brick.BrickGenMap.StyleGenerator;
 
 import java.util.Random;
 

@@ -13,6 +13,8 @@ import org.Rendering.ImageAsset;
 import utils.Time;
 import utils.Vector2;
 
+import static game.Brick.BrickVisual.setBrightness;
+
 public class Brick extends MonoBehaviour {
 
     private static final double BURN_TIME = 3.0;
@@ -28,6 +30,7 @@ public class Brick extends MonoBehaviour {
     private double frostStartTime = 0.0;
     private int damageMultiplier = 1;
     private BrickDamageAcceptor brickDamageAcceptor = null;
+    private boolean isJustDamaged = false;
 
     public EventHandler<OnBrickDestroyedEventArgs> onBrickDestroyed = new EventHandler<>(Brick.class);
     private Time.CoroutineID burnCoroutineID = null;
@@ -70,6 +73,7 @@ public class Brick extends MonoBehaviour {
 
     public void damage(int amount) {
         health -= damageMultiplier * amount;
+        isJustDamaged = true;
 
         if (health <= 0) {
             GameObjectManager.destroy(gameObject);
@@ -148,13 +152,32 @@ public class Brick extends MonoBehaviour {
         this.statusBrickEffect = StatusEffect.None;
         damageMultiplier = BASE_DAMAGE_MULTIPLIER;
         SpriteRenderer renderer = getComponent(SpriteRenderer.class);
-        renderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
+        renderer.setImage(ImageAsset.ImageIndex.BrickNormal.getImage());
         renderer.setSize(BRICK_SIZE);
         renderer.setPivot(new Vector2(0.5, 0.5));
     }
 
     public StatusEffect getStatusBrickEffect() {
         return statusBrickEffect;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void resetJustDamaged() {
+        isJustDamaged = false;
+    }
+
+    public boolean isJustDamaged() {
+        return isJustDamaged;
+    }
+
+    public void setWaveIndex(int idx) {
+        if (idx == -2) {
+            return;
+        }
+        setBrightness(idx, this);
     }
 
 }

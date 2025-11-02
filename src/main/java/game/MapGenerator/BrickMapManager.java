@@ -1,16 +1,17 @@
 package game.MapGenerator;
 
 import game.Brick.Brick;
+import game.Brick.BrickEvent.BrickEvent;
+import game.Brick.BrickEvent.EventType;
 import game.Brick.BrickPrefab;
 import game.Brick.BrickType;
-import game.BrickObj.BrickGenMap.GenMap;
+import game.Brick.BrickGenMap.GenMap;
 import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
-import utils.Random;
 import utils.Vector2;
 
 import java.util.ArrayList;
@@ -28,11 +29,11 @@ public final class BrickMapManager extends MonoBehaviour {
     }
 
     private static BrickMapManager instance = null;
-
-    private final GenMap mapGenerator = new GenMap(ROW_COUNT, COLUMN_COUNT);
-
     private final List<List<Brick>> brickGrid = new ArrayList<>();
     private final HashMap<Brick, Cell> brickCoordinateMap = new HashMap<>();
+
+    private final GenMap mapGenerator = new GenMap(ROW_COUNT, COLUMN_COUNT);
+    private final BrickEvent brickEvent = new BrickEvent(ROW_COUNT, COLUMN_COUNT, brickGrid);
 
     public EventHandler<Void> onMapCleared = new EventHandler<>(BrickMapManager.class);
     public EventHandler<BrickType> onBrickDestroyed = new EventHandler<>(BrickMapManager.class);
@@ -124,6 +125,13 @@ public final class BrickMapManager extends MonoBehaviour {
         }
         brickCoordinateMap.clear();
 
+    }
+
+    @Override
+    public void update() {
+        brickEvent.executeEvent(EventType.Collision);
+        brickEvent.executeEvent(EventType.Wave);
+        brickEvent.executeEvent(EventType.ResetDamagedStatus);
     }
 
 }

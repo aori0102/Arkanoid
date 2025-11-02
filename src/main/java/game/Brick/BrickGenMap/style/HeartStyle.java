@@ -1,12 +1,12 @@
-package game.BrickObj.BrickGenMap.style;
+package game.Brick.BrickGenMap.style;
 
-import static game.BrickObj.BrickGenMap.TransTypeNumBer.transTypeToNumber;
-import static game.BrickObj.BrickGenMap.Mathx.*;
-import static game.BrickObj.Init.*;
+import static game.Brick.BrickGenMap.TransTypeNumBer.transTypeToNumber;
+import static game.Brick.BrickGenMap.Mathx.*;
+import static game.Brick.Init.*;
 
-import game.BrickObj.BrickType;
-import game.BrickObj.BrickGenMap.SpecialsSprinkler;
-import game.BrickObj.BrickGenMap.StyleGenerator;
+import game.Brick.BrickType;
+import game.Brick.BrickGenMap.SpecialsSprinkler;
+import game.Brick.BrickGenMap.StyleGenerator;
 import java.util.Random;
 
 /** HEART: parametric heart shape; edges hardened. */
@@ -51,11 +51,11 @@ public final class HeartStyle implements StyleGenerator {
     }
 
     private static BrickType selectByBias(Random rng, double bias) {
-        game.BrickObj.BrickType[] arr = game.BrickObj.BrickType.values();
+        BrickType[] arr = BrickType.values();
         int maxIx = (int) Math.round(keep01(bias) * (arr.length - 1));
         return arr[rng.nextInt(maxIx + 1)];
     }
-    private static game.BrickObj.BrickType selectHard(Random rng, double topFrac) {
-        return game.BrickObj.BrickGenMap.TypePickers.pickFromTopHard(rng, topFrac);
+    private static BrickType selectHard(Random rng, double topFrac) {
+        return game.Brick.BrickGenMap.TypePickers.pickFromTopHard(rng, topFrac);
     }
 }

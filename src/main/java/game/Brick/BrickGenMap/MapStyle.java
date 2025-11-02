@@ -1,4 +1,4 @@
-package game.BrickObj.BrickGenMap;
+package game.Brick.BrickGenMap;
 
 /**
  * All defaults style.

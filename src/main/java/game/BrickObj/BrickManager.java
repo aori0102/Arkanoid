@@ -1,5 +1,5 @@
 package game.BrickObj;
-import game.BrickObj.BrickGenMap.MapStyle;
+import game.Brick.BrickGenMap.MapStyle;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import utils.Vector2;
@@ -26,8 +26,8 @@ public class BrickManager extends MonoBehaviour {
         if (instance != null) {
             throw new IllegalStateException("BrickManager is a singleton!");
         }
-//        brickFactory = new BrickFactory(10, 10, MapStyle.HEART, 0.3);
-//        brickFactory.printBrickTypes();
+        brickFactory = new BrickFactory(10, 10, MapStyle.HEART, 0.3);
+        brickFactory.printBrickTypes();
         instance = this;
     }
 

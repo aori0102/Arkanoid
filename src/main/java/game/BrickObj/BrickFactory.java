@@ -2,8 +2,8 @@ package game.BrickObj;
 
 import game.BrickObj.BrickEvent.EndEvent;
 import game.BrickObj.BrickEvent.WaveEffect;
-import game.BrickObj.BrickGenMap.GenMap;
-import game.BrickObj.BrickGenMap.MapStyle;
+import game.Brick.BrickGenMap.GenMap;
+import game.Brick.BrickGenMap.MapStyle;
 import org.GameObject.GameObjectManager;
 
 import static game.BrickObj.Init.*;
@@ -34,7 +34,7 @@ public class BrickFactory {
         matrixObj = new BrickMatrix(rowData, colData, brickComponent);
 
         GenMap gen = new GenMap(rowData, colData);
-        matrixObj.transIntToBrick(gen.generate(kindMap, difficult));
+//        matrixObj.transIntToBrick(gen.generate(kindMap, difficult));
 
         endEvent = new EndEvent();
         waveEffect = new WaveEffect();
@@ -51,7 +51,7 @@ public class BrickFactory {
 
     public void runProgress() {
         gameTime++;
-        if(gameTime % 15 == 0) {
+        if(gameTime % 5 == 0) {
             waveEffect.collectJustDamaged();
             waveEffect.runAllWave();
         }

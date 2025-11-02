@@ -1,7 +1,6 @@
-package game.BrickObj.BrickGenMap;
+package game.Brick.BrickGenMap;
 
-import game.BrickObj.Brick;
-import game.BrickObj.BrickType;
+import game.Brick.BrickType;
 
 public class TransTypeNumBer {
     public static BrickType transNumberToType(int number) {

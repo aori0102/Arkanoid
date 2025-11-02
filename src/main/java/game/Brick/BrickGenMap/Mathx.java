@@ -1,4 +1,4 @@
-package game.BrickObj.BrickGenMap;
+package game.Brick.BrickGenMap;
 
 /**
  * Class Mathx help some problem relate to Math.

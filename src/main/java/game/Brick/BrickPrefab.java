@@ -12,23 +12,22 @@ public final class BrickPrefab {
 
     public static Brick instantiateBrick(){
 
-        // Core object
+        // Setup core object
         var brickObject = GameObjectManager.instantiate("Brick")
                 .addComponent(BrickDamageAcceptor.class)
                 .addComponent(Brick.class)
                 .getGameObject();
 
-        // Renderer
+        //Setup visual and ready for rendering object
         var brickRenderer = brickObject.addComponent(SpriteRenderer.class);
-        brickRenderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
+        brickRenderer.setImage(ImageAsset.ImageIndex.BrickNormal.getImage());
         brickRenderer.setSize(BRICK_SIZE);
         brickRenderer.setPivot(new Vector2(0.5, 0.5));
 
-        // Collider
+        // Setup collider
         brickObject.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
 
-        return brickObject.getComponent(Brick.class);
-
+        return brickObject.addComponent(Brick.class);
     }
 
 }

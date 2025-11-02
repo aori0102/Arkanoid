@@ -1,9 +1,9 @@
-package game.BrickObj.BrickGenMap;
+package game.Brick.BrickGenMap;
 
-import game.BrickObj.BrickType;
+import game.Brick.BrickType;
 import java.util.Random;
 
-import static game.BrickObj.BrickGenMap.Mathx.*;
+import static game.Brick.BrickGenMap.Mathx.*;
 
 public final class TypePickers {
     private TypePickers() {}

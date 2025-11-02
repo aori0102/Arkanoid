@@ -1,15 +1,17 @@
-package game.BrickObj.BrickGenMap;
+package game.Brick.BrickGenMap;
 
-import static game.BrickObj.BrickGenMap.Mathx.*;
+import static game.Brick.BrickGenMap.Mathx.*;
+import static game.Brick.BrickGenMap.TransTypeNumBer.transNumberToType;
 
-import game.Brick.Brick;
 import game.Brick.BrickType;
-import game.BrickObj.Init.Matrix;
-import game.BrickObj.BrickGenMap.style.*;
+import game.Brick.Init.Matrix;
+import game.Brick.BrickGenMap.style.*;
 
 import java.util.*;
 
 public final class GenMap {
+
+    private int level = 0;
     private final int rows;
     private final int cols;
     private final Random rng;
@@ -26,9 +28,6 @@ public final class GenMap {
         registerDefaults();
     }
 
-    /**
-     * Register all defaults style.
-     */
     private void registerDefaults() {
         strategies.put(MapStyle.RANDOM, new RandomStyle());
         strategies.put(MapStyle.GRADIENT, new GradientStyle());
@@ -48,32 +47,52 @@ public final class GenMap {
         strategies.put(MapStyle.STAR, new StarStyle());
     }
 
+    private MapStyle getRandomMapStyle() {
+        if (strategies.isEmpty()) {
+            throw new IllegalStateException("No registered map styles!");
+        }
+
+        List<MapStyle> styles = new ArrayList<>(strategies.keySet());
+        return styles.get(rng.nextInt(styles.size()));
+    }
+
+    private double getRandomDouble() {
+        double base = Math.min(0.8,  level * 0.02);
+        double jitter = rng.nextDouble() * 0.002;
+        return keep01(base + jitter);
+    }
+
+    private double getDifficultLevel() {
+        return getRandomDouble();
+    }
+
     public List<List<BrickType>> generate() {
+        level++;
+        if (level * 0.02 == 0.8) {
+            level--;
+        }
+
+        Matrix mapType = generate(getRandomMapStyle(), getDifficultLevel());
+
         List<List<BrickType>> result = new ArrayList<>();
         for (int row = 0; row < rows; row++) {
             List<BrickType> rowList = new ArrayList<>();
             for (int col = 0; col < cols; col++) {
-                rowList.add(BrickType.Steel);
+                rowList.add(transNumberToType(mapType.get(row, col)));
             }
             result.add(rowList);
         }
+
         return result;
     }
 
-    /**
-     * Return a new BrickMatrix for the chosen style.
-     * Strategy pattern design for genMap structure.
-     */
     public Matrix generate(MapStyle style, double difficulty) {
         StyleGenerator gen = strategies.get(style);
+        if (gen == null)
+            throw new IllegalArgumentException("MapStyle not registered: " + style);
         return gen.generate(rows, cols, keep01(difficulty), rng);
     }
 
-
-    /**
-     * Allow opening system for another style which will be added.
-     * Overide this function.
-     */
     public void register(MapStyle style, StyleGenerator generator) {
         strategies.put(style, generator);
     }

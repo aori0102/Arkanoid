@@ -1,11 +1,11 @@
-package game.BrickObj.BrickGenMap;
+package game.Brick.BrickGenMap;
 
-import static game.BrickObj.BrickGenMap.TransTypeNumBer.transNumberToType;
-import static game.BrickObj.BrickGenMap.TransTypeNumBer.transTypeToNumber;
-import static game.BrickObj.BrickGenMap.Mathx.*;
+import static game.Brick.BrickGenMap.TransTypeNumBer.transNumberToType;
+import static game.Brick.BrickGenMap.TransTypeNumBer.transTypeToNumber;
+import static game.Brick.BrickGenMap.Mathx.*;
 
-import game.BrickObj.BrickType;
-import game.BrickObj.Init.Matrix;
+import game.Brick.BrickType;
+import game.Brick.Init.Matrix;
 import java.util.Random;
 
 public final class SpecialsSprinkler {

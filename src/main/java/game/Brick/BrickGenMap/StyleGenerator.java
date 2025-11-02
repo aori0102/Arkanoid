@@ -1,6 +1,6 @@
-package game.BrickObj.BrickGenMap;
+package game.Brick.BrickGenMap;
 
-import game.BrickObj.Init.Matrix;
+import game.Brick.Init.Matrix;
 import java.util.Random;
 
 public interface StyleGenerator {

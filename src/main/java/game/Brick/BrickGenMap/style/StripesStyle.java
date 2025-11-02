@@ -1,12 +1,12 @@
-package game.BrickObj.BrickGenMap.style;
+package game.Brick.BrickGenMap.style;
 
-import static game.BrickObj.BrickGenMap.Mathx.*;
-import static game.BrickObj.BrickGenMap.TransTypeNumBer.transTypeToNumber;
+import static game.Brick.BrickGenMap.Mathx.*;
+import static game.Brick.BrickGenMap.TransTypeNumBer.transTypeToNumber;
 
-import game.BrickObj.BrickType;
-import game.BrickObj.Init.Matrix;
-import game.BrickObj.BrickGenMap.SpecialsSprinkler;
-import game.BrickObj.BrickGenMap.StyleGenerator;
+import game.Brick.BrickType;
+import game.Brick.Init.Matrix;
+import game.Brick.BrickGenMap.SpecialsSprinkler;
+import game.Brick.BrickGenMap.StyleGenerator;
 import java.util.Random;
 
 /** STRIPES: horizontal bands; band height scales slightly with difficulty. */
