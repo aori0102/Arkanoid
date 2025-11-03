@@ -9,10 +9,13 @@ import game.GameObject.Shield;
 import game.MapGenerator.BrickMapManager;
 import game.Obstacle.Index.ObstacleManager;
 import game.Perks.Index.PerkManager;
+import game.Player.Player;
 import game.Player.Prefab.PlayerPrefab;
 import game.PowerUp.Index.PowerUpManager;
 import game.UI.UIManager;
 import org.GameObject.GameObjectManager;
+import org.Particle.Emitter.ConeEmitter;
+import org.Particle.ParticlesPrefab.ParticleType;
 import utils.Vector2;
 
 public final class InGameSceneBuilder extends SceneBuilder {
@@ -56,6 +59,14 @@ public final class InGameSceneBuilder extends SceneBuilder {
         var borderBottom = GameObjectManager.instantiate("Border_Bottom");
         borderBottom.addComponent(Border.class).setBorderType(BorderType.BorderBottom);
         borderBottom.getTransform().setLocalPosition(new Vector2(1190, 750));
+
+        var circleEmitter =  GameObjectManager.instantiate("Circle_Emitter");
+        circleEmitter.setParent(Player.getInstance().getPlayerPaddle().getGameObject());
+        circleEmitter.getTransform().setLocalPosition(new Vector2(0, 10));
+        circleEmitter.addComponent(ConeEmitter.class).assignEmitterSpecs(
+                10, 30, 100, 200, 0.2,0.4
+        );
+        circleEmitter.getComponent(ConeEmitter.class).emit(ParticleType.Fire);
 
     }
 

@@ -95,6 +95,8 @@ public class ImageAsset {
         brick_bomb("/Brick/brick_bomb.png"),
         BlueBrick("/Brick/BlueBrick.png"),
 
+        /// Particle
+        PurpleParticle("/Particle/ParticlePurple.png"),
 
         None("");
 
