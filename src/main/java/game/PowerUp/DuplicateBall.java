@@ -36,8 +36,6 @@ public class DuplicateBall extends MultipleBall {
 
     @Override
     public void start() {
-        duplicateBallEventActionID = PowerUpManager.getInstance().onDuplicateBall.
-                addListener((_, _) -> handleOnMultipleRequest());
     }
 
     /**
@@ -59,14 +57,11 @@ public class DuplicateBall extends MultipleBall {
             BallsManager.getInstance().addBall(newBall);
             newBall.setDirection(direction);
         }
-
-
-        // TODO : Fix this shit
     }
 
     @Override
     public void onApplied() {
-        PowerUpManager.getInstance().onDuplicateBall.removeListener(duplicateBallEventActionID);
+        handleOnMultipleRequest();
         GameObjectManager.destroy(gameObject);
     }
 

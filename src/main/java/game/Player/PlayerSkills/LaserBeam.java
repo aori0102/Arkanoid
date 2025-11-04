@@ -1,5 +1,11 @@
 package game.Player.PlayerSkills;
 
+import game.Brick.BrickDamageAcceptor;
+import game.Damagable.DamageAcceptor;
+import game.Damagable.DamageInfo;
+import game.Damagable.DamageType;
+import game.Damagable.ICanDealDamage;
+import game.Effect.StatusEffect;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import org.GameObject.GameObject;
@@ -9,6 +15,8 @@ import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
 import utils.Time;
 import utils.Vector2;
+
+import javax.swing.*;
 
 public class LaserBeam extends Skill {
 
@@ -27,7 +35,9 @@ public class LaserBeam extends Skill {
 
     public void awake() {
         setSkillIndex(SkillIndex.LaserBeam);
-        assignColliderInfo();
+        getComponent(BoxCollider.class).setIncludeLayer(Layer.combineLayerMask(colliderLayers));
+        getComponent(BoxCollider.class).setOnCollisionEnterCallback(this::handleCollision);
+
     }
 
     public void update() {
@@ -44,16 +54,6 @@ public class LaserBeam extends Skill {
         if (border != null && border.getBorderType() == BorderType.BorderTop) {
             GameObjectManager.destroy(gameObject);
         }
-    }
-
-    @Override
-    public void assignColliderInfo() {
-        var collider = getComponent(BoxCollider.class);
-        collider.setIncludeLayer(Layer.combineLayerMask(colliderLayers));
-        collider.setLocalCenter(new Vector2(0, 0));
-        collider.setLocalSize(new Vector2(32, 256));
-
-        collider.setOnCollisionEnterCallback(this::handleCollision);
     }
 
     @Override

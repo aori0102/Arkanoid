@@ -35,6 +35,7 @@ public class PowerUp extends MonoBehaviour {
             if (e.otherCollider.getComponent(PlayerPaddle.class) != null) {
                 isMoving = false;
             }
+            System.out.println("Hit");
         });
 
         gameObject.setLayer(Layer.PowerUp);

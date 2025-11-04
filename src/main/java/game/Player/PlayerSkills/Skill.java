@@ -24,14 +24,6 @@ public abstract class Skill extends MonoBehaviour {
 
     }
 
-    public void awake() {
-        assignColliderInfo();
-    }
-
-    public abstract void assignColliderInfo();
-
-    // TODO : fix this class
-
     protected void setSkillIndex(SkillIndex skillIndex) {
         this.skillIndex = skillIndex;
         getComponent(SpriteRenderer.class).setImage(skillIndex.getImageIndex().getImage());

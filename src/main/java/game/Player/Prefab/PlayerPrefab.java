@@ -15,7 +15,6 @@ import utils.Vector2;
  * <ul>
  *     <li>{@link Player}</li>
  *     <li>{@link PlayerSkillsHandler}</li>
- *     <li>{@link PlayerPowerUpHandler}</li>
  *     <li>{@link PlayerPaddle}</li>
  *     <li>{@link PlayerLives}</li>
  * </ul>

@@ -27,9 +27,6 @@ public class BlizzardBall extends PowerUp {
     }
 
     public void start() {
-        blizzardBallEventActionID = PowerUpManager.getInstance().onBlizzardBall.addListener((sender, powerEffect) -> {
-            handleOnBlizzardBallRequested(powerEffect);
-        });
     }
 
     public void handleOnBlizzardBallRequested(StatusEffect statusEffect) {
@@ -38,7 +35,7 @@ public class BlizzardBall extends PowerUp {
 
     @Override
     public void onApplied() {
-        PowerUpManager.getInstance().onBlizzardBall.removeListener(blizzardBallEventActionID);
+        handleOnBlizzardBallRequested(StatusEffect.FrostBite);
         GameObjectManager.destroy(gameObject);
     }
 

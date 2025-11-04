@@ -10,11 +10,11 @@ import utils.Vector2;
 
 public class Shield extends MonoBehaviour {
 
+    private static final double DURATION = 5.0;
     private static Shield instance;
 
     private boolean isExisted = false;
     private double counter = 0;
-    private double duration = 0;
 
     /**
      * Create this MonoBehaviour.
@@ -42,7 +42,7 @@ public class Shield extends MonoBehaviour {
 
     public void update() {
         if (isExisted) {
-            handleShieldDuration(duration);
+            handleShieldDuration(DURATION);
         }
     }
 
@@ -54,10 +54,9 @@ public class Shield extends MonoBehaviour {
         }
     }
 
-    public void turnOn(double duration) {
+    public void turnOn() {
         gameObject.setActive(true);
         isExisted = true;
-        this.duration = duration;
     }
 
     public void turnOff() {

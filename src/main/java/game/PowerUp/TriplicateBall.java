@@ -27,7 +27,9 @@ public class TriplicateBall extends MultipleBall {
      */
     public TriplicateBall(GameObject owner) {
         super(owner);
+        System.out.println("TriplicateBall constructor " + this);
     }
+
 
     @Override
     public void awake() {
@@ -36,10 +38,6 @@ public class TriplicateBall extends MultipleBall {
 
     @Override
     public void start() {
-        triplicateBallEventActionID = PowerUpManager.getInstance().onTriplicateBall.addListener((sender, args) -> {
-            System.out.println("TriplicateBall start");
-            handleOnMultipleRequest();
-        });
     }
 
     /**
@@ -69,13 +67,11 @@ public class TriplicateBall extends MultipleBall {
             secondBall.setDirection(secondDirection);
         }
 
-        // TODO : fix this shit too
     }
 
     @Override
     public void onApplied() {
-        System.out.println("TriplicateBall onApplied");
-        PowerUpManager.getInstance().onTriplicateBall.removeListener(triplicateBallEventActionID);
+        handleOnMultipleRequest();
         GameObjectManager.destroy(gameObject);
     }
 

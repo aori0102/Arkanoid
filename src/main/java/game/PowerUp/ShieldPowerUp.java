@@ -5,6 +5,7 @@ import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpIndex;
 import game.PowerUp.Index.PowerUpManager;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 
 public class ShieldPowerUp extends PowerUp {
     /**
@@ -18,10 +19,15 @@ public class ShieldPowerUp extends PowerUp {
     }
 
     public void awake() {
-        PowerUpManager.getInstance().onShieldSpawn.addListener(this::handleOnShieldSpawn);
     }
 
-    private void handleOnShieldSpawn(Object o, Double duration) {
-        Shield.getInstance().turnOn(duration);
+    private void handleOnShieldSpawn() {
+        Shield.getInstance().turnOn();
+    }
+
+    @Override
+    public void onApplied() {
+        handleOnShieldSpawn();
+        GameObjectManager.destroy(gameObject);
     }
 }

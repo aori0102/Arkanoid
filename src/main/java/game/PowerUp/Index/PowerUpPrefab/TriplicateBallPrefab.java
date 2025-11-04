@@ -17,7 +17,6 @@ public class TriplicateBallPrefab extends PowerUpPrefab {
         triplicateBall.getTransform().setGlobalPosition(position);
         triplicateBall.getTransform().setGlobalScale(new Vector2(0.5, 0.5));
         triplicateBall.linkPaddle(playerPaddle);
-        triplicateBall.linkPlayerPowerUp(Player.getInstance().getPlayerPowerUpHandler());
 
         return triplicateBall;
     }

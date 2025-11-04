@@ -22,6 +22,9 @@ import utils.Time;
 
 public class Ball extends MonoBehaviour {
 
+    private static final double BALL_CRITICAL_CHANCE = 0.27;
+    private static final double BALL_CRITICAL_AMOUNT = 0.59;
+    private static final int BALL_DAMAGE = 100;
     private static final double BASE_BALL_SPEED = 500;
     private static final Vector2 BOUNCE_OFFSET = new Vector2(0.2, 0.2);
 
@@ -184,7 +187,7 @@ public class Ball extends MonoBehaviour {
 
         double dotCoefficient = Vector2.dot(dirNorm, normal);
 
-        boolean nearlyParallel = dotCoefficient == 1;
+        boolean nearlyParallel = Math.abs(dotCoefficient) == 1;
 
         if (nearlyParallel) {
             reflectDirection = reflectDirection.add(BOUNCE_OFFSET.multiply(0.3).normalize());
@@ -270,6 +273,47 @@ public class Ball extends MonoBehaviour {
 
     public StatusEffect getCurrentStatusEffect() {
         return currentStatusEffect;
+    }
+
+    private void resetCurrentStatusEffect() {
+        if (currentStatusEffect != StatusEffect.None) {
+            System.out.println("This is called by Ball");
+            currentStatusEffect = StatusEffect.None;
+            changeBallVisual();
+        }
+    }
+
+    @Override
+    public DamageInfo getDamageInfo() {
+
+        var damageInfo = new DamageInfo();
+        if (Random.range(0.0, 1.0) < BALL_CRITICAL_CHANCE) {
+            damageInfo.amount = (int) (BALL_DAMAGE * (1.0 + BALL_CRITICAL_AMOUNT));
+            damageInfo.type = DamageType.Critical;
+        } else {
+            damageInfo.amount = BALL_DAMAGE;
+            damageInfo.type = DamageType.Normal;
+        }
+        return damageInfo;
+
+    }
+
+    @Override
+    public StatusEffect getEffect() {
+        return currentStatusEffect;
+    }
+
+    @Override
+    public void onDamaged() {
+        System.out.println("Damaged");
+        resetCurrentStatusEffect();
+    }
+
+    @Override
+    public boolean isDamageTarget(DamageAcceptor damageAcceptor) {
+        return damageAcceptor instanceof VoltraxisDamageAcceptor
+                || damageAcceptor instanceof PowerCoreDamageAcceptor
+                || damageAcceptor instanceof BrickDamageAcceptor;
     }
 
 }

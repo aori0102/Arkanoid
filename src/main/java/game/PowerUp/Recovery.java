@@ -32,6 +32,6 @@ public class Recovery extends PowerUp {
 
     @Override
     protected void onDestroy() {
-        PowerUpManager.getInstance().onRecovery.removeListener(recoveryEventActionID);
+        handleOnRecoveryRequested();
     }
 }

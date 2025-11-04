@@ -1,6 +1,7 @@
 package game.PowerUp;
 
 import game.Player.PlayerPowerUpHandler;
+import game.GameObject.BallsManager;
 import game.PowerUp.Index.PowerUp;
 import game.Player.Paddle.PlayerPaddle;
 import org.GameObject.GameObject;
@@ -12,6 +13,7 @@ public abstract class MultipleBall extends PowerUp {
 
     protected PlayerPowerUpHandler playerPowerUpHandler;
     protected PlayerPaddle playerPaddle;
+    protected PlayerPaddle paddle;
 
     /**
      * Create this MonoBehaviour.
