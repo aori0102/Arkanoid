@@ -26,7 +26,6 @@ public class ParticlePool extends MonoBehaviour {
 
     public Particle getParticle(ParticleType particleType) {
         List<Particle> particles = particleHashMap.computeIfAbsent(particleType, k -> new ArrayList<>());
-        System.out.println(particles.size());
         for (Particle particle : particles) {
             if (!particle.getGameObject().isActive()) {
                 particle.getGameObject().setActive(true);
