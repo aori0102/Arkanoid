@@ -1,0 +1,26 @@
+{
+  "imagePath": "GeneralButtons",
+  "frameList": [
+    {
+      "clipAnchor": {
+        "x": 2096,
+        "y": 120
+      },
+      "clipSize": {
+        "x": 418,
+        "y": 118
+      },
+      "duration": 0.1,
+      "rotationAngle": 0
+    }
+  ],
+  "renderSize": {
+    "x":  278.6667,
+    "y": 78.6667
+  },
+  "pivot": {
+    "x": 0.5,
+    "y": 0.5
+  },
+  "loop": true
+}

@@ -1,5 +1,7 @@
 package org;
 
+import org.Audio.AudioManager;
+import org.Audio.MusicHandler;
 import org.GameObject.GameObjectManager;
 import org.Rendering.RendererManager;
 import org.Rendering.VideoAsset;
@@ -23,6 +25,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 
         VideoAsset.initializeVideoMedia();
+        AudioManager.initializeAudioManager();
 
         Random.init();
         var defaultScene = SceneManager.createScenes(stage);

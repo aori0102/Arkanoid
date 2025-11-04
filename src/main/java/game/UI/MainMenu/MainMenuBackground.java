@@ -12,6 +12,7 @@ public class MainMenuBackground extends MonoBehaviour {
     private VideoPlayer videoPlayer;
     private Vector2 pivot = new Vector2(0.5, 0.5);
     private final double SCALE = 1.3;
+
     /**
      * Create this MonoBehaviour.
      *

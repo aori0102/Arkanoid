@@ -90,6 +90,31 @@ public class EventHandler<T> {
     }
 
     /**
+     * Invoke all events. Can be comprehended like activating all the assigned action.
+     *
+     * @param argument : the data we want to pass into the action.
+     */
+    public void invoke(Class<?> sender, T argument) {
+
+        if (sender != null && sender != callerClass) {
+            throw new IllegalArgumentException(
+                    "This event can only be called within " + callerClass.getName() + "."
+            );
+        }
+
+        if (!listeners.isEmpty()) {
+
+            var newListenerSet = new HashSet<>(listeners.values());
+            for (var listener : newListenerSet) {
+                if (listener != null) {
+                    listener.accept(sender, argument);
+                }
+            }
+        }
+
+    }
+
+    /**
      * Check if there aren't any listeners.
      *
      * @return {@code true} if the list is not empty.

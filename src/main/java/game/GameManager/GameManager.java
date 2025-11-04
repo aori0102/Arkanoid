@@ -35,6 +35,7 @@ public class GameManager extends MonoBehaviour {
 
     private int currentLevel = 1;
     private boolean hasSave = false;
+    private boolean isBossFight = false;
 
     private EventActionID brickMapManager_onMapCleared_ID = null;
 
@@ -194,4 +195,23 @@ public class GameManager extends MonoBehaviour {
         SceneManager.loadScene(SceneKey.Menu);
     }
 
+    public void toNextLevel() {
+        System.out.println("[GameManager] To Next Level");
+
+        currentLevel++;
+        loadNextLevel();
+    }
+
+    private void brickManager_onLevelComplete() {
+        System.out.println("[GameManager] Brick Manager onLevelComplete");
+
+    }
+
+    public boolean isGameOver() {
+        return gameState == GameState.GameOver;
+    }
+
+    public boolean isBossFight() {
+        return isBossFight;
+    }
 }

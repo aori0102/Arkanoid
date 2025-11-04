@@ -46,33 +46,17 @@ public class VideoPlayer extends Renderable {
             System.err.println("[VideoPlayer] Cannot set video: media is null");
             return;
         }
+        reinitMediaPlayer(media);
 
-        Platform.runLater(() -> {
-            // Dispose old player
-            if (activeMediaPlayer != null) {
-                activeMediaPlayer.stop();
-                activeMediaPlayer.dispose();
-                activePlayers.remove(activeMediaPlayer);
-            }
+    }
 
-            try {
-                activeMediaPlayer = new MediaPlayer(media);
-                activePlayers.add(activeMediaPlayer);
-                mediaView.setMediaPlayer(activeMediaPlayer);
-
-                // Apply current properties
-                activeMediaPlayer.setMute(isMute);
-                activeMediaPlayer.setVolume(currentVolume);
-                enableLooping(isLoop);
-
-                activeMediaPlayer.setOnError(() ->
-                        System.err.println("[VideoPlayer] Media error: " + activeMediaPlayer.getError())
-                );
-
-            } catch (Exception e) {
-                System.err.println("[VideoPlayer] Failed to set video: " + e.getMessage());
-            }
-        });
+    public void reinitMediaPlayer(Media media) {
+        if(activeMediaPlayer != null) {
+            activeMediaPlayer.stop();
+            activeMediaPlayer.dispose();
+        }
+        activeMediaPlayer = new MediaPlayer(media);
+        mediaView.setMediaPlayer(activeMediaPlayer);
     }
 
     /**
@@ -119,6 +103,8 @@ public class VideoPlayer extends Renderable {
         } else {
             activeMediaPlayer.setOnEndOfMedia(null);
         }
+
+        mediaView.setMediaPlayer(activeMediaPlayer);
     }
 
     /** Sets visible width */
