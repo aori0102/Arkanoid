@@ -12,6 +12,7 @@ import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
+import org.ParticleSystem.Particles.BallParticle;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
 import org.Rendering.ImageAsset;
@@ -35,6 +36,8 @@ public class Ball extends MonoBehaviour {
     private boolean hitPaddle = false;
 
     private EventActionID ball_onAnyBallHitBrick_ID = null;
+
+    private BallParticle ballParticle;
 
     public static EventHandler<Void> onAnyBallHitBrick = new EventHandler<>(Ball.class);
     public static EventHandler<Void> onAnyBallJustHitPaddle = new EventHandler<>(Ball.class);
@@ -73,6 +76,8 @@ public class Ball extends MonoBehaviour {
             pendingEffect = StatusEffect.None;
         }
 
+        initializeBallParticle();
+        ballParticle.stopEmit();
     }
 
     @Override
@@ -88,7 +93,6 @@ public class Ball extends MonoBehaviour {
 
     @Override
     protected void onDestroy() {
-        //TODO: let ball manager listen to event
         if (BallsManager.getInstance() != null) {
             BallsManager.getInstance().removeBall(this);
         }
@@ -116,12 +120,15 @@ public class Ball extends MonoBehaviour {
      */
     public void handleMovement() {
         // Make the ball follow the paddle position if player haven't fired it
-        if (!playerPaddle.isFired && direction == null) {
-            getTransform().setGlobalPosition(playerPaddle.getTransform().getGlobalPosition());
+        if (!playerPaddle.isFired && direction.equals(Vector2.zero())) {
+            getTransform().setGlobalPosition(playerPaddle.getTransform()
+                    .getGlobalPosition().add(Vector2.up().multiply(20)));
+            ballParticle.stopEmit();
         }
         // Moving the ball
         else {
             getTransform().translate(direction.normalize().multiply(BASE_BALL_SPEED * Time.getDeltaTime()));
+            ballParticle.startEmit();
         }
 
     }
@@ -204,6 +211,7 @@ public class Ball extends MonoBehaviour {
         getTransform().setGlobalPosition(offset);
 
         direction = reflectDirection;
+        ballParticle.setDirection(direction);
     }
 
     /**
@@ -277,10 +285,16 @@ public class Ball extends MonoBehaviour {
 
     private void resetCurrentStatusEffect() {
         if (currentStatusEffect != StatusEffect.None) {
-            System.out.println("This is called by Ball");
             currentStatusEffect = StatusEffect.None;
             changeBallVisual();
         }
     }
+
+    private void initializeBallParticle() {
+        ballParticle = GameObjectManager.instantiate("BallParticle").addComponent(BallParticle.class);
+        ballParticle.setDirection(direction.multiply(-1));
+        ballParticle.setParent(gameObject);
+    }
+
 
 }

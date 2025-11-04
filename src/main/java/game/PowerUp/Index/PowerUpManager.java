@@ -57,7 +57,7 @@ public class PowerUpManager extends MonoBehaviour {
             );
             if (chosenKey.equals(DuplicateBall.class) || chosenKey.equals(TriplicateBall.class)) {
                 if (BallsManager.getInstance().getBallSet().size()
-                        < BallsManager.getInstance().getMaxBallExisted()) {
+                        > BallsManager.getInstance().getMaxBallExisted()) {
                     return;
                 }
             }

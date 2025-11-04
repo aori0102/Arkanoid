@@ -1,4 +1,4 @@
-package org.Particle.Emitter;
+package org.ParticleSystem.Emitter;
 
 public enum EmitTypes {
     Square,

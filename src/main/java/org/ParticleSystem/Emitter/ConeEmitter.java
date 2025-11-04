@@ -1,13 +1,11 @@
-package org.Particle.Emitter;
+package org.ParticleSystem.Emitter;
 
 import org.GameObject.GameObject;
-import org.Particle.Particle;
-import org.Particle.ParticleType;
+import org.ParticleSystem.ParticleObject;
 import utils.Random;
 import utils.Vector2;
 
 public class ConeEmitter extends ParticleEmitter {
-
 
     public ConeEmitter(GameObject owner) {
         super(owner);
@@ -16,17 +14,6 @@ public class ConeEmitter extends ParticleEmitter {
 
     public void awake() {
         System.out.println(particleType);
-    }
-
-    @Override
-    public void update() {
-        if (!canEmit) {
-            return;
-        }
-        super.update();
-        if (isEmitting) {
-            emit();
-        }
     }
 
     @Override
@@ -39,7 +26,7 @@ public class ConeEmitter extends ParticleEmitter {
 
         Vector2 direction = Vector2.rotate(baseDirection, offsetAngle).normalize();
 
-        Particle particle = spawnParticles(particleType);
+        ParticleObject particle = spawnParticles(particleType);
         particle.getTransform().setGlobalPosition(spawnPos);
         particle.setParticleType(particleType);
         particle.setDirection(direction);

@@ -5,8 +5,10 @@ import game.Entity.EntityHealthAlterType;
 import game.Rank.ExperienceHolder;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
+import org.ParticleSystem.Particles.ExplodingBrickParticle;
 import org.Rendering.SpriteRenderer;
 import org.Rendering.ImageAsset;
 import utils.Time;
@@ -138,10 +140,6 @@ public class Brick extends MonoBehaviour {
         renderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
         renderer.setSize(BRICK_SIZE);
         renderer.setPivot(new Vector2(0.5, 0.5));
-    }
-
-    public StatusEffect getStatusBrickEffect() {
-        return statusBrickEffect;
     }
 
 }

@@ -1,23 +1,28 @@
-package org.Particle;
+package org.ParticleSystem;
 
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;
+import utils.MathUtils;
 import utils.Time;
 import utils.Vector2;
 
-public class Particle extends MonoBehaviour {
+public class ParticleObject extends MonoBehaviour {
 
     public Vector2 direction;
     public double speed;
     public double lifeTime;
     private double lifeTimer = 0;
+    private SpriteRenderer particleVisual;
 
     private ParticleType type;
 
-    public Particle(GameObject owner) {
+    public ParticleObject(GameObject owner) {
         super(owner);
-        setParticleType(ParticleType.Fire);
+    }
+
+    public void awake() {
+        particleVisual = getComponent(SpriteRenderer.class);
     }
 
     public void assignSpecs(double speed, double lifeTime) {
@@ -34,6 +39,9 @@ public class Particle extends MonoBehaviour {
         getTransform().translate(direction.normalize().multiply(speed * Time.getDeltaTime()));
 
         lifeTimer += Time.getDeltaTime();
+        double t = lifeTimer / lifeTime;
+        double opacity = MathUtils.lerp(1, 0, t);
+        particleVisual.setOpacity(opacity);
         if (lifeTimer >= lifeTime) {
             gameObject.setActive(false);
             lifeTimer = 0;

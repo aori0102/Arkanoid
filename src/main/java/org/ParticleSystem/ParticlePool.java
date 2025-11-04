@@ -1,4 +1,4 @@
-package org.Particle;
+package org.ParticleSystem;
 
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -13,7 +13,7 @@ public class ParticlePool extends MonoBehaviour {
 
     private static ParticlePool instance;
 
-    private final HashMap<ParticleType, List<Particle>> particleHashMap = new HashMap<>();
+    private final HashMap<ParticleType, List<ParticleObject>> particleHashMap = new HashMap<>();
 
     public ParticlePool(GameObject owner) {
         super(owner);
@@ -24,17 +24,17 @@ public class ParticlePool extends MonoBehaviour {
         return instance;
     }
 
-    public Particle getParticle(ParticleType particleType) {
-        List<Particle> particles = particleHashMap.computeIfAbsent(particleType, k -> new ArrayList<>());
-        for (Particle particle : particles) {
+    public ParticleObject getParticle(ParticleType particleType) {
+        List<ParticleObject> particles = particleHashMap.computeIfAbsent(particleType, k -> new ArrayList<>());
+        for (ParticleObject particle : particles) {
             if (!particle.getGameObject().isActive()) {
                 particle.getGameObject().setActive(true);
                 return particle;
             }
         }
 
-        Particle particle = GameObjectManager.instantiate("Particle")
-                .addComponent(Particle.class);
+        ParticleObject particle = GameObjectManager.instantiate("Particle")
+                .addComponent(ParticleObject.class);
         particle.setParticleType(particleType);
 
         SpriteRenderer sr = particle.addComponent(SpriteRenderer.class);
@@ -44,7 +44,7 @@ public class ParticlePool extends MonoBehaviour {
         return particle;
     }
 
-    public void releaseParticle(Particle particle) {
+    public void releaseParticle(ParticleObject particle) {
         particle.getGameObject().setActive(false);
     }
 }
