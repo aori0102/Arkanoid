@@ -4,6 +4,8 @@ import game.Brick.BrickHealth;
 import game.Entity.EntityDamageDealer;
 import game.Entity.EntityHealth;
 import game.Entity.EntityStat;
+import game.Voltraxis.Object.PowerCore.PowerCoreHealth;
+import game.Voltraxis.VoltraxisHealth;
 import org.GameObject.GameObject;
 
 public final class BallDamageDealer extends EntityDamageDealer {
@@ -28,7 +30,9 @@ public final class BallDamageDealer extends EntityDamageDealer {
 
     @Override
     protected boolean isDamageTarget(EntityHealth entityHealth) {
-        return entityHealth instanceof BrickHealth;
+        return entityHealth instanceof BrickHealth
+                || entityHealth instanceof VoltraxisHealth
+                || entityHealth instanceof PowerCoreHealth;
     }
 
     @Override
