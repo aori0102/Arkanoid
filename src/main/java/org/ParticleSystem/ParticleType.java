@@ -1,4 +1,4 @@
-package org.Particle;
+package org.ParticleSystem;
 
 import org.Rendering.ImageAsset;
 
@@ -6,7 +6,9 @@ public enum ParticleType {
 
     Fire(ImageAsset.ImageIndex.FireParticle),
     Blizzard(ImageAsset.ImageIndex.None),
-    Energy(ImageAsset.ImageIndex.EnergyParticle);
+    Energy(ImageAsset.ImageIndex.EnergyParticle),
+    Ball(ImageAsset.ImageIndex.BallParticle),
+    ExplodingBrick(ImageAsset.ImageIndex.ExplodingBrickParticle),;
 
     private final ImageAsset.ImageIndex imageIndex;
 

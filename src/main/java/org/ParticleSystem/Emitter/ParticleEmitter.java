@@ -1,20 +1,29 @@
-package org.Particle.Emitter;
+package org.ParticleSystem.Emitter;
 
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
-import org.Particle.Particle;
-import org.Particle.ParticlePool;
-import org.Particle.ParticleType;
+import org.ParticleSystem.ParticleObject;
+import org.ParticleSystem.ParticlePool;
+import org.ParticleSystem.ParticleType;
 import utils.Random;
 import utils.Time;
 import utils.Vector2;
 
 public abstract class ParticleEmitter extends MonoBehaviour {
 
+    /// The spawn rate of particle
     protected double emissionRate;
+
+    ///  Delay time between each spawn
     protected double emissionTime;
+
+    /// Spread Angle of the particle in the world position
     protected double spreadAngle;
+
+    /// Minimum travel speed
     protected double minSpeed;
+
+    /// Maximum travel speed
     protected double maxSpeed;
     protected double minLifeTime;
     protected double maxLifeTime;
@@ -33,7 +42,11 @@ public abstract class ParticleEmitter extends MonoBehaviour {
 
     @Override
     public void update() {
+        if (!canEmit) return;
         emitCounter();
+        if (isEmitting) {
+            emit();
+        }
     }
 
     protected void emitCounter() {
@@ -50,11 +63,12 @@ public abstract class ParticleEmitter extends MonoBehaviour {
 
     protected abstract Vector2 generateSpawnPosition();
 
-    protected Particle spawnParticles(ParticleType particleType) {
+    protected ParticleObject spawnParticles(ParticleType particleType) {
         double speed = Random.range(minSpeed, maxSpeed);
         double lifetime = Random.range(minLifeTime, maxLifeTime);
 
-        Particle particle = ParticlePool.getInstance().getParticle(particleType);
+        ParticleObject particle = ParticlePool.getInstance().getParticle(particleType);
+        particle.setParticleType(particleType);
 
         particle.assignSpecs(speed, lifetime);
         particle.getGameObject().setActive(true);
@@ -91,7 +105,6 @@ public abstract class ParticleEmitter extends MonoBehaviour {
     }
 
     public void setParticleType(ParticleType particleType) {
-        System.out.println("This is set");
         this.particleType = particleType;
     }
 

@@ -1,7 +1,6 @@
 package org.Prefab;
 
 import game.Ball.BallPrefab;
-import game.Ball.BallsManager;
 import game.Ball.BallsManagerPrefab;
 import game.Brick.BrickPrefab;
 import game.Damagable.HealthChangePopUpUIPrefab;
@@ -88,6 +87,8 @@ public enum PrefabIndex {
     Player_HealthBar(new PlayerHealthBarPrefab()),
 
     Player_HealthLossVignette(new PlayerHealthLossVignettePrefab()),
+
+    /// Particle;
 
     None(null);
 

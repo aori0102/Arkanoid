@@ -1,6 +1,7 @@
 package game.MapGenerator;
 
 import game.Brick.Brick;
+import game.Brick.ExplodingBrickParticleCaller;
 import game.BrickObj.BrickGenMap.GenMap;
 import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventActionID;
@@ -9,6 +10,7 @@ import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import org.ParticleSystem.Particles.ExplodingBrickParticle;
 import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
 import utils.Vector2;
@@ -113,6 +115,7 @@ public final class BrickMapManager extends MonoBehaviour {
             var cell = brickCoordinateMap.remove(brick);
             brickGrid.get(cell.row).set(cell.column, null);
             PowerUpManager.getInstance().spawnPowerUp(e.brickPosition);
+            ExplodingBrickParticleCaller.getInstance().startEmit(e.brickPosition);
             if (brickCoordinateMap.isEmpty()) {
                 onMapCleared.invoke(this, null);
             }

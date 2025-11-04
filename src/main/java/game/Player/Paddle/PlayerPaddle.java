@@ -18,6 +18,7 @@ import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import org.Layer.Layer;
+import org.ParticleSystem.Particles.PaddleParticle;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
 import utils.Time;
@@ -76,11 +77,10 @@ public class PlayerPaddle extends MonoBehaviour {
             canStartStunnedCounter = true;
         });
 
+        spawnParticle();
+
         Player.getInstance().getPlayerController().getActionMap().
                 onKeyHeld.addListener(this::handlePaddleMovement);
-        Player.getInstance().getPlayerController().getActionMap().
-                onKeyReleased.addListener((_, action) -> {
-                });
         Player.getInstance().getPlayerController().getActionMap().
                 onMouseHeld.addListener(this::handleRayDirection);
         Player.getInstance().getPlayerController().getActionMap().
@@ -277,6 +277,22 @@ public class PlayerPaddle extends MonoBehaviour {
      */
     public void linkArrow(Arrow arrow) {
         this.arrow = arrow;
+    }
+
+    private void spawnParticle() {
+        var paddleParticle = GameObjectManager.instantiate("PaddleParticle").addComponent(PaddleParticle.class);
+        paddleParticle.getGameObject().setParent(gameObject);
+        paddleParticle.setPosition(new Vector2(40, 0));
+        paddleParticle.setDirection(Vector2.down());
+        paddleParticle.setParent(gameObject);
+        paddleParticle.startEmit();
+
+        var paddleParticle1 = GameObjectManager.instantiate("PaddleParticle").addComponent(PaddleParticle.class);
+        paddleParticle1.getGameObject().setParent(gameObject);
+        paddleParticle1.setPosition(new Vector2(-40, 0));
+        paddleParticle1.setDirection(Vector2.down());
+        paddleParticle1.setParent(gameObject);
+        paddleParticle1.startEmit();
     }
 
 }

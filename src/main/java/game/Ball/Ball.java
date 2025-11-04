@@ -12,6 +12,7 @@ import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
+import org.ParticleSystem.Particles.BallParticle;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
 import org.Rendering.ImageAsset;
@@ -33,6 +34,8 @@ public class Ball extends MonoBehaviour {
     private boolean hitPaddle = false;
 
     private EventActionID ball_onAnyBallHitBrick_ID = null;
+
+    private BallParticle ballParticle;
 
     public static EventHandler<Void> onAnyBallHitBrick = new EventHandler<>(Ball.class);
     public static EventHandler<Void> onAnyBallJustHitPaddle = new EventHandler<>(Ball.class);
@@ -73,6 +76,8 @@ public class Ball extends MonoBehaviour {
         ballEffectController.onEffectInflicted.addListener(this::ballEffectController_onEffectInflicted);
         ballEffectController.onEffectCleared.addListener(this::ballEffectController_onEffectCleared);
 
+        initializeBallParticle();
+        ballParticle.stopEmit();
     }
 
     @Override
@@ -88,7 +93,6 @@ public class Ball extends MonoBehaviour {
 
     @Override
     protected void onDestroy() {
-        //TODO: let ball manager listen to event
         if (BallsManager.getInstance() != null) {
             BallsManager.getInstance().removeBall(this);
         }
@@ -124,12 +128,15 @@ public class Ball extends MonoBehaviour {
      */
     public void handleMovement() {
         // Make the ball follow the paddle position if player haven't fired it
-        if (!playerPaddle.isFired && direction == null) {
-            getTransform().setGlobalPosition(playerPaddle.getTransform().getGlobalPosition());
+        if (!playerPaddle.isFired && direction.equals(Vector2.zero())) {
+            getTransform().setGlobalPosition(playerPaddle.getTransform()
+                    .getGlobalPosition().add(Vector2.up().multiply(20)));
+            ballParticle.stopEmit();
         }
         // Moving the ball
         else {
             getTransform().translate(direction.normalize().multiply(BASE_BALL_SPEED * Time.getDeltaTime()));
+            ballParticle.startEmit();
         }
 
     }
@@ -162,6 +169,7 @@ public class Ball extends MonoBehaviour {
         } else if (Vector2.dot(direction, Vector2.right()) < 0.1) {
             direction = direction.rotateBy(Random.range(-0.078, 0.019));
         }
+        ballParticle.setDirection(direction);
     }
 
     /**
@@ -236,5 +244,12 @@ public class Ball extends MonoBehaviour {
     private void ballEffectController_onEffectCleared(Object sender, StatusEffect e) {
         getBallVisual().setImage(ImageAsset.ImageIndex.Ball.getImage());
     }
+
+    private void initializeBallParticle() {
+        ballParticle = GameObjectManager.instantiate("BallParticle").addComponent(BallParticle.class);
+        ballParticle.setDirection(direction.multiply(-1));
+        ballParticle.setParent(gameObject);
+    }
+
 
 }
