@@ -9,7 +9,8 @@ import org.Event.EventActionID;
 import org.GameObject.GameObject;
 
 public class Recovery extends PowerUp {
-    private EventActionID recoveryEventActionID = null;
+
+    private static final int HEAL_AMOUNT = 20;
 
     /**
      * Create this MonoBehaviour.
@@ -21,17 +22,14 @@ public class Recovery extends PowerUp {
         setPowerUpIndex(PowerUpIndex.Recovery);
     }
 
-    public void awake() {
-        recoveryEventActionID = PowerUpManager.getInstance().onRecovery.addListener(this::handleOnRecoveryRequested);
-    }
-
-    private void handleOnRecoveryRequested(Object o, int healAmount) {
+    private void handleOnRecoveryRequested() {
         Player.getInstance().getPlayerPaddle().getPaddleHealth()
-                .alterHealth(EntityHealthAlterType.Regeneration, healAmount);
+                .alterHealth(EntityHealthAlterType.Regeneration, HEAL_AMOUNT);
     }
 
     @Override
     protected void onDestroy() {
         handleOnRecoveryRequested();
     }
+
 }

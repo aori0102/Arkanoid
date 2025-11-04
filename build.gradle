@@ -35,6 +35,12 @@ test {
 run {
     // Add --editor_enabled for editor view
     args = ["--editor_enabled"]
+
+    jvmArgs = [
+            "-XX:+UseZGC",
+            "-Xms512m",
+            "-Xmx1024m"
+    ]
 }
 
 application {

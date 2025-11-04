@@ -16,7 +16,6 @@ public class Player extends MonoBehaviour {
     private static Player instance = null;
 
     /// Attributes
-    private static final int BASE_SPEED = 1000;
     private static final int ATTACK = 80;
     private static final int BASE_SPEED = 800;
     private int currentSpeed;

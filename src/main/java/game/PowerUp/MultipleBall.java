@@ -1,7 +1,6 @@
 package game.PowerUp;
 
 import game.Player.PlayerPowerUpHandler;
-import game.GameObject.BallsManager;
 import game.PowerUp.Index.PowerUp;
 import game.Player.Paddle.PlayerPaddle;
 import org.GameObject.GameObject;

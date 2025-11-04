@@ -283,37 +283,4 @@ public class Ball extends MonoBehaviour {
         }
     }
 
-    @Override
-    public DamageInfo getDamageInfo() {
-
-        var damageInfo = new DamageInfo();
-        if (Random.range(0.0, 1.0) < BALL_CRITICAL_CHANCE) {
-            damageInfo.amount = (int) (BALL_DAMAGE * (1.0 + BALL_CRITICAL_AMOUNT));
-            damageInfo.type = DamageType.Critical;
-        } else {
-            damageInfo.amount = BALL_DAMAGE;
-            damageInfo.type = DamageType.Normal;
-        }
-        return damageInfo;
-
-    }
-
-    @Override
-    public StatusEffect getEffect() {
-        return currentStatusEffect;
-    }
-
-    @Override
-    public void onDamaged() {
-        System.out.println("Damaged");
-        resetCurrentStatusEffect();
-    }
-
-    @Override
-    public boolean isDamageTarget(DamageAcceptor damageAcceptor) {
-        return damageAcceptor instanceof VoltraxisDamageAcceptor
-                || damageAcceptor instanceof PowerCoreDamageAcceptor
-                || damageAcceptor instanceof BrickDamageAcceptor;
-    }
-
 }

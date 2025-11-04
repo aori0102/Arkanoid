@@ -1,11 +1,5 @@
 package game.Player.PlayerSkills;
 
-import game.Brick.BrickDamageAcceptor;
-import game.Damagable.DamageAcceptor;
-import game.Damagable.DamageInfo;
-import game.Damagable.DamageType;
-import game.Damagable.ICanDealDamage;
-import game.Effect.StatusEffect;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import org.GameObject.GameObject;
