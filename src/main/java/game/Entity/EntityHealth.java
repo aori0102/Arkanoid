@@ -61,7 +61,7 @@ public abstract class EntityHealth extends MonoBehaviour {
      * @param alterType The health altering type.
      * @param amount    The value to set.
      */
-    public void alterHealth(EntityHealthAlterType alterType, int amount) {
+    public final void alterHealth(EntityHealthAlterType alterType, int amount) {
 
         var previous = _health;
 
@@ -93,7 +93,7 @@ public abstract class EntityHealth extends MonoBehaviour {
      *
      * @return this entity's current health point.
      */
-    public int getHealth() {
+    public final int getHealth() {
         return _health;
     }
 
