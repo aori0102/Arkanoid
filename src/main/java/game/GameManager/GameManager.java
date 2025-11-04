@@ -118,6 +118,10 @@ public class GameManager extends MonoBehaviour {
         SceneManager.loadScene(SceneKey.Menu);
     }
 
+    private void spawnBoss() {
+        PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis);
+    }
+
     /**
      * Load the next level.
      * <p>
