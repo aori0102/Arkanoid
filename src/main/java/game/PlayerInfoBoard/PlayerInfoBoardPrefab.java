@@ -25,7 +25,7 @@ public final class PlayerInfoBoardPrefab extends Prefab {
                 .addComponent(SpriteRenderer.class);
         backgroundRenderer.setPivot(new Vector2(1.0, 0.0));
         backgroundRenderer.setImage(ImageAsset.ImageIndex.Player_UI_Scoreboard_Background.getImage());
-        backgroundRenderer.setRenderLayer(RenderLayer.UI);
+        backgroundRenderer.setRenderLayer(RenderLayer.UI_Middle);
         backgroundRenderer.getTransform().setGlobalPosition(BACKGROUND_POSITION);
         backgroundRenderer.getGameObject().setParent(playerInfoObject);
 

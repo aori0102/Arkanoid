@@ -18,10 +18,10 @@ public enum RenderLayer {
     _10(10),
     Overlay(11),
     _12(12),
-    _13(13),
-    _14(14),
-    _15(15),
-    UI(16);
+    UI_Bottom(13),
+    UI_Middle(14),
+    UI_Top(15),
+    _16(16);
 
     private static final int MAX_LAYER = 16;
     private final int layerIndex;

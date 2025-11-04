@@ -41,7 +41,7 @@ public final class HealthBarUIPrefab extends Prefab {
         var backgroundSpriteRenderer = backgroundObject.addComponent(SpriteRenderer.class);
         backgroundSpriteRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_HealthBar_Background.getImage());
         backgroundSpriteRenderer.setPivot(centerPivot);
-        backgroundSpriteRenderer.setRenderLayer(RenderLayer.UI);
+        backgroundSpriteRenderer.setRenderLayer(RenderLayer.UI_Middle);
         backgroundSpriteRenderer.setSize(HEALTH_BAR_SIZE);
         backgroundObject.setParent(healthBarObject);
 
@@ -50,7 +50,7 @@ public final class HealthBarUIPrefab extends Prefab {
         var lostSpriteRenderer = lostObject.addComponent(SpriteRenderer.class);
         lostSpriteRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_HealthBar_Lost.getImage());
         lostSpriteRenderer.setPivot(centerPivot);
-        lostSpriteRenderer.setRenderLayer(RenderLayer.UI);
+        lostSpriteRenderer.setRenderLayer(RenderLayer.UI_Middle);
         lostSpriteRenderer.setSize(HEALTH_BAR_SIZE);
         lostObject.setParent(healthBarObject);
 
@@ -59,7 +59,7 @@ public final class HealthBarUIPrefab extends Prefab {
         var remainSpriteRenderer = remainObject.addComponent(SpriteRenderer.class);
         remainSpriteRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_HealthBar_Remain.getImage());
         remainSpriteRenderer.setPivot(centerPivot);
-        remainSpriteRenderer.setRenderLayer(RenderLayer.UI);
+        remainSpriteRenderer.setRenderLayer(RenderLayer.UI_Middle);
         remainSpriteRenderer.setSize(HEALTH_BAR_SIZE);
         remainObject.setParent(healthBarObject);
 
@@ -68,7 +68,7 @@ public final class HealthBarUIPrefab extends Prefab {
         var outlineSpriteRenderer = outlineObject.addComponent(SpriteRenderer.class);
         outlineSpriteRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_HealthBar_Outline.getImage());
         outlineSpriteRenderer.setPivot(centerPivot);
-        outlineSpriteRenderer.setRenderLayer(RenderLayer.UI);
+        outlineSpriteRenderer.setRenderLayer(RenderLayer.UI_Middle);
         outlineSpriteRenderer.setSize(HEALTH_BAR_SIZE);
         outlineObject.setParent(healthBarObject);
 
@@ -80,7 +80,7 @@ public final class HealthBarUIPrefab extends Prefab {
         healthText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         healthText.setVerticalAlignment(TextVerticalAlignment.Middle);
         healthText.setFontSize(HEALTH_FONT_SIZE);
-        healthText.setRenderLayer(RenderLayer.UI);
+        healthText.setRenderLayer(RenderLayer.UI_Middle);
         healthTextObject.setParent(healthBarObject);
 
         // Boss name text
@@ -91,7 +91,7 @@ public final class HealthBarUIPrefab extends Prefab {
         nameText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         nameText.setVerticalAlignment(TextVerticalAlignment.Middle);
         nameText.setFontSize(NAME_FONT_SIZE);
-        nameText.setRenderLayer(RenderLayer.UI);
+        nameText.setRenderLayer(RenderLayer.UI_Middle);
         nameText.getTransform().setLocalPosition(NAME_TEXT_OFFSET);
         nameTextObject.setParent(healthBarObject);
 

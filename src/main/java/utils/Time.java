@@ -27,6 +27,7 @@ public class Time {
     private static double time = 0.0;
     private static double realTime = 0.0;
     private static double deltaTime = 0.0;
+    private static double unscaledDeltaTime = 0.0;
 
     /**
      * Update time for this frame. Should only be
@@ -43,7 +44,8 @@ public class Time {
 
         var prev = realTime;
         realTime = System.nanoTime() / 1000000000.0 - offset;
-        deltaTime = (realTime - prev) * timeScale;
+        unscaledDeltaTime = realTime - prev;
+        deltaTime = unscaledDeltaTime * timeScale;
         time += deltaTime;
 
     }
@@ -131,6 +133,14 @@ public class Time {
      */
     public static double getDeltaTime() {
         return deltaTime;
+    }
+
+    /**
+     *
+     * @return The delta time that is not affected by timescale.
+     */
+    public static double getUnscaledDeltaTime() {
+        return unscaledDeltaTime;
     }
 
 }

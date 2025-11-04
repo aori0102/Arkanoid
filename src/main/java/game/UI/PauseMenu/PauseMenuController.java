@@ -44,19 +44,14 @@ public class PauseMenuController extends MonoBehaviour {
     }
     private void onMenuButtonClicked(Object sender, MouseEvent e) {
         SceneManager.loadScene(SceneKey.Menu);
+        GameManager.getInstance().resumeGame();
     }
+
     private void linkButtons() {
         try {
-            var pauseMenuButtons = PauseMenuManager.getInstance().getButtons();
-            for(var button : pauseMenuButtons){
-                if(button instanceof PauseButton){
-                    pauseButton = (PauseButton) button;
-                } else if(button instanceof ResumeButton){
-                    resumeButton = (ResumeButton) button;
-                } else if(button instanceof MenuButton){
-                    menuButton = (MenuButton) button;
-                }
-            }
+            pauseButton = PauseMenuManager.getInstance().getPauseButton();
+            resumeButton = PauseMenuManager.getInstance().getResumeButton();
+            menuButton = PauseMenuManager.getInstance().getMenuButton();
 
             if(pauseButton == null || resumeButton == null || menuButton == null){
                 throw new NullPointerException("PauseMenuButton(s) is null!");

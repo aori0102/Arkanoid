@@ -18,7 +18,10 @@ public class SFXPlayer extends AudioPlayer {
     {
         return sfxIndex;
     }
-
+    public void setVolume(double volume)
+    {
+        audioClip.setVolume(volume);
+    }
     @Override
     public void play() {
         audioClip.play();

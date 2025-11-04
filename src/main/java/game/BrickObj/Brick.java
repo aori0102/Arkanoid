@@ -1,6 +1,8 @@
 package game.BrickObj;
 
 import game.Ball.Ball;
+import org.Audio.AudioManager;
+import org.Audio.SFXAsset;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;

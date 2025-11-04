@@ -15,6 +15,7 @@ public class MusicHandler {
     public static void audioHandler_OnSceneChanged(Object sender, SceneKey e) {
         System.out.println("Music Handler on scene changed!");
         if (e == SceneKey.Menu) {
+            AudioManager.stopMusic();
             AudioManager.setCurrentMusicPlayer(MusicAsset.MusicIndex.MainMenuOST);
             AudioManager.playMusic();
         } else if (e == SceneKey.InGame) {

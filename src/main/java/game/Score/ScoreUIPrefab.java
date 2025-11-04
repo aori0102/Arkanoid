@@ -4,10 +4,7 @@ import javafx.scene.paint.Color;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.RenderLayer;
-import org.Main;
 import org.Prefab.Prefab;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
 import org.Text.FontDataIndex;
 import org.Text.TextHorizontalAlignment;
 import org.Text.TextUI;
@@ -44,7 +41,7 @@ public final class ScoreUIPrefab extends Prefab {
         scoreText.setText(SCORE_TEXT_DEFAULT);
         scoreText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         scoreText.setVerticalAlignment(TextVerticalAlignment.Middle);
-        scoreText.setRenderLayer(RenderLayer.UI);
+        scoreText.setRenderLayer(RenderLayer.UI_Middle);
         scoreText.getGameObject().setParent(scoreUI.getGameObject());
         scoreText.getTransform().setGlobalPosition(SCORE_TEXT_POSITION);
 
@@ -57,7 +54,7 @@ public final class ScoreUIPrefab extends Prefab {
         levelText.setText(LEVEL_TEXT_DEFAULT);
         levelText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         levelText.setVerticalAlignment(TextVerticalAlignment.Middle);
-        levelText.setRenderLayer(RenderLayer.UI);
+        levelText.setRenderLayer(RenderLayer.UI_Middle);
         levelText.setPivot(new Vector2(0.5, 0.0));
         levelText.getGameObject().setParent(scoreUI.getGameObject());
         levelText.getTransform().setGlobalPosition(LEVEL_TEXT_POSITION);
@@ -71,7 +68,7 @@ public final class ScoreUIPrefab extends Prefab {
         comboText.setText(COMBO_TEXT_DEFAULT);
         comboText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         comboText.setVerticalAlignment(TextVerticalAlignment.Middle);
-        comboText.setRenderLayer(RenderLayer.UI);
+        comboText.setRenderLayer(RenderLayer.UI_Middle);
         comboText.getGameObject().setParent(scoreUI.getGameObject());
         comboText.getTransform().setGlobalPosition(COMBO_TEXT_POSITION);
 
