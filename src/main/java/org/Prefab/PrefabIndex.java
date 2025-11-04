@@ -21,6 +21,11 @@ import game.PlayerInfoBoard.PlayerInfoBoardPrefab;
 import game.Score.ScoreManagerPrefab;
 import game.Score.ScorePopUpPrefab;
 import game.Score.ScoreUIPrefab;
+import game.UI.Buttons.ContinueButton;
+import game.UI.Buttons.MenuButton;
+import game.UI.Buttons.OptionsButton;
+import game.UI.Buttons.ResumeButton;
+import game.UI.Prefab.*;
 import game.UI.UIManagerPrefab;
 import game.Voltraxis.Prefab.*;
 
@@ -51,7 +56,15 @@ public enum PrefabIndex {
     /// Health change visualization
     HealthChange_PopUp(new HealthChangePopUpUIPrefab()),
     HealthChange_VisualizeHandler(new HealthChangeVisualizerPrefab()),
-
+    /// UI
+    PauseButton(new PauseButtonPrefab()),
+    ResumeButton(new ResumeButtonPrefab()),
+    MenuButton(new MenuButtonPrefab()),
+    StartButton(new StartButtonPrefab()),
+    ContinueButton(new ContinueButtonPrefab()),
+    RecordButton(new RecordButtonPrefab()),
+    OptionsButton(new OptionsButtonPrefab()),
+    QuitButton(new QuitButtonPrefab()),
     /// Voltraxis
     Voltraxis(new VoltraxisPrefab()),
     Voltraxis_ChargingUI(new ChargingUIPrefab()),

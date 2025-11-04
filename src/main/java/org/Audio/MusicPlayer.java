@@ -39,6 +39,13 @@ public class MusicPlayer extends AudioPlayer {
     public void stop() {
         mediaPlayer.stop();
     }
+    public void setVolume(double volume) {
+        mediaPlayer.setVolume(volume);
+    }
+
+    public double getVolume() {
+        return mediaPlayer.getVolume();
+    }
 
     public void pause() {
         mediaPlayer.pause();

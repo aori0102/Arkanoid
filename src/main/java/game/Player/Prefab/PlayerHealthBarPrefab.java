@@ -41,7 +41,7 @@ public class PlayerHealthBarPrefab extends Prefab {
         backgroundRenderer.setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_Background.getImage());
         backgroundRenderer.setPivot(centerPivot);
         backgroundRenderer.setSize(HEALTH_BAR_SIZE);
-        backgroundRenderer.setRenderLayer(RenderLayer.UI);
+        backgroundRenderer.setRenderLayer(RenderLayer.UI_Middle);
         backgroundObject.setParent(healthBar.getGameObject());
 
         // Fill
@@ -50,7 +50,7 @@ public class PlayerHealthBarPrefab extends Prefab {
         fillRenderer.setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_Fill.getImage());
         fillRenderer.setPivot(centerPivot);
         fillRenderer.setSize(HEALTH_BAR_SIZE);
-        fillRenderer.setRenderLayer(RenderLayer.UI);
+        fillRenderer.setRenderLayer(RenderLayer.UI_Middle);
         fillRenderer.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);
         fillObject.setParent(healthBar.getGameObject());
 
@@ -60,7 +60,7 @@ public class PlayerHealthBarPrefab extends Prefab {
         outlineRenderer.setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_Outline.getImage());
         outlineRenderer.setPivot(centerPivot);
         outlineRenderer.setSize(HEALTH_BAR_SIZE);
-        outlineRenderer.setRenderLayer(RenderLayer.UI);
+        outlineRenderer.setRenderLayer(RenderLayer.UI_Middle);
         outlineObject.setParent(healthBar.getGameObject());
 
         // Life
@@ -74,7 +74,7 @@ public class PlayerHealthBarPrefab extends Prefab {
         leftLifeRenderer.setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_LifeRemain.getImage());
         leftLifeRenderer.setPivot(centerPivot);
         leftLifeRenderer.setSize(LIFE_BAR_SIZE);
-        leftLifeRenderer.setRenderLayer(RenderLayer.UI);
+        leftLifeRenderer.setRenderLayer(RenderLayer.UI_Middle);
         leftLifeObject.setParent(lifeContainerObject);
         leftLifeObject.getTransform().setLocalPosition(LIFE_RENDERER_OFFSET.inverse());
 
@@ -84,7 +84,7 @@ public class PlayerHealthBarPrefab extends Prefab {
         centerLifeRenderer.setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_LifeRemain.getImage());
         centerLifeRenderer.setPivot(centerPivot);
         centerLifeRenderer.setSize(LIFE_BAR_SIZE);
-        centerLifeRenderer.setRenderLayer(RenderLayer.UI);
+        centerLifeRenderer.setRenderLayer(RenderLayer.UI_Middle);
         centerLifeObject.setParent(lifeContainerObject);
 
         // Right life
@@ -93,7 +93,7 @@ public class PlayerHealthBarPrefab extends Prefab {
         rightLifeRenderer.setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_LifeRemain.getImage());
         rightLifeRenderer.setPivot(centerPivot);
         rightLifeRenderer.setSize(LIFE_BAR_SIZE);
-        rightLifeRenderer.setRenderLayer(RenderLayer.UI);
+        rightLifeRenderer.setRenderLayer(RenderLayer.UI_Middle);
         rightLifeObject.setParent(lifeContainerObject);
         rightLifeObject.getTransform().setLocalPosition(LIFE_RENDERER_OFFSET);
 

@@ -1,12 +1,14 @@
 package game.UI.Buttons;
 
-import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
+import org.Audio.AudioManager;
+import org.Audio.SFXAsset;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Animation.SpriteAnimator;
-import utils.MathUtils;
+import org.Layer.RenderLayer;
+import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
 public abstract class BaseButton extends MonoBehaviour {
@@ -25,7 +27,6 @@ public abstract class BaseButton extends MonoBehaviour {
 
     //ButtonState
     protected enum ButtonState {Idle, Hover, Pressed, Released, Clicked}
-
     protected ButtonState buttonState = ButtonState.Idle;
     private ButtonState prevState = null;
 
@@ -57,6 +58,7 @@ public abstract class BaseButton extends MonoBehaviour {
         spriteAnimator.addAnimationClip(releasedKey);
         spriteAnimator.addAnimationClip(clickedKey);
         setupEventHandler();
+        spriteAnimator.getComponent(SpriteRenderer.class).setRenderLayer(RenderLayer.UI_Top);
 
 
     }
@@ -83,6 +85,7 @@ public abstract class BaseButton extends MonoBehaviour {
         buttonUI.onPointerClick.addListener((s, e) -> {
             buttonState = ButtonState.Clicked;
             targetScale = CLICKED_SCALE;
+            AudioManager.playSFX(SFXAsset.SFXIndex.ButtonClick);
             System.out.println("[ButtonUI] → Clicked event triggered | State: " + buttonState);
         });
 
@@ -107,6 +110,7 @@ public abstract class BaseButton extends MonoBehaviour {
         buttonUI.onPointerEnter.addListener((s, e) -> {
             buttonState = ButtonState.Hover;
             targetScale = ENTER_SCALE;
+            AudioManager.playSFX(SFXAsset.SFXIndex.ButtonHover);
             System.out.println("[ButtonUI] → PointerEnter event triggered | State: " + buttonState);
         });
 
@@ -118,7 +122,7 @@ public abstract class BaseButton extends MonoBehaviour {
     }
 
     private void scaleAnimation(){
-        scale += (targetScale - scale) * SCALE_SPEED * utils.Time.getDeltaTime();
+        scale += (targetScale - scale) * SCALE_SPEED * utils.Time.getUnscaledDeltaTime();
         getTransform().setGlobalScale(new Vector2(scale, scale));
     }
 

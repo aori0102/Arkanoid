@@ -65,7 +65,7 @@ public final class PowerCorePrefab extends Prefab {
         backgroundRenderer.setPivot(centerPivot);
         backgroundRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_PowerCore_UI_HealthBar_Background.getImage());
         backgroundRenderer.setSize(POWER_CORE_HEALTH_BAR_RENDER_SIZE);
-        backgroundRenderer.setRenderLayer(RenderLayer.UI);
+        backgroundRenderer.setRenderLayer(RenderLayer.UI_Middle);
         backgroundObject.setParent(healthBarObject);
 
         // Fill lost
@@ -74,7 +74,7 @@ public final class PowerCorePrefab extends Prefab {
         fillLostRenderer.setPivot(centerPivot);
         fillLostRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_PowerCore_UI_HealthBar_Lost.getImage());
         fillLostRenderer.setSize(POWER_CORE_HEALTH_BAR_RENDER_SIZE);
-        fillLostRenderer.setRenderLayer(RenderLayer.UI);
+        fillLostRenderer.setRenderLayer(RenderLayer.UI_Middle);
         fillLostRenderer.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);
         fillLostObject.setParent(healthBarObject);
 
@@ -84,7 +84,7 @@ public final class PowerCorePrefab extends Prefab {
         fillRemainRenderer.setPivot(centerPivot);
         fillRemainRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_PowerCore_UI_HealthBar_Remain.getImage());
         fillRemainRenderer.setSize(POWER_CORE_HEALTH_BAR_RENDER_SIZE);
-        fillRemainRenderer.setRenderLayer(RenderLayer.UI);
+        fillRemainRenderer.setRenderLayer(RenderLayer.UI_Middle);
         fillRemainRenderer.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);
         fillRemainObject.setParent(healthBarObject);
 
@@ -94,7 +94,7 @@ public final class PowerCorePrefab extends Prefab {
         outlineRenderer.setPivot(centerPivot);
         outlineRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_PowerCore_UI_HealthBar_Outline.getImage());
         outlineRenderer.setSize(POWER_CORE_HEALTH_BAR_RENDER_SIZE);
-        outlineRenderer.setRenderLayer(RenderLayer.UI);
+        outlineRenderer.setRenderLayer(RenderLayer.UI_Middle);
         outlineObject.setParent(healthBarObject);
 
         // Link components

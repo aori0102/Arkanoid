@@ -32,7 +32,7 @@ public final class ScorePopUp extends MonoBehaviour {
     public ScorePopUp(GameObject owner) {
         super(owner);
 
-        scoreText.setRenderLayer(RenderLayer.UI);
+        scoreText.setRenderLayer(RenderLayer.UI_Middle);
         scoreText.setFontSize(20);
         scoreText.setFont(FontDataIndex.Jersey_25);
         scoreText.setVerticalAlignment(TextVerticalAlignment.Bottom);

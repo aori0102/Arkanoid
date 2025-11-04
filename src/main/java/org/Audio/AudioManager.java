@@ -21,6 +21,9 @@ public final class AudioManager {
             new HashMap<SFXAsset.SFXIndex, SFXPlayer>();
 
     private static MusicPlayer currentMusicPlayer = null;
+    private static double masterVolume = 1;
+    private static double musicVolume = 1;
+    private static double sfxVolume = 1;
 
 
     public static void initializeAudioManager() {
@@ -35,27 +38,52 @@ public final class AudioManager {
             if (value == MusicAsset.MusicIndex.None) continue;
             new MusicPlayer(value);
         }
-
+        setMusicVolume(0.5);
         // Delay listener registration until all players are done constructing
         MusicHandler.initializeMusicHandler();
     }
 
+    public static void setMasterVolume(double volume) {
+        masterVolume = volume;
+        if (currentMusicPlayer != null) {
+            currentMusicPlayer.setVolume(masterVolume * musicVolume);
+
+        }
+    }
+
+    public static void setMusicVolume(double musicVolume) {
+        AudioManager.musicVolume = musicVolume;
+        if (currentMusicPlayer != null) {
+            currentMusicPlayer.setVolume(musicVolume * masterVolume);
+        }
+
+    }
+
+    public static void setSfxVolume(double sfxVolume) {
+        AudioManager.sfxVolume = sfxVolume;
+    }
+
+    public static double getMasterVolume() {
+        return masterVolume;
+    }
 
     public static void setCurrentMusicPlayer(MusicAsset.MusicIndex musicIndex) {
         currentMusicPlayer = musicIndexMusicPlayerHashMap.get(musicIndex);
         currentMusicPlayer.setLoop(true);
+        currentMusicPlayer.setVolume(masterVolume * currentMusicPlayer.getVolume());
     }
 
     public static void playMusic() {
-        if(currentMusicPlayer == null){
+        if (currentMusicPlayer == null) {
             System.err.println("[AudioManager] Can't play music because current music player is null");
         }
         System.out.println("[AudioManager] Playing music:" + currentMusicPlayer.getMusicIndex());
+        currentMusicPlayer.setVolume(masterVolume * musicVolume);
         currentMusicPlayer.play();
     }
 
     public static void stopMusic() {
-        if(currentMusicPlayer == null){
+        if (currentMusicPlayer == null) {
             return;
         }
         currentMusicPlayer.stop();
@@ -63,10 +91,14 @@ public final class AudioManager {
 
     /**
      * Play SFX
+     *
      * @param sfxIndex index of the SFX that you want to play.
      */
     public static void playSFX(SFXAsset.SFXIndex sfxIndex) {
-        sfxIndexSFXPlayerHashMap.get(sfxIndex).play();
+
+        var sfx = sfxIndexSFXPlayerHashMap.get(sfxIndex);
+        sfx.setVolume(sfxVolume * masterVolume);
+        sfx.play();
     }
 
     public static void addAudioPlayer(AudioPlayer audioPlayer) {

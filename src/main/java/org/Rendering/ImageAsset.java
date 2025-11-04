@@ -32,6 +32,10 @@ public class ImageAsset {
         ResumeButton("/UI/ResumeButton.png"),
         /// Game Title
         GameTitle("/UI/GameTitle.png"),
+        /// Background
+        GamePlayBackground_Normal("/UI/GamePlayBackground_Normal.png"),
+        GamePlayBackground_Boss("/UI/GamePlayBackground_Boss.png"),
+        DimmedBackground("/UI/DimmedBackground.png"),
         /// Perks
         Perks("/UI/Perks.png"),
 

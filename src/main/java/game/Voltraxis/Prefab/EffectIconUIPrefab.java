@@ -1,6 +1,5 @@
 package game.Voltraxis.Prefab;
 
-import game.Voltraxis.VoltraxisData;
 import game.Voltraxis.VoltraxisEffectIconUI;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -24,7 +23,7 @@ public final class EffectIconUIPrefab extends Prefab {
                 .getGameObject();
         var effectRenderer = effectIconObject.getComponent(SpriteRenderer.class);
         effectRenderer.setPivot(centerPivot);
-        effectRenderer.setRenderLayer(RenderLayer.UI);
+        effectRenderer.setRenderLayer(RenderLayer.UI_Middle);
 
         return effectIconObject;
 

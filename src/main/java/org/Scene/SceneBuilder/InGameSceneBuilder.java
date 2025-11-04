@@ -14,6 +14,7 @@ import game.PowerUp.Index.PowerUpManager;
 import game.UI.Buttons.MenuButton;
 import game.UI.Buttons.PauseButton;
 import game.UI.Buttons.ResumeButton;
+import game.UI.GamePlayBackground;
 import game.UI.PauseMenu.PauseMenuController;
 import game.UI.PauseMenu.PauseMenuManager;
 import org.GameObject.GameObjectManager;
@@ -44,6 +45,8 @@ public final class InGameSceneBuilder extends SceneBuilder {
 
         PrefabManager.instantiatePrefab(PrefabIndex.PlayerInfoBoard);
 
+        GameObjectManager.instantiate("GamePlayBackground").addComponent(GamePlayBackground.class);
+
         BallsManager.getInstance().spawnInitialBall();
 
         var powerUpManager = GameObjectManager.instantiate("powerUpManager");
@@ -67,19 +70,10 @@ public final class InGameSceneBuilder extends SceneBuilder {
         borderBottom.addComponent(Border.class).setBorderType(BorderType.BorderBottom);
         borderBottom.getTransform().setLocalPosition(new Vector2(1190, 750));
 
-        var pausebutton = GameObjectManager.instantiate("PauseButton").addComponent(PauseButton.class);
-        var resumeButton = GameObjectManager.instantiate("ResumeButton").addComponent(ResumeButton.class);
-        var menuButton = GameObjectManager.instantiate("MenuButton").addComponent(MenuButton.class);
 
-        pausebutton.getTransform().setGlobalPosition(new Vector2(50,50));
-        resumeButton.getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH/2,400));
-        menuButton.getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH/2,500));
+
 
         GameObjectManager.instantiate("PauseMenuManager").addComponent(PauseMenuManager.class);
-        PauseMenuManager.getInstance().addPauseMenuButton(menuButton);
-        PauseMenuManager.getInstance().addPauseMenuButton(resumeButton);
-        PauseMenuManager.getInstance().addPauseMenuButton(pausebutton);
-        GameObjectManager.instantiate("PauseMenuController").addComponent(PauseMenuController.class);
 
         var circleEmitter1 =  GameObjectManager.instantiate("Circle_Emitter").addComponent(ConeEmitter.class);
         circleEmitter1.setEmissionRate(50);

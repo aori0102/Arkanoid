@@ -1,6 +1,8 @@
 package game.BrickObj;
 
 import game.BrickObj.BrickEvent.CollisionEvent;
+import org.Audio.AudioManager;
+import org.Audio.SFXAsset;
 import org.GameObject.GameObjectManager;
 import org.Physics.BoxCollider;
 import org.Rendering.SpriteRenderer;
@@ -160,6 +162,7 @@ public class Init {
         private void onBrickCollision(Object curr, Void E) {
             if (curr instanceof Brick brickobj) {
                 CollisionEvent.ColliEvent(brickobj.getRowID(), brickobj.getColID(), brickobj.getBrickType());
+                AudioManager.playSFX(SFXAsset.SFXIndex.OnBrickHit);
             }
         }
 

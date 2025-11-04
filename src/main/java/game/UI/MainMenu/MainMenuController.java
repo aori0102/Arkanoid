@@ -62,11 +62,11 @@ public class MainMenuController extends MonoBehaviour {
 
     private void linkButtons() {
         try {
-            startButton = GameObjectManager.find("StartButton").getComponent(StartButton.class);
-            continueButton = GameObjectManager.find("ContinueButton").getComponent(ContinueButton.class);
-            recordButton = GameObjectManager.find("RecordButton").getComponent(RecordButton.class);
-            optionsButton = GameObjectManager.find("OptionsButton").getComponent(OptionsButton.class);
-            quitButton = GameObjectManager.find("QuitButton").getComponent(QuitButton.class);
+            startButton = MainMenuManager.getInstance().getStartButton();
+            continueButton = MainMenuManager.getInstance().getContinueButton();
+            recordButton = MainMenuManager.getInstance().getRecordButton();
+            optionsButton = MainMenuManager.getInstance().getOptionsButton();
+            quitButton = MainMenuManager.getInstance().getQuitButton();
         } catch (Exception e) {
             System.err.println("[MainMenuController] Failed to link buttons: " + e.getMessage());
         }

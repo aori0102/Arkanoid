@@ -14,6 +14,7 @@ import utils.Time;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
+import utils.UITween.TweenManager;
 
 public class Main extends Application {
 
@@ -59,6 +60,7 @@ public class Main extends Application {
         Time.update();
         GameObjectManager.runCycle();
         FPSCounter.update();
+        TweenManager.update();
     }
 
     /**
