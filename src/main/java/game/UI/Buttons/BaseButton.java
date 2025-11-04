@@ -39,9 +39,6 @@ public abstract class BaseButton extends MonoBehaviour {
     private final double RELEASE_SCALE = 1.0;
     private final double PRESS_SCALE = 1.15;
 
-    //Events
-    public EventHandler<MouseEvent> onAnyMenuButtonClicked = new EventHandler<>(BaseButton.class);
-
     public BaseButton(GameObject owner) {
         super(owner);
         spriteAnimator = owner.addComponent(SpriteAnimator.class);
@@ -84,7 +81,6 @@ public abstract class BaseButton extends MonoBehaviour {
 
     private void setupEventHandler() {
         buttonUI.onPointerClick.addListener((s, e) -> {
-            onAnyMenuButtonClicked.invoke(this, e);
             buttonState = ButtonState.Clicked;
             targetScale = CLICKED_SCALE;
             System.out.println("[ButtonUI] → Clicked event triggered | State: " + buttonState);

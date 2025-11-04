@@ -30,32 +30,15 @@ public class MainMenuController extends MonoBehaviour {
     @Override
     public void awake() {
         linkButtons();
-        startButton.onAnyMenuButtonClicked.addListener(this::baseButton_onAnyMenuButtonClicked);
-        continueButton.onAnyMenuButtonClicked.addListener(this::baseButton_onAnyMenuButtonClicked);
-        recordButton.onAnyMenuButtonClicked.addListener(this::baseButton_onAnyMenuButtonClicked);
-        optionsButton.onAnyMenuButtonClicked.addListener(this::baseButton_onAnyMenuButtonClicked);
-        quitButton.onAnyMenuButtonClicked.addListener(this::baseButton_onAnyMenuButtonClicked);
+        startButton.getButtonUI().onPointerClick.addListener(this::onStartButtonClick);
+        continueButton.getButtonUI().onPointerClick.addListener(this::onContinueButtonClick);
+        recordButton.getButtonUI().onPointerClick.addListener(this::onRecordButtonClick);
+        optionsButton.getButtonUI().onPointerClick.addListener(this::onOptionsButtonClick);
+        quitButton.getButtonUI().onPointerClick.addListener(this::onQuitButtonClick);
 
     }
 
-    /**
-     * Called when {@link BaseButton#onAnyMenuButtonClicked} is invoked.<br><br>
-     * This function handles menu button click event.
-     */
-    private void baseButton_onAnyMenuButtonClicked(Object sender, MouseEvent e) {
-        System.out.println("Alo");
-        if (sender instanceof StartButton) {
-            onStartButtonClick(sender, e);
-        } else if (sender instanceof ContinueButton) {
-            onContinueButtonClick(sender, e);
-        } else if (sender instanceof RecordButton) {
-            onRecordButtonClick(sender, e);
-        } else if (sender instanceof OptionsButton) {
-            onOptionsButtonClick(sender, e);
-        } else if (sender instanceof QuitButton) {
-            onQuitButtonClick(sender, e);
-        }
-    }
+
 
     private void onStartButtonClick(Object sender, MouseEvent e) {
         SceneManager.loadScene(SceneKey.InGame);

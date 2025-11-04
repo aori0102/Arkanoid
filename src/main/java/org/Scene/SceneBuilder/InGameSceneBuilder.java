@@ -12,8 +12,14 @@ import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
 import game.Player.Prefab.PlayerPrefab;
 import game.PowerUp.Index.PowerUpManager;
+import game.UI.Buttons.MenuButton;
+import game.UI.Buttons.PauseButton;
+import game.UI.Buttons.ResumeButton;
+import game.UI.PauseMenu.PauseMenuController;
+import game.UI.PauseMenu.PauseMenuManager;
 import game.UI.UIManager;
 import org.GameObject.GameObjectManager;
+import org.Main;
 import utils.Vector2;
 
 public final class InGameSceneBuilder extends SceneBuilder {
@@ -21,23 +27,22 @@ public final class InGameSceneBuilder extends SceneBuilder {
     @Override
     protected void build() {
 
+
+
         GameObjectManager.instantiate("PerkManager").addComponent(PerkManager.class);
         GameObjectManager.instantiate("UIManager").addComponent(UIManager.class);
         GameObjectManager.instantiate("GameManager").addComponent(GameManager.class);
         GameObjectManager.instantiate("BrickMapManager").addComponent(BrickMapManager.class);
+        GameObjectManager.instantiate("ObstacleManager").addComponent(ObstacleManager.class);
+        GameObjectManager.instantiate("PowerUpManager").addComponent(PowerUpManager.class);
+        GameObjectManager.instantiate("BallsManager").addComponent(BallsManager.class);
         ScoreManagerPrefab.instantiate();
+
 
         new PlayerPrefab().instantiatePrefab();
 
-        var ballsManager = GameObjectManager.instantiate("ballManager");
-        ballsManager.addComponent(BallsManager.class);
         BallsManager.getInstance().spawnInitialBall();
 
-        var obstacleManager = GameObjectManager.instantiate("obstacleManager");
-        obstacleManager.addComponent(ObstacleManager.class);
-
-        var powerUpManager = GameObjectManager.instantiate("powerUpManager");
-        powerUpManager.addComponent(PowerUpManager.class);
         PowerUpManager.getInstance().linkPlayerPowerUp(Player.getInstance().getComponent(PlayerPowerUpHandler.class));
 
         //new VoltraxisPrefab().instantiatePrefab();
@@ -57,6 +62,20 @@ public final class InGameSceneBuilder extends SceneBuilder {
         var borderBottom = GameObjectManager.instantiate("Border_Bottom");
         borderBottom.addComponent(Border.class).setBorderType(BorderType.BorderBottom);
         borderBottom.getTransform().setLocalPosition(new Vector2(1190, 750));
+
+        var pausebutton = GameObjectManager.instantiate("PauseButton").addComponent(PauseButton.class);
+        var resumeButton = GameObjectManager.instantiate("ResumeButton").addComponent(ResumeButton.class);
+        var menuButton = GameObjectManager.instantiate("MenuButton").addComponent(MenuButton.class);
+
+        pausebutton.getTransform().setGlobalPosition(new Vector2(50,50));
+        resumeButton.getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH/2,400));
+        menuButton.getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH/2,500));
+
+        GameObjectManager.instantiate("PauseMenuManager").addComponent(PauseMenuManager.class);
+        PauseMenuManager.getInstance().addPauseMenuButton(menuButton);
+        PauseMenuManager.getInstance().addPauseMenuButton(resumeButton);
+        PauseMenuManager.getInstance().addPauseMenuButton(pausebutton);
+        GameObjectManager.instantiate("PauseMenuController").addComponent(PauseMenuController.class);
 
     }
 
