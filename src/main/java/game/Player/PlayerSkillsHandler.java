@@ -14,7 +14,7 @@ import static game.Player.PlayerSkills.SkillPrefabGenerator.skillDataMap;
 
 public class PlayerSkillsHandler extends MonoBehaviour {
 
-    private static final int DASH_SPEED = 2500;
+    private static final int DASH_SPEED = 1500;
     private static final double DASH_TIME = 0.2;
 
     private PlayerPaddle playerPaddle;
