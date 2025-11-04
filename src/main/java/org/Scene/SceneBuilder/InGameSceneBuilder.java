@@ -23,6 +23,7 @@ public final class InGameSceneBuilder extends SceneBuilder {
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_BrickMapManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_RankManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_ScoreManager);
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_ObstacleManager);
 
         PrefabManager.instantiatePrefab(PrefabIndex.Player);
 
@@ -31,9 +32,6 @@ public final class InGameSceneBuilder extends SceneBuilder {
         var ballsManager = GameObjectManager.instantiate("ballManager");
         ballsManager.addComponent(BallsManager.class);
         BallsManager.getInstance().spawnInitialBall();
-
-        var obstacleManager = GameObjectManager.instantiate("obstacleManager");
-        obstacleManager.addComponent(ObstacleManager.class);
 
         var powerUpManager = GameObjectManager.instantiate("powerUpManager");
         powerUpManager.addComponent(PowerUpManager.class);

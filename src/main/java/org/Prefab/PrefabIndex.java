@@ -7,6 +7,7 @@ import game.Damagable.HealthChangeVisualizerPrefab;
 import game.GameManager.GameManagerPrefab;
 import game.GameManager.LevelUIPrefab;
 import game.MapGenerator.BrickMapManagerPrefab;
+import game.Obstacle.Index.ObstacleManagerPrefab;
 import game.Perks.Index.PerkManagerPrefab;
 import game.Player.Prefab.PaddlePrefab;
 import game.Player.Prefab.PlayerHealthBarPrefab;
@@ -42,6 +43,7 @@ public enum PrefabIndex {
     Manager_GameManager(new GameManagerPrefab()),
     Manager_PerkManager(new PerkManagerPrefab()),
     Manager_UIManager(new UIManagerPrefab()),
+    Manager_ObstacleManager(new ObstacleManagerPrefab()),
 
     /// Health change visualization
     HealthChange_PopUp(new HealthChangePopUpUIPrefab()),
