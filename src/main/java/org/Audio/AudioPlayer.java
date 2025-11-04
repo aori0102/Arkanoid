@@ -4,7 +4,7 @@ import javafx.scene.media.Media;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 
-public abstract class AudioPlayer{
+public abstract class AudioPlayer {
     public AudioPlayer(){
 
     }

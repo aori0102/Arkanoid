@@ -6,6 +6,13 @@ import org.GameObject.MonoBehaviour;
 
 import java.util.HashMap;
 
+/**
+ * AudioManager is responsible for playing and handling audio in general(Music and SFX).
+ * All uses of AudioPlayer (MusicPlayer and SFXPlayer) is handled through here.
+ * Don't use the {@link MusicPlayer#play()} or {@link SFXPlayer#play()} or any method that related to these classes.
+ * Instead, control the audio in {@link AudioManager} using methods such as
+ * {@link #playMusic()}, {@link #playSFX(SFXAsset.SFXIndex)},...
+ */
 public final class AudioManager {
 
     private static final HashMap<MusicAsset.MusicIndex, MusicPlayer> musicIndexMusicPlayerHashMap =
@@ -54,6 +61,10 @@ public final class AudioManager {
         currentMusicPlayer.stop();
     }
 
+    /**
+     * Play SFX
+     * @param sfxIndex index of the SFX that you want to play.
+     */
     public static void playSFX(SFXAsset.SFXIndex sfxIndex) {
         sfxIndexSFXPlayerHashMap.get(sfxIndex).play();
     }
