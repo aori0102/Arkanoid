@@ -1,5 +1,6 @@
 package game.Voltraxis.Object.PowerCore;
 
+import game.Entity.EntityHealth;
 import game.Voltraxis.Prefab.VoltraxisPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -61,9 +62,9 @@ public class PowerCoreHealthBar extends MonoBehaviour {
      * updates the ratio between health and max health for filling.
      *
      * @param sender {@link PowerCore}.
-     * @param e      Empty event argument.
+     * @param e      Event argument containing data about the health change.
      */
-    private void powerCore_onHealthChanged(Object sender, Void e) {
+    private void powerCore_onHealthChanged(Object sender, EntityHealth.OnHealthChangedEventArgs e) {
         var powerCoreHealth = powerCore.getPowerCoreHealth();
         ratio = (double) powerCoreHealth.getHealth() / powerCoreHealth.getMaxHealth();
         lastHealthChangeTick = Time.getTime();

@@ -1,16 +1,18 @@
 package game.Voltraxis.Prefab;
 
 import game.Voltraxis.*;
-import game.Voltraxis.Object.*;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Physics.BoxCollider;
+import org.Prefab.Prefab;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import utils.Vector2;
 
 /**
  * Prefab of the main object Voltraxis.
  */
-public final class VoltraxisPrefab implements IVoltraxisPrefab {
+public final class VoltraxisPrefab extends Prefab {
 
     private static final Vector2 BOSS_POSITION = new Vector2(600.0, 300.0);
     private static final Vector2 BOSS_COLLIDER_SIZE = new Vector2(230.0, 230.0);
@@ -27,7 +29,7 @@ public final class VoltraxisPrefab implements IVoltraxisPrefab {
                 .addComponent(VoltraxisGroggy.class)
                 .addComponent(VoltraxisNormalAttackBrain.class)
                 .addComponent(VoltraxisSkillHandler.class)
-                .addComponent(VoltraxisStatManager.class)
+                .addComponent(VoltraxisStat.class)
                 .addComponent(VoltraxisPowerCoreManager.class)
                 .addComponent(BoxCollider.class)
                 .addComponent(VoltraxisHealth.class)
@@ -38,23 +40,23 @@ public final class VoltraxisPrefab implements IVoltraxisPrefab {
         voltraxis.getComponent(BoxCollider.class).setLocalSize(BOSS_COLLIDER_SIZE);
 
         // Visual
-        var visual = new VoltraxisVisualPrefab().instantiatePrefab();
+        var visual = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_Visual);
         visual.setParent(voltraxis);
 
         // Groggy UI
-        var groggyUI = new GroggyUIPrefab().instantiatePrefab();
+        var groggyUI = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_GroggyUI);
         groggyUI.setParent(bossObject);
 
         // Charging UI
-        var chargingUI = new ChargingUIPrefab().instantiatePrefab();
+        var chargingUI = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_ChargingUI);
         chargingUI.setParent(bossObject);
 
         // Effect bar UI
-        var effectBarUI = new EffectBarUIPrefab().instantiatePrefab();
+        var effectBarUI = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_EffectBarUI);
         effectBarUI.setParent(bossObject);
 
         // Health bar UI
-        var healthBarUI = new HealthBarUIPrefab().instantiatePrefab();
+        var healthBarUI = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_HealthBarUI);
         healthBarUI.setParent(bossObject);
 
         // Starting position

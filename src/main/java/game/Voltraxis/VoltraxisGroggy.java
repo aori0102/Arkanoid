@@ -1,5 +1,6 @@
 package game.Voltraxis;
 
+import game.Entity.EntityHealth;
 import game.Voltraxis.Object.PowerCore.PowerCore;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -51,7 +52,7 @@ public class VoltraxisGroggy extends MonoBehaviour {
 
     @Override
     public void start() {
-        Voltraxis.getInstance().getVoltraxisHealth().onDamaged.addListener(this::voltraxis_onDamaged);
+        Voltraxis.getInstance().getVoltraxisHealth().onHealthChanged.addListener(this::voltraxis_onDamaged);
         Voltraxis.getInstance().getVoltraxisCharging().onChargingTerminated
                 .addListener(this::voltraxisCharging_onChargingTerminated);
     }
@@ -62,14 +63,14 @@ public class VoltraxisGroggy extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link VoltraxisHealth#onDamaged} is invoked. This function
+     * Called when {@link VoltraxisHealth#onHealthChanged} is invoked. This function
      * increment the groggy amount and fire {@link #onGroggyReachedMax}
      * or {@link #onGroggyToDeployPowerCore} if meets certain criteria.
      *
      * @param sender {@link Voltraxis}.
-     * @param e      Empty event argument.
+     * @param e      Event argument containing data about the damage.
      */
-    private void voltraxis_onDamaged(Object sender, Void e) {
+    private void voltraxis_onDamaged(Object sender, EntityHealth.OnHealthChangedEventArgs e) {
 
         if (groggyLocked) {
             return;

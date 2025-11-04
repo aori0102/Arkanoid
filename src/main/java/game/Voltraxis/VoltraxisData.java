@@ -12,7 +12,8 @@ public final class VoltraxisData {
     public static final int BASE_ATTACK = 18;
     public static final int BASE_MAX_HEALTH = 1843125;
     public static final int BASE_DEFENSE = 36;
-    public static final int DEFENSE_STRENGTH_SCALE = 67;
+    public static final double CRITICAL_CHANCE = 0.2;
+    public static final double CRITICAL_DAMAGE = 0.36;
 
     /// Basic skill
     public static final double BASIC_SKILL_COOLDOWN = 7.0;
@@ -26,7 +27,7 @@ public final class VoltraxisData {
     /// Groggy skill
     public static final double GROGGY_BASIC_COOLDOWN_REDUCTION = 0.35;
     public static final double GROGGY_ATTACK_INCREMENT = 0.2;
-    public static final double GROGGY_DELTA = 0.08;
+    public static final double GROGGY_DELTA = 0.8;
     public static final double GROGGY_DURATION = 18.0;
 
     /// Power core

@@ -19,6 +19,7 @@ import game.Score.ScoreManagerPrefab;
 import game.Score.ScorePopUpPrefab;
 import game.Score.ScoreUIPrefab;
 import game.UI.UIManagerPrefab;
+import game.Voltraxis.Prefab.*;
 
 public enum PrefabIndex {
 
@@ -45,6 +46,18 @@ public enum PrefabIndex {
     /// Health change visualization
     HealthChange_PopUp(new HealthChangePopUpUIPrefab()),
     HealthChange_VisualizeHandler(new HealthChangeVisualizerPrefab()),
+
+    /// Voltraxis
+    Voltraxis(new VoltraxisPrefab()),
+    Voltraxis_ChargingUI(new ChargingUIPrefab()),
+    Voltraxis_EffectBarUI(new EffectBarUIPrefab()),
+    Voltraxis_EffectIconUI(new EffectIconUIPrefab()),
+    Voltraxis_ElectricBall(new ElectricBallPrefab()),
+    Voltraxis_GroggyUI(new GroggyUIPrefab()),
+    Voltraxis_HealthBarUI(new HealthBarUIPrefab()),
+    Voltraxis_PowerCore(new PowerCorePrefab()),
+    Voltraxis_UltimateLaser(new UltimateLaserPrefab()),
+    Voltraxis_Visual(new VoltraxisVisualPrefab()),
 
     /// Ball
     Ball(new BallPrefab()),

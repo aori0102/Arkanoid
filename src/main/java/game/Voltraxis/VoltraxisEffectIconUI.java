@@ -1,6 +1,5 @@
 package game.Voltraxis;
 
-import game.Voltraxis.Prefab.VoltraxisPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;
@@ -11,7 +10,9 @@ import utils.Vector2;
  */
 public class VoltraxisEffectIconUI extends MonoBehaviour {
 
-    private SpriteRenderer visualRenderer = null;
+    private static final Vector2 ICON_SIZE = new Vector2(30.58, 23.52);
+
+    private final SpriteRenderer visualRenderer = addComponent(SpriteRenderer.class);
 
     /**
      * Create this MonoBehaviour.
@@ -42,26 +43,9 @@ public class VoltraxisEffectIconUI extends MonoBehaviour {
 
     }
 
-    /**
-     * Immediately set the local position for this icon.
-     * Used by {@link VoltraxisEffectManager} when creating
-     * an icon.
-     *
-     * @param position The immediate local position to set.
-     */
-    void setEntry(Vector2 position) {
-        getTransform().setLocalPosition(position);
-    }
-
-    /**
-     * Set the image renderer for the icon.<br><br>
-     * <b><i><u>NOTE:</u> Only use within
-     * {@link VoltraxisPrefab} as linking components.</i></b>
-     *
-     * @param renderer The image renderer for this icon.
-     */
-    public void setVisualRenderer(SpriteRenderer renderer) {
-        visualRenderer = renderer;
+    public void setEffectIndex(VoltraxisData.EffectIndex effectIndex) {
+        visualRenderer.setImage(effectIndex.getImageIndex().getImage());
+        visualRenderer.setSize(ICON_SIZE);
     }
 
 }

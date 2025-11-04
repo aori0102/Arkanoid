@@ -5,11 +5,12 @@ import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.Prefab.Prefab;
 
 /**
  * Prefab for Voltraxis' visual.
  */
-public final class VoltraxisVisualPrefab implements IVoltraxisPrefab {
+public final class VoltraxisVisualPrefab extends Prefab {
 
     @Override
     public GameObject instantiatePrefab() {

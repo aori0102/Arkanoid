@@ -1,6 +1,5 @@
 package game.Voltraxis;
 
-import game.Voltraxis.Prefab.VoltraxisPrefab;
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
 import org.GameObject.GameObject;
@@ -11,7 +10,7 @@ import org.GameObject.MonoBehaviour;
  */
 public final class VoltraxisVisual extends MonoBehaviour {
 
-    private SpriteAnimator animator = null;
+    private final SpriteAnimator animator = addComponent(SpriteAnimator.class);
 
     /**
      * Create this MonoBehaviour.
@@ -25,7 +24,6 @@ public final class VoltraxisVisual extends MonoBehaviour {
     @Override
     public void awake() {
 
-        animator = getComponent(SpriteAnimator.class);
         animateIdle();
 
         Voltraxis.getInstance().getVoltraxisNormalAttackBrain().onBasicAttackCommenced

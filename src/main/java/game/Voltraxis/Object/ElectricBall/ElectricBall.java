@@ -1,4 +1,4 @@
-package game.Voltraxis.Object;
+package game.Voltraxis.Object.ElectricBall;
 
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -16,6 +16,8 @@ public class ElectricBall extends MonoBehaviour {
 
     private Vector2 direction = new Vector2();
 
+    private Time.CoroutineID onBallLifespanReached_coroutineID = null;
+
     /**
      * Create this MonoBehaviour.
      *
@@ -27,12 +29,18 @@ public class ElectricBall extends MonoBehaviour {
 
     @Override
     public void awake() {
-        Time.addCoroutine(this::onBallLifespanReached, Time.getTime() + BALL_LIFESPAN);
+        onBallLifespanReached_coroutineID
+                = Time.addCoroutine(this::onBallLifespanReached, Time.getTime() + BALL_LIFESPAN);
     }
 
     @Override
     public void update() {
         getTransform().translate(direction.normalize().multiply(MOVEMENT_SPEED * Time.getDeltaTime()));
+    }
+
+    @Override
+    public void onDestroy() {
+        Time.removeCoroutine(onBallLifespanReached_coroutineID);
     }
 
     /**

@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.RenderLayer;
+import org.Prefab.Prefab;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import org.Text.FontDataIndex;
@@ -16,7 +17,7 @@ import utils.Vector2;
 /**
  * Prefab of Voltraxis' health bar UI.
  */
-public final class HealthBarUIPrefab implements IVoltraxisPrefab {
+public final class HealthBarUIPrefab extends Prefab {
 
     private static final double HEALTH_FONT_SIZE = 24.0;
     private static final double NAME_FONT_SIZE = 40.0;

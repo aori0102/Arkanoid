@@ -1,10 +1,13 @@
 package game.Voltraxis.Prefab;
 
-import game.Voltraxis.Object.ElectricBall;
+import game.Voltraxis.Object.ElectricBall.ElectricBall;
+import game.Voltraxis.Object.ElectricBall.ElectricBallDamageDealer;
+import game.Voltraxis.Object.ElectricBall.ElectricBallStat;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
+import org.Prefab.Prefab;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
@@ -12,7 +15,7 @@ import utils.Vector2;
 /**
  * Prefab of Voltraxis' {@link ElectricBall}.
  */
-public final class ElectricBallPrefab implements IVoltraxisPrefab {
+public final class ElectricBallPrefab extends Prefab {
 
     private static final Vector2 BALL_SIZE = new Vector2(64.0, 64.0);
 
@@ -21,6 +24,8 @@ public final class ElectricBallPrefab implements IVoltraxisPrefab {
 
         // Main object
         var electricBall = GameObjectManager.instantiate("Electric Ball")
+                .addComponent(ElectricBallStat.class)
+                .addComponent(ElectricBallDamageDealer.class)
                 .addComponent(ElectricBall.class);
 
         // Collider

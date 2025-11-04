@@ -1,6 +1,5 @@
 package game.Voltraxis;
 
-import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -17,7 +16,7 @@ public class Voltraxis extends MonoBehaviour {
     private VoltraxisCharging voltraxisCharging = null;
     private VoltraxisNormalAttackBrain voltraxisNormalAttackBrain = null;
     private VoltraxisSkillHandler voltraxisSkillHandler = null;
-    private VoltraxisStatManager voltraxisStatManager = null;
+    private VoltraxisStat voltraxisStat = null;
     private VoltraxisHealth voltraxisHealth = null;
 
     private static Voltraxis instance = null;
@@ -38,7 +37,7 @@ public class Voltraxis extends MonoBehaviour {
         voltraxisCharging = getComponent(VoltraxisCharging.class);
         voltraxisNormalAttackBrain = getComponent(VoltraxisNormalAttackBrain.class);
         voltraxisSkillHandler = getComponent(VoltraxisSkillHandler.class);
-        voltraxisStatManager = getComponent(VoltraxisStatManager.class);
+        voltraxisStat = getComponent(VoltraxisStat.class);
         voltraxisHealth = getComponent(VoltraxisHealth.class);
     }
 
@@ -79,8 +78,8 @@ public class Voltraxis extends MonoBehaviour {
         return voltraxisSkillHandler;
     }
 
-    public VoltraxisStatManager getVoltraxisStatManager() {
-        return voltraxisStatManager;
+    public VoltraxisStat getVoltraxisStatManager() {
+        return voltraxisStat;
     }
 
     public void inflictEffect(VoltraxisEffectManager.EffectInputInfo info) {

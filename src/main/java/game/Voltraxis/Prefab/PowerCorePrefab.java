@@ -7,6 +7,7 @@ import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.RenderLayer;
 import org.Physics.BoxCollider;
+import org.Prefab.Prefab;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
@@ -14,7 +15,7 @@ import utils.Vector2;
 /**
  * Prefab of Voltraxis' power core, containing both logical and visual objects.
  */
-public final class PowerCorePrefab implements IVoltraxisPrefab {
+public final class PowerCorePrefab extends Prefab {
 
     private static final Vector2 POWER_CORE_COLLIDER_SIZE = new Vector2(80.0, 80.0);
     private static final Vector2 POWER_CORE_UI_OFFSET = new Vector2(0.0, -75.0);
@@ -29,6 +30,7 @@ public final class PowerCorePrefab implements IVoltraxisPrefab {
         var powerCoreObject = GameObjectManager.instantiate("PowerCore")
                 .addComponent(PowerCore.class)
                 .addComponent(PowerCoreHealth.class)
+                .addComponent(PowerCoreStat.class)
                 .getGameObject();
 
         // Collider

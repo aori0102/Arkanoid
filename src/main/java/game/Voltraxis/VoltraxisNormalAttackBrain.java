@@ -1,8 +1,7 @@
 package game.Voltraxis;
 
-import game.Voltraxis.Object.ElectricBall;
+import game.Voltraxis.Object.ElectricBall.ElectricBall;
 import game.Voltraxis.Prefab.ElectricBallPrefab;
-import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -10,8 +9,6 @@ import utils.MathUtils;
 import utils.Random;
 import utils.Time;
 import utils.Vector2;
-
-import java.util.HashMap;
 
 public class VoltraxisNormalAttackBrain extends MonoBehaviour {
 

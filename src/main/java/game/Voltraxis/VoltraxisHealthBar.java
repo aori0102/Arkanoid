@@ -1,5 +1,6 @@
 package game.Voltraxis;
 
+import game.Entity.EntityHealth;
 import game.Voltraxis.Prefab.VoltraxisPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -44,7 +45,7 @@ public class VoltraxisHealthBar extends MonoBehaviour {
     }
 
     @Override
-    public void start(){
+    public void start() {
         Voltraxis.getInstance().getVoltraxisHealth()
                 .onHealthChanged.addListener(this::voltraxis_onHealthChanged);
     }
@@ -106,11 +107,11 @@ public class VoltraxisHealthBar extends MonoBehaviour {
      * <b>Called when {@link VoltraxisHealth#onHealthChanged} is invoked.</b>
      *
      * @param sender {@link Voltraxis}.
-     * @param e      Empty event argument.
+     * @param e      Event argument containing data about the health change.
      */
-    private void voltraxis_onHealthChanged(Object sender, Void e) {
-        targetRatio = (double) Voltraxis.getInstance().getVoltraxisHealth().getHealth() / VoltraxisData.BASE_MAX_HEALTH;
-        healthText.setText(Voltraxis.getInstance().getVoltraxisHealth().getHealth() + " / " + VoltraxisData.BASE_MAX_HEALTH);
+    private void voltraxis_onHealthChanged(Object sender, EntityHealth.OnHealthChangedEventArgs e) {
+        targetRatio = (double) e.health / VoltraxisData.BASE_MAX_HEALTH;
+        healthText.setText(e.health + " / " + VoltraxisData.BASE_MAX_HEALTH);
         lastHealthChangeTick = Time.getTime();
     }
 

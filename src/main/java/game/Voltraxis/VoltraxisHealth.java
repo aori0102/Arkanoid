@@ -1,15 +1,10 @@
 package game.Voltraxis;
 
-import org.Event.EventHandler;
+import game.Entity.EntityHealth;
+import game.Entity.EntityStat;
 import org.GameObject.GameObject;
-import org.GameObject.MonoBehaviour;
 
-public final class VoltraxisHealth extends MonoBehaviour {
-
-    private int health = VoltraxisData.BASE_MAX_HEALTH;
-
-    public EventHandler<Void> onHealthChanged = new EventHandler<>(VoltraxisHealth.class);
-    public EventHandler<Void> onDamaged = new EventHandler<>(VoltraxisHealth.class);
+public final class VoltraxisHealth extends EntityHealth {
 
     /**
      * Create this MonoBehaviour.
@@ -20,23 +15,14 @@ public final class VoltraxisHealth extends MonoBehaviour {
         super(owner);
     }
 
-    public void damage(int amount) {
-        health -= amount;
-        if (health <= 0) {
-            health = 0;
-            System.out.println("Boss ded");
-        }
-        onHealthChanged.invoke(this, null);
-        onDamaged.invoke(this, null);
+    @Override
+    protected Class<? extends EntityStat> getStatComponentClass() {
+        return VoltraxisStat.class;
     }
 
-    /**
-     * Get Voltraxis' current HP.
-     *
-     * @return Voltraxis' currentHP.
-     */
-    public int getHealth() {
-        return health;
+    @Override
+    public int getMaxHealth() {
+        return VoltraxisData.BASE_MAX_HEALTH;
     }
 
 }

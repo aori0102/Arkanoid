@@ -1,12 +1,15 @@
 package game.Voltraxis;
 
 import game.Voltraxis.Object.PowerCore.PowerCore;
+import game.Voltraxis.Object.PowerCore.PowerCoreHealth;
 import game.Voltraxis.Prefab.PowerCorePrefab;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import utils.Vector2;
 
 import java.util.HashMap;
@@ -102,19 +105,14 @@ public class VoltraxisPowerCoreManager extends MonoBehaviour {
         var powerCoreInfo = powerCoreInfoMap.get(powerCoreIndex);
 
         // Instantiate the power core
-        var newCore = new PowerCorePrefab().instantiatePrefab()
+        var newCore = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_PowerCore)
                 .getComponent(PowerCore.class);
         newCore.getTransform().setGlobalPosition(powerCoreIndex.corePosition);
-        int powerCoreHealth = (int) (VoltraxisData.BASE_MAX_HEALTH * VoltraxisData.POWER_CORE_PROPORTIONAL_HEALTH);
-        newCore.getPowerCoreHealth().setHealth(powerCoreHealth);
 
         // Add power core effect
         var powerCoreEffectInfo = new VoltraxisEffectManager.EffectInputInfo();
         powerCoreEffectInfo.index = VoltraxisData.EffectIndex.PowerCore;
         powerCoreEffectInfo.value = 0.0;
-        //TODO:
-//        powerCoreEffectInfo.effectEndingConstraint
-//                = (_) -> newCore.getGameObject().isDestroyed();
         powerCoreEffectInfo.effectEndedCallback = null;
         Voltraxis.getInstance().getVoltraxisEffectManager().addEffect(powerCoreEffectInfo);
 
@@ -123,9 +121,6 @@ public class VoltraxisPowerCoreManager extends MonoBehaviour {
         var damageTakenDecrementEffectInfo = new VoltraxisEffectManager.EffectInputInfo();
         damageTakenDecrementEffectInfo.index = VoltraxisData.EffectIndex.DamageTakenDecrement;
         damageTakenDecrementEffectInfo.value = VoltraxisData.POWER_CORE_DAMAGE_TAKEN_REDUCTION;
-        //TODO:
-//        damageTakenDecrementEffectInfo.effectEndingConstraint
-//                = (_) -> newCore.getGameObject().isDestroyed();
         damageTakenDecrementEffectInfo.effectEndedCallback = null;
         Voltraxis.getInstance().getVoltraxisEffectManager().addEffect(damageTakenDecrementEffectInfo);
 

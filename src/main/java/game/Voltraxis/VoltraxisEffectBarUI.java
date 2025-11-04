@@ -4,6 +4,8 @@ import game.Voltraxis.Prefab.EffectIconUIPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import utils.Vector2;
 
 import java.util.LinkedHashMap;
@@ -40,8 +42,9 @@ public final class VoltraxisEffectBarUI extends MonoBehaviour {
      * @param e      Event argument containing effect info.
      */
     private void voltraxisEffectManager_onEffectAdded(Object sender, VoltraxisEffectManager.EffectInputInfo e) {
-        var infoUI = new EffectIconUIPrefab(e.index).instantiatePrefab()
+        var infoUI = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_EffectIconUI)
                 .getComponent(VoltraxisEffectIconUI.class);
+        infoUI.setEffectIndex(e.index);
         infoUI.getGameObject().setParent(gameObject);
         effectIconUIMap.put(e, infoUI);
         updateIconList();

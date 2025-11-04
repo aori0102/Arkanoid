@@ -3,12 +3,13 @@ package game.Voltraxis.Prefab;
 import game.Voltraxis.VoltraxisEffectBarUI;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.Prefab.Prefab;
 import utils.Vector2;
 
 /**
  * Prefab of Voltraxis' effect bar UI.
  */
-public final class EffectBarUIPrefab implements IVoltraxisPrefab {
+public final class EffectBarUIPrefab extends Prefab {
 
     private static final Vector2 EFFECT_BAR_ANCHOR = new Vector2(280.0, 100.0);
 

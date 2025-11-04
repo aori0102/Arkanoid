@@ -4,6 +4,7 @@ import game.Voltraxis.VoltraxisGroggyUI;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.RenderLayer;
+import org.Prefab.Prefab;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
@@ -11,7 +12,7 @@ import utils.Vector2;
 /**
  * Prefab of Voltraxis' groggy gauge UI.
  */
-public final class GroggyUIPrefab implements IVoltraxisPrefab {
+public final class GroggyUIPrefab extends Prefab {
 
     private static final Vector2 GROGGY_GAUGE_UI_POSITION = new Vector2(838.0, 100.0);
     private static final Vector2 GROGGY_GAUGE_SIZE = new Vector2(156.25, 13.93);

@@ -1,4 +1,4 @@
-package game.Voltraxis.Object;
+package game.Voltraxis.Object.UltimateLaser;
 
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
@@ -8,11 +8,12 @@ import org.Rendering.SpriteRenderer;
 import utils.MathUtils;
 import utils.Time;
 
-public class UltimateLaser extends MonoBehaviour {
+public class UltimateLaserVisual extends MonoBehaviour {
 
     private static final double LASER_APPEAR_RATE = 23.013;
 
-    private SpriteRenderer renderer = null;
+    private final SpriteRenderer renderer = addComponent(SpriteRenderer.class);
+    private final SpriteAnimator animator = addComponent(SpriteAnimator.class);
     private double ratio = 0.0;
 
     /**
@@ -20,16 +21,15 @@ public class UltimateLaser extends MonoBehaviour {
      *
      * @param owner The owner of this component.
      */
-    public UltimateLaser(GameObject owner) {
+    public UltimateLaserVisual(GameObject owner) {
         super(owner);
     }
 
     @Override
     public void awake() {
-        getComponent(SpriteAnimator.class).playAnimation(AnimationClipData.Voltraxis_UltimateLaser, null);
-        renderer = getComponent(SpriteRenderer.class);
-        renderer.setFillAmount(0.0);
+        renderer.setFillAmount(ratio);
         renderer.setFillType(SpriteRenderer.FillType.Vertical_TopToBottom);
+        animator.playAnimation(AnimationClipData.Voltraxis_UltimateLaser, null);
     }
 
     @Override

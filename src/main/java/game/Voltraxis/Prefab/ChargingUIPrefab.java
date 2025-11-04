@@ -4,6 +4,7 @@ import game.Voltraxis.VoltraxisChargingUI;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.RenderLayer;
+import org.Prefab.Prefab;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
@@ -11,7 +12,7 @@ import utils.Vector2;
 /**
  * Prefab of Voltraxis' EX charging UI.
  */
-public final class ChargingUIPrefab implements IVoltraxisPrefab {
+public final class ChargingUIPrefab extends Prefab {
 
     private static final Vector2 CHARGING_UI_RENDER_SIZE = new Vector2(200.0, 10.0);
     private static final Vector2 CHARGING_UI_RENDER_POSITION = new Vector2(600.0, 100.0);

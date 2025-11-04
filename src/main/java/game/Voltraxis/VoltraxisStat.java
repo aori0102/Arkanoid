@@ -1,21 +1,21 @@
 package game.Voltraxis;
 
+import game.Entity.EntityStat;
 import org.GameObject.GameObject;
-import org.GameObject.MonoBehaviour;
 
-public final class VoltraxisStatManager extends MonoBehaviour {
+public final class VoltraxisStat extends EntityStat {
 
     private double attackMultiplier = 1.0;
     private double defenseMultiplier = 1.0;
     private double basicCooldownMultiplier = 1.0;
-    private double damageTakenProportion = 1.0;
+    private double damageTakenMultiplier = 1.0;
 
     /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
-    public VoltraxisStatManager(GameObject owner) {
+    public VoltraxisStat(GameObject owner) {
         super(owner);
     }
 
@@ -25,6 +25,51 @@ public final class VoltraxisStatManager extends MonoBehaviour {
                 .addListener(this::voltraxisEffectManager_onEffectAdded);
         Voltraxis.getInstance().getVoltraxisEffectManager().onEffectRemoved
                 .addListener(this::voltraxisEffectManager_onEffectRemoved);
+    }
+
+    /**
+     * Get the overall ATK after applying all modifiers.
+     *
+     * @return The overall ATK.
+     */
+    @Override
+    public double getAttackMultiplier() {
+        return attackMultiplier;
+    }
+
+    @Override
+    public int getAttack() {
+        return VoltraxisData.BASE_ATTACK;
+    }
+
+    @Override
+    public int getDefence() {
+        return VoltraxisData.BASE_DEFENSE;
+    }
+
+    @Override
+    public double getDefenceMultiplier() {
+        return defenseMultiplier;
+    }
+
+    @Override
+    public double getDamageTakenMultiplier() {
+        return damageTakenMultiplier;
+    }
+
+    @Override
+    public double getRegenerationMultiplier() {
+        return 0;
+    }
+
+    @Override
+    public double getCriticalChange() {
+        return VoltraxisData.CRITICAL_CHANCE;
+    }
+
+    @Override
+    public double getCriticalDamage() {
+        return VoltraxisData.CRITICAL_DAMAGE;
     }
 
     /**
@@ -47,11 +92,11 @@ public final class VoltraxisStatManager extends MonoBehaviour {
                 break;
 
             case VoltraxisData.EffectIndex.DamageTakenDecrement:
-                damageTakenProportion -= e.value;
+                damageTakenMultiplier -= e.value;
                 break;
 
             case VoltraxisData.EffectIndex.DamageTakenIncrement:
-                damageTakenProportion += e.value;
+                damageTakenMultiplier += e.value;
                 break;
 
             case VoltraxisData.EffectIndex.SkillCooldownDecrement:
@@ -59,7 +104,7 @@ public final class VoltraxisStatManager extends MonoBehaviour {
                 break;
 
             case VoltraxisData.EffectIndex.Frostbite:
-                damageTakenProportion += VoltraxisData.FROST_BITE_DAMAGE_TAKEN_INCREMENT;
+                damageTakenMultiplier += VoltraxisData.FROST_BITE_DAMAGE_TAKEN_INCREMENT;
                 break;
 
         }
@@ -86,11 +131,11 @@ public final class VoltraxisStatManager extends MonoBehaviour {
                 break;
 
             case VoltraxisData.EffectIndex.DamageTakenDecrement:
-                damageTakenProportion += e.value;
+                damageTakenMultiplier += e.value;
                 break;
 
             case VoltraxisData.EffectIndex.DamageTakenIncrement:
-                damageTakenProportion -= e.value;
+                damageTakenMultiplier -= e.value;
                 break;
 
             case VoltraxisData.EffectIndex.SkillCooldownDecrement:
@@ -98,38 +143,10 @@ public final class VoltraxisStatManager extends MonoBehaviour {
                 break;
 
             case VoltraxisData.EffectIndex.Frostbite:
-                damageTakenProportion -= VoltraxisData.FROST_BITE_DAMAGE_TAKEN_INCREMENT;
+                damageTakenMultiplier -= VoltraxisData.FROST_BITE_DAMAGE_TAKEN_INCREMENT;
 
         }
 
-    }
-
-    /**
-     * Get the overall ATK after applying all modifiers.
-     *
-     * @return The overall ATK.
-     */
-    public double getAttackMultiplier() {
-        return attackMultiplier;
-    }
-
-    /**
-     * Get the overall DEF after applying all modifiers.
-     *
-     * @return The overall DEF.
-     */
-    public double getDefenseMultiplier() {
-        return defenseMultiplier;
-    }
-
-    /**
-     * Get the overall DMG taken proportion after applying
-     * all modifiers.
-     *
-     * @return The overall DMG taken proportion.
-     */
-    public double getDamageTakenProportion() {
-        return damageTakenProportion;
     }
 
     /**
@@ -143,33 +160,12 @@ public final class VoltraxisStatManager extends MonoBehaviour {
     }
 
     /**
-     * Get Voltraxis' current DEF, with modifier included.
-     *
-     * @return Voltraxis' current DEF.
-     */
-    public int getDefence() {
-        return (int) (getDefenseMultiplier() * VoltraxisData.BASE_DEFENSE);
-    }
-
-    /**
-     * Get Voltraxis' current ATK, with modifier included.
-     *
-     * @return Voltraxis' current DEF.
-     */
-    public int getAttack() {
-        return (int) (getAttackMultiplier() * VoltraxisData.BASE_ATTACK);
-    }
-
-    /**
      * Get Voltraxis' basic skill cooldown, with modifier included.
      *
      * @return Voltraxis' basic skill cooldown.
      */
     public double getBasicSkillCooldown() {
         return VoltraxisData.BASIC_SKILL_COOLDOWN * getBasicCooldownMultiplier();
-    }
-
-    public void takeDamage(int amount){
     }
 
 }
