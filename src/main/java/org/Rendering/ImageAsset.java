@@ -97,6 +97,8 @@ public class ImageAsset {
 
         /// Particle
         PurpleParticle("/Particle/ParticlePurple.png"),
+        FireParticle("/Particle/FireParticle.png"),
+        EnergyParticle("/Particle/EnergyParticle.png"),
 
         None("");
 

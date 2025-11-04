@@ -1,12 +1,12 @@
-package org.Particle.ParticlesPrefab;
+package org.Particle;
 
 import org.Rendering.ImageAsset;
 
 public enum ParticleType {
 
-    Fire(ImageAsset.ImageIndex.FireBall),
+    Fire(ImageAsset.ImageIndex.FireParticle),
     Blizzard(ImageAsset.ImageIndex.None),
-    Energy(ImageAsset.ImageIndex.None);
+    Energy(ImageAsset.ImageIndex.EnergyParticle);
 
     private final ImageAsset.ImageIndex imageIndex;
 

@@ -3,14 +3,11 @@ package org.Particle.Emitter;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Particle.Particle;
-import org.Particle.ParticleGenerator;
-import org.Particle.ParticlesPrefab.ParticleType;
+import org.Particle.ParticlePool;
+import org.Particle.ParticleType;
 import utils.Random;
 import utils.Time;
 import utils.Vector2;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class ParticleEmitter extends MonoBehaviour {
 
@@ -22,16 +19,14 @@ public abstract class ParticleEmitter extends MonoBehaviour {
     protected double minLifeTime;
     protected double maxLifeTime;
     protected double timer = 0;
+    protected Vector2 baseDirection;
 
     protected boolean isEmitting;
+    protected boolean canEmit = false;
 
     protected EmitTypes emitType;
+    protected ParticleType particleType;
 
-    /**
-     * Create this MonoBehaviour.
-     *
-     * @param owner The owner of this component.
-     */
     public ParticleEmitter(GameObject owner) {
         super(owner);
     }
@@ -51,18 +46,18 @@ public abstract class ParticleEmitter extends MonoBehaviour {
         } else isEmitting = false;
     }
 
-    public abstract void emit( ParticleType particleType);
-
-    protected abstract void handleDirection();
+    public abstract void emit();
 
     protected abstract Vector2 generateSpawnPosition();
 
     protected Particle spawnParticles(ParticleType particleType) {
         double speed = Random.range(minSpeed, maxSpeed);
-        double lifetime =  Random.range(minLifeTime, maxLifeTime);
+        double lifetime = Random.range(minLifeTime, maxLifeTime);
 
-        Particle particle = ParticleGenerator.particlePrefabHashMap
-                .get(particleType).spawnParticle(speed, lifetime);
+        Particle particle = ParticlePool.getInstance().getParticle(particleType);
+
+        particle.assignSpecs(speed, lifetime);
+        particle.getGameObject().setActive(true);
 
         return particle;
     }
@@ -71,22 +66,44 @@ public abstract class ParticleEmitter extends MonoBehaviour {
         this.emitType = emitType;
     }
 
-    public void assignEmitterSpecs(double emissionRate, double spreadAngle,
-                                   double minSpeed, double maxSpeed,
-                                   double minLifeTime, double maxLifeTime) {
+    public void setEmissionRate(double emissionRate) {
         this.emissionRate = emissionRate;
+    }
+
+    public void setSpreadAngle(double spreadAngle) {
         this.spreadAngle = spreadAngle;
+    }
+
+    public void setMinSpeed(double minSpeed) {
         this.minSpeed = minSpeed;
+    }
+
+    public void setMaxSpeed(double maxSpeed) {
         this.maxSpeed = maxSpeed;
+    }
+
+    public void setMinLifeTime(double minLifeTime) {
         this.minLifeTime = minLifeTime;
+    }
+
+    public void setMaxLifeTime(double maxLifeTime) {
         this.maxLifeTime = maxLifeTime;
     }
 
-    public void start() {
-        isEmitting = true;
+    public void setParticleType(ParticleType particleType) {
+        System.out.println("This is set");
+        this.particleType = particleType;
     }
 
-    public void stop() {
-        isEmitting = false;
+    public void startEmit() {
+        canEmit = true;
+    }
+
+    public void setBaseDirection(Vector2 baseDirection) {
+        this.baseDirection = baseDirection;
+    }
+
+    public void stopEmit() {
+        canEmit = false;
     }
 }

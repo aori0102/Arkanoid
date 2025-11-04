@@ -15,7 +15,8 @@ import game.PowerUp.Index.PowerUpManager;
 import game.UI.UIManager;
 import org.GameObject.GameObjectManager;
 import org.Particle.Emitter.ConeEmitter;
-import org.Particle.ParticlesPrefab.ParticleType;
+import org.Particle.ParticlePool;
+import org.Particle.ParticleType;
 import utils.Vector2;
 
 public final class InGameSceneBuilder extends SceneBuilder {
@@ -60,13 +61,34 @@ public final class InGameSceneBuilder extends SceneBuilder {
         borderBottom.addComponent(Border.class).setBorderType(BorderType.BorderBottom);
         borderBottom.getTransform().setLocalPosition(new Vector2(1190, 750));
 
-        var circleEmitter =  GameObjectManager.instantiate("Circle_Emitter");
-        circleEmitter.setParent(Player.getInstance().getPlayerPaddle().getGameObject());
-        circleEmitter.getTransform().setLocalPosition(new Vector2(0, 10));
-        circleEmitter.addComponent(ConeEmitter.class).assignEmitterSpecs(
-                10, 30, 100, 200, 0.2,0.4
-        );
-        circleEmitter.getComponent(ConeEmitter.class).emit(ParticleType.Fire);
+        var circleEmitter1 =  GameObjectManager.instantiate("Circle_Emitter").addComponent(ConeEmitter.class);
+        circleEmitter1.setEmissionRate(50);
+        circleEmitter1.setSpreadAngle(30);
+        circleEmitter1.setMinSpeed(100);
+        circleEmitter1.setMaxSpeed(200);
+        circleEmitter1.setMinLifeTime(0.1);
+        circleEmitter1.setMaxLifeTime(0.3);
+        circleEmitter1.setBaseDirection(Vector2.down());
+        circleEmitter1.setParticleType(ParticleType.Energy);
+        circleEmitter1.getGameObject().setParent(Player.getInstance().getPlayerPaddle().getGameObject());
+        circleEmitter1.getTransform().setLocalPosition(new Vector2(38, 10));
+        circleEmitter1.startEmit();
+
+        var circleEmitter =  GameObjectManager.instantiate("Circle_Emitter").addComponent(ConeEmitter.class);
+        circleEmitter.setEmissionRate(50);
+        circleEmitter.setSpreadAngle(30);
+        circleEmitter.setMinSpeed(100);
+        circleEmitter.setMaxSpeed(200);
+        circleEmitter.setMinLifeTime(0.1);
+        circleEmitter.setMaxLifeTime(0.3);
+        circleEmitter.setBaseDirection(Vector2.down());
+        circleEmitter.setParticleType(ParticleType.Energy);
+        circleEmitter.getGameObject().setParent(Player.getInstance().getPlayerPaddle().getGameObject());
+        circleEmitter.getTransform().setLocalPosition(new Vector2(-40, 10));
+        circleEmitter.startEmit();
+
+
+        ParticlePool particlePool = GameObjectManager.instantiate("ParticlePool").addComponent(ParticlePool.class);
 
     }
 

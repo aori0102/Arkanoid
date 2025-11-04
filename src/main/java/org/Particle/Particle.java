@@ -1,9 +1,7 @@
 package org.Particle;
 
 import org.GameObject.GameObject;
-import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
-import org.Particle.ParticlesPrefab.ParticleType;
 import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
@@ -17,16 +15,9 @@ public class Particle extends MonoBehaviour {
 
     private ParticleType type;
 
-
-    /**
-     * Create this MonoBehaviour.
-     *
-     * @param owner The owner of this component.
-     */
     public Particle(GameObject owner) {
         super(owner);
         setParticleType(ParticleType.Fire);
-        addComponent(SpriteRenderer.class).setImage(type.getImageIndex().getImage());
     }
 
     public void assignSpecs(double speed, double lifeTime) {
@@ -40,13 +31,13 @@ public class Particle extends MonoBehaviour {
     }
 
     public void handleMovement(Vector2 direction, double speed) {
-
         getTransform().translate(direction.normalize().multiply(speed * Time.getDeltaTime()));
 
         lifeTimer += Time.getDeltaTime();
         if (lifeTimer >= lifeTime) {
-            GameObjectManager.destroy(gameObject);
-            System.out.println("Destroyed!");
+            gameObject.setActive(false);
+            lifeTimer = 0;
+            ParticlePool.getInstance().releaseParticle(this);
         }
     }
 
