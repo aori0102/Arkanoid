@@ -1,7 +1,9 @@
 package game.Entity;
 
+import game.Effect.StatusEffect;
+import game.Effect.StatusEffectCombination;
+import game.Effect.StatusEffectInfo;
 import game.Player.Paddle.PaddleHealth;
-import game.Player.PlayerLives;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Physics.BoxCollider;
@@ -30,6 +32,8 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
     private final EntityStat entityStat = addComponent(getStatComponentClass());
     private final BoxCollider boxCollider = addComponent(BoxCollider.class);
 
+    private StatusEffectCombination currentStatusEffectCombination = null;
+
     /**
      * Create this MonoBehaviour.
      *
@@ -41,41 +45,101 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
 
     @Override
     public void update() {
-        handleHealthManipulation();
-    }
-
-    /**
-     * Handle collision with any objects with {@link EntityHealth} and deal damage accordingly.
-     */
-    private void handleHealthManipulation() {
 
         if (!canDealDamage()) {
             return;
         }
 
         var overlappedList = PhysicsManager.getOverlapColliders(boxCollider, true);
-        for (var collider : overlappedList) {
-            var healthObject = collider.getComponent(EntityHealth.class);
-            if (healthObject != null && isDamageTarget(healthObject)) {
 
-                boolean critical = Random.range(0.0, 1.0) < entityStat.getCriticalChange();
-                EntityHealthAlterType healthAlteringType;
-                if (isPlayerHealth(healthObject)) {
-                    healthAlteringType = EntityHealthAlterType.PlayerTakeDamage;
-                } else {
-                    healthAlteringType
-                            = critical ? EntityHealthAlterType.CriticalDamage : EntityHealthAlterType.NormalDamage;
+        for (var collider : overlappedList) {
+
+            var healthObject = collider.getComponent(EntityHealth.class);
+            if (healthObject != null) {
+
+                // Inflict effect
+                var effectControllingObject = collider.getComponent(EntityEffectController.class);
+                if (effectControllingObject != null) {
+
+                    handleEffectInflicting(effectControllingObject);
+                    if (gameObject.isDestroyed()) {
+                        return;
+                    }
+                    onEffectInflicted(effectControllingObject);
+
                 }
 
-                var damage
-                        = (int) (entityStat.getActualAttack() * (1 + (critical ? entityStat.getCriticalChange() : 0)));
-                healthObject.alterHealth(healthAlteringType, damage);
-                onDamageDealt();
+                // Deal damage
+                handleHealthManipulation(healthObject);
                 if (gameObject.isDestroyed()) {
                     return;
                 }
+                onDamageDealt(healthObject);
 
             }
+
+        }
+    }
+
+    private void handleEffectInflicting(EntityEffectController effectController) {
+
+        var statusInfo = getStatusEffectInfo();
+        if (statusInfo != null && effectController != null) {
+
+            // Handle effect
+            if (!handleStatusCombination(statusInfo.effect, effectController)) {
+                effectController.inflictEffect(statusInfo);
+            }
+
+        }
+
+    }
+
+    private boolean handleStatusCombination(StatusEffect statusEffect, EntityEffectController effectController) {
+
+        currentStatusEffectCombination = null;
+        var combinationArray = StatusEffectCombination.values();
+        for (var combination : combinationArray) {
+
+            if (combination.hitEffect == statusEffect && effectController.removeEffect(combination.bearEffect)) {
+                currentStatusEffectCombination = combination;
+                break;
+            }
+
+        }
+
+        return currentStatusEffectCombination != null;
+
+    }
+
+    /**
+     * Handle collision with any objects with {@link EntityHealth} and deal damage accordingly.
+     */
+    private void handleHealthManipulation(EntityHealth healthObject) {
+
+        if (healthObject != null && isDamageTarget(healthObject)) {
+
+            // Check for critical hit
+            boolean critical = Random.range(0.0, 1.0) < entityStat.getCriticalChange();
+            EntityHealthAlterType healthAlteringType;
+            if (isPlayerHealth(healthObject)) {
+                healthAlteringType = EntityHealthAlterType.PlayerTakeDamage;
+            } else {
+                healthAlteringType
+                        = critical ? EntityHealthAlterType.CriticalDamage : EntityHealthAlterType.NormalDamage;
+            }
+
+            // Calculate damage
+            var damage = entityStat.getActualAttack();
+            if (critical) {
+                damage = (int) (damage * (1 + entityStat.getCriticalDamage()));
+            }
+            if (currentStatusEffectCombination != null) {
+                damage = (int) (damage * currentStatusEffectCombination.damageMultiplier);
+            }
+            healthObject.alterHealth(healthAlteringType, damage);
+            onDamageDealt(healthObject);
+
         }
 
     }
@@ -86,8 +150,10 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
 
     /**
      * Handles what happen after this object deals damage.
+     *
+     * @param entityHealth The {@link EntityHealth} of the object that was hit.
      */
-    protected abstract void onDamageDealt();
+    protected abstract void onDamageDealt(EntityHealth entityHealth);
 
     /**
      * Check whether this object can deal damage when called.
@@ -116,5 +182,9 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
      * @return The class signature of the stat holding class.
      */
     protected abstract Class<? extends EntityStat> getStatComponentClass();
+
+    protected abstract void onEffectInflicted(EntityEffectController effectController);
+
+    protected abstract StatusEffectInfo getStatusEffectInfo();
 
 }

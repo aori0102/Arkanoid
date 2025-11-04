@@ -24,6 +24,7 @@ public final class BrickPrefab extends Prefab {
                 .addComponent(BrickHealth.class)
                 .addComponent(Brick.class)
                 .addComponent(ExperienceHolder.class)
+                .addComponent(BrickEffectController.class)
                 .addComponent(BrickStat.class)
                 .getGameObject();
 

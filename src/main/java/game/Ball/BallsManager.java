@@ -1,17 +1,13 @@
 package game.Ball;
 
+import game.Effect.StatusEffectInfo;
 import game.Player.Player;
 import game.Effect.StatusEffect;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
-import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
-import org.Physics.BoxCollider;
 import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
-import utils.Vector2;
 
 import java.util.HashSet;
 
@@ -23,7 +19,7 @@ public class BallsManager extends MonoBehaviour {
 
     private final HashSet<Ball> ballSet = new HashSet<>();
     public int index = 1;
-    private StatusEffect currentEffect = StatusEffect.None;
+    private StatusEffect currentEffect = null;
 
     public EventHandler<Void> onBallCountChanged = new EventHandler<>(BallsManager.class);
 
@@ -64,8 +60,13 @@ public class BallsManager extends MonoBehaviour {
 
     public void applyStatusPowerUpEffect(StatusEffect statusEffect) {
         this.currentEffect = statusEffect;
-        for (var ball : ballSet) {
-            ball.addEffect(currentEffect);
+        if (currentEffect != null) {
+            var statusInfo = new StatusEffectInfo();
+            statusInfo.effect = currentEffect;
+            statusInfo.duration = Double.MAX_VALUE;
+            for (var ball : ballSet) {
+                ball.getBallEffectController().inflictEffect(statusInfo);
+            }
         }
     }
 

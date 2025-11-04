@@ -1,7 +1,6 @@
 package game.Brick;
 
 import game.Effect.StatusEffect;
-import game.Entity.EntityHealthAlterType;
 import game.Rank.ExperienceHolder;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -9,29 +8,19 @@ import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
 import org.Rendering.SpriteRenderer;
 import org.Rendering.ImageAsset;
-import utils.Time;
 import utils.Vector2;
 
 public class Brick extends MonoBehaviour {
 
-    private static final double BURN_TIME = 3.0;
-    private static final double FROSTBITE_TIME = 3.0;
-    private static final int BURN_EXISTED_TICKS = 1;
-    private static final int BURN_DAMAGE = 5;
     private static final Vector2 BRICK_SIZE = new Vector2(64, 32);
-    private static final int BASE_DAMAGE_MULTIPLIER = 1;
-    private static final int FROSTBITE_DAMAGE_MULTIPLIER = 2;
 
     private final SpriteRenderer spriteRenderer = addComponent(SpriteRenderer.class);
     private final ExperienceHolder experienceHolder = addComponent(ExperienceHolder.class);
     private final BrickHealth brickHealth = addComponent(BrickHealth.class);
     private final BrickStat brickStat = addComponent(BrickStat.class);
+    private final BrickEffectController brickEffectController = addComponent(BrickEffectController.class);
 
     private BrickType brickType = BrickType.Normal;
-    private double burnStartTime = 0.0;
-    private double frostStartTime = 0.0;
-
-    private Time.CoroutineID burnCoroutineID = null;
 
     public static EventHandler<OnBrickDestroyedEventArgs> onAnyBrickDestroyed = new EventHandler<>(Brick.class);
 
@@ -39,8 +28,6 @@ public class Brick extends MonoBehaviour {
         public Vector2 brickPosition;
         public BrickType brickType;
     }
-
-    public StatusEffect statusBrickEffect = StatusEffect.None;
 
     /**
      * Create this MonoBehaviour.
@@ -57,91 +44,62 @@ public class Brick extends MonoBehaviour {
     }
 
     @Override
+    public void awake() {
+        spriteRenderer.setImage(brickType.imageIndex.getImage());
+        spriteRenderer.setSize(BrickPrefab.BRICK_SIZE);
+
+        experienceHolder.setExp(brickType.exp);
+    }
+
+    @Override
+    public void start() {
+        brickEffectController.onEffectInflicted.addListener(this::brickEffectController_onEffectInflicted);
+        brickEffectController.onEffectCleared.addListener(this::brickEffectController_onEffectCleared);
+    }
+
+    @Override
     protected void onDestroy() {
         var onBrickDestroyedEventArgs = new OnBrickDestroyedEventArgs();
         onBrickDestroyedEventArgs.brickPosition = getTransform().getGlobalPosition();
         onBrickDestroyedEventArgs.brickType = brickType;
         onAnyBrickDestroyed.invoke(this, onBrickDestroyedEventArgs);
-
-        Time.removeCoroutine(burnCoroutineID);
     }
 
-    @Override
-    public void update() {
-        if (statusBrickEffect == StatusEffect.FrostBite) {
-            if (Time.getTime() > frostStartTime + FROSTBITE_TIME) {
-                resetStatusBrickEffect();
-            }
-        }
+    /**
+     * Called when {@link BrickEffectController#onEffectInflicted} is invoked.<br><br>
+     * This function changes the visual of the brick based on the effect inflicted.
+     *
+     * @param sender Event caller {@link BrickEffectController}.
+     * @param e      Event argument indicating the effect that was inflicted.
+     */
+    private void brickEffectController_onEffectInflicted(Object sender, StatusEffect e) {
+        spriteRenderer.setImage(switch (e) {
+            case Burn -> ImageAsset.ImageIndex.OrangeBrick.getImage();
+            case FrostBite -> ImageAsset.ImageIndex.CyanBrick.getImage();
+            case Electrified -> ImageAsset.ImageIndex.PurpleBrick.getImage();
+            default -> ImageAsset.ImageIndex.GreenBrick.getImage();
+        });
+        spriteRenderer.setSize(BRICK_SIZE);
     }
 
-    private void takeBurnDamage() {
-        brickHealth.alterHealth(EntityHealthAlterType.BurnDamage, BURN_DAMAGE);
-        if (gameObject.isDestroyed()) {
-            return;
-        }
-        if (Time.getTime() < burnStartTime + BURN_TIME) {
-            burnCoroutineID = Time.addCoroutine(this::takeBurnDamage, Time.getTime() + BURN_EXISTED_TICKS);
-        } else {
-            resetStatusBrickEffect();
+    /**
+     * Called when {@link BrickEffectController#onEffectCleared} is invoked.<br><br>
+     * This function changes the visual of the brick back to normal as the effect is removed.
+     *
+     * @param sender Event callers {@link BrickEffectController}.
+     * @param e      Event argument indicating the effect that was removed.
+     */
+    private void brickEffectController_onEffectCleared(Object sender, StatusEffect e) {
+        if (!brickEffectController.hasAnyEffect()) {
+            spriteRenderer.setImage(brickType.imageIndex.getImage());
         }
     }
 
     public void setBrickType(BrickType brickType) {
         this.brickType = brickType;
-        spriteRenderer.setImage(brickType.imageIndex.getImage());
-        spriteRenderer.setSize(BrickPrefab.BRICK_SIZE);
-        experienceHolder.setExp(brickType.exp);
-    }
-
-    public void setStatusBrickEffect(StatusEffect statusBrickEffect) {
-        this.statusBrickEffect = statusBrickEffect;
-        handleStatusEffect(statusBrickEffect);
-        changeBrickVisual(statusBrickEffect);
-    }
-
-    public void handleStatusEffect(StatusEffect statusEffect) {
-        switch (statusEffect) {
-            case Burn -> {
-                burnCoroutineID = Time.addCoroutine(this::takeBurnDamage, Time.getTime() + 2);
-                burnStartTime = Time.getTime();
-            }
-            case FrostBite -> {
-                brickStat.setDamageTakenMultiplier(FROSTBITE_DAMAGE_MULTIPLIER);
-                frostStartTime = Time.getTime();
-            }
-        }
     }
 
     private void changeBrickVisual(StatusEffect statusEffect) {
-        switch (statusEffect) {
-            case Burn -> {
-                SpriteRenderer renderer = getComponent(SpriteRenderer.class);
-                renderer.setImage(ImageAsset.ImageIndex.OrangeBrick.getImage());
-                renderer.setSize(BRICK_SIZE);
-                renderer.setPivot(new Vector2(0.5, 0.5));
-            }
-
-            case FrostBite -> {
-                SpriteRenderer renderer = getComponent(SpriteRenderer.class);
-                renderer.setImage(ImageAsset.ImageIndex.PurpleBrick.getImage());
-                renderer.setSize(BRICK_SIZE);
-                renderer.setPivot(new Vector2(0.5, 0.5));
-            }
-        }
-    }
-
-    public void resetStatusBrickEffect() {
-        this.statusBrickEffect = StatusEffect.None;
-        brickStat.setDamageTakenMultiplier(BASE_DAMAGE_MULTIPLIER);
-        SpriteRenderer renderer = getComponent(SpriteRenderer.class);
-        renderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
-        renderer.setSize(BRICK_SIZE);
-        renderer.setPivot(new Vector2(0.5, 0.5));
-    }
-
-    public StatusEffect getStatusBrickEffect() {
-        return statusBrickEffect;
     }
 
 }

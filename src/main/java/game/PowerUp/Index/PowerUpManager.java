@@ -50,14 +50,14 @@ public class PowerUpManager extends MonoBehaviour {
 
 
         int target = 1;
-        if (Random.range(0, 10) == target) {
+        if (Random.range(0, 3) == target) {
 
             var chosenKey = PowerUpPrefabGenerator.registeredPowerUps.get(
                     Random.range(0, PowerUpPrefabGenerator.registeredPowerUps.size())
             );
             if (chosenKey.equals(DuplicateBall.class) || chosenKey.equals(TriplicateBall.class)) {
                 if (BallsManager.getInstance().getBallSet().size()
-                        < BallsManager.getInstance().getMaxBallExisted()) {
+                        > BallsManager.getInstance().getMaxBallExisted()) {
                     return;
                 }
             }

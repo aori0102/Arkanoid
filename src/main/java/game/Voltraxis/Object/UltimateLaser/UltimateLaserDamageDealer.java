@@ -1,6 +1,8 @@
 package game.Voltraxis.Object.UltimateLaser;
 
+import game.Effect.StatusEffectInfo;
 import game.Entity.EntityDamageDealer;
+import game.Entity.EntityEffectController;
 import game.Entity.EntityHealth;
 import game.Entity.EntityStat;
 import game.Player.Paddle.PaddleHealth;
@@ -23,7 +25,7 @@ public final class UltimateLaserDamageDealer extends EntityDamageDealer {
     }
 
     @Override
-    protected void onDamageDealt() {
+    protected void onDamageDealt(EntityHealth entityHealth) {
         lastDamageTick = Time.getTime();
     }
 
@@ -40,6 +42,15 @@ public final class UltimateLaserDamageDealer extends EntityDamageDealer {
     @Override
     protected Class<? extends EntityStat> getStatComponentClass() {
         return UltimateLaserStat.class;
+    }
+
+    @Override
+    protected void onEffectInflicted(EntityEffectController effectController) {
+    }
+
+    @Override
+    protected StatusEffectInfo getStatusEffectInfo() {
+        return null;
     }
 
 }

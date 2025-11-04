@@ -7,6 +7,8 @@ public enum EntityHealthAlterType {
     NormalDamage(Color.GREY),
     CriticalDamage(Color.YELLOW),
     BurnDamage(Color.ORANGE),
+    FrostDamage(Color.CYAN),
+    ElectrifiedDamage(Color.MAGENTA),
     Regeneration(Color.GREEN);
 
     public final Color displayColor;

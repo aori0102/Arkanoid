@@ -411,6 +411,10 @@ public class GameObject {
 
         validateObjectLife();
 
+        if (type == null) {
+            return null;
+        }
+
         if (!type.isInterface() && !MonoBehaviour.class.isAssignableFrom(type)) {
             throw new IllegalArgumentException("Cannot get component. " + type + " is not MonoBehaviour nor an interface!");
         }
@@ -437,6 +441,10 @@ public class GameObject {
     public <T extends MonoBehaviour> T addComponent(Class<T> type) {
 
         validateObjectLife();
+
+        if (type == null) {
+            return null;
+        }
 
         if (!registeredComponentSet.contains(type)) {
 

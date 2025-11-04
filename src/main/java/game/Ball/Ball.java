@@ -1,11 +1,11 @@
 package game.Ball;
 
 import game.Brick.Brick;
+import game.Effect.StatusEffect;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import game.Player.Player;
 import game.Player.Paddle.PlayerPaddle;
-import game.Effect.StatusEffect;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -22,16 +22,14 @@ import utils.Time;
 
 public class Ball extends MonoBehaviour {
 
-    private static final double BALL_CRITICAL_CHANCE = 0.27;
-    private static final double BALL_CRITICAL_AMOUNT = 0.59;
-    private static final int BALL_DAMAGE = 100;
     private static final double BASE_BALL_SPEED = 500;
     private static final Vector2 BOUNCE_OFFSET = new Vector2(0.2, 0.2);
 
+    private BallDamageDealer ballDamageDealer = null;
+    private BallEffectController ballEffectController = null;
+
     private Vector2 direction = Vector2.zero();
     private PlayerPaddle playerPaddle;
-    private StatusEffect currentStatusEffect = StatusEffect.None;
-    private StatusEffect pendingEffect = StatusEffect.None;
     private boolean hitPaddle = false;
 
     private EventActionID ball_onAnyBallHitBrick_ID = null;
@@ -50,6 +48,10 @@ public class Ball extends MonoBehaviour {
      */
     @Override
     public void awake() {
+
+        ballDamageDealer = getComponent(BallDamageDealer.class);
+        ballEffectController = getComponent(BallEffectController.class);
+
         playerPaddle = Player.getInstance().getPlayerPaddle();
 
         // Assign collider specs and the function
@@ -68,10 +70,8 @@ public class Ball extends MonoBehaviour {
             playerPaddle.isFired = true;
         });
 
-        if (pendingEffect != StatusEffect.None) {
-            addEffect(pendingEffect);
-            pendingEffect = StatusEffect.None;
-        }
+        ballEffectController.onEffectInflicted.addListener(this::ballEffectController_onEffectInflicted);
+        ballEffectController.onEffectCleared.addListener(this::ballEffectController_onEffectCleared);
 
     }
 
@@ -94,6 +94,14 @@ public class Ball extends MonoBehaviour {
         }
         Ball.onAnyBallHitBrick.removeListener(ball_onAnyBallHitBrick_ID);
         onAnyBallDestroyed.invoke(this, null);
+    }
+
+    public BallDamageDealer getBallDamageDealer() {
+        return ballDamageDealer;
+    }
+
+    public BallEffectController getBallEffectController() {
+        return ballEffectController;
     }
 
     public boolean isHitPaddle() {
@@ -157,56 +165,6 @@ public class Ball extends MonoBehaviour {
     }
 
     /**
-     * Calculating the direction of the ball.<br>
-     * The reflected direction is calculated by the formular : <br>
-     * {@code r = d - 2 * (d,n) * n} <br>
-     * In that formular: <br>
-     * r is reflected direction <br>
-     * d is the previous direction <br>
-     * n is the normal vector (base on which side the ball interacts with) <br>
-     * If the direction is vertical with the surface, the reflected direction will be added <br>
-     * an offset vector to avoid stuck.
-     *
-     * @param collisionData : the hit object's collision data
-     */
-    private void handleAngleDirection(CollisionData collisionData) {
-        if (direction == null) return;
-
-        Vector2 normal = collisionData.hitNormal.normalize();
-
-        if (Math.abs(normal.x) > Math.abs(normal.y)) {
-            normal = new Vector2(Math.signum(normal.x), 0);
-        } else {
-            normal = new Vector2(0, Math.signum(normal.y));
-        }
-
-        Vector2 dirNorm = direction.normalize();
-
-        double dot = Vector2.dot(dirNorm, normal);
-        Vector2 reflectDirection = dirNorm.subtract(normal.multiply(2 * dot)).normalize();
-
-        double dotCoefficient = Vector2.dot(dirNorm, normal);
-
-        boolean nearlyParallel = Math.abs(dotCoefficient) == 1;
-
-        if (nearlyParallel) {
-            reflectDirection = reflectDirection.add(BOUNCE_OFFSET.multiply(0.3).normalize());
-        }
-
-        if (isCollidedWith(collisionData, PlayerPaddle.class)) {
-            Vector2 paddleVel = playerPaddle.getMovementVector();
-            if (!paddleVel.equals(Vector2.zero())) {
-                reflectDirection = reflectDirection.add(paddleVel.normalize().multiply(0.3)).normalize();
-            }
-        }
-
-        Vector2 offset = getTransform().getGlobalPosition().add(normal.inverse().multiply(1));
-        getTransform().setGlobalPosition(offset);
-
-        direction = reflectDirection;
-    }
-
-    /**
      * Set the ball's direction.
      *
      * @param direction : the direction we want the ball to follow.
@@ -245,42 +203,38 @@ public class Ball extends MonoBehaviour {
         return collisionData.otherCollider.getComponent(type) != null;
     }
 
-    public void changeBallVisual() {
+    /**
+     * Called when {@link BallEffectController#onEffectInflicted} is invoked.<br><br>
+     * This function changes the ball visual when an effect is inflicted.
+     *
+     * @param sender Event caller {@link BallEffectController}.
+     * @param e      Event argument indicating the effect that was inflicted.
+     */
+    private void ballEffectController_onEffectInflicted(Object sender, StatusEffect e) {
         if (getBallVisual() != null) {
-            switch (currentStatusEffect) {
+            switch (e) {
+
                 case FrostBite -> {
                     getBallVisual().setImage(ImageAsset.ImageIndex.BlizzardBall.getImage());
                 }
+
                 case Burn -> {
                     getBallVisual().setImage(ImageAsset.ImageIndex.FireBall.getImage());
                 }
 
-                default -> {
-                    getBallVisual().setImage(ImageAsset.ImageIndex.Ball.getImage());
-                }
             }
         }
     }
 
-    public void addEffect(StatusEffect statusEffect) {
-        this.currentStatusEffect = statusEffect;
-        changeBallVisual();
-    }
-
-    public void setPendingEffect(StatusEffect statusEffect) {
-        this.pendingEffect = statusEffect;
-    }
-
-    public StatusEffect getCurrentStatusEffect() {
-        return currentStatusEffect;
-    }
-
-    private void resetCurrentStatusEffect() {
-        if (currentStatusEffect != StatusEffect.None) {
-            System.out.println("This is called by Ball");
-            currentStatusEffect = StatusEffect.None;
-            changeBallVisual();
-        }
+    /**
+     * Called when {@link BallEffectController#onEffectCleared} is invoked.<br><br>
+     * This function resets the ball's visual when effect is removed.
+     *
+     * @param sender Event caller {@link BallEffectController}.
+     * @param e      Event argument indicating the effect that was removed.
+     */
+    private void ballEffectController_onEffectCleared(Object sender, StatusEffect e) {
+        getBallVisual().setImage(ImageAsset.ImageIndex.Ball.getImage());
     }
 
 }

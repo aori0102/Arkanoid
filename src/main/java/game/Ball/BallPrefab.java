@@ -16,6 +16,7 @@ public final class BallPrefab extends Prefab {
         // Core
         var ballObject = GameObjectManager.instantiate("ball")
                 .addComponent(Ball.class)
+                .addComponent(BallEffectController.class)
                 .addComponent(BallDamageDealer.class)
                 .addComponent(BallStat.class)
                 .getGameObject();

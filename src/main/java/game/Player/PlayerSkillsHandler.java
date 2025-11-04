@@ -29,12 +29,14 @@ public class PlayerSkillsHandler extends MonoBehaviour {
         super(owner);
     }
 
+    @Override
     public void awake() {
        Player.getInstance().getPlayerController().getActionMap().
                onKeyPressed.addListener(this::handleSkillRequest);
        playerPaddle = getComponent(PlayerPaddle.class);
     }
 
+    @Override
     public void update() {
         handleSKillCooldown();
     }
