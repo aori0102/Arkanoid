@@ -3,7 +3,6 @@ package org.Scene.SceneBuilder;
 import game.Ball.BallsManager;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
-import game.Obstacle.Index.ObstacleManager;
 import game.Player.Player;
 import game.Player.PlayerPowerUpHandler;
 import game.PowerUp.Index.PowerUpManager;
@@ -12,7 +11,6 @@ import game.UI.Buttons.PauseButton;
 import game.UI.Buttons.ResumeButton;
 import game.UI.PauseMenu.PauseMenuController;
 import game.UI.PauseMenu.PauseMenuManager;
-import game.UI.UIManager;
 import org.GameObject.GameObjectManager;
 import org.Main;
 import org.Prefab.PrefabIndex;
@@ -31,7 +29,7 @@ public final class InGameSceneBuilder extends SceneBuilder {
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_RankManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_ScoreManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_ObstacleManager);
-        ScoreManagerPrefab.instantiate();
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_BallsManager);
 
         PrefabManager.instantiatePrefab(PrefabIndex.Player);
 

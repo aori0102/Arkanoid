@@ -89,6 +89,7 @@ public final class ScoreManager extends MonoBehaviour {
             BallsManager.getInstance().onBallCountChanged
                     .removeListener(ballsManager_onBallCountChanged_ID);
         }
+        instance = null;
     }
 
     /**

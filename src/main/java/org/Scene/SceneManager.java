@@ -81,7 +81,7 @@ public class SceneManager {
             currentSceneKey = sceneKey;
             SceneBuilderManager.buildScene(sceneKey);
 
-            System.out.println("[Scene Manager]Scene " + sceneMap.get(sceneKey) + " loaded!");
+            System.out.println("[Scene Manager] Scene " + sceneKey + " loaded!");
             OnSceneChanged.invoke(SceneManager.class, currentSceneKey);
 
         } catch (Exception e) {

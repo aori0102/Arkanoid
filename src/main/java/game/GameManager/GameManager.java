@@ -202,15 +202,6 @@ public class GameManager extends MonoBehaviour {
         loadNextLevel();
     }
 
-    private void brickManager_onLevelComplete() {
-        System.out.println("[GameManager] Brick Manager onLevelComplete");
-
-    }
-
-    public boolean isGameOver() {
-        return gameState == GameState.GameOver;
-    }
-
     public boolean isBossFight() {
         return isBossFight;
     }

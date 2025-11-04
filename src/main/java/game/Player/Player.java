@@ -56,17 +56,6 @@ public class Player extends MonoBehaviour {
         return playerPaddle;
     }
 
-    /**
-     * Called when {@link PlayerPaddle#onPaddleDestroyed} is invoked.<br><br>
-     * This function unlinks the current paddle when it's destroyed.
-     *
-     * @param sender Event caller {@link PlayerPaddle}.
-     * @param e      Empty event argument.
-     */
-    private void paddle_onPaddleDestroyed(Object sender, Void e) {
-        playerPaddle = null;
-    }
-
     public PlayerPowerUpHandler getPlayerPowerUpHandler() {
         return playerPowerUpHandler;
     }

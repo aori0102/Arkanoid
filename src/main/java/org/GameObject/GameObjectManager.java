@@ -2,8 +2,6 @@ package org.GameObject;
 
 import org.Event.EventHandler;
 import org.Main;
-import org.Scene.SceneBuilder.SceneBuilder;
-import org.Scene.SceneManager;
 
 import java.util.*;
 
@@ -141,6 +139,10 @@ public class GameObjectManager {
      */
     private static void reboot() {
 
+        if (sceneUpdateAbortion) {
+            return;
+        }
+
         // Added queried objects
         while (!addedGameObjectQueue.isEmpty()) {
 
@@ -235,10 +237,23 @@ public class GameObjectManager {
 
     public static void clearCurrentScene() {
 
+        System.out.println("[GameObjectManager] Clearing game object scene");
         for (var object : gameObjectSet) {
-            object.markDestroyed();
-            object.clearData();
+            System.out.println("Processing " + object);
+            if (object.isDestroyed()) {
+                continue;
+            }
+            try {
+                object.markDestroyed();
+                object.clearData();
+            } catch (Exception e) {
+                System.out.println("[GameObjectManager] Possible fatal exception: " + e.getMessage());
+            }
         }
+        gameObjectSet.clear();
+        addedGameObjectQueue.clear();
+        removedObjectQueue.clear();
+
         sceneUpdateAbortion = true;
     }
 

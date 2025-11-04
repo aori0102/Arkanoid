@@ -72,6 +72,11 @@ public class PowerUpManager extends MonoBehaviour {
         playerPaddle = Player.getInstance().getPlayerPaddle();
     }
 
+    @Override
+    public void onDestroy() {
+        instance = null;
+    }
+
     /**
      * Link each power up with its corresponding event
      * These events are from the {@link PlayerPowerUpHandler}
@@ -118,16 +123,16 @@ public class PowerUpManager extends MonoBehaviour {
 
 
         int target = 1;
-       //if (Random.range(0, 1) == target) {
+        //if (Random.range(0, 1) == target) {
 
-            var chosenKey = PowerUpPrefabGenerator.registeredPowerUps.get(
-                    Random.range(0, PowerUpPrefabGenerator.registeredPowerUps.size())
-            );
+        var chosenKey = PowerUpPrefabGenerator.registeredPowerUps.get(
+                Random.range(0, PowerUpPrefabGenerator.registeredPowerUps.size())
+        );
 
-            PowerUp chosen = PowerUpPrefabGenerator.powerUpPrefabHashMap.get(chosenKey)
-                    .generatePowerUp(position, playerPaddle);
+        PowerUp chosen = PowerUpPrefabGenerator.powerUpPrefabHashMap.get(chosenKey)
+                .generatePowerUp(position, playerPaddle);
 
-            assignPowerUpEvent(chosen);
+        assignPowerUpEvent(chosen);
 
         //}
     }

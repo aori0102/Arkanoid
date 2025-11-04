@@ -43,7 +43,7 @@ public class ObstacleManager extends MonoBehaviour {
     /**
      * Maximum attempt to spawn an obstacle.
      */
-    private static final int SPAWNING_ATTEMPT_THRESHOLD=10;
+    private static final int SPAWNING_ATTEMPT_THRESHOLD = 10;
 
     /**
      * Smoothing coefficient
@@ -83,6 +83,11 @@ public class ObstacleManager extends MonoBehaviour {
     @Override
     public void update() {
         spawnObstacles();
+    }
+
+    @Override
+    public void onDestroy() {
+        instance = null;
     }
 
     /**

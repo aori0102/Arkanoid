@@ -86,7 +86,9 @@ public class Ball extends MonoBehaviour {
     @Override
     protected void onDestroy() {
         //TODO: let ball manager listen to event
-        BallsManager.getInstance().removeBall(this);
+        if (BallsManager.getInstance() != null) {
+            BallsManager.getInstance().removeBall(this);
+        }
         Ball.onAnyBallHitBrick.removeListener(ball_onAnyBallHitBrick_ID);
         onAnyBallDestroyed.invoke(this, null);
     }

@@ -3,6 +3,7 @@ package game.UI.PauseMenu;
 import game.UI.Buttons.BaseButton;
 import game.UI.Buttons.MenuButton;
 import game.UI.Buttons.ResumeButton;
+import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 
@@ -11,8 +12,8 @@ import java.util.List;
 
 public class PauseMenuManager extends MonoBehaviour {
     private static PauseMenuManager instance;
-    private final List<BaseButton> buttons =  new ArrayList<>();
-    private final List<BaseButton> pauseMenuButtons =new ArrayList<>();
+    private final List<BaseButton> buttons = new ArrayList<>();
+    private final List<BaseButton> pauseMenuButtons = new ArrayList<>();
 
 
     /**
@@ -23,35 +24,41 @@ public class PauseMenuManager extends MonoBehaviour {
     public PauseMenuManager(GameObject owner) {
         super(owner);
 
-        if (instance == null) {
-            instance = this;
+        if (instance != null) {
+            throw new ReinitializedSingletonException("PauseMenuManager is a singleton!");
         }
+        instance = this;
     }
 
-    public static PauseMenuManager getInstance(){
+    @Override
+    public void onDestroy() {
+        instance = null;
+    }
+
+    public static PauseMenuManager getInstance() {
         return instance;
     }
 
-    public void showPauseMenu(){
+    public void showPauseMenu() {
         for (BaseButton button : pauseMenuButtons) {
             button.getGameObject().setActive(true);
         }
     }
 
-    public void hidePauseMenu(){
+    public void hidePauseMenu() {
         for (BaseButton button : pauseMenuButtons) {
             button.getGameObject().setActive(false);
         }
     }
 
-    public void addPauseMenuButton(BaseButton button){
-        if(button instanceof ResumeButton || button instanceof MenuButton){
+    public void addPauseMenuButton(BaseButton button) {
+        if (button instanceof ResumeButton || button instanceof MenuButton) {
             pauseMenuButtons.add(button);
         }
         buttons.add(button);
     }
 
-    public List<BaseButton> getButtons(){
+    public List<BaseButton> getButtons() {
         return buttons;
     }
 }

@@ -48,7 +48,7 @@ public final class BrickMapManager extends MonoBehaviour {
         super(owner);
 
         if (instance != null) {
-            throw new ReinitializedSingletonException("MapGenerator is a singleton!");
+            throw new ReinitializedSingletonException("BrickMapManager is a singleton!");
         }
         instance = this;
 
@@ -71,6 +71,7 @@ public final class BrickMapManager extends MonoBehaviour {
     @Override
     protected void onDestroy() {
         Brick.onAnyBrickDestroyed.removeListener(brick_onAnyBrickDestroyed_ID);
+        instance = null;
     }
 
     public void generateMap() {
