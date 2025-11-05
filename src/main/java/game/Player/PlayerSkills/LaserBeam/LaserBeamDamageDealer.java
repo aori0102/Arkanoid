@@ -1,4 +1,4 @@
-package game.Ball;
+package game.Player.PlayerSkills.LaserBeam;
 
 import game.Brick.BrickHealth;
 import game.Effect.StatusEffectInfo;
@@ -8,30 +8,23 @@ import game.Entity.EntityHealth;
 import game.Entity.EntityStat;
 import game.Voltraxis.Object.PowerCore.PowerCoreHealth;
 import game.Voltraxis.VoltraxisHealth;
-import org.Annotation.LinkViaPrefab;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 
-public final class BallDamageDealer extends EntityDamageDealer {
-
-    @LinkViaPrefab
-    private Ball ball = null;
+public final class LaserBeamDamageDealer extends EntityDamageDealer {
 
     /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
-    public BallDamageDealer(GameObject owner) {
+    public LaserBeamDamageDealer(GameObject owner) {
         super(owner);
     }
 
     @Override
-    public void awake() {
-        ball = getComponent(Ball.class);
-    }
-
-    @Override
     protected void onDamageDealt(EntityHealth entityHealth) {
+        GameObjectManager.destroy(gameObject);
     }
 
     @Override
@@ -48,23 +41,15 @@ public final class BallDamageDealer extends EntityDamageDealer {
 
     @Override
     protected Class<? extends EntityStat> getStatComponentClass() {
-        return BallStat.class;
+        return LaserBeamStat.class;
     }
 
     @Override
     protected void onEffectInflicted(EntityEffectController effectController) {
-        ball.getBallEffectController().removeAllEffect();
     }
 
     @Override
     protected StatusEffectInfo getStatusEffectInfo() {
-        var effectList = ball.getBallEffectController().getEffectList();
-        if (!effectList.isEmpty()) {
-            var statusInfo = new StatusEffectInfo();
-            statusInfo.effect = effectList.getFirst();
-            statusInfo.duration = BallEffectController.EFFECT_INFLICTED_TIME;
-            return statusInfo;
-        }
         return null;
     }
 

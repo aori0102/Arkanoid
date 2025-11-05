@@ -8,6 +8,7 @@ import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
 
+// TODO: Doc + Prefab
 public class Shield extends MonoBehaviour {
 
     private static final double DURATION = 5.0;
@@ -32,6 +33,7 @@ public class Shield extends MonoBehaviour {
         return instance;
     }
 
+    @Override
     public void awake() {
         var collider = getComponent(BoxCollider.class);
         collider.setLocalSize(new Vector2(20000.0, 1.0));

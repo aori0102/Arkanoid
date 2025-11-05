@@ -19,7 +19,7 @@ public interface IPointerUpHandler {
      * to define the behavior that occurs when a node is released.
      * </p>
      */
-    public void onPointerUp(MouseEvent event);
+    void onPointerUp(MouseEvent event);
 
     /**
      * Attach this click handler to a {@link GameObject} and all of its children.
@@ -36,4 +36,5 @@ public interface IPointerUpHandler {
             node.setOnMouseReleased(this::onPointerUp);
         }
     }
+
 }

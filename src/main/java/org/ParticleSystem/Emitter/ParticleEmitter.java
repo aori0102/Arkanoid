@@ -28,7 +28,7 @@ public abstract class ParticleEmitter extends MonoBehaviour {
     protected double minLifeTime;
     protected double maxLifeTime;
     protected double timer = 0;
-    protected Vector2 baseDirection;
+    protected Vector2 baseDirection = Vector2.zero();
 
     protected boolean isEmitting;
     protected boolean canEmit = false;

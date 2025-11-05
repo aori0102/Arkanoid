@@ -1,10 +1,13 @@
-package org.ParticleSystem.Particles;
+package game.Particle;
 
 import org.GameObject.GameObject;
 import org.ParticleSystem.Emitter.EmitTypes;
 import org.ParticleSystem.EmitterGenerator;
 import org.ParticleSystem.ParticleType;
+import org.ParticleSystem.Particles.ParticlePrefab;
 
+// TODO: Doc + fix offsetting
+// TODO: Remove if not transferring event from central class to particle emitter
 public class BallParticle extends ParticlePrefab {
     /**
      * Create this MonoBehaviour.

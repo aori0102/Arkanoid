@@ -1,6 +1,5 @@
 package game.Interface;
 
-
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import org.GameObject.GameObject;
@@ -20,7 +19,7 @@ public interface IPointerEnterHandler {
      * to define the behavior that occurs when a node is entered.
      * </p>
      */
-    public void onPointerEntered(MouseEvent event);
+    void onPointerEntered(MouseEvent event);
 
     /**
      * Attach this click handler to a {@link GameObject} and all of its children.
@@ -37,5 +36,5 @@ public interface IPointerEnterHandler {
             node.setOnMouseEntered(this::onPointerEntered);
         }
     }
-}
 
+}

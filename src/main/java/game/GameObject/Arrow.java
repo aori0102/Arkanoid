@@ -1,31 +1,27 @@
 package game.GameObject;
 
-import game.BrickObj.Brick;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
+// TODO: Doc
 public class Arrow extends MonoBehaviour {
 
-    // TODO: bruh it turns into a fucking green brick
+    private final SpriteRenderer spriteRenderer=addComponent(SpriteRenderer.class);
 
     /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
-
-    private SpriteRenderer spriteRenderer;
-
     public Arrow(GameObject owner) {
         super(owner);
-        addComponent(SpriteRenderer.class);
+        spriteRenderer.setPivot(new Vector2(0, 0.5));
     }
 
+    @Override
     public void awake() {
-        spriteRenderer = getComponent(SpriteRenderer.class);
-        spriteRenderer.setPivot(new Vector2(0, 0.5));
         gameObject.setActive(false);
     }
 

@@ -1,7 +1,10 @@
-package game.Player.PlayerSkills;
+package game.Player.PlayerSkills.LaserBeam;
 
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
+import game.Player.Player;
+import game.Player.PlayerSkills.Skill;
+import game.Player.PlayerSkills.SkillIndex;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.Layer;
@@ -10,12 +13,9 @@ import org.Physics.CollisionData;
 import utils.Time;
 import utils.Vector2;
 
-import javax.swing.*;
-
 public class LaserBeam extends Skill {
 
     private static final double LASER_SPEED = 1000;
-    private static final int LASER_DAMAGE = 500;
     private final Layer[] colliderLayers = {Layer.Boss, Layer.Brick};
 
     /**
@@ -27,13 +27,21 @@ public class LaserBeam extends Skill {
         super(owner);
     }
 
+    @Override
     public void awake() {
         setSkillIndex(SkillIndex.LaserBeam);
         getComponent(BoxCollider.class).setIncludeLayer(Layer.combineLayerMask(colliderLayers));
         getComponent(BoxCollider.class).setOnCollisionEnterCallback(this::handleCollision);
-
     }
 
+    @Override
+    public void start() {
+        getTransform().setGlobalPosition(
+                Player.getInstance().getPlayerPaddle().getTransform().getGlobalPosition()
+        );
+    }
+
+    @Override
     public void update() {
         handleMovement();
     }

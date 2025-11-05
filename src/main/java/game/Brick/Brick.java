@@ -4,14 +4,15 @@ import game.Effect.StatusEffect;
 import game.Rank.ExperienceHolder;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
-import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
-import org.ParticleSystem.Particles.ExplodingBrickParticle;
+import org.Physics.BoxCollider;
+import org.Physics.CollisionData;
 import org.Rendering.SpriteRenderer;
 import org.Rendering.ImageAsset;
 import utils.Vector2;
 
+// TODO: Refactor
 public class Brick extends MonoBehaviour {
 
     private static final Vector2 BRICK_SIZE = new Vector2(64, 32);
@@ -31,6 +32,8 @@ public class Brick extends MonoBehaviour {
         public BrickType brickType;
     }
 
+    public static EventHandler<Void> onAnyBrickHit = new EventHandler<>(Brick.class);
+
     /**
      * Create this MonoBehaviour.
      *
@@ -38,11 +41,7 @@ public class Brick extends MonoBehaviour {
      */
     public Brick(GameObject owner) {
         super(owner);
-        owner.setLayer(Layer.Brick);
-    }
-
-    public BrickType getBrickType() {
-        return brickType;
+        addComponent(BoxCollider.class).setOnCollisionEnterCallback(this::onCollisionEnter);
     }
 
     @Override
@@ -65,6 +64,14 @@ public class Brick extends MonoBehaviour {
         onBrickDestroyedEventArgs.brickPosition = getTransform().getGlobalPosition();
         onBrickDestroyedEventArgs.brickType = brickType;
         onAnyBrickDestroyed.invoke(this, onBrickDestroyedEventArgs);
+    }
+
+    public BrickType getBrickType() {
+        return brickType;
+    }
+
+    private void onCollisionEnter(CollisionData data) {
+        onAnyBrickHit.invoke(this, null);
     }
 
     /**
@@ -99,9 +106,6 @@ public class Brick extends MonoBehaviour {
 
     public void setBrickType(BrickType brickType) {
         this.brickType = brickType;
-    }
-
-    private void changeBrickVisual(StatusEffect statusEffect) {
     }
 
 }

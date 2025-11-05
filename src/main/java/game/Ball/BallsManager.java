@@ -13,13 +13,12 @@ import java.util.HashSet;
 
 public class BallsManager extends MonoBehaviour {
 
-    private static final int MAX_BALL_EXISTED = 100;
+    private static final int MAX_BALL_TO_MULTIPLY = 12;
 
     private static BallsManager instance;
 
     private final HashSet<Ball> ballSet = new HashSet<>();
     public int index = 1;
-    private StatusEffect currentEffect = null;
 
     public EventHandler<Void> onBallCountChanged = new EventHandler<>(BallsManager.class);
 
@@ -33,11 +32,23 @@ public class BallsManager extends MonoBehaviour {
         instance = this;
     }
 
+    public static BallsManager getInstance() {
+        return instance;
+    }
+
+    /**
+     *
+     * @param ball
+     */
     public void addBall(Ball ball) {
         ballSet.add(ball);
         onBallCountChanged.invoke(this, null);
     }
 
+    /**
+     *
+     * @param ball
+     */
     public void removeBall(Ball ball) {
         ballSet.remove(ball);
         onBallCountChanged.invoke(this, null);
@@ -46,23 +57,22 @@ public class BallsManager extends MonoBehaviour {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public HashSet<Ball> getBallSet() {
         return ballSet;
     }
 
-    public String ballNameBuilder() {
-        return "ball" + index;
-    }
-
-    public String ballVisualNameBuilder() {
-        return "ball" + index++;
-    }
-
+    /**
+     *
+     * @param statusEffect
+     */
     public void applyStatusPowerUpEffect(StatusEffect statusEffect) {
-        this.currentEffect = statusEffect;
-        if (currentEffect != null) {
+        if (statusEffect != null) {
             var statusInfo = new StatusEffectInfo();
-            statusInfo.effect = currentEffect;
+            statusInfo.effect = statusEffect;
             statusInfo.duration = Double.MAX_VALUE;
             for (var ball : ballSet) {
                 ball.getBallEffectController().inflictEffect(statusInfo);
@@ -70,6 +80,9 @@ public class BallsManager extends MonoBehaviour {
         }
     }
 
+    /**
+     * @return
+     */
     public void spawnInitialBall() {
 
         var ball = PrefabManager.instantiatePrefab(PrefabIndex.Ball)
@@ -79,19 +92,20 @@ public class BallsManager extends MonoBehaviour {
         ballSet.add(ball);
     }
 
+    /**
+     *
+     * @return
+     */
     public int getBallCount() {
         return ballSet.size();
     }
 
-    public StatusEffect getCurrentEffect() {
-        return currentEffect;
+    /**
+     *
+     * @return
+     */
+    public boolean canSpawnBallMultiplication() {
+        return getBallCount() < MAX_BALL_TO_MULTIPLY;
     }
 
-    public static BallsManager getInstance() {
-        return instance;
-    }
-
-    public int getMaxBallExisted() {
-        return MAX_BALL_EXISTED;
-    }
 }

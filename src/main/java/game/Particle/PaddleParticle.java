@@ -1,14 +1,12 @@
-package org.ParticleSystem.Particles;
+package game.Particle;
 
-import game.Player.Player;
 import org.GameObject.GameObject;
-import org.GameObject.MonoBehaviour;
 import org.ParticleSystem.Emitter.EmitTypes;
-import org.ParticleSystem.Emitter.ParticleEmitter;
 import org.ParticleSystem.EmitterGenerator;
 import org.ParticleSystem.ParticleType;
-import utils.Vector2;
+import org.ParticleSystem.Particles.ParticlePrefab;
 
+// TODO: Remove if not transferring event from central class to particle emitter
 public class PaddleParticle extends ParticlePrefab {
 
 

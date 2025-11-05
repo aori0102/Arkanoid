@@ -1,6 +1,5 @@
 package game.Interface;
 
-
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import org.GameObject.GameObject;
@@ -20,7 +19,7 @@ public interface IPointerDownHandler {
      * to define the behavior that occurs when a node is pressed.
      * </p>
      */
-    public void onPointerDown(MouseEvent event);
+    void onPointerDown(MouseEvent event);
 
     /**
      * Attach this click handler to a {@link GameObject} and all of its children.

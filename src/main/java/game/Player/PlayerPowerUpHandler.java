@@ -3,7 +3,6 @@ package game.Player;
 import game.Ball.Ball;
 import game.Player.Paddle.PlayerPaddle;
 import game.PowerUp.Index.PowerUp;
-import game.PowerUp.Index.PowerUpIndex;
 import game.Effect.StatusEffect;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -16,9 +15,6 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
 
     private static final int DOUBLE_MULTIPLE = 2;
     private static final int TRIPLE_MULTIPLE = 3;
-    private static final double EXPLOSION_MAX_DURATION = 5.0;
-    private static final int EXPLOSION_MAX_HIT = 3;
-    private static final double PADDLE_EXPANSION_SCALE = 1.5;
     private static final double SHIELD_MAX_DURATION = 5.0;
     private static final int HEAL_AMOUNT = 20;
 
@@ -96,15 +92,11 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
 
         switch (powerUp.getPowerUpIndex()) {
 
-            case None -> throw new RuntimeException("Cannot process " + PowerUpIndex.None);
+            case null -> throw new RuntimeException("Cannot process null power up");
             case DuplicateBall -> onDuplicateBallRequested
                     .invoke(this, DOUBLE_MULTIPLE);
             case TriplicateBall -> onTriplicateBallRequested
                     .invoke(this, TRIPLE_MULTIPLE);
-            case Explosive -> onBallToExplosiveRequested
-                    .invoke(this, new OnBallToExplosiveEventArgs(EXPLOSION_MAX_DURATION, EXPLOSION_MAX_HIT));
-            case Expand -> onPaddleScaleChangeRequested
-                    .invoke(this, PADDLE_EXPANSION_SCALE);
             case Shield -> onShieldSpawnRequested
                     .invoke(this, SHIELD_MAX_DURATION);
             case FireBall -> onFireBallRequested

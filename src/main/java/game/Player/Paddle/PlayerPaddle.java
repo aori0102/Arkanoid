@@ -18,7 +18,7 @@ import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import org.Layer.Layer;
-import org.ParticleSystem.Particles.PaddleParticle;
+import game.Particle.PaddleParticle;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
 import utils.Time;

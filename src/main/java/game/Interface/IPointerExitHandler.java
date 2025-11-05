@@ -1,6 +1,5 @@
 package game.Interface;
 
-
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -21,16 +20,8 @@ public interface IPointerExitHandler {
      * to define the behavior that occurs when a node is exited.
      * </p>
      */
-    public void onPointerExited(MouseEvent event);
-    /**
-     * Attach area that the event will occur.
-     *
-     * @param node Area that you want the event to occur on.
-     *             <p>
-     *             If the node has an instance of an {@link ImageView} type, the area of that image will be used.
-     *             (Recommend to use {@link ImageView} to initialize effective area).
-     *             </p>
-     */
+    void onPointerExited(MouseEvent event);
+
     /**
      * Attach this click handler to a {@link GameObject} and all of its children.
      * <p>
@@ -46,4 +37,5 @@ public interface IPointerExitHandler {
             node.setOnMouseExited(this::onPointerExited);
         }
     }
+
 }

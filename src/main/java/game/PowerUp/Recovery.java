@@ -28,7 +28,8 @@ public class Recovery extends PowerUp {
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
+        super.onDestroy();
         handleOnRecoveryRequested();
     }
 

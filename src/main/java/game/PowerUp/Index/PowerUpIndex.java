@@ -1,30 +1,25 @@
 package game.PowerUp.Index;
 
+import org.Prefab.PrefabIndex;
 import org.Rendering.ImageAsset;
 
 public enum PowerUpIndex {
 
-    DuplicateBall(ImageAsset.ImageIndex.DuplicateBall),
-    TriplicateBall(ImageAsset.ImageIndex.TriplicateBall),
-    FireBall(ImageAsset.ImageIndex.FireBallICon),
-    Blizzard(ImageAsset.ImageIndex.BlizzardBallIcon),
-    Explosive(ImageAsset.ImageIndex.Explosive),
-    Shield(ImageAsset.ImageIndex.ShieldIcon),
-    Expand(ImageAsset.ImageIndex.None),
-    Slow(ImageAsset.ImageIndex.None),
-    Catch(ImageAsset.ImageIndex.None),
-    LaserBeam(ImageAsset.ImageIndex.LaserBeam),
-    Recovery(ImageAsset.ImageIndex.HealIcon),
-    None(ImageAsset.ImageIndex.None);
+    DuplicateBall(ImageAsset.ImageIndex.DuplicateBall, PrefabIndex.PowerUp_Duplicate, 5),
+    TriplicateBall(ImageAsset.ImageIndex.TriplicateBall, PrefabIndex.PowerUp_Triplicate, 3),
+    FireBall(ImageAsset.ImageIndex.FireBallICon, PrefabIndex.PowerUp_FireBall, 10),
+    Blizzard(ImageAsset.ImageIndex.BlizzardBallIcon, PrefabIndex.PowerUp_BlizzardBall, 10),
+    Shield(ImageAsset.ImageIndex.ShieldIcon, PrefabIndex.PowerUp_Shield, 3),
+    Recovery(ImageAsset.ImageIndex.HealIcon, PrefabIndex.PowerUp_Recovery, 3);
 
-    private final ImageAsset.ImageIndex imageIndex;
+    public final ImageAsset.ImageIndex imageIndex;
+    public final PrefabIndex prefabIndex;
+    public final int maxCocurrent;
 
-    PowerUpIndex(ImageAsset.ImageIndex imageIndex) {
+    PowerUpIndex(ImageAsset.ImageIndex imageIndex, PrefabIndex prefabIndex, int maxCocurrent) {
         this.imageIndex = imageIndex;
-    }
-
-    public ImageAsset.ImageIndex getImageIndex() {
-        return imageIndex;
+        this.prefabIndex = prefabIndex;
+        this.maxCocurrent = maxCocurrent;
     }
 
 }

@@ -5,6 +5,7 @@ import org.GameObject.MonoBehaviour;
 import org.Physics.BoxCollider;
 import utils.Vector2;
 
+// TODO: Doc
 public class Border extends MonoBehaviour {
 
     private BorderType borderType;

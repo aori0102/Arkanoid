@@ -6,13 +6,13 @@ import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import game.Player.Player;
 import game.Player.Paddle.PlayerPaddle;
+import org.Annotation.LinkViaPrefab;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
-import org.Layer.Layer;
-import org.ParticleSystem.Particles.BallParticle;
+import org.ParticleSystem.Emitter.ConeEmitter;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
 import org.Rendering.ImageAsset;
@@ -21,21 +21,22 @@ import utils.Random;
 import utils.Vector2;
 import utils.Time;
 
+// TODO: Doc
 public class Ball extends MonoBehaviour {
 
     private static final double BASE_BALL_SPEED = 500;
-    private static final Vector2 BOUNCE_OFFSET = new Vector2(0.2, 0.2);
 
-    private BallDamageDealer ballDamageDealer = null;
-    private BallEffectController ballEffectController = null;
+    private final BallDamageDealer ballDamageDealer = addComponent(BallDamageDealer.class);
+    private final BallEffectController ballEffectController = addComponent(BallEffectController.class);
 
     private Vector2 direction = Vector2.zero();
     private PlayerPaddle playerPaddle;
     private boolean hitPaddle = false;
 
-    private EventActionID ball_onAnyBallHitBrick_ID = null;
+    @LinkViaPrefab
+    private ConeEmitter coneEmitter = null;
 
-    private BallParticle ballParticle;
+    private EventActionID ball_onAnyBallHitBrick_ID = null;
 
     public static EventHandler<Void> onAnyBallHitBrick = new EventHandler<>(Ball.class);
     public static EventHandler<Void> onAnyBallJustHitPaddle = new EventHandler<>(Ball.class);
@@ -43,7 +44,11 @@ public class Ball extends MonoBehaviour {
 
     public Ball(GameObject owner) {
         super(owner);
-        owner.setLayer(Layer.Ball);
+        addComponent(BoxCollider.class).setOnCollisionEnterCallback((data) -> {
+            handleHitHandle(data);
+            handleCollision(data);
+            System.out.println("Ball collided with " + data.otherCollider.getGameObject());
+        });
     }
 
     /**
@@ -51,21 +56,7 @@ public class Ball extends MonoBehaviour {
      */
     @Override
     public void awake() {
-
-        ballDamageDealer = getComponent(BallDamageDealer.class);
-        ballEffectController = getComponent(BallEffectController.class);
-
         playerPaddle = Player.getInstance().getPlayerPaddle();
-
-        // Assign collider specs and the function
-        var ballCollider = getComponent(BoxCollider.class);
-        ballCollider.setExcludeLayer(Layer.Ball.getUnderlyingValue());
-        ballCollider.setLocalCenter(new Vector2(0, 0));
-        ballCollider.setLocalSize(new Vector2(20, 16));
-        ballCollider.setOnCollisionEnterCallback((data) -> {
-            handleHitHandle(data);
-            handleCollision(data);
-        });
 
         // Add listener to paddle event
         playerPaddle.onMouseReleased.addListener((e, vector2) -> {
@@ -75,9 +66,6 @@ public class Ball extends MonoBehaviour {
 
         ballEffectController.onEffectInflicted.addListener(this::ballEffectController_onEffectInflicted);
         ballEffectController.onEffectCleared.addListener(this::ballEffectController_onEffectCleared);
-
-        initializeBallParticle();
-        ballParticle.stopEmit();
     }
 
     @Override
@@ -96,8 +84,20 @@ public class Ball extends MonoBehaviour {
         if (BallsManager.getInstance() != null) {
             BallsManager.getInstance().removeBall(this);
         }
+        coneEmitter.stopEmit();
         Ball.onAnyBallHitBrick.removeListener(ball_onAnyBallHitBrick_ID);
         onAnyBallDestroyed.invoke(this, null);
+    }
+
+    /**
+     * Link ball particle<br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link BallPrefab}
+     * as part of component linking process.</i></b>
+     *
+     * @param coneEmitter Particle object to link.
+     */
+    public void linkBallParticle(ConeEmitter coneEmitter) {
+        this.coneEmitter = coneEmitter;
     }
 
     public BallDamageDealer getBallDamageDealer() {
@@ -131,16 +131,20 @@ public class Ball extends MonoBehaviour {
         if (!playerPaddle.isFired && direction.equals(Vector2.zero())) {
             getTransform().setGlobalPosition(playerPaddle.getTransform()
                     .getGlobalPosition().add(Vector2.up().multiply(20)));
-            ballParticle.stopEmit();
+            coneEmitter.stopEmit();
         }
         // Moving the ball
         else {
-            getTransform().translate(direction.normalize().multiply(BASE_BALL_SPEED * Time.getDeltaTime()));
-            ballParticle.startEmit();
+            coneEmitter.startEmit();
+            getTransform().translate(direction.normalize().multiply(BASE_BALL_SPEED * Time.getDeltaTime())); // die
         }
 
     }
 
+    /**
+     *
+     * @param collisionData
+     */
     private void handleCollision(CollisionData collisionData) {
         if (isCollidedWith(collisionData, Border.class)) {
             var border = collisionData.otherCollider.getComponent(Border.class);
@@ -157,6 +161,10 @@ public class Ball extends MonoBehaviour {
         }
     }
 
+    /**
+     *
+     * @param collisionData
+     */
     private void handleHitHandle(CollisionData collisionData) {
         direction = collisionData.hitNormal.normalize().multiply(2.0).add(direction.normalize());
         var paddle = collisionData.otherCollider.getComponent(PlayerPaddle.class);
@@ -169,7 +177,7 @@ public class Ball extends MonoBehaviour {
         } else if (Vector2.dot(direction, Vector2.right()) < 0.1) {
             direction = direction.rotateBy(Random.range(-0.078, 0.019));
         }
-        ballParticle.setDirection(direction);
+        coneEmitter.setBaseDirection(direction.inverse());
     }
 
     /**
@@ -191,6 +199,10 @@ public class Ball extends MonoBehaviour {
         return direction;
     }
 
+    /**
+     *
+     * @return
+     */
     public SpriteRenderer getBallVisual() {
         for (var child : getTransform().getChildren()) {
             if (child.getComponent(SpriteRenderer.class) != null) {
@@ -244,12 +256,5 @@ public class Ball extends MonoBehaviour {
     private void ballEffectController_onEffectCleared(Object sender, StatusEffect e) {
         getBallVisual().setImage(ImageAsset.ImageIndex.Ball.getImage());
     }
-
-    private void initializeBallParticle() {
-        ballParticle = GameObjectManager.instantiate("BallParticle").addComponent(BallParticle.class);
-        ballParticle.setDirection(direction.multiply(-1));
-        ballParticle.setParent(gameObject);
-    }
-
 
 }

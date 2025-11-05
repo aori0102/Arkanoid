@@ -1,14 +1,12 @@
 package game.PowerUp.Index;
 
 import game.Ball.BallsManager;
-import game.Player.Player;
-import game.Player.Paddle.PlayerPaddle;
-import game.Player.PlayerPowerUpHandler;
 import game.PowerUp.*;
-import game.PowerUp.DuplicateBall;
-import game.PowerUp.TriplicateBall;
+import org.Event.EventActionID;
+import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
+import org.Prefab.PrefabManager;
 import utils.Random;
 import utils.Vector2;
 
@@ -19,8 +17,10 @@ import utils.Vector2;
 public class PowerUpManager extends MonoBehaviour {
 
     private static PowerUpManager instance = null;
-    private PlayerPaddle playerPaddle;
-    public static int count = 0;
+
+    private final Integer[] assignedPowerUp;
+
+    private EventActionID powerUp_onAnyPowerUpDestroyed_ID = null;
 
     /**
      * Create this MonoBehaviour.
@@ -30,40 +30,60 @@ public class PowerUpManager extends MonoBehaviour {
     public PowerUpManager(GameObject owner) {
         super(owner);
         if (instance != null) {
-            throw new IllegalStateException("PowerUpManager is a singleton!");
+            throw new ReinitializedSingletonException("PowerUpManager is a singleton!");
         }
         instance = this;
+
+        var powerUpCount = PowerUpIndex.values().length;
+        assignedPowerUp = new Integer[powerUpCount];
+        for (int i = 0; i < powerUpCount; i++) {
+            assignedPowerUp[i] = 0;
+        }
+
     }
 
     @Override
     public void awake() {
-        playerPaddle = Player.getInstance().getPlayerPaddle();
+        powerUp_onAnyPowerUpDestroyed_ID = PowerUp.onAnyPowerUpDestroyed
+                .addListener(this::powerUp_onAnyPowerUpDestroyed);
     }
 
     @Override
     public void onDestroy() {
         instance = null;
+        PowerUp.onAnyPowerUpDestroyed.removeListener(powerUp_onAnyPowerUpDestroyed_ID);
     }
 
+    /**
+     * Called when {@link PowerUp#onAnyPowerUpDestroyed} is invoked.<br><br>
+     * This function removes a power up as it's destroyed.
+     *
+     * @param sender Event caller {@link PowerUp}.
+     * @param e      Empty event argument.
+     */
+    private void powerUp_onAnyPowerUpDestroyed(Object sender, Void e) {
+        if (sender instanceof PowerUp powerUp) {
+            assignedPowerUp[powerUp.getPowerUpIndex().ordinal()]--;
+        }
+    }
 
     public void spawnPowerUp(Vector2 position) {
 
+        var powerUpIndexArray = PowerUpIndex.values();
+        int target = 0;
+        if (Random.range(0, 1) == target) {
 
-        int target = 1;
-        if (Random.range(0, 3) == target) {
-
-            var chosenKey = PowerUpPrefabGenerator.registeredPowerUps.get(
-                    Random.range(0, PowerUpPrefabGenerator.registeredPowerUps.size())
-            );
-            if (chosenKey.equals(DuplicateBall.class) || chosenKey.equals(TriplicateBall.class)) {
-                if (BallsManager.getInstance().getBallSet().size()
-                        > BallsManager.getInstance().getMaxBallExisted()) {
+            var chosenKey = powerUpIndexArray[Random.range(0, powerUpIndexArray.length)];
+            if (chosenKey == PowerUpIndex.DuplicateBall || chosenKey == PowerUpIndex.TriplicateBall) {
+                if (!BallsManager.getInstance().canSpawnBallMultiplication()) {
                     return;
                 }
             }
-
-            PowerUpPrefabGenerator.powerUpPrefabHashMap.get(chosenKey)
-                    .generatePowerUp(position, playerPaddle);
+            if (assignedPowerUp[chosenKey.ordinal()] < chosenKey.maxCocurrent) {
+                PrefabManager.instantiatePrefab(chosenKey.prefabIndex)
+                        .getTransform().setGlobalPosition(position);
+                assignedPowerUp[chosenKey.ordinal()]++;
+            }
 
         }
     }

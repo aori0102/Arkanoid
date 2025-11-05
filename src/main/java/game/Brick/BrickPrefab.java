@@ -4,6 +4,7 @@ import game.Damagable.HealthChangeVisualizer;
 import game.Rank.ExperienceHolder;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Prefab.Prefab;
 import org.Prefab.PrefabIndex;
@@ -27,12 +28,17 @@ public final class BrickPrefab extends Prefab {
                 .addComponent(BrickEffectController.class)
                 .addComponent(BrickStat.class)
                 .getGameObject();
+        brickObject.setLayer(Layer.Brick);
 
         // Renderer
         var brickRenderer = brickObject.addComponent(SpriteRenderer.class);
         brickRenderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
         brickRenderer.setSize(BRICK_SIZE);
         brickRenderer.setPivot(new Vector2(0.5, 0.5));
+
+        // Health component
+        brickObject.getComponent(BrickHealth.class)
+                .linkBrick(brickObject.getComponent(Brick.class));
 
         // Collider
         brickObject.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);

@@ -2,6 +2,7 @@ package game.GameManager;
 
 import game.MapGenerator.BrickMapManager;
 import org.Event.EventActionID;
+import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Prefab.PrefabIndex;
@@ -35,13 +36,17 @@ public class GameManager extends MonoBehaviour {
 
     private int currentLevel = 1;
     private boolean hasSave = false;
-    private boolean isBossFight = false;
 
     private EventActionID brickMapManager_onMapCleared_ID = null;
 
     private Time.CoroutineID enterPlaying_coroutineID = null;
 
     private static GameManager instance = null;
+
+    public EventHandler<Void> onMapCleared = new EventHandler<>(GameManager.class);
+    public EventHandler<Void> onBossFightEntered = new EventHandler<>(GameManager.class);
+    public EventHandler<Void> onMapEntered = new EventHandler<>(GameManager.class);
+    public EventHandler<Void> onGameOver = new EventHandler<>(GameManager.class);
 
     /**
      * Create this MonoBehaviour.
@@ -90,11 +95,17 @@ public class GameManager extends MonoBehaviour {
         concludeLevel();
     }
 
+    /**
+     * @aaa
+     */
     public void startNewGame() {
         currentLevel = 0;
         loadNextLevel();
     }
 
+    /**
+     * @aaaa
+     */
     public void continueGame() {
         if (hasSave) {
             System.out.println("[GameManager] Continuing Game");
@@ -107,20 +118,12 @@ public class GameManager extends MonoBehaviour {
 
     }
 
-    public void restartGame() {
-        System.out.println("[GameManager] Restarting Game");
-
-        loadNextLevel();
-    }
-
-    public void returnToMainMenu() {
-        System.out.println("[GameManager] Returning to Main Menu");
-
-        SceneManager.loadScene(SceneKey.Menu);
-    }
-
-    private void spawnBoss() {
+    /**
+     * @aaa
+     */
+    private void enterBossFight() {
         PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis);
+        onBossFightEntered.invoke(this, null);
     }
 
     /**
@@ -147,12 +150,16 @@ public class GameManager extends MonoBehaviour {
         enterPlaying_coroutineID
                 = Time.addCoroutine(this::enterPlaying, Time.getTime() + LEVEL_INTRODUCTION_TIME);
 
+        onMapEntered.invoke(this, null);
+
     }
 
     /**
      * Handles when the level is completed.
      */
     public void concludeLevel() {
+
+        onMapCleared.invoke(this, null);
 
         setGameState(GameState.ConcludingLevel);
 
@@ -167,27 +174,45 @@ public class GameManager extends MonoBehaviour {
 
     }
 
+    /**
+     * @aaa
+     */
     private void enterPlaying() {
         setGameState(GameState.Playing);
     }
 
+    /**
+     * @aaa
+     */
     public void gameOver() {
-        SceneManager.loadScene(SceneKey.Menu);
+        onGameOver.invoke(this, null);
     }
 
+    /**
+     * @aaa
+     */
     public void pauseGame() {
         Time.setTimeScale(0);
         //showPauseUI
     }
 
+    /**
+     * @aaa
+     */
     public void resumeGame() {
         Time.setTimeScale(1);
         //hidePauseUI
     }
 
+    /**
+     * @aaa
+     */
     public void quitGame() {
     }
 
+    /**
+     * @aaa
+     */
     public void giveUp() {
         System.out.println("[GameManager] Giving Up");
 
@@ -195,6 +220,9 @@ public class GameManager extends MonoBehaviour {
         SceneManager.loadScene(SceneKey.Menu);
     }
 
+    /**
+     * @aaa
+     */
     public void toNextLevel() {
         System.out.println("[GameManager] To Next Level");
 
@@ -202,7 +230,4 @@ public class GameManager extends MonoBehaviour {
         loadNextLevel();
     }
 
-    public boolean isBossFight() {
-        return isBossFight;
-    }
 }

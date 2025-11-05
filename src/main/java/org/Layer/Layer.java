@@ -76,7 +76,7 @@ public enum Layer {
      * @param layers The layers to be included.
      * @return An integer represent the layers included in bit mask.
      */
-    public static int combineLayerMask(Layer[] layers) {
+    public static int combineLayerMask(Layer... layers) {
         int layerMask = 0;
         for (var layer : layers) {
             layerMask |= layer.underlyingValue;

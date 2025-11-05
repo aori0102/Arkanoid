@@ -1,12 +1,14 @@
-package org.ParticleSystem.Particles;
+package game.Particle;
 
 import org.GameObject.GameObject;
 import org.ParticleSystem.Emitter.CircleEmitter;
 import org.ParticleSystem.Emitter.EmitTypes;
 import org.ParticleSystem.EmitterGenerator;
 import org.ParticleSystem.ParticleType;
+import org.ParticleSystem.Particles.ParticlePrefab;
 
-public class ExplodingBrickParticle extends ParticlePrefab{
+// TODO: Remove if not transferring event from central class to particle emitter
+public class ExplodingBrickParticle extends ParticlePrefab {
     /**
      * Create this MonoBehaviour.
      *

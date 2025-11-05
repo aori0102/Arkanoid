@@ -1,29 +1,17 @@
 package org.Scene.SceneBuilder;
 
 import game.Ball.BallsManager;
-import game.Brick.ExplodingBrickParticleCaller;
+import game.Brick.ExplodingBrickParticleManager;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import game.GameObject.Shield;
-import game.Player.Player;
 import game.PowerUp.Index.PowerUpManager;
-import game.UI.Buttons.MenuButton;
-import game.UI.Buttons.PauseButton;
-import game.UI.Buttons.ResumeButton;
 import game.UI.GamePlayBackground;
-import game.UI.PauseMenu.PauseMenuController;
 import game.UI.PauseMenu.PauseMenuManager;
 import org.GameObject.GameObjectManager;
-import org.Main;
-import org.ParticleSystem.Emitter.CircleEmitter;
-import org.ParticleSystem.Emitter.EmitTypes;
-import org.ParticleSystem.Emitter.ParticleEmitter;
-import org.ParticleSystem.EmitterGenerator;
-import org.ParticleSystem.Particles.ExplodingBrickParticle;
 import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
 import org.ParticleSystem.ParticlePool;
-import org.ParticleSystem.ParticleType;
 import utils.Vector2;
 
 public final class InGameSceneBuilder extends SceneBuilder {
@@ -72,7 +60,7 @@ public final class InGameSceneBuilder extends SceneBuilder {
         borderBottom.getTransform().setLocalPosition(new Vector2(1190, 750));
 
         GameObjectManager.instantiate("PauseMenuManager").addComponent(PauseMenuManager.class);
-        GameObjectManager.instantiate("ExplodingBrickCaller").addComponent(ExplodingBrickParticleCaller.class);
+        GameObjectManager.instantiate("ExplodingBrickCaller").addComponent(ExplodingBrickParticleManager.class);
 
     }
 

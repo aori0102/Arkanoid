@@ -1,11 +1,10 @@
 package game.PowerUp.Index;
 
-import game.Player.Paddle.PlayerPaddle;
+import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
-import org.Physics.BoxCollider;
 import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
@@ -17,8 +16,9 @@ public class PowerUp extends MonoBehaviour {
 
     protected static final double TRAVEL_SPEED = 100;
 
-    private PowerUpIndex powerUpIndex = PowerUpIndex.None;
-    protected boolean isMoving = true;
+    private PowerUpIndex powerUpIndex = null;
+
+    public static EventHandler<Void> onAnyPowerUpDestroyed = new EventHandler<>(PowerUp.class);
 
     /**
      * Create this MonoBehaviour.
@@ -28,25 +28,17 @@ public class PowerUp extends MonoBehaviour {
     public PowerUp(GameObject owner) {
 
         super(owner);
-        var boxCollider = addComponent(BoxCollider.class);
-        boxCollider.setLocalSize(new Vector2(100.0, 100.0));
-        boxCollider.setTrigger(true);
-        boxCollider.setOnTriggerEnterCallback(e -> {
-            if (e.otherCollider.getComponent(PlayerPaddle.class) != null) {
-                isMoving = false;
-            }
-            System.out.println("Hit");
-        });
-
-        gameObject.setLayer(Layer.PowerUp);
-
-        addComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
 
     }
 
     @Override
     public void update() {
         handleDroppingMotion();
+    }
+
+    @Override
+    public void onDestroy() {
+        onAnyPowerUpDestroyed.invoke(this, null);
     }
 
     private void handleDroppingMotion() {
@@ -72,7 +64,7 @@ public class PowerUp extends MonoBehaviour {
     public void setPowerUpIndex(PowerUpIndex powerUpIndex) {
         this.powerUpIndex = powerUpIndex;
         getComponent(SpriteRenderer.class)
-                .setImage(powerUpIndex.getImageIndex().getImage());
+                .setImage(powerUpIndex.imageIndex.getImage());
     }
 
     /**

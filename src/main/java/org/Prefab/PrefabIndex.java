@@ -1,5 +1,6 @@
 package org.Prefab;
 
+import game.Ball.BallParticlePrefab;
 import game.Ball.BallPrefab;
 import game.Ball.BallsManagerPrefab;
 import game.Brick.BrickPrefab;
@@ -10,20 +11,19 @@ import game.GameManager.LevelUIPrefab;
 import game.MapGenerator.BrickMapManagerPrefab;
 import game.Obstacle.Index.ObstacleManagerPrefab;
 import game.Perks.Index.PerkManagerPrefab;
+import game.Player.PlayerSkills.PlayerSkillsPrefab.LaserBeamPrefab;
 import game.Player.Prefab.PaddlePrefab;
 import game.Player.Prefab.PlayerHealthBarPrefab;
 import game.Player.Prefab.PlayerHealthLossVignettePrefab;
 import game.Player.Prefab.PlayerPrefab;
+import game.PowerUp.DuplicateBall;
+import game.PowerUp.Prefab.*;
 import game.Rank.RankManagerPrefab;
 import game.Rank.RankUIPrefab;
 import game.PlayerInfoBoard.PlayerInfoBoardPrefab;
 import game.Score.ScoreManagerPrefab;
 import game.Score.ScorePopUpPrefab;
 import game.Score.ScoreUIPrefab;
-import game.UI.Buttons.ContinueButton;
-import game.UI.Buttons.MenuButton;
-import game.UI.Buttons.OptionsButton;
-import game.UI.Buttons.ResumeButton;
 import game.UI.Prefab.*;
 import game.UI.UIManagerPrefab;
 import game.Voltraxis.Prefab.*;
@@ -64,6 +64,7 @@ public enum PrefabIndex {
     RecordButton(new RecordButtonPrefab()),
     OptionsButton(new OptionsButtonPrefab()),
     QuitButton(new QuitButtonPrefab()),
+
     /// Voltraxis
     Voltraxis(new VoltraxisPrefab()),
     Voltraxis_ChargingUI(new ChargingUIPrefab()),
@@ -78,6 +79,19 @@ public enum PrefabIndex {
 
     /// Ball
     Ball(new BallPrefab()),
+    Ball_Particle(new BallParticlePrefab()),
+
+    /// Skill
+    LaserBeam(new LaserBeamPrefab()),
+
+    /// Power up
+    PowerUp_Placeholder(new PowerUpPlaceholderPrefab()),
+    PowerUp_FireBall(new FireBallPrefab()),
+    PowerUp_BlizzardBall(new BlizzardBallPrefab()),
+    PowerUp_Recovery(new RecoveryPrefab()),
+    PowerUp_Shield(new ShieldPrefab()),
+    PowerUp_Duplicate(new DuplicateBallPrefab()),
+    PowerUp_Triplicate(new TriplicateBallPrefab()),
 
     /// Player
     Player(new PlayerPrefab()),

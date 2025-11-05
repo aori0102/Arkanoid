@@ -6,7 +6,8 @@ import org.ParticleSystem.Emitter.ParticleEmitter;
 import org.ParticleSystem.ParticleType;
 import utils.Vector2;
 
-public class ParticlePrefab extends MonoBehaviour {
+// TODO: Doc
+public abstract class ParticlePrefab extends MonoBehaviour {
 
     protected ParticleEmitter particleEmitter;
 
@@ -20,26 +21,26 @@ public class ParticlePrefab extends MonoBehaviour {
     }
 
     public void startEmit() {
-        System.out.println("Starting particle emitter");
         particleEmitter.startEmit();
     }
     public void stopEmit() {
         particleEmitter.stopEmit();
     }
 
-    public void setPosition(Vector2 position) {
+    public final void setPosition(Vector2 position) {
         particleEmitter.getTransform().setLocalPosition(position);
     }
 
-    public void setDirection(Vector2 direction) {
+    public final void setDirection(Vector2 direction) {
         particleEmitter.setBaseDirection(direction);
     }
 
-    public void setParent(GameObject parent) {
+    public final void setParent(GameObject parent) {
         particleEmitter.getGameObject().setParent(parent);
     }
 
-    public void setParticleType(ParticleType particleType) {
+    public final void setParticleType(ParticleType particleType) {
         particleEmitter.setParticleType(particleType);
     }
+
 }
