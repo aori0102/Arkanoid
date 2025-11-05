@@ -194,14 +194,14 @@ public class BalanceCondition {
 
         int num = 0;
         for (int col = 0; col < cols; col++) {
-            if (g.get(rows - 1, cols) != transTypeToNumber(BrickType.Diamond)) {
+            if (g.get(rows - 1, col) != transTypeToNumber(BrickType.Diamond)) {
                 num++;
             }
         }
 
         if (num < atLeastNumGate) {
             List<Integer> rngList = new ArrayList<>();
-            for (int col = 0; col <  cols; col++) {
+            for (int col = 0; col < cols; col++) {
                 rngList.add(col);
             }
 

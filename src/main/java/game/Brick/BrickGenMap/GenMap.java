@@ -74,7 +74,7 @@ public final class GenMap {
         }
 
         Matrix mapType = generate(getRandomMapStyle(), getDifficultLevel());
-        //balanceCondition(mapType);
+        balanceCondition(mapType);
 
         List<List<BrickType>> result = new ArrayList<>();
         for (int row = 0; row < rows; row++) {
