@@ -2,6 +2,7 @@ package game.Brick.BrickEvent.EventList;
 
 import game.Brick.Brick;
 import game.Brick.BrickEvent.Event;
+import java.util.ArrayList;
 import java.util.List;
 
 import static game.Brick.Init.*;
@@ -14,27 +15,25 @@ public class GiftEvent implements Event {
     private final int EXECUTE_TIME = 15;
     private final int DAMAGE = 30;
     private boolean flag = false;
-    List<IntPair> targets;
+    private final List<IntPair> targets;  // ✅ init
     private int timeFrame = 0, executeTime = 0;
-
 
     public GiftEvent(int row, int col, List<List<Brick>> matrix) {
         this.rowData = row;
         this.colData = col;
         this.brickGrid = matrix;
+        this.targets = new ArrayList<>();
     }
-
 
     @Override
     public void runEvent() {
 
         if (timeFrame == 0 && executeTime == EXECUTE_TIME && flag) {
-
-            for (var index: targets) {
+            for (var index : targets) {
                 int r = index.fi();
-                int c = index.fi();
+                int c = index.se();
 
-                if(!valid(brickGrid, r, c)) continue;
+                if (!valid(brickGrid, r, c)) continue;
 
                 var brick = brickGrid.get(r).get(c);
                 brick.incHeath(DAMAGE);
@@ -46,28 +45,19 @@ public class GiftEvent implements Event {
         }
 
         if (flag) {
-            if (timeFrame % 2 ==  0) {
-                for (var index: targets) {
+            if (timeFrame % 2 == 0) {
+                for (var index : targets) {
                     int r = index.fi();
-                    int c = index.fi();
+                    int c = index.se();
 
-                    if(!valid(brickGrid, r, c)) continue;
-
-                    var brick = brickGrid.get(r).get(c);
-                    if(timeFrame % 2 == 1) {
-                        brick.setYellowRender();
-                    }
-                    else {
-                        brick.maxBrightness();
-                    }
+                    if (!valid(brickGrid, r, c)) continue;
+                    brickGrid.get(r).get(c).setYellowRender();
                 }
-            }
-            else {
+            } else {
                 for (int r = 0; r < rowData; r++) {
                     for (int c = 0; c < colData; c++) {
                         if (valid(brickGrid, r, c)) {
-                            var brick =  brickGrid.get(r).get(c);
-                            brick.resetRenderColor();
+                            brickGrid.get(r).get(c).resetRenderColor();
                         }
                     }
                 }
@@ -82,12 +72,14 @@ public class GiftEvent implements Event {
     @Override
     public void getStartEvent(int r, int c) {
         if (valid(brickGrid, r, c)) {
+
             destroyBrick(brickGrid, r, c);
+
+            targets.clear();
 
             for (int i = 0; i < 8; i++) {
                 int dx = fx[i];
                 int dy = fy[i];
-
                 int newRow = r + dx;
                 int newCol = c + dy;
 

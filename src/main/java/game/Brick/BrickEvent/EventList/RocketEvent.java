@@ -20,27 +20,25 @@ public class RocketEvent implements Event {
     private final int EXECUTE_TIME = 15;
     private final int DAMAGE = 30;
     private boolean flag = false;
-    List<IntPair> targets;
+    private final List<IntPair> targets;
     private int timeFrame = 0, executeTime = 0;
-
 
     public RocketEvent(int row, int col, List<List<Brick>> matrix) {
         this.rowData = row;
         this.colData = col;
         this.brickGrid = matrix;
+        this.targets = new ArrayList<>();
     }
-
 
     @Override
     public void runEvent() {
 
         if (timeFrame == 0 && executeTime == EXECUTE_TIME && flag) {
-
-            for (var index: targets) {
+            for (var index : targets) {
                 int r = index.fi();
-                int c = index.fi();
+                int c = index.se();
 
-                if(!valid(brickGrid, r, c)) continue;
+                if (!valid(brickGrid, r, c)) continue;
 
                 var brick = brickGrid.get(r).get(c);
                 brick.damage(DAMAGE);
@@ -52,28 +50,21 @@ public class RocketEvent implements Event {
         }
 
         if (flag) {
-            if (timeFrame % 2 ==  0) {
-                for (var index: targets) {
+            if (timeFrame % 2 == 0) {
+                for (var index : targets) {
                     int r = index.fi();
-                    int c = index.fi();
+                    int c = index.se();
 
-                    if(!valid(brickGrid, r, c)) continue;
+                    if (!valid(brickGrid, r, c)) continue;
 
                     var brick = brickGrid.get(r).get(c);
-                    if(timeFrame % 2 == 1) {
-                        brick.setRedRender();
-                    }
-                    else {
-                        brick.maxBrightness();
-                    }
+                    brick.setRedRender();
                 }
-            }
-            else {
+            } else {
                 for (int r = 0; r < rowData; r++) {
                     for (int c = 0; c < colData; c++) {
                         if (valid(brickGrid, r, c)) {
-                            var brick =  brickGrid.get(r).get(c);
-                            brick.resetRenderColor();
+                            brickGrid.get(r).get(c).resetRenderColor();
                         }
                     }
                 }
@@ -95,16 +86,16 @@ public class RocketEvent implements Event {
 
             for (int i = 0; i < rowData; i++) {
                 for (int j = 0; j < colData; j++) {
-                    if (isDestroyed(brickGrid, i, j)) {
+                    if (!isDestroyed(brickGrid, i, j)) {
                         allAlive.add(new Init.IntPair(i, j));
                     }
                 }
             }
 
             Collections.shuffle(allAlive, rng);
+            targets.clear();
             for (int k = 0; k < Math.min(MAX_TARGETS, allAlive.size()); k++) {
-                Init.IntPair p = allAlive.get(k);
-                targets.add(p);
+                targets.add(allAlive.get(k));
             }
 
             flag = true;
