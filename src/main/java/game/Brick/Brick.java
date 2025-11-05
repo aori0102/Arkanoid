@@ -13,7 +13,7 @@ import org.Rendering.ImageAsset;
 import utils.Time;
 import utils.Vector2;
 
-import static game.Brick.BrickVisual.setBrightness;
+import static game.Brick.BrickVisual.*;
 
 public class Brick extends MonoBehaviour {
 
@@ -78,6 +78,18 @@ public class Brick extends MonoBehaviour {
         if (health <= 0) {
             GameObjectManager.destroy(gameObject);
         }
+    }
+
+    public void decHeath(int amount) {
+        health -= amount;
+
+        if (health <= 0) {
+            GameObjectManager.destroy(gameObject);
+        }
+    }
+
+    public void incHeath(int amount) {
+        health += amount;
     }
 
     @Override
@@ -178,6 +190,22 @@ public class Brick extends MonoBehaviour {
             return;
         }
         setBrightness(idx, this);
+    }
+
+    public void maxBrightness() {
+        setBrightnessMax(this);
+    }
+
+    public void setRedRender() {
+        setRed(this);
+    }
+
+    public void setYellowRender() {
+        setYellow(this);
+    }
+
+    public void resetRenderColor() {
+        resetRender(this);
     }
 
 }

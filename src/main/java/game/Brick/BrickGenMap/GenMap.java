@@ -1,5 +1,6 @@
 package game.Brick.BrickGenMap;
 
+import static game.Brick.BrickGenMap.BalanceCondition.balanceCondition;
 import static game.Brick.BrickGenMap.Mathx.*;
 import static game.Brick.BrickGenMap.TransTypeNumBer.transNumberToType;
 
@@ -58,8 +59,8 @@ public final class GenMap {
 
     private double getRandomDouble() {
         double base = Math.min(0.8,  level * 0.02);
-        double jitter = rng.nextDouble() * 0.002;
-        return keep01(base + jitter);
+        double add = rng.nextDouble() * 0.002;
+        return keep01(base + add);
     }
 
     private double getDifficultLevel() {
@@ -73,6 +74,7 @@ public final class GenMap {
         }
 
         Matrix mapType = generate(getRandomMapStyle(), getDifficultLevel());
+        //balanceCondition(mapType);
 
         List<List<BrickType>> result = new ArrayList<>();
         for (int row = 0; row < rows; row++) {

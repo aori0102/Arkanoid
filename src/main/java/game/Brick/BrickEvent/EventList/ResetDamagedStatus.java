@@ -30,6 +30,11 @@ public class ResetDamagedStatus implements Event {
             }
         }
         timeFrame++;
-        timeFrame %= FrameForEachRunTime;
+        timeFrame %= NumFrameForEachRunTime;
+    }
+
+    @Override
+    public void getStartEvent(int r, int c) {
+
     }
 }

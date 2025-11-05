@@ -2,8 +2,6 @@ package game.Brick.BrickEvent;
 
 import game.Brick.Brick;
 import game.Brick.BrickEvent.EventList.*;
-import game.Brick.BrickGenMap.MapStyle;
-import game.Brick.BrickGenMap.StyleGenerator;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -25,19 +23,38 @@ public class BrickEvent {
     private void registerDefaults() {
         eventMap.put(EventType.Wave, new WaveEvent(row, col, brickGrid));
         eventMap.put(EventType.ResetDamagedStatus, new ResetDamagedStatus(row, col, brickGrid));
-        eventMap.put(EventType.Collision, new CollisionEvent(row, col, brickGrid));
+        eventMap.put(EventType.Angel, new AngelEvent(row, col, brickGrid));
+        eventMap.put(EventType.Bomb, new BombEvent(row, col, brickGrid));
+        eventMap.put(EventType.Gift, new GiftEvent(row, col, brickGrid));
+        eventMap.put(EventType.Rocket, new RocketEvent(row, col, brickGrid));
+        eventMap.put(EventType.Reborn, new RebornEvent(row, col, brickGrid));
+        eventMap.put(EventType.Rock, new RockEvent(row, col, brickGrid));
     }
 
-    public void executeEvent(EventType eventType) {
+    public void executeEvent() {
+        Event eventT = eventMap.get(EventType.Wave);
+        eventT.runEvent();
+
+        for (EventType eventType : EventType.values()) {
+            Event event = eventMap.get(eventType);
+            if (event != null && eventType != EventType.ResetDamagedStatus
+            && eventType != EventType.Wave) {
+                event.runEvent();
+            }
+        }
+
+        eventT = eventMap.get(EventType.ResetDamagedStatus);
+        eventT.runEvent();
+    }
+
+    public void getStartEvent(EventType eventType, int r, int c) {
         Event event = eventMap.get(eventType);
-        if (event == null)
-            throw new IllegalArgumentException("EventType not registered: " + eventType);
-        event.runEvent();
+        if (event != null) {
+            event.getStartEvent(r, c);
+        }
     }
 
     public void register(EventType Type, Event event) {
         eventMap.put(Type, event);
     }
-
-
 }

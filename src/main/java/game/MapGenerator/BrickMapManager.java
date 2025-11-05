@@ -79,7 +79,6 @@ public final class BrickMapManager extends MonoBehaviour {
                 brickGrid.get(row).set(column, brick);
                 brickCoordinateMap.put(brick, cell);
                 brick.onBrickDestroyed.addListener(this::brick_onBrickDestroyed);
-
             }
 
         }
@@ -129,9 +128,26 @@ public final class BrickMapManager extends MonoBehaviour {
 
     @Override
     public void update() {
-        brickEvent.executeEvent(EventType.Collision);
-        brickEvent.executeEvent(EventType.Wave);
-        brickEvent.executeEvent(EventType.ResetDamagedStatus);
+
+        for (int row  = 0; row < ROW_COUNT; row++) {
+            for (int col = 0; col < COLUMN_COUNT; col++) {
+                var brick = brickGrid.get(row).get(col);
+                if (brick != null && brick.isJustDamaged()) {
+                    var brickType = brick.getBrickType();
+                    switch (brickType) {
+                        case Reborn -> brickEvent.getStartEvent(EventType.Reborn, row, col);
+                        case Rock -> brickEvent.getStartEvent(EventType.Rock, row, col);
+                        case Rocket ->  brickEvent.getStartEvent(EventType.Rocket, row, col);
+                        case Gift ->  brickEvent.getStartEvent(EventType.Gift, row, col);
+                        case Angel ->  brickEvent.getStartEvent(EventType.Angel, row, col);
+                        case Bomb -> brickEvent.getStartEvent(EventType.Bomb, row, col);
+                        default -> {}
+                    }
+                }
+            }
+        }
+
+        brickEvent.executeEvent();
     }
 
 }

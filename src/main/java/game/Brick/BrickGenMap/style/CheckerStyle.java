@@ -15,7 +15,7 @@ public final class CheckerStyle implements StyleGenerator {
     public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);
         Matrix g = new Matrix(rows, cols);
-        BrickType A = BrickType.Normal, B = BrickType.Rock;
+        BrickType A = BrickType.Normal, B = BrickType.Steel;
         int cellH = Math.max(1, (int)Math.round(lerp(1, 3, difficulty)));
         int cellW = Math.max(1, (int)Math.round(lerp(1, 3, difficulty)));
         for (int r = 0; r < rows; r++)

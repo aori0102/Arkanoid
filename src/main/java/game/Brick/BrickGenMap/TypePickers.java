@@ -24,7 +24,6 @@ public final class TypePickers {
     private static BrickType weightedPick(Random rng, double wN, double wS, double wD) {
         double sum = wN + wS + wD;
         if (sum <= 0.0) {
-            // Degenerate: fall back to Normal
             return BrickType.Normal;
         }
         double r = rng.nextDouble() * sum;

@@ -75,20 +75,6 @@ public final class SpecialsSprinkler {
         }
     }
 
-    public static void openDimondGate(Matrix matrix, Random rng) {
-        final int row = matrix.rows();
-        final int col = matrix.columns();
-
-        boolean[][] isDimond  = new boolean[row][col];
-        for (int r = 0; r < row; r++) {
-            for (int c = 0; c < col; c++) {
-                if(transNumberToType(matrix.get(r, c)) == BrickType.Diamond) {
-                    isDimond[r][c] = true;
-                }
-            }
-        }
-    }
-
     public static void sprinkle(Matrix g, Random rng, double difficulty) {
         if (g == null || rng == null) return;
 

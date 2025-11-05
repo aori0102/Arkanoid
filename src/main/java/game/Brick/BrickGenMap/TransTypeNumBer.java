@@ -3,6 +3,7 @@ package game.Brick.BrickGenMap;
 import game.Brick.BrickType;
 
 public class TransTypeNumBer {
+
     public static BrickType transNumberToType(int number) {
         return switch (number) {
             case 0 -> BrickType.Normal;

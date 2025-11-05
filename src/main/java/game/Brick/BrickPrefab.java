@@ -18,6 +18,7 @@ public final class BrickPrefab {
                 .addComponent(Brick.class)
                 .getGameObject();
 
+
         //Setup visual and ready for rendering object
         var brickRenderer = brickObject.addComponent(SpriteRenderer.class);
         brickRenderer.setImage(ImageAsset.ImageIndex.BrickNormal.getImage());

@@ -1,4 +1,5 @@
 package game.Brick;
+import java.util.List;
 import java.util.Vector;
 
 
@@ -15,6 +16,31 @@ public class Init {
 
     public static boolean inBounds(int r, int c, int rows, int cols) {
         return r >= 0 && r < rows && c >= 0 && c < cols;
+    }
+
+    public static boolean isJustDamaged(List<List<Brick>> brickGrid, int row, int col) {
+        if(!valid(brickGrid, row, col)) return false;
+        return brickGrid.get(row).get(col).isJustDamaged();
+    }
+
+    public static void resetJustDamaged(List<List<Brick>> brickGrid, int row, int col) {
+        if (!valid(brickGrid, row, col)) return;
+        brickGrid.get(row).get(col).resetJustDamaged();
+    }
+
+    public static boolean isDestroyed(List<List<Brick>> brickGrid, int row, int col) {
+        if(!valid(brickGrid, row, col)) return false;
+        return brickGrid.get(row).get(col) == null
+                || brickGrid.get(row).get(col).getHealth() <= 0;
+    }
+
+    public static void destroyBrick(List<List<Brick>> brickGrid, int row, int col) {
+        if (!valid(brickGrid, row, col)) return;
+        brickGrid.get(row).get(col).decHeath(1000000);
+    }
+
+    public static boolean valid(List<List<Brick>> brickGrid, int r, int c) {
+        return r >= 0 && c >= 0 && r < brickGrid.size() && c < brickGrid.get(r).size() && brickGrid.get(r).get(c) != null;
     }
 
     public static class Matrix implements Cloneable {
