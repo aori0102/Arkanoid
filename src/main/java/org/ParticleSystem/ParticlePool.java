@@ -4,6 +4,7 @@ import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;
+import utils.Vector2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ public class ParticlePool extends MonoBehaviour {
 
         SpriteRenderer sr = particle.addComponent(SpriteRenderer.class);
         sr.setImage(particleType.getImageIndex().getImage());
+        sr.setPivot(new Vector2(0.5, 0.5));
 
         particles.add(particle);
         return particle;

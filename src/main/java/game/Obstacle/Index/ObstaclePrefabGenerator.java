@@ -2,7 +2,7 @@ package game.Obstacle.Index;
 
 import game.Obstacle.Index.Generator.LaserPrefab;
 import game.Obstacle.Index.Generator.ObstaclePrefab;
-import game.Obstacle.Object.Laser;
+import game.Obstacle.Laser.Laser;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -46,7 +46,8 @@ public class PaddlePrefab extends Prefab {
         arrow.setParent(paddle);
         arrow.getTransform().setLocalPosition(new Vector2(0, 0));
         arrow.getComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Arrow.getImage());
-        arrow.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));
+        arrow.getComponent(SpriteRenderer.class).setPivot(new Vector2(0, 0.5));
+        arrow.getTransform().setLocalPosition(new Vector2(0, -20));
         paddle.getComponent(PlayerPaddle.class).linkArrow(arrow.getComponent(Arrow.class));
 
         // Health change visualizer
