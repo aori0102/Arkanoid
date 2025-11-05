@@ -2,6 +2,8 @@ package game.Brick.BrickEvent.EventList;
 
 import game.Brick.Brick;
 import game.Brick.BrickEvent.Event;
+import game.Entity.EntityHealthAlterType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class GiftEvent implements Event {
                 if (!valid(brickGrid, r, c)) continue;
 
                 var brick = brickGrid.get(r).get(c);
-                brick.incHeath(DAMAGE);
+                brick.getBrickHealth().alterHealth(EntityHealthAlterType.NormalDamage, DAMAGE);
             }
 
             executeTime = 0;

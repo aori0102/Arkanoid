@@ -5,7 +5,6 @@ import game.Rank.ExperienceHolder;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
-import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
 import org.Rendering.SpriteRenderer;
@@ -24,6 +23,7 @@ public class Brick extends MonoBehaviour {
     private final BrickEffectController brickEffectController = addComponent(BrickEffectController.class);
 
     private BrickType brickType = BrickType.Normal;
+    private boolean isJustDamaged = false;
 
     public static EventHandler<OnBrickDestroyedEventArgs> onAnyBrickDestroyed = new EventHandler<>(Brick.class);
 
@@ -48,6 +48,7 @@ public class Brick extends MonoBehaviour {
     public void awake() {
         spriteRenderer.setImage(brickType.imageIndex.getImage());
         spriteRenderer.setSize(BrickPrefab.BRICK_SIZE);
+        System.out.println("awake " + gameObject);
 
         experienceHolder.setExp(brickType.exp);
     }
@@ -59,19 +60,33 @@ public class Brick extends MonoBehaviour {
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         var onBrickDestroyedEventArgs = new OnBrickDestroyedEventArgs();
         onBrickDestroyedEventArgs.brickPosition = getTransform().getGlobalPosition();
         onBrickDestroyedEventArgs.brickType = brickType;
         onAnyBrickDestroyed.invoke(this, onBrickDestroyedEventArgs);
     }
 
+    @Override
+    public void lateUpdate() {
+        isJustDamaged = false;
+    }
+
     public BrickType getBrickType() {
         return brickType;
     }
 
+    public BrickHealth getBrickHealth() {
+        return brickHealth;
+    }
+
+    public BrickStat getBrickStat() {
+        return brickStat;
+    }
+
     private void onCollisionEnter(CollisionData data) {
         onAnyBrickHit.invoke(this, null);
+        isJustDamaged = true;
     }
 
     /**
@@ -86,7 +101,7 @@ public class Brick extends MonoBehaviour {
             case Burn -> ImageAsset.ImageIndex.OrangeBrick.getImage();
             case FrostBite -> ImageAsset.ImageIndex.CyanBrick.getImage();
             case Electrified -> ImageAsset.ImageIndex.PurpleBrick.getImage();
-            default -> ImageAsset.ImageIndex.GreenBrick.getImage();
+            default -> ImageAsset.ImageIndex.CyanBrick.getImage();
         });
         spriteRenderer.setSize(BRICK_SIZE);
     }
@@ -101,19 +116,12 @@ public class Brick extends MonoBehaviour {
     private void brickEffectController_onEffectCleared(Object sender, StatusEffect e) {
         if (!brickEffectController.hasAnyEffect()) {
             spriteRenderer.setImage(brickType.imageIndex.getImage());
+            spriteRenderer.setSize(BRICK_SIZE);
         }
     }
 
     public void setBrickType(BrickType brickType) {
         this.brickType = brickType;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void resetJustDamaged() {
-        isJustDamaged = false;
     }
 
     public boolean isJustDamaged() {
@@ -124,23 +132,23 @@ public class Brick extends MonoBehaviour {
         if (idx == -2) {
             return;
         }
-        setBrightness(idx, this);
+        BrickVisual.setBrightness(idx, this);
     }
 
     public void maxBrightness() {
-        setBrightnessMax(this);
+        BrickVisual.setBrightnessMax(this);
     }
 
     public void setRedRender() {
-        setRed(this);
+        BrickVisual.setRed(this);
     }
 
     public void setYellowRender() {
-        setYellow(this);
+        BrickVisual.setYellow(this);
     }
 
     public void resetRenderColor() {
-        resetRender(this);
+        BrickVisual.resetRender(this);
     }
 
 }

@@ -4,18 +4,15 @@ import org.Rendering.ImageAsset;
 
 public enum BrickType {
 
-    Normal(36, 100, 2, ImageAsset.ImageIndex.GreenBrick),
+    Normal(36, 100, 2, ImageAsset.ImageIndex.CyanBrick),
     Steel(80, 320, 6, ImageAsset.ImageIndex.PurpleBrick),
-    Diamond(999999, 0, 0, ImageAsset.ImageIndex.None);
-    Normal(36, 100, ImageAsset.ImageIndex.BrickNormal),
-    Rock(50, 30, ImageAsset.ImageIndex.BrickRock),
-    Steel(80, 320, ImageAsset.ImageIndex.BrickSteel),
-    Diamond(999999, 0, ImageAsset.ImageIndex.BrickDiamond),
-    Rocket(50, 10, ImageAsset.ImageIndex.BrickRocket),
-    Bomb(50, 30, ImageAsset.ImageIndex.BrickBomb),
-    Gift(10, 10, ImageAsset.ImageIndex.BrickGift),
-    Reborn(10, 10, ImageAsset.ImageIndex.BrickReborn),
-    Angel(10, 10, ImageAsset.ImageIndex.BrickAngel),;
+    Diamond(999, 280, 8, ImageAsset.ImageIndex.BrickDiamond),
+    Rock(50, 130, 4, ImageAsset.ImageIndex.BrickRock),
+    Rocket(50, 110, 7, ImageAsset.ImageIndex.BrickRocket),
+    Bomb(50, 90, 3, ImageAsset.ImageIndex.BrickBomb),
+    Gift(10, 50, 2, ImageAsset.ImageIndex.BrickGift),
+    Reborn(10, 210, 4, ImageAsset.ImageIndex.BrickReborn),
+    Angel(10, 180, 5, ImageAsset.ImageIndex.BrickAngel);
 
     public final int maxHealth;
     public final int score;

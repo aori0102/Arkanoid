@@ -11,7 +11,8 @@ public class BrickEvent {
     private final int row;
     private final int col;
     private final List<List<Brick>> brickGrid;
-    private final Map<EventType, Event> eventMap = new EnumMap<>(EventType.class);;
+    private final Map<EventType, Event> eventMap = new EnumMap<>(EventType.class);
+    ;
 
     public BrickEvent(int rowT, int colT, List<List<Brick>> brickGridT) {
         this.row = rowT;
@@ -22,7 +23,6 @@ public class BrickEvent {
 
     private void registerDefaults() {
         eventMap.put(EventType.Wave, new WaveEvent(row, col, brickGrid));
-        eventMap.put(EventType.ResetDamagedStatus, new ResetDamagedStatus(row, col, brickGrid));
         eventMap.put(EventType.Angel, new AngelEvent(row, col, brickGrid));
         eventMap.put(EventType.Bomb, new BombEvent(row, col, brickGrid));
         eventMap.put(EventType.Gift, new GiftEvent(row, col, brickGrid));
@@ -37,14 +37,11 @@ public class BrickEvent {
 
         for (EventType eventType : EventType.values()) {
             Event event = eventMap.get(eventType);
-            if (event != null && eventType != EventType.ResetDamagedStatus
-            && eventType != EventType.Wave) {
+            if (event != null && eventType != EventType.Wave) {
                 event.runEvent();
             }
         }
 
-        eventT = eventMap.get(EventType.ResetDamagedStatus);
-        eventT.runEvent();
     }
 
     public void getStartEvent(EventType eventType, int r, int c) {

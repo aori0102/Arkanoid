@@ -3,10 +3,7 @@ package game.MapGenerator;
 import game.Brick.Brick;
 import game.Brick.BrickEvent.BrickEvent;
 import game.Brick.BrickEvent.EventType;
-import game.Brick.BrickPrefab;
-import game.Brick.BrickType;
 import game.Brick.BrickGenMap.GenMap;
-import game.BrickObj.BrickGenMap.GenMap;
 import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
@@ -41,6 +38,7 @@ public final class BrickMapManager extends MonoBehaviour {
     private final BrickEvent brickEvent = new BrickEvent(ROW_COUNT, COLUMN_COUNT, brickGrid);
 
     private EventActionID brick_onAnyBrickDestroyed_ID = null;
+    private EventActionID brick_onAnyBrickHit_ID = null;
 
     public EventHandler<Void> onMapCleared = new EventHandler<>(BrickMapManager.class);
 
@@ -72,11 +70,15 @@ public final class BrickMapManager extends MonoBehaviour {
         brick_onAnyBrickDestroyed_ID = Brick.onAnyBrickDestroyed.addListener(
                 this::brick_onAnyBrickDestroyed
         );
+        brick_onAnyBrickHit_ID = Brick.onAnyBrickHit.addListener(
+                this::brick_onAnyBrickHit
+        );
     }
 
     @Override
     protected void onDestroy() {
         Brick.onAnyBrickDestroyed.removeListener(brick_onAnyBrickDestroyed_ID);
+        Brick.onAnyBrickDestroyed.removeListener(brick_onAnyBrickHit_ID);
         instance = null;
     }
 
@@ -93,7 +95,9 @@ public final class BrickMapManager extends MonoBehaviour {
                 var cell = new Cell(row, column);
                 var brick = PrefabManager.instantiatePrefab(PrefabIndex.Brick)
                         .getComponent(Brick.class);
+                System.out.println(brick.getGameObject());
                 brick.setBrickType(typeGrid.get(row).get(column));
+                System.out.println("Set brck t " + typeGrid.get(row).get(column) + " | " + brick.getGameObject());
                 var position = BRICK_MAP_ANCHOR.add((BRICK_OFFSET).scaleUp(new Vector2(column, row)));
                 brick.getTransform().setGlobalPosition(position);
                 brickGrid.get(row).set(column, brick);
@@ -147,28 +151,62 @@ public final class BrickMapManager extends MonoBehaviour {
 
     }
 
-    @Override
-    public void update() {
-
-        for (int row  = 0; row < ROW_COUNT; row++) {
-            for (int col = 0; col < COLUMN_COUNT; col++) {
-                var brick = brickGrid.get(row).get(col);
-                if (brick != null && brick.isJustDamaged()) {
-                    var brickType = brick.getBrickType();
-                    switch (brickType) {
-                        case Reborn -> brickEvent.getStartEvent(EventType.Reborn, row, col);
-                        case Rock -> brickEvent.getStartEvent(EventType.Rock, row, col);
-                        case Rocket ->  brickEvent.getStartEvent(EventType.Rocket, row, col);
-                        case Gift ->  brickEvent.getStartEvent(EventType.Gift, row, col);
-                        case Angel ->  brickEvent.getStartEvent(EventType.Angel, row, col);
-                        case Bomb -> brickEvent.getStartEvent(EventType.Bomb, row, col);
-                        default -> {}
-                    }
+    /**
+     * Called when {@link Brick#onAnyBrickHit} is invoked.<br><br>
+     *
+     * @param sender
+     * @param e
+     */
+    private void brick_onAnyBrickHit(Object sender, Void e) {
+        if (sender instanceof Brick brick) {
+            var cell = brickCoordinateMap.get(brick);
+            if (cell == null) {
+                throw new RuntimeException("Hit stranded brick (not assigned into grid)");
+            }
+            var row = cell.row;
+            var col = cell.column;
+            var brickType = brick.getBrickType();
+            switch (brickType) {
+                case Reborn -> brickEvent.getStartEvent(EventType.Reborn, row, col);
+                case Rock -> brickEvent.getStartEvent(EventType.Rock, row, col);
+                case Rocket -> brickEvent.getStartEvent(EventType.Rocket, row, col);
+                case Gift -> brickEvent.getStartEvent(EventType.Gift, row, col);
+                case Angel -> brickEvent.getStartEvent(EventType.Angel, row, col);
+                case Bomb -> brickEvent.getStartEvent(EventType.Bomb, row, col);
+                default -> {
                 }
             }
         }
+    }
 
+    @Override
+    public void update() {
         brickEvent.executeEvent();
     }
+
+//    @Override
+//    public void update() {
+//
+//        for (int row = 0; row < ROW_COUNT; row++) {
+//            for (int col = 0; col < COLUMN_COUNT; col++) {
+//                var brick = brickGrid.get(row).get(col);
+//                if (brick != null && brick.isJustDamaged()) {
+//                    var brickType = brick.getBrickType();
+//                    switch (brickType) {
+//                        case Reborn -> brickEvent.getStartEvent(EventType.Reborn, row, col);
+//                        case Rock -> brickEvent.getStartEvent(EventType.Rock, row, col);
+//                        case Rocket -> brickEvent.getStartEvent(EventType.Rocket, row, col);
+//                        case Gift -> brickEvent.getStartEvent(EventType.Gift, row, col);
+//                        case Angel -> brickEvent.getStartEvent(EventType.Angel, row, col);
+//                        case Bomb -> brickEvent.getStartEvent(EventType.Bomb, row, col);
+//                        default -> {
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        brickEvent.executeEvent();
+//    }
 
 }

@@ -1,4 +1,7 @@
 package game.Brick;
+
+import org.GameObject.GameObjectManager;
+
 import java.util.List;
 import java.util.Vector;
 
@@ -19,24 +22,18 @@ public class Init {
     }
 
     public static boolean isJustDamaged(List<List<Brick>> brickGrid, int row, int col) {
-        if(!valid(brickGrid, row, col)) return false;
+        if (!valid(brickGrid, row, col)) return false;
         return brickGrid.get(row).get(col).isJustDamaged();
     }
 
-    public static void resetJustDamaged(List<List<Brick>> brickGrid, int row, int col) {
-        if (!valid(brickGrid, row, col)) return;
-        brickGrid.get(row).get(col).resetJustDamaged();
-    }
-
     public static boolean isDestroyed(List<List<Brick>> brickGrid, int row, int col) {
-        if(!valid(brickGrid, row, col)) return false;
-        return brickGrid.get(row).get(col) == null
-                || brickGrid.get(row).get(col).getHealth() <= 0;
+        if (!valid(brickGrid, row, col)) return false;
+        return brickGrid.get(row).get(col) == null;
     }
 
     public static void destroyBrick(List<List<Brick>> brickGrid, int row, int col) {
         if (!valid(brickGrid, row, col)) return;
-        brickGrid.get(row).get(col).decHeath(1000000);
+        GameObjectManager.destroy(brickGrid.get(row).get(col).getGameObject());
     }
 
     public static boolean valid(List<List<Brick>> brickGrid, int r, int c) {

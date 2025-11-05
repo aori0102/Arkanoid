@@ -20,7 +20,7 @@ import org.InputAction.ActionMap;
 import org.Layer.Layer;
 import game.Particle.PaddleParticle;
 import org.Physics.BoxCollider;
-import org.Physics.CollisionData;
+import org.Physics.PhysicsManager;
 import utils.Time;
 import utils.Vector2;
 
@@ -37,6 +37,7 @@ public class PlayerPaddle extends MonoBehaviour {
 
     private final PaddleHealth paddleHealth = addComponent(PaddleHealth.class);
     private final PaddleStat paddleStat = addComponent(PaddleStat.class);
+    private final BoxCollider boxCollider = addComponent(BoxCollider.class);
 
     private Arrow arrow;
     private Vector2 fireDirection = new Vector2();
@@ -68,11 +69,6 @@ public class PlayerPaddle extends MonoBehaviour {
      */
     @Override
     public void awake() {
-        // Assign components
-        BoxCollider boxCollider = gameObject.getComponent(BoxCollider.class);
-        //Assign line specs
-        boxCollider.setOnTriggerEnterCallback(this::onTriggerEnter);
-
         ObstacleManager.getInstance().onPaddleCollidedWithObstacle.addListener((e, voi) -> {
             canStartStunnedCounter = true;
         });
@@ -98,6 +94,21 @@ public class PlayerPaddle extends MonoBehaviour {
     @Override
     public void update() {
         handleCollisionWithObstacles();
+        handlePowerUps();
+    }
+
+    private void handlePowerUps() {
+
+        var overlapCollider = PhysicsManager.getOverlapColliders(boxCollider, true);
+        for (var other : overlapCollider) {
+            var powerUp = other.getComponent(PowerUp.class);
+            if (powerUp != null) {
+                if (powerUp instanceof Recovery || isFired) {
+                    onPowerUpConsumed.invoke(this, powerUp);
+                }
+            }
+        }
+
     }
 
     @Override
@@ -245,29 +256,6 @@ public class PlayerPaddle extends MonoBehaviour {
         if (direction == null) return false;
         double angle = Math.toDegrees(Vector2.angle(direction.normalize(), DIRECTION_VECTOR.normalize()));
         return angle >= DOT_LIMIT_ANGLE_RIGHT && angle <= DOT_LIMIT_ANGLE_LEFT;
-    }
-
-    /**
-     * Trigger the event when the paddle consumes a power up.
-     * It will invoke an event which is listened by player
-     *
-     * @param collisionData : the collision data of the power up
-     */
-    private void onTriggerEnter(CollisionData collisionData) {
-
-        var powerUp = collisionData.otherCollider.getComponent(PowerUp.class);
-
-        if (powerUp instanceof Recovery) {
-            onPowerUpConsumed.invoke(this, powerUp);
-        } else {
-            if (!isFired) {
-                return;
-            }
-
-            if (powerUp != null) {
-                onPowerUpConsumed.invoke(this, powerUp);
-            }
-        }
     }
 
     /**

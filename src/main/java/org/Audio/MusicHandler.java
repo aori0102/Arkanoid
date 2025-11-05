@@ -19,12 +19,10 @@ public class MusicHandler {
             AudioManager.setCurrentMusicPlayer(MusicAsset.MusicIndex.MainMenuOST);
             AudioManager.playMusic();
         } else if (e == SceneKey.InGame) {
-//            if (!GameManager.getInstance().isBossFight()) {
-//                AudioManager.stopMusic();
-//                AudioManager.setCurrentMusicPlayer(MusicAsset.MusicIndex.GameOST);
-//                AudioManager.playMusic();
-//            }
-
+            AudioManager.stopMusic();
+            AudioManager.setCurrentMusicPlayer(MusicAsset.MusicIndex.GameOST);
+            AudioManager.playMusic();
+            // TODO: boss fight event fuck you
         }
     }
 }

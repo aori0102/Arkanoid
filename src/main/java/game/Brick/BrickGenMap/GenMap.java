@@ -58,7 +58,7 @@ public final class GenMap {
     }
 
     private double getRandomDouble() {
-        double base = Math.min(0.8,  level * 0.02);
+        double base = Math.min(0.8, level * 0.02);
         double add = rng.nextDouble() * 0.002;
         return keep01(base + add);
     }
@@ -80,7 +80,7 @@ public final class GenMap {
         for (int row = 0; row < rows; row++) {
             List<BrickType> rowList = new ArrayList<>();
             for (int col = 0; col < cols; col++) {
-                rowList.add(BrickType.Normal);
+                rowList.add(transNumberToType(mapType.get(row, col)));
             }
             result.add(rowList);
         }
