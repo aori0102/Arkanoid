@@ -108,4 +108,39 @@ public class Brick extends MonoBehaviour {
         this.brickType = brickType;
     }
 
+    public int getHealth() {
+        return health;
+    }
+
+    public void resetJustDamaged() {
+        isJustDamaged = false;
+    }
+
+    public boolean isJustDamaged() {
+        return isJustDamaged;
+    }
+
+    public void setWaveIndex(int idx) {
+        if (idx == -2) {
+            return;
+        }
+        setBrightness(idx, this);
+    }
+
+    public void maxBrightness() {
+        setBrightnessMax(this);
+    }
+
+    public void setRedRender() {
+        setRed(this);
+    }
+
+    public void setYellowRender() {
+        setYellow(this);
+    }
+
+    public void resetRenderColor() {
+        resetRender(this);
+    }
+
 }

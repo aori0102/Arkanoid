@@ -20,7 +20,7 @@ public final class BrickPrefab extends Prefab {
     @Override
     public GameObject instantiatePrefab() {
 
-        // Core object
+        // Setup core object
         var brickObject = GameObjectManager.instantiate("Brick")
                 .addComponent(BrickHealth.class)
                 .addComponent(Brick.class)
@@ -30,9 +30,10 @@ public final class BrickPrefab extends Prefab {
                 .getGameObject();
         brickObject.setLayer(Layer.Brick);
 
-        // Renderer
+
+        //Setup visual and ready for rendering object
         var brickRenderer = brickObject.addComponent(SpriteRenderer.class);
-        brickRenderer.setImage(ImageAsset.ImageIndex.GreenBrick.getImage());
+        brickRenderer.setImage(ImageAsset.ImageIndex.BrickNormal.getImage());
         brickRenderer.setSize(BRICK_SIZE);
         brickRenderer.setPivot(new Vector2(0.5, 0.5));
 

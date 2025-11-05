@@ -1,6 +1,11 @@
 package game.MapGenerator;
 
 import game.Brick.Brick;
+import game.Brick.BrickEvent.BrickEvent;
+import game.Brick.BrickEvent.EventType;
+import game.Brick.BrickPrefab;
+import game.Brick.BrickType;
+import game.Brick.BrickGenMap.GenMap;
 import game.BrickObj.BrickGenMap.GenMap;
 import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventActionID;
@@ -29,11 +34,11 @@ public final class BrickMapManager extends MonoBehaviour {
     }
 
     private static BrickMapManager instance = null;
-
-    private final GenMap mapGenerator = new GenMap(ROW_COUNT, COLUMN_COUNT);
-
     private final List<List<Brick>> brickGrid = new ArrayList<>();
     private final HashMap<Brick, Cell> brickCoordinateMap = new HashMap<>();
+
+    private final GenMap mapGenerator = new GenMap(ROW_COUNT, COLUMN_COUNT);
+    private final BrickEvent brickEvent = new BrickEvent(ROW_COUNT, COLUMN_COUNT, brickGrid);
 
     private EventActionID brick_onAnyBrickDestroyed_ID = null;
 
@@ -140,6 +145,30 @@ public final class BrickMapManager extends MonoBehaviour {
         }
         brickCoordinateMap.clear();
 
+    }
+
+    @Override
+    public void update() {
+
+        for (int row  = 0; row < ROW_COUNT; row++) {
+            for (int col = 0; col < COLUMN_COUNT; col++) {
+                var brick = brickGrid.get(row).get(col);
+                if (brick != null && brick.isJustDamaged()) {
+                    var brickType = brick.getBrickType();
+                    switch (brickType) {
+                        case Reborn -> brickEvent.getStartEvent(EventType.Reborn, row, col);
+                        case Rock -> brickEvent.getStartEvent(EventType.Rock, row, col);
+                        case Rocket ->  brickEvent.getStartEvent(EventType.Rocket, row, col);
+                        case Gift ->  brickEvent.getStartEvent(EventType.Gift, row, col);
+                        case Angel ->  brickEvent.getStartEvent(EventType.Angel, row, col);
+                        case Bomb -> brickEvent.getStartEvent(EventType.Bomb, row, col);
+                        default -> {}
+                    }
+                }
+            }
+        }
+
+        brickEvent.executeEvent();
     }
 
 }

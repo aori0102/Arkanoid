@@ -4,14 +4,11 @@ import game.BrickObj.BrickEvent.CollisionEvent;
 import org.Audio.AudioManager;
 import org.Audio.SFXAsset;
 import org.GameObject.GameObjectManager;
-import org.Physics.BoxCollider;
-import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
 import java.util.Vector;
 
-import static game.BrickObj.BrickGenMap.TransTypeNumBer.transNumberToType;
-import static game.BrickObj.BrickManager.BRICK_SIZE;
+import static game.Brick.BrickGenMap.TransTypeNumBer.transNumberToType;
 import static game.BrickObj.Render.setRender;
 
 public class Init {
@@ -321,7 +318,7 @@ public class Init {
                     System.out.println("beforeTransIntToBrick: r=" + r + " c=" +
                             c + " " + that.get(r, c) + " " + transNumberToType(that.get(r, c))
                             + " " + getObjType(r, c));
-                    setType(r, c, transNumberToType(that.get(r, c)));
+//                    setType(r, c, transNumberToType(that.get(r, c)));
                     System.out.println("transIntToBrick: r=" + r + " c=" +
                             c + " " + that.get(r, c) + " " + transNumberToType(that.get(r, c))
                             + " " + getObjType(r, c));

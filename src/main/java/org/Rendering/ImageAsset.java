@@ -85,23 +85,21 @@ public class ImageAsset {
         Player_UI_Rank_LevelUpIcon("/Player/UI/Scoreboard/Rank/LevelUpIcon.png"),
 
         /// Bricks
-        GreenBrick("/Brick/GreenBrick.png"),
         PurpleBrick("/Brick/PurpleBrick.png"),
         OrangeBrick("/Brick/OrangeBrick.png"),
         CyanBrick("/Brick/CyanBrick.png"),
+        BrickNormal("/Brick/brick_normal.png"),
+        BrickSteel("/Brick/brick_steel.png"),
+        BrickDiamond("/Brick/brick_diamond.png"),
+        BrickGift("/Brick/brick_gift.png"),
+        BrickReborn("/Brick/brick_reborn.png"),
+        BrickRock("/Brick/brick_rock.png"),
+        BrickRocket("/Brick/brick_rocket.png"),
+        BrickAngel("/Brick/brick_angel.png"),
+        BrickBomb("/Brick/brick_bomb.png"),
 
         /// Effects
         HealthLossVignette("/Effect/HealthLossVignette.png"),
-        brick_normal("/Brick/brick_normal.png"),
-        brick_steel("/Brick/brick_steel.png"),
-        brick_diamond("/Brick/brick_diamond.png"),
-        brick_gift("/Brick/brick_gift.png"),
-        brick_reborn("/Brick/brick_reborn.png"),
-        brick_rock("/Brick/brick_rock.png"),
-        brick_rocket("/Brick/brick_rocket.png"),
-        brick_angel("/Brick/brick_angel.png"),
-        brick_bomb("/Brick/brick_bomb.png"),
-        BlueBrick("/Brick/BlueBrick.png"),
 
         /// Particle
         PurpleParticle("/Particle/ParticlePurple.png"),

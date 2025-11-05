@@ -1,15 +1,46 @@
-package game.BrickObj.BrickEvent;
+package game.Brick.BrickEvent.EventList;
 
-import java.util.*;
-import static game.BrickObj.Init.*;
+import game.Brick.Brick;
+import game.Brick.BrickEvent.Event;
 
-public final class WaveEffect {
+import java.util.ArrayList;
+import java.util.List;
+
+import static game.Brick.Init.*;
+
+public final class WaveEvent implements Event {
 
     private static final int DESTROYED = -2;
     private static final int EMPTY = -1;
 
-    private final Matrix matrixOfObj;
     private final List<IntPair> justDamaged = new ArrayList<>();
+    private final int rowData;
+    private final int colData;
+    private final List<List<Brick>> brickGrid;
+    private final Matrix state;
+
+    private int timeFrame = 0;
+
+    public WaveEvent(int rowData, int colData, List<List<Brick>> matrix) {
+        this.rowData = rowData;
+        this.colData = colData;
+        this.brickGrid = matrix;
+        state = new Matrix(rowData, colData);
+    }
+
+    @Override
+    public void runEvent() {
+        if (timeFrame == 0) {
+            runAllWave();
+        }
+        timeFrame++;
+        timeFrame %= NumFrameForEachRunTime;
+    }
+
+    @Override
+    public void getStartEvent(int r, int c) {
+
+    }
 
     private static final class WaveLayer {
         final List<IntPair> layer1 = new ArrayList<>();
@@ -19,32 +50,23 @@ public final class WaveEffect {
 
     private final List<WaveLayer> activeWaves = new ArrayList<>();
 
-    public WaveEffect() {
-        matrixOfObj = new Matrix(rowData, colData, EMPTY);
-    }
 
-    public Matrix getStateMatrix() {
-        return matrixOfObj;
-    }
+    public void runAllWave() {
 
-    public void collectJustDamaged() {
         justDamaged.clear();
         for (int r = 0; r < rowData; r++) {
             for (int c = 0; c < colData; c++) {
-                if (!matrixObj.invalid(r, c) && matrixObj.isJustDamaged(r, c)) {
+                if (valid(brickGrid, r, c) && isJustDamaged(brickGrid, r, c)) {
                     justDamaged.add(new IntPair(r, c));
-                    matrixObj.resetJustDamaged(r, c);
                 }
             }
         }
-    }
 
-    public void runAllWave() {
-        final Matrix state = new Matrix(rowData, colData, EMPTY);
+        state.fill(EMPTY);
 
         for (int i = 0; i < rowData; i++) {
             for (int j = 0; j < colData; j++) {
-                if (matrixObj.isDestroyed(i, j)) {
+                if (!valid(brickGrid, i, j) && isDestroyed(brickGrid, i, j)) {
                     state.set(i, j, DESTROYED);
                 }
             }
@@ -109,13 +131,11 @@ public final class WaveEffect {
                     state.set(p.fi(), p.se(), 1);
         }
 
-        matrixObj.setWaveIndex(state);
-    }
-
-    public static double mapWaveToBrightness(int index, int maxWave) {
-        index += 2;
-        double minB = -0.2;
-        double maxB =  0.2;
-        return minB + (maxB - minB) * ((double) index / maxWave);
+        for (int row = 0; row < rowData; row++) {
+            for (int col = 0; col < colData; col++) {
+                if (valid(brickGrid, row, col))
+                    brickGrid.get(row).get(col).setWaveIndex(state.get(row, col));
+            }
+        }
     }
 }

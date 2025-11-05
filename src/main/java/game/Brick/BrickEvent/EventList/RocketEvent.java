@@ -1,0 +1,115 @@
+package game.Brick.BrickEvent.EventList;
+
+import game.Brick.Brick;
+import game.Brick.BrickEvent.Event;
+import game.Brick.Init;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+import static game.Brick.Init.*;
+
+public class RocketEvent implements Event {
+
+    private final int rowData;
+    private final int colData;
+    private final List<List<Brick>> brickGrid;
+    private final int MAX_TARGETS = 10;
+    private final int EXECUTE_TIME = 15;
+    private final int DAMAGE = 30;
+    private boolean flag = false;
+    List<IntPair> targets;
+    private int timeFrame = 0, executeTime = 0;
+
+
+    public RocketEvent(int row, int col, List<List<Brick>> matrix) {
+        this.rowData = row;
+        this.colData = col;
+        this.brickGrid = matrix;
+    }
+
+
+    @Override
+    public void runEvent() {
+
+        if (timeFrame == 0 && executeTime == EXECUTE_TIME && flag) {
+
+            for (var index: targets) {
+                int r = index.fi();
+                int c = index.fi();
+
+                if(!valid(brickGrid, r, c)) continue;
+
+                var brick = brickGrid.get(r).get(c);
+                brick.damage(DAMAGE);
+            }
+
+            executeTime = 0;
+            targets.clear();
+            flag = false;
+        }
+
+        if (flag) {
+            if (timeFrame % 2 ==  0) {
+                for (var index: targets) {
+                    int r = index.fi();
+                    int c = index.fi();
+
+                    if(!valid(brickGrid, r, c)) continue;
+
+                    var brick = brickGrid.get(r).get(c);
+                    if(timeFrame % 2 == 1) {
+                        brick.setRedRender();
+                    }
+                    else {
+                        brick.maxBrightness();
+                    }
+                }
+            }
+            else {
+                for (int r = 0; r < rowData; r++) {
+                    for (int c = 0; c < colData; c++) {
+                        if (valid(brickGrid, r, c)) {
+                            var brick =  brickGrid.get(r).get(c);
+                            brick.resetRenderColor();
+                        }
+                    }
+                }
+            }
+        }
+
+        if (timeFrame == 0 && flag) executeTime++;
+        timeFrame++;
+        timeFrame %= NumFrameForEachRunTime;
+    }
+
+    @Override
+    public void getStartEvent(int r, int c) {
+        if (valid(brickGrid, r, c)) {
+            destroyBrick(brickGrid, r, c);
+
+            Random rng = new Random();
+            List<Init.IntPair> allAlive = new ArrayList<>();
+
+            for (int i = 0; i < rowData; i++) {
+                for (int j = 0; j < colData; j++) {
+                    if (isDestroyed(brickGrid, i, j)) {
+                        allAlive.add(new Init.IntPair(i, j));
+                    }
+                }
+            }
+
+            Collections.shuffle(allAlive, rng);
+            for (int k = 0; k < Math.min(MAX_TARGETS, allAlive.size()); k++) {
+                Init.IntPair p = allAlive.get(k);
+                targets.add(p);
+            }
+
+            flag = true;
+            timeFrame = 0;
+            executeTime = 0;
+        }
+    }
+}

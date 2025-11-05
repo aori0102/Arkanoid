@@ -16,15 +16,15 @@ public class Render {
 
     public static Image getImage(BrickType brickType) {
         return switch (brickType) {
-            case Normal -> ImageAsset.ImageIndex.brick_normal.getImage();
-            case Steel -> ImageAsset.ImageIndex.brick_steel.getImage();
-            case Diamond -> ImageAsset.ImageIndex.brick_diamond.getImage();
-            case Rocket -> ImageAsset.ImageIndex.brick_rocket.getImage();
-            case Rock -> ImageAsset.ImageIndex.brick_rock.getImage();
-            case Bomb -> ImageAsset.ImageIndex.brick_bomb.getImage();
-            case Gift -> ImageAsset.ImageIndex.brick_gift.getImage();
-            case Reborn -> ImageAsset.ImageIndex.brick_reborn.getImage();
-            case Angel -> ImageAsset.ImageIndex.brick_angel.getImage();
+            case Normal -> ImageAsset.ImageIndex.BrickNormal.getImage();
+            case Steel -> ImageAsset.ImageIndex.BrickSteel.getImage();
+            case Diamond -> ImageAsset.ImageIndex.BrickDiamond.getImage();
+            case Rocket -> ImageAsset.ImageIndex.BrickRocket.getImage();
+            case Rock -> ImageAsset.ImageIndex.BrickRock.getImage();
+            case Bomb -> ImageAsset.ImageIndex.BrickBomb.getImage();
+            case Gift -> ImageAsset.ImageIndex.BrickGift.getImage();
+            case Reborn -> ImageAsset.ImageIndex.BrickReborn.getImage();
+            case Angel -> ImageAsset.ImageIndex.BrickAngel.getImage();
         };
     }
 
