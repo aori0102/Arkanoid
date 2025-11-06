@@ -50,8 +50,8 @@ public final class BallPrefab extends Prefab {
         var particleEmitter = PrefabManager.instantiatePrefab(PrefabIndex.Ball_Particle)
                 .addComponent(ConeEmitter.class);
         particleEmitter.setEmissionRate(50);
-        particleEmitter.setMinSpeed(300);
-        particleEmitter.setMaxSpeed(600);
+        particleEmitter.setMinSpeed(100);
+        particleEmitter.setMaxSpeed(300);
         particleEmitter.setMinLifeTime(0.1);
         particleEmitter.setMaxLifeTime(0.3);
         particleEmitter.setSpreadAngle(1);

@@ -1,4 +1,4 @@
-package game.Obstacle.Object;
+package game.Obstacle.Laser;
 
 import game.Obstacle.Index.Obstacle;
 import org.GameObject.GameObject;

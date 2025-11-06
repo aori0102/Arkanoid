@@ -17,12 +17,16 @@ public class Arrow extends MonoBehaviour {
      */
     public Arrow(GameObject owner) {
         super(owner);
-        spriteRenderer.setPivot(new Vector2(0, 0.5));
     }
 
     @Override
     public void awake() {
         gameObject.setActive(false);
+    }
+
+    @Override
+    public void update() {
+        System.out.println(spriteRenderer.getPivot());
     }
 
     public void handleArrowDirection(double angle) {

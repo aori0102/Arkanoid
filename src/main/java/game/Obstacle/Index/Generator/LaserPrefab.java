@@ -1,7 +1,7 @@
 package game.Obstacle.Index.Generator;
 
 import game.Obstacle.Index.Obstacle;
-import game.Obstacle.Object.Laser;
+import game.Obstacle.Laser.Laser;
 import org.GameObject.GameObjectManager;
 import org.Physics.BoxCollider;
 import org.Rendering.ImageAsset;
