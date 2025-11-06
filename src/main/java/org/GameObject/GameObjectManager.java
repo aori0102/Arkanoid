@@ -239,8 +239,7 @@ public class GameObjectManager {
 
         System.out.println("[GameObjectManager] Clearing game object scene");
         for (var object : gameObjectSet) {
-            System.out.println("Processing " + object);
-            if (object.isDestroyed()) {
+            if (object.isDestroyed() || object.isDoNotDestroyOnLoad()) {
                 continue;
             }
             try {

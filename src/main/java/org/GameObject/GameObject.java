@@ -33,6 +33,7 @@ public class GameObject {
      * anywhere else.
      */
     private boolean isDestroyed = false;
+    private boolean doNotDestroyOnLoad = false;
     private String name = DEFAULT_NAME;
     private Layer layer = Layer.Default;
     private EventActionID parentOnActivenessChangedActionID = null;
@@ -125,12 +126,23 @@ public class GameObject {
     }
 
     /**
-     * Check if this game object is destroyed.
+     * Check whether this object is destroyed.
      *
-     * @return {@code true} if is destroyed, otherwise {@code false}.
+     * @return {@code true} when this object or its parent is destroyed,
+     * otherwise {@code false}.
      */
     public boolean isDestroyed() {
-        return isDestroyed;
+        return isDestroyed || (parent != null && parent.isDestroyed());
+    }
+
+    /**
+     * Check whether to keep this object when loading scene.
+     *
+     * @return {@code true} if this object is or belongs to a {@code DoNotDestroyOnLoad}
+     * object, otherwise {@code false}.
+     */
+    public boolean isDoNotDestroyOnLoad() {
+        return doNotDestroyOnLoad || (parent != null && parent.isDoNotDestroyOnLoad());
     }
 
     /**
@@ -517,6 +529,17 @@ public class GameObject {
      */
     public SceneKey getRegisteredSceneKey() {
         return registeredSceneKey;
+    }
+
+    /**
+     * Set this game object's {@code doNotDestroyOnLoad} property. When enabled,
+     * this object will not be destroyed when loading a new scene.
+     *
+     * @param doNotDestroyOnLoad Whether this object should be kept alive when
+     *                           loading new scene.
+     */
+    public void setDoNotDestroyOnLoad(boolean doNotDestroyOnLoad) {
+        this.doNotDestroyOnLoad = doNotDestroyOnLoad;
     }
 
     @Override
