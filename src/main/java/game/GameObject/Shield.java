@@ -1,5 +1,6 @@
 package game.GameObject;
 
+import game.Player.Player;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Physics.BoxCollider;
@@ -49,6 +50,9 @@ public class Shield extends MonoBehaviour {
     }
 
     private void handleShieldDuration(double duration) {
+        if (!Player.getInstance().getPlayerPaddle().canBeDamaged()) {
+            return;
+        }
         counter += Time.getDeltaTime();
 
         if (counter >= duration) {

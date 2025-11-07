@@ -1,11 +1,11 @@
 package game.Player.Paddle;
 
 import game.Ball.Ball;
+import game.Effect.StatusEffect;
 import game.Entity.EntityHealthAlterType;
 import game.GameManager.GameManager;
 import game.GameManager.GameState;
 import game.GameObject.Arrow;
-import game.Obstacle.Index.ObstacleManager;
 import game.Player.Player;
 import game.Player.PlayerData;
 import game.PowerUp.Index.PowerUp;
@@ -18,7 +18,6 @@ import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import org.Layer.Layer;
-import game.Particle.PaddleParticle;
 import org.Physics.BoxCollider;
 import org.Physics.PhysicsManager;
 import utils.Time;
@@ -31,21 +30,18 @@ public class PlayerPaddle extends MonoBehaviour {
     // The constant specs of the ball
     private static final double DOT_LIMIT_ANGLE_RIGHT = 30;
     private static final double DOT_LIMIT_ANGLE_LEFT = 150;
-    private static final double STUNNED_TIME = 3.6;
     private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0);
-    private static final int DASH_SPEED = 2500;
 
     private final PaddleHealth paddleHealth = addComponent(PaddleHealth.class);
     private final PaddleStat paddleStat = addComponent(PaddleStat.class);
     private final BoxCollider boxCollider = addComponent(BoxCollider.class);
+    private final PaddleEffectController paddleEffectController = addComponent(PaddleEffectController.class);
+    private Time.CoroutineID stunnedCoroutineID;
 
     private Arrow arrow;
     private Vector2 fireDirection = new Vector2();
 
     private boolean canInvoke;
-    private boolean canStartStunnedCounter = false;
-    private boolean canReduceSpeed = true;
-    private double stunnedCounter = 0;
 
     // Event
     public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(PlayerPaddle.class);
@@ -54,10 +50,10 @@ public class PlayerPaddle extends MonoBehaviour {
     private EventActionID ball_onAnyBallDestroyed_ID = null;
 
     public boolean isFired = false;
+    private boolean canBeDamaged = true;
 
     private Vector2 movementVector = new Vector2(0, 0);
 
-    private Time.CoroutineID dashCoroutineID = null;
 
     public PlayerPaddle(GameObject owner) {
         super(owner);
@@ -69,11 +65,7 @@ public class PlayerPaddle extends MonoBehaviour {
      */
     @Override
     public void awake() {
-        ObstacleManager.getInstance().onPaddleCollidedWithObstacle.addListener((e, voi) -> {
-            canStartStunnedCounter = true;
-        });
-
-        spawnParticle();
+        paddleEffectController.onEffectInflicted.addListener(this::paddleEffectController_onEffectInflicted);
 
         Player.getInstance().getPlayerController().getActionMap().
                 onKeyHeld.addListener(this::handlePaddleMovement);
@@ -93,7 +85,6 @@ public class PlayerPaddle extends MonoBehaviour {
 
     @Override
     public void update() {
-        handleCollisionWithObstacles();
         handlePowerUps();
     }
 
@@ -225,28 +216,6 @@ public class PlayerPaddle extends MonoBehaviour {
     }
 
     /**
-     * Handle the movement of the paddle when an obstacle hits it. Its speed will be
-     * reduced by 10 times when hit
-     */
-    private void handleCollisionWithObstacles() {
-        if (!canStartStunnedCounter) return;
-        stunnedCounter += Time.getDeltaTime();
-
-        if (canReduceSpeed) {
-            int currentSpeed = Player.getInstance().getCurrentSpeed() / 10;
-            Player.getInstance().setCurrentSpeed(currentSpeed);
-            canReduceSpeed = false;
-        }
-
-        if (stunnedCounter >= STUNNED_TIME) {
-            Player.getInstance().setCurrentSpeed(Player.getInstance().getBaseSpeed());
-            canReduceSpeed = true;
-            stunnedCounter = 0;
-            canStartStunnedCounter = false;
-        }
-    }
-
-    /**
      * Check if the direction is in the valid range.
      *
      * @param direction : the fire direction.
@@ -267,20 +236,29 @@ public class PlayerPaddle extends MonoBehaviour {
         this.arrow = arrow;
     }
 
-    private void spawnParticle() {
-        var paddleParticle = GameObjectManager.instantiate("PaddleParticle").addComponent(PaddleParticle.class);
-        paddleParticle.getGameObject().setParent(gameObject);
-        paddleParticle.setPosition(new Vector2(40, 0));
-        paddleParticle.setDirection(Vector2.down());
-        paddleParticle.setParent(gameObject);
-        paddleParticle.startEmit();
 
-        var paddleParticle1 = GameObjectManager.instantiate("PaddleParticle").addComponent(PaddleParticle.class);
-        paddleParticle1.getGameObject().setParent(gameObject);
-        paddleParticle1.setPosition(new Vector2(-40, 0));
-        paddleParticle1.setDirection(Vector2.down());
-        paddleParticle1.setParent(gameObject);
-        paddleParticle1.startEmit();
+    private void paddleEffectController_onEffectInflicted(Object o, StatusEffect statusEffect) {
+        if (!canBeDamaged) {
+            return;
+        }
+
+        if (statusEffect == StatusEffect.Stunned) {
+            int currentSpeedSpeed = Player.getInstance().getCurrentSpeed();
+            Player.getInstance().setCurrentSpeed(currentSpeedSpeed /= 10);
+            stunnedCoroutineID = Time.addCoroutine(this::resetPaddleSpeed, Time.getTime() + 3);
+        }
     }
 
+    private void resetPaddleSpeed() {
+        Player.getInstance().setCurrentSpeed(Player.getInstance().getBaseSpeed());
+        Time.removeCoroutine(stunnedCoroutineID);
+    }
+
+    public boolean canBeDamaged() {
+        return canBeDamaged;
+    }
+
+    public void setCanBeDamaged(boolean canBeDamaged) {
+        this.canBeDamaged = canBeDamaged;
+    }
 }

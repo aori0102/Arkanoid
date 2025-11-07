@@ -1,5 +1,6 @@
-package game.Player.PlayerSkills;
+package game.Player.PlayerSkills.Skills;
 
+import game.Player.PlayerSkills.SkillIndex;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;

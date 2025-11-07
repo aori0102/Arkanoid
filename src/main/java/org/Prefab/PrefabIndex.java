@@ -11,12 +11,14 @@ import game.GameManager.LevelUIPrefab;
 import game.MapGenerator.BrickMapManagerPrefab;
 import game.Obstacle.Index.ObstacleManagerPrefab;
 import game.Perks.Index.PerkManagerPrefab;
+import game.Player.PlayerSkills.PlayerSkillsPrefab.DashPrefab;
+import game.Player.PlayerSkills.PlayerSkillsPrefab.InvinciblePrefab;
 import game.Player.PlayerSkills.PlayerSkillsPrefab.LaserBeamPrefab;
+import game.Player.PlayerSkills.PlayerSkillsPrefab.UpdraftPrefab;
 import game.Player.Prefab.PaddlePrefab;
 import game.Player.Prefab.PlayerHealthBarPrefab;
 import game.Player.Prefab.PlayerHealthLossVignettePrefab;
 import game.Player.Prefab.PlayerPrefab;
-import game.PowerUp.DuplicateBall;
 import game.PowerUp.Prefab.*;
 import game.Rank.RankManagerPrefab;
 import game.Rank.RankUIPrefab;
@@ -83,6 +85,9 @@ public enum PrefabIndex {
 
     /// Skill
     LaserBeam(new LaserBeamPrefab()),
+    Dash(new DashPrefab()),
+    Updraft(new UpdraftPrefab()),
+    Invincible(new InvinciblePrefab()),
 
     /// Power up
     PowerUp_Placeholder(new PowerUpPlaceholderPrefab()),

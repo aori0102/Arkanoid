@@ -47,7 +47,6 @@ public class Ball extends MonoBehaviour {
         addComponent(BoxCollider.class).setOnCollisionEnterCallback((data) -> {
             handleHitHandle(data);
             handleCollision(data);
-            System.out.println("Ball collided with " + data.otherCollider.getGameObject());
         });
     }
 

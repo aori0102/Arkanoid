@@ -1,10 +1,13 @@
 package game.Obstacle.Laser;
 
+import game.Effect.StatusEffect;
 import game.Effect.StatusEffectInfo;
 import game.Entity.EntityDamageDealer;
 import game.Entity.EntityEffectController;
 import game.Entity.EntityHealth;
 import game.Entity.EntityStat;
+import game.Player.Paddle.PaddleHealth;
+import game.Player.Player;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 
@@ -30,7 +33,11 @@ public class LaserDamageDealer extends EntityDamageDealer {
 
     @Override
     protected boolean isDamageTarget(EntityHealth entityHealth) {
-        return false;
+        if (Player.getInstance().getPlayerPaddle().canBeDamaged()) {
+            return entityHealth instanceof PaddleHealth;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -40,11 +47,16 @@ public class LaserDamageDealer extends EntityDamageDealer {
 
     @Override
     protected void onEffectInflicted(EntityEffectController effectController) {
-        
+        System.out.println("LaserDamageDealer EffectInflicted");
     }
 
     @Override
     protected StatusEffectInfo getStatusEffectInfo() {
-        return null;
+        System.out.println("LaserDamageDealer StatusEffectInfo");
+        var stunnedEffectInfo = new StatusEffectInfo();
+        stunnedEffectInfo.duration = 3;
+        stunnedEffectInfo.effect = StatusEffect.Stunned;
+
+        return stunnedEffectInfo;
     }
 }

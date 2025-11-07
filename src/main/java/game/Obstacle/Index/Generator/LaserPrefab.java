@@ -2,6 +2,8 @@ package game.Obstacle.Index.Generator;
 
 import game.Obstacle.Index.Obstacle;
 import game.Obstacle.Laser.Laser;
+import game.Obstacle.Laser.LaserDamageDealer;
+import game.Obstacle.Laser.LaserStat;
 import org.GameObject.GameObjectManager;
 import org.Physics.BoxCollider;
 import org.Rendering.ImageAsset;
@@ -13,6 +15,8 @@ public class LaserPrefab extends ObstaclePrefab {
     public Obstacle generateObstacle() {
 
         var laser = GameObjectManager.instantiate("Laser")
+                .addComponent(LaserStat.class)
+                .addComponent(LaserDamageDealer.class)
                 .addComponent(Laser.class);
         laser.addComponent(BoxCollider.class);
         laser.getGameObject().setActive(false);

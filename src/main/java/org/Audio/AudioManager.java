@@ -34,7 +34,7 @@ public final class AudioManager {
             if (value == MusicAsset.MusicIndex.None) continue;
             new MusicPlayer(value);
         }
-        setMusicVolume(0.5);
+        setMusicVolume(0);
         // Delay listener registration until all players are done constructing
         MusicHandler.initializeMusicHandler();
     }

@@ -1,8 +1,8 @@
 package game.Player.PlayerSkills.PlayerSkillsPrefab;
 
-import game.Player.PlayerSkills.LaserBeam.LaserBeam;
-import game.Player.PlayerSkills.LaserBeam.LaserBeamDamageDealer;
-import game.Player.PlayerSkills.LaserBeam.LaserBeamStat;
+import game.Player.PlayerSkills.Skills.LaserBeam.LaserBeam;
+import game.Player.PlayerSkills.Skills.LaserBeam.LaserBeamDamageDealer;
+import game.Player.PlayerSkills.Skills.LaserBeam.LaserBeamStat;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Physics.BoxCollider;
