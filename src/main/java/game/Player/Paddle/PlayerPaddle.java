@@ -1,17 +1,13 @@
 package game.Player.Paddle;
 
-import game.Ball.Ball;
-import game.Entity.EntityHealthAlterType;
-import game.GameManager.GameManager;
-import game.GameManager.GameState;
+import game.GameManager.LevelState;
 import game.GameObject.Arrow;
+import game.Level.LevelManager;
 import game.Obstacle.Index.ObstacleManager;
 import game.Player.Player;
-import game.Player.PlayerData;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Recovery;
 import javafx.scene.input.MouseButton;
-import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -51,13 +47,9 @@ public class PlayerPaddle extends MonoBehaviour {
     public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(PlayerPaddle.class);
     public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(PlayerPaddle.class);
 
-    private EventActionID ball_onAnyBallDestroyed_ID = null;
-
     public boolean isFired = false;
 
     private Vector2 movementVector = new Vector2(0, 0);
-
-    private Time.CoroutineID dashCoroutineID = null;
 
     public PlayerPaddle(GameObject owner) {
         super(owner);
@@ -87,8 +79,6 @@ public class PlayerPaddle extends MonoBehaviour {
     public void start() {
         paddleHealth.onPaddleHealthReachesZero
                 .addListener(this::playerPaddleHealth_onPaddleHealthReachesZero);
-        ball_onAnyBallDestroyed_ID = Ball.onAnyBallDestroyed
-                .addListener(this::ball_onAnyBallDestroyed);
     }
 
     @Override
@@ -109,23 +99,6 @@ public class PlayerPaddle extends MonoBehaviour {
             }
         }
 
-    }
-
-    @Override
-    public void onDestroy() {
-        Ball.onAnyBallDestroyed
-                .removeListener(ball_onAnyBallDestroyed_ID);
-    }
-
-    /**
-     * Called when {@link Ball#onAnyBallDestroyed} is invoked.<br><br>
-     * This function decreases the player's health when a ball is destroyed.
-     *
-     * @param sender Event caller {@link Ball}.
-     * @param e      Empty event argument.
-     */
-    private void ball_onAnyBallDestroyed(Object sender, Void e) {
-        paddleHealth.alterHealth(EntityHealthAlterType.PlayerTakeDamage, PlayerData.HEALTH_LOST_ON_BALL_DESTROYED);
     }
 
     /**
@@ -176,7 +149,7 @@ public class PlayerPaddle extends MonoBehaviour {
     }
 
     private void handleRayReleased(Object e, ActionMap.Action action) {
-        if (GameManager.getInstance().getGameState() != GameState.Playing) {
+        if (LevelManager.getInstance().getLevelState() != LevelState.Playing) {
             return;
         }
         arrow.turnOff();
@@ -190,7 +163,7 @@ public class PlayerPaddle extends MonoBehaviour {
      * Handle the direction ray.
      */
     private void handleRayDirection(Object e, ActionMap.Action action) {
-        if (isFired || GameManager.getInstance().getGameState() != GameState.Playing) {
+        if (isFired || LevelManager.getInstance().getLevelState() != LevelState.Playing) {
             return;
         }
 

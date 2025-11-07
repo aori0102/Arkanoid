@@ -20,6 +20,7 @@ public final class LevelManager extends MonoBehaviour {
 
     public static final double LEVEL_INTRODUCING_TIME = 3.2;
     public static final double LEVEL_CONCLUDING_TIME = 3.0;
+    public static final double BALL_REMOVAL_DELAY = 0.01;
 
     private static final String LEVEL_PREFIX = "Level ";
     private static final String FRENZY_LABEL = "F R E N Z Y !";
@@ -45,6 +46,7 @@ public final class LevelManager extends MonoBehaviour {
     private LevelState _levelState = LevelState.IntroducingLevel;
 
     private int levelIndex = 0;
+    private double mapClearingStartTick = 0.0;
 
     private EventActionID brickMapManager_onMapCleared_ID = null;
     private EventActionID voltraxis_onBossDestroyed_ID = null;
@@ -53,6 +55,7 @@ public final class LevelManager extends MonoBehaviour {
 
     private Time.CoroutineID enablePlaying_coroutineID = null;
     private Time.CoroutineID progressToNextLevel_coroutineID = null;
+    private Time.CoroutineID destroyRandomBall_coroutineID = null;
 
     public EventHandler<Void> onLevelCleared = new EventHandler<>(LevelManager.class);
 
@@ -91,6 +94,7 @@ public final class LevelManager extends MonoBehaviour {
         }
         Time.removeCoroutine(enablePlaying_coroutineID);
         Time.removeCoroutine(progressToNextLevel_coroutineID);
+        Time.removeCoroutine(destroyRandomBall_coroutineID);
     }
 
     @Override
@@ -163,7 +167,7 @@ public final class LevelManager extends MonoBehaviour {
 
     public void startGame(int levelIndex) {
         this.levelIndex = levelIndex;
-        progressToNextLevel();
+        loadCurrentLevel();
     }
 
     private void endLevel() {
@@ -171,21 +175,11 @@ public final class LevelManager extends MonoBehaviour {
         setLevelState(LevelState.ConcludingLevel);
         cleanUpMap();
         displayLevelCleared();
-
-        // Delay for conclusion
-        progressToNextLevel_coroutineID
-                = Time.addCoroutine(this::progressToNextLevel, Time.getTime() + LEVEL_CONCLUDING_TIME);
-
     }
 
     private void progressToNextLevel() {
-
         levelIndex++;
         loadCurrentLevel();
-
-        // Display notification
-        displayLevelEnter();
-
     }
 
     private void displayLevelEnter() {
@@ -194,14 +188,14 @@ public final class LevelManager extends MonoBehaviour {
         if (LEVEL_DATA[levelIndex] == LevelType.Frenzy) {
             notificationUI.setNotification(FRENZY_LABEL);
         } else {
-            notificationUI.setNotification(LEVEL_PREFIX + levelIndex);
+            notificationUI.setNotification(LEVEL_PREFIX + (levelIndex + 1));
         }
     }
 
     private void displayLevelCleared() {
         var notificationUI = PrefabManager.instantiatePrefab(PrefabIndex.LevelNotificationUI)
                 .getComponent(LevelNotificationUI.class);
-        notificationUI.setNotification(LEVEL_PREFIX + levelIndex + CLEARED_SUFFIX);
+        notificationUI.setNotification(LEVEL_PREFIX + (levelIndex + 1) + CLEARED_SUFFIX);
     }
 
     private void loadCurrentLevel() {
@@ -214,6 +208,9 @@ public final class LevelManager extends MonoBehaviour {
         } else {
             BrickMapManager.getInstance().generateMap();
         }
+
+        // Display notification
+        displayLevelEnter();
 
         setLevelState(LevelState.IntroducingLevel);
 
@@ -241,7 +238,23 @@ public final class LevelManager extends MonoBehaviour {
     }
 
     private void cleanUpMap() {
-        BallsManager.getInstance().removeAllBall();
+        destroyRandomBall_coroutineID
+                = Time.addCoroutine(this::destroyRandomBall, Time.getTime() + BALL_REMOVAL_DELAY);
+        mapClearingStartTick = Time.getTime();
+    }
+
+    private void destroyRandomBall() {
+        if (BallsManager.getInstance().removeRandomBall()) {
+            destroyRandomBall_coroutineID
+                    = Time.addCoroutine(this::destroyRandomBall, Time.getTime() + BALL_REMOVAL_DELAY);
+        } else {
+            var clearTime = Time.getTime() - mapClearingStartTick;
+            progressToNextLevel_coroutineID
+                    = Time.addCoroutine(
+                    this::progressToNextLevel,
+                    Time.getTime() + Math.max(0.0, LEVEL_CONCLUDING_TIME - clearTime)
+            );
+        }
     }
 
     private void onGameOver() {

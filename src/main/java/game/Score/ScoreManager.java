@@ -3,6 +3,8 @@ package game.Score;
 import game.Brick.Brick;
 import game.Ball.Ball;
 import game.Ball.BallsManager;
+import game.GameManager.LevelState;
+import game.Level.LevelManager;
 import game.MapGenerator.BrickMapManager;
 import game.Player.Paddle.PlayerPaddle;
 import org.Event.EventActionID;
@@ -12,6 +14,8 @@ import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 
 public final class ScoreManager extends MonoBehaviour {
+
+    private static final int BALL_SCORE_WHEN_CLEARED = 12;
 
     private static ScoreManager instance = null;
 
@@ -100,8 +104,13 @@ public final class ScoreManager extends MonoBehaviour {
      * @param e      Empty event argument.
      */
     private void ball_onAnyBallDestroyed(Object sender, Void e) {
-        if (sender instanceof Ball ball && ball.isHitPaddle()) {
-            touchedBall--;
+        var levelState = LevelManager.getInstance().getLevelState();
+        if (levelState == LevelState.ConcludingLevel) {
+            setScore(_score + _combo + BALL_SCORE_WHEN_CLEARED);
+        } else if (levelState == LevelState.Playing) {
+            if (sender instanceof Ball ball && ball.isHitPaddle()) {
+                touchedBall--;
+            }
         }
     }
 

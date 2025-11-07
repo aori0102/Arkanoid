@@ -1,5 +1,6 @@
 package game.Voltraxis;
 
+import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -18,6 +19,8 @@ public class Voltraxis extends MonoBehaviour {
     private VoltraxisSkillHandler voltraxisSkillHandler = null;
     private VoltraxisStat voltraxisStat = null;
     private VoltraxisHealth voltraxisHealth = null;
+
+    public EventHandler<Void> onBossDestroyed = new EventHandler<>(Voltraxis.class);
 
     private static Voltraxis instance = null;
 
@@ -43,6 +46,7 @@ public class Voltraxis extends MonoBehaviour {
 
     @Override
     protected void onDestroy() {
+        onBossDestroyed.invoke(this, null);
         instance = null;
     }
 

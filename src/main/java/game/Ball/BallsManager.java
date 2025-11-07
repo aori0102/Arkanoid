@@ -5,6 +5,7 @@ import game.Player.Player;
 import game.Effect.StatusEffect;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
@@ -21,6 +22,7 @@ public class BallsManager extends MonoBehaviour {
     public int index = 1;
 
     public EventHandler<Void> onBallCountChanged = new EventHandler<>(BallsManager.class);
+    public EventHandler<Void> onAllBallDestroyed = new EventHandler<>(BallsManager.class);
 
     /**
      * Create this MonoBehaviour.
@@ -53,8 +55,21 @@ public class BallsManager extends MonoBehaviour {
         ballSet.remove(ball);
         onBallCountChanged.invoke(this, null);
         if (ballSet.isEmpty()) {
-            spawnInitialBall();
+            onAllBallDestroyed.invoke(this, null);
         }
+    }
+
+    public boolean removeRandomBall() {
+
+        if (ballSet.isEmpty()) {
+            return false;
+        }
+        var ballToRemove = ballSet.iterator().next();
+        ballSet.remove(ballToRemove);
+        GameObjectManager.destroy(ballToRemove.getGameObject());
+
+        return true;
+
     }
 
     /**
