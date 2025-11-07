@@ -221,21 +221,9 @@ public class GameObjectManager {
     }
 
     /**
-     * Find the first GameObject with the given name.
-     *
-     * @param name The name of the GameObject to find.
-     * @return The GameObject, or {@code null} if not found.
+     * Clear all objects from the current scene, except the ones marked with
+     * {@link GameObject#isDoNotDestroyOnLoad}.
      */
-    // TODO: should be removed, too many risks
-    public static GameObject find(String name) {
-        for (var obj : gameObjectSet) {
-            if (obj.getName().equals(name)) {
-                return obj;
-            }
-        }
-        return null;
-    }
-
     public static void clearCurrentScene() {
 
         System.out.println("[GameObjectManager] Clearing game object scene");

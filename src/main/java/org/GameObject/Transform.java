@@ -27,6 +27,21 @@ public class Transform extends MonoBehaviour {
     private Vector2 _localPosition = Vector2.zero();
 
     /**
+     * Read-only field. Can only be written to within {@link #setLocalScale}.
+     */
+    private Vector2 _localScale = Vector2.one();
+
+    /**
+     * Create this MonoBehaviour.
+     *
+     * @param owner The owner of this component.
+     */
+    public Transform(GameObject owner) {
+        super(owner);
+        gameObject.onParentChanged.addListener(this::gameObject_onParentChanged);
+    }
+
+    /**
      * Set the local position for this object.
      */
     public void setLocalPosition(Vector2 localPosition) {
@@ -38,11 +53,6 @@ public class Transform extends MonoBehaviour {
     }
 
     /**
-     * Read-only field. Can only be written to within {@link #setLocalScale}.
-     */
-    private Vector2 _localScale = Vector2.one();
-
-    /**
      * Set the local scale for this object.
      */
     public void setLocalScale(Vector2 localScale) {
@@ -51,16 +61,6 @@ public class Transform extends MonoBehaviour {
         }
         this._localScale = new Vector2(localScale);
         onScaleChanged.invoke(this, null);
-    }
-
-    /**
-     * Create this MonoBehaviour.
-     *
-     * @param owner The owner of this component.
-     */
-    public Transform(GameObject owner) {
-        super(owner);
-        gameObject.onParentChanged.addListener(this::gameObject_onParentChanged);
     }
 
     /**
@@ -172,6 +172,12 @@ public class Transform extends MonoBehaviour {
 
     /**
      * Translate this transform by {@code translation}.
+     * <p>
+     * The translation automatically
+     * checks for collision through {@link PhysicsManager} if there is a {@link BoxCollider}
+     * attached to this object. If a physical collision is detected (colliding with a non-trigger
+     * collider) the object won't be able to move, instead it 'sticks' to the other object.
+     * </p>
      *
      * @param translation The translation (movement).
      */

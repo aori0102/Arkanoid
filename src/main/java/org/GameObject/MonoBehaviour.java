@@ -1,9 +1,15 @@
 package org.GameObject;
 
 /**
- * Base class of every game component. Each component is
- * derived through this class and is responsible for defining
- * a {@link GameObject}'s attribute.
+ * Base class of every game component.
+ * <p>
+ * Each component is derived through this class and is responsible for defining
+ * a {@link GameObject}'s behaviour.
+ * </p>
+ * <p>
+ * Creating a {@link MonoBehaviour} through {@code new} is not advisable. Instead,
+ * use {@link GameObject#addComponent}.
+ * </p>
  */
 public abstract class MonoBehaviour {
 
@@ -38,8 +44,7 @@ public abstract class MonoBehaviour {
     }
 
     /**
-     * Called first right after this object is instantiated
-     * and is active.
+     * Called first right after this object is instantiated.
      */
     public void awake() {
     }
@@ -57,7 +62,7 @@ public abstract class MonoBehaviour {
     }
 
     /**
-     * Called late every frame after {@link #update}.
+     * Called last every frame after {@link #update}.
      */
     public void lateUpdate() {
     }
@@ -73,6 +78,9 @@ public abstract class MonoBehaviour {
 
     /**
      * Get the component of type {@link T} of this object.
+     * <p>
+     * See {@link GameObject#getComponent} for more details.
+     * </p>
      *
      * @param type The type of the component.
      * @param <T>  The type of the component.
@@ -84,6 +92,9 @@ public abstract class MonoBehaviour {
 
     /**
      * Add component of type {@code type} to this game object.
+     * <p>
+     * See {@link GameObject#getComponent} for more details.
+     * </p>
      *
      * @param type The type of the component.
      * @param <T>  The type of the component.

@@ -2,6 +2,7 @@ package org.GameObject;
 
 import org.Event.EventActionID;
 import org.Event.EventHandler;
+import org.Exception.AccessingDestroyedObjectException;
 import org.Layer.Layer;
 import org.Scene.SceneKey;
 import org.Scene.SceneManager;
@@ -10,8 +11,21 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * Class that contains components ({@link MonoBehaviour}) that
- * makes up a game object.
+ * Most basic class to form objects within the structure of ECS.
+ * <p>
+ * It contains components under ({@link MonoBehaviour}) that makes up an object.
+ * </p>
+ * <p>
+ * In case this object is destroyed, accessing any of its data will throw
+ * {@link AccessingDestroyedObjectException} (except when trying to call
+ * {@link GameObject#isDestroyed()}.
+ * </p>
+ * <p>
+ * Creating and destroying a game object is managed through {@link GameObjectManager},
+ * not directly using {@code new}. This also applies to its components, as they will
+ * also be automatically disposed of when this object is destroyed. Destroying a game
+ * object also destroys all of its children.
+ * </p>
  */
 public class GameObject {
 
@@ -191,7 +205,9 @@ public class GameObject {
     }
 
     /**
-     * Set the activeness of this game object.
+     * Set the activeness of this game object. When a {@link GameObject}
+     * is inactive, none of its {@link MonoBehaviour} will be updated. This
+     * also applies to rendering.
      *
      * @param active Enable or disable.
      */
@@ -413,12 +429,16 @@ public class GameObject {
     }
 
     /**
-     * Get a component of type {@link T} from this game object.
+     * Get a component of type {@link T} from this game object. This function
+     * will return the first occurrence of {@link T} (or any {@link MonoBehaviour}
+     * that implements {@link T} in case it's an {@code interface}).
      *
      * @param type Class type of {@link T}. Use {@code .class}.
      * @param <T>  Component type, must derive from {@link MonoBehaviour}
      *             or an {@code interface}.
-     * @return A component, or {@code null} if not found any.
+     * @return The corresponding component, or {@code null} if not found any.
+     * @throws IllegalArgumentException If the type violates the condition (not being
+     *                                  either {@link MonoBehaviour} or an {@code interface}).
      */
     public <T> T getComponent(Class<T> type) {
 
@@ -495,11 +515,11 @@ public class GameObject {
     /**
      * Validate this object life for accessing.
      *
-     * @throws IllegalStateException if this object is destroyed.
+     * @throws AccessingDestroyedObjectException if this object is destroyed.
      */
     private void validateObjectLife() {
         if (isDestroyed) {
-            throw new IllegalStateException("You are trying to access a destroyed game object!");
+            throw new AccessingDestroyedObjectException(this + " is destroyed!");
         }
     }
 
