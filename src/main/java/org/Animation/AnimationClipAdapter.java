@@ -8,6 +8,9 @@ import utils.Vector2;
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ * JSON serializer and deserializer for {@link SpriteAnimationClip}.
+ */
 public class AnimationClipAdapter implements
         JsonSerializer<SpriteAnimationClip>,
         JsonDeserializer<SpriteAnimationClip> {

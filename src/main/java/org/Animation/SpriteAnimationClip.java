@@ -7,6 +7,9 @@ import utils.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains data for animating on a sprite sheet.
+ */
 public class SpriteAnimationClip {
 
     protected static class AnimationNode {
@@ -93,6 +96,7 @@ public class SpriteAnimationClip {
     }
 
     // TODO: doc this script again since changed from animator to clip adapter
+
     /**
      * Get the sprite sheet bound to this animation clip.
      *

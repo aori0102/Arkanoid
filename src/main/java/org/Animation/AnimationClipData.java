@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Objects;
 
+/**
+ * Enum class that loads and stores animation clips.
+ */
 public enum AnimationClipData {
     _Placeholder("/something.json"),
 
