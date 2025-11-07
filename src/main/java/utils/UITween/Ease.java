@@ -121,7 +121,27 @@ public enum Ease {
                     ? (1 - OUT_BOUNCE.apply(1 - 2 * t)) / 2
                     : (1 + OUT_BOUNCE.apply(2 * t - 1)) / 2;
         }
+    },
+
+    IN_SINE {
+        @Override public double apply(double t) {
+            return 1 - Math.cos((t * Math.PI) / 2);
+        }
+    },
+
+    OUT_SINE {
+        @Override public double apply(double t) {
+            return Math.sin((t * Math.PI) / 2);
+        }
+    },
+
+    IN_OUT_SINE {
+        @Override public double apply(double t) {
+            return -(Math.cos(Math.PI * t) - 1) / 2;
+        }
     };
+
+
 
     /** Apply this easing to normalized t (0 → 1). */
     public abstract double apply(double t);

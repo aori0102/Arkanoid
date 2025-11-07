@@ -8,7 +8,7 @@ public final class PerkManagerPrefab extends Prefab {
 
     @Override
     public GameObject instantiatePrefab() {
-        return GameObjectManager.instantiate("PerManager")
+        return GameObjectManager.instantiate("PerkManager")
                 .addComponent(PerkManager.class)
                 .getGameObject();
     }

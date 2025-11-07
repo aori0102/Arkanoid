@@ -6,7 +6,10 @@ import org.Physics.BoxCollider;
 import org.Physics.PhysicsManager;
 import utils.Vector2;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * A component responsible for handling an objects position and
@@ -226,12 +229,13 @@ public class Transform extends MonoBehaviour {
      *
      * @return A copy of all children transforms.
      */
-    public HashSet<Transform> getChildren() {
-        var children = new HashSet<Transform>();
+    public Set<Transform> getChildren() {
+        Set<Transform> result = new LinkedHashSet<>();
         for (var child : gameObject.getChildren()) {
-            children.add(child.getTransform());
+            result.add(child.getTransform());
         }
-        return children;
+        return Collections.unmodifiableSet(result);
     }
+
 
 }

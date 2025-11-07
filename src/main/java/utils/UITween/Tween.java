@@ -81,6 +81,17 @@ public class Tween {
         return this;
     }
 
+    public Tween moveYBy(double offsetY, double duration) {
+        this.duration = duration;
+        for (TargetState t : targets) {
+            t.fromY = t.node.getTranslateY();
+            t.toY = t.fromY + offsetY;
+            t.moveY = true;
+        }
+        return this;
+    }
+
+
     public Tween scaleTo(double toScale, double duration) {
         this.duration = duration;
         for (TargetState t : targets) {

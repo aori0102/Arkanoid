@@ -1,6 +1,7 @@
 package game.Perks.Index;
 
 import com.sun.javafx.util.Utils;
+import game.Brick.BrickEvent.Event;
 import game.Interface.IPointerClickHandler;
 import game.Interface.IPointerEnterHandler;
 import game.Interface.IPointerExitHandler;
@@ -9,6 +10,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
+import org.Audio.AudioManager;
+import org.Audio.SFXAsset;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -20,6 +23,8 @@ import org.Text.TextUI;
 import org.Text.TextVerticalAlignment;
 import utils.Random;
 import utils.Time;
+import utils.UITween.Ease;
+import utils.UITween.Tween;
 import utils.Vector2;
 
 public abstract class Perk extends MonoBehaviour
@@ -30,23 +35,19 @@ public abstract class Perk extends MonoBehaviour
     public EventHandler<MouseEvent> onPointerClicked = new EventHandler<>(Perk.class);
     public EventHandler<MouseEvent> onPointerEntered = new EventHandler<>(Perk.class);
     public EventHandler<MouseEvent> onPointerExited = new EventHandler<>(Perk.class);
-    private static final double MAX_PERK_FLUCTUATION_DISTANCE = 3.2;
-    private static final double PERK_FLUCTUATION_RATE = 0.49;
-    private static final double HOVER_OFFSET = 100;
-    private static final double FLUCTUATION_RANDOM_MAX = 3.6;
-    protected double randomTime = Random.range(0, FLUCTUATION_RANDOM_MAX);
 
     protected TextUI textUI;
     protected SpriteAnimator spriteAnimator;
 
     protected AnimationClipData perkKey;
     private static final double TEXT_SIZE = 20.0;
-
-    private Vector2 targetPosition;
-    private final Vector2 TARGET_OFFSET = new Vector2(0, 50);
-    private Vector2 ORIGIN_POSITION;
-    private final double HOVER_SPEED = 8;
-
+    private final double ANIMATION_DURATION = 0.1;
+    private final double ORIGINAL_SCALE = 1.0;
+    private final double TARGET_SCALE = 1.2;
+    private static final double FLUCTUATION_RANDOM_MAX = 5;
+    private static final double FLUCTUATION_RATE = 1.2;
+    private static final double randomTime = Random.range(0, FLUCTUATION_RANDOM_MAX);
+    private Vector2 oldPosition;
     //ButtonState
     protected enum ButtonState {Idle, Hover, Pressed, Released, Clicked}
 
@@ -87,38 +88,37 @@ public abstract class Perk extends MonoBehaviour
         onPointerExited.addListener(this::perk_onPointerExited);
         onPointerClicked.addListener(this::perk_onPointerClicked);
 
-
     }
 
     @Override
     public void start() {
-        spriteAnimator.playAnimation(perkKey, null);
-        ORIGIN_POSITION = getTransform().getGlobalPosition();
-        targetPosition = new Vector2(ORIGIN_POSITION);
+        oldPosition = getTransform().getGlobalPosition();
 
+        spriteAnimator.playAnimation(perkKey, null);
+        idleAnimation();
     }
 
     @Override
     public void update() {
-        hoverAnimation();
+        idleAnimation();
     }
 
     protected abstract void setUpVisual();
 
     protected void perk_onPointerClicked(Object sender, MouseEvent e){
-
+        System.out.println("perk_onPointerClicked");
+        AudioManager.playSFX(SFXAsset.SFXIndex.OnPerkReceived);
     }
 
     protected void perk_onPointerEntered(Object sender, MouseEvent e) {
-        targetPosition = new Vector2(ORIGIN_POSITION.x - TARGET_OFFSET.x
-                , ORIGIN_POSITION.y - TARGET_OFFSET.y) ;
+        hoverAnimation();
         buttonState = ButtonState.Hover;
         System.out.println("[Perk] Hover");
 
     }
 
     protected void perk_onPointerExited(Object sender, MouseEvent e) {
-        targetPosition = new Vector2(ORIGIN_POSITION) ;
+        exitAnimation();
         buttonState = ButtonState.Idle;
         System.out.println("[Perk] Idle");
     }
@@ -145,12 +145,38 @@ public abstract class Perk extends MonoBehaviour
         textUI.getText().setFill(Color.YELLOW);
     }
 
-
-    private void hoverAnimation() {
-        Vector2 currentPos = getTransform().getGlobalPosition();
-        double newX = currentPos.x + (targetPosition.x - currentPos.x) * HOVER_SPEED * Time.getDeltaTime();
-        double newY = currentPos.y + (targetPosition.y - currentPos.y) * HOVER_SPEED * Time.getDeltaTime();
-        getTransform().setGlobalPosition(new Vector2(newX, newY));
+    private void idleAnimation() {
+        if(oldPosition == null) {
+            oldPosition = getTransform().getGlobalPosition();
+        }
+        double time = Time.getRealTime();
+        double phase = (getGameObject().hashCode() % 1000) / 1000.0 * Math.PI * 2; // unique offset
+        double swing = Math.sin(FLUCTUATION_RATE * time * Math.PI / randomTime + phase) * 5.0; // ±5 px
+        getTransform().setGlobalPosition(oldPosition.add(new Vector2(0, swing)));
     }
+
+    private void hoverAnimation(){
+        Tween.to(getGameObject())
+                .scaleTo(TARGET_SCALE, ANIMATION_DURATION)
+                .ease(Ease.IN_OUT)
+                .play();
+    }
+
+    private void exitAnimation(){
+        Tween.to(getGameObject())
+                .scaleTo(ORIGINAL_SCALE, ANIMATION_DURATION)
+                .ease(Ease.IN_OUT)
+                .play();
+    }
+
+    private void startAnimation(){
+        Tween.to(getGameObject())
+                .moveY(400, 0.3)
+                .ease(Ease.IN_OUT)
+                .play();
+    }
+
+
+
 
 }

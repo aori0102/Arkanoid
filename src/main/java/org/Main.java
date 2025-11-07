@@ -15,6 +15,8 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 import utils.UITween.TweenManager;
+import uk.co.caprica.vlcj.factory.discovery.NativeDiscovery;
+
 
 public class Main extends Application {
 
@@ -24,6 +26,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        // Ensure VLC is found
+        new NativeDiscovery().discover();
+
 
         VideoAsset.initializeVideoMedia();
         AudioManager.initializeAudioManager();

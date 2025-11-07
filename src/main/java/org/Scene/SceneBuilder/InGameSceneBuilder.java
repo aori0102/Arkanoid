@@ -5,6 +5,7 @@ import game.Brick.ExplodingBrickParticleManager;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import game.GameObject.Shield;
+import game.Perks.Index.PerkManager;
 import game.PowerUp.Index.PowerUpManager;
 import game.UI.GamePlayBackground;
 import game.UI.PauseMenu.PauseMenuManager;
@@ -35,7 +36,7 @@ public final class InGameSceneBuilder extends SceneBuilder {
         PrefabManager.instantiatePrefab(PrefabIndex.PlayerInfoBoard);
 
         GameObjectManager.instantiate("GamePlayBackground").addComponent(GamePlayBackground.class);
-
+        PerkManager.getInstance().instantiatePerks();
         BallsManager.getInstance().spawnInitialBall();
 
         var powerUpManager = GameObjectManager.instantiate("powerUpManager");
