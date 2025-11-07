@@ -58,4 +58,19 @@ public final class BallStat extends EntityStat {
         return BALL_CRITICAL_AMOUNT;
     }
 
+    @Override
+    public int getMaxHealth() {
+        return 0;
+    }
+
+    @Override
+    public double getMovementSpeed() {
+        return 0;
+    }
+
+    @Override
+    public double getMovementSpeedMultiplier() {
+        return 0;
+    }
+
 }

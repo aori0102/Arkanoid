@@ -52,4 +52,19 @@ public class LaserStat extends EntityStat {
     public double getCriticalDamage() {
         return 2;
     }
+
+    @Override
+    public int getMaxHealth() {
+        return 0;
+    }
+
+    @Override
+    public double getMovementSpeed() {
+        return 0;
+    }
+
+    @Override
+    public double getMovementSpeedMultiplier() {
+        return 0;
+    }
 }

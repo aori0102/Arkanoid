@@ -1,6 +1,7 @@
 package game.Player.Paddle;
 
 import game.Entity.EntityStat;
+import game.Player.PlayerData;
 import org.GameObject.GameObject;
 
 public final class PaddleStat extends EntityStat {
@@ -51,6 +52,21 @@ public final class PaddleStat extends EntityStat {
 
     @Override
     public double getCriticalDamage() {
+        return 0;
+    }
+
+    @Override
+    public int getMaxHealth() {
+        return PlayerData.MAX_HEALTH;
+    }
+
+    @Override
+    public double getMovementSpeed() {
+        return 0;
+    }
+
+    @Override
+    public double getMovementSpeedMultiplier() {
         return 0;
     }
 

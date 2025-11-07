@@ -20,9 +20,4 @@ public final class VoltraxisHealth extends EntityHealth {
         return VoltraxisStat.class;
     }
 
-    @Override
-    public int getMaxHealth() {
-        return VoltraxisData.BASE_MAX_HEALTH;
-    }
-
 }

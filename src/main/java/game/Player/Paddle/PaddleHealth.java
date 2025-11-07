@@ -2,7 +2,6 @@ package game.Player.Paddle;
 
 import game.Entity.EntityHealth;
 import game.Entity.EntityStat;
-import game.Player.PlayerData;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 
@@ -22,11 +21,6 @@ public final class PaddleHealth extends EntityHealth {
     @Override
     protected Class<? extends EntityStat> getStatComponentClass() {
         return PaddleStat.class;
-    }
-
-    @Override
-    public int getMaxHealth() {
-        return PlayerData.MAX_HEALTH;
     }
 
 }

@@ -122,6 +122,7 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
             // Check for critical hit
             boolean critical = Random.range(0.0, 1.0) < entityStat.getCriticalChange();
             EntityHealthAlterType healthAlteringType;
+            EntityHealthAlterType secondaryHealthAlteringType = null;
             if (isPlayerHealth(healthObject)) {
                 healthAlteringType = EntityHealthAlterType.PlayerTakeDamage;
             } else {
@@ -136,8 +137,11 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
             }
             if (currentStatusEffectCombination != null) {
                 damage = (int) (damage * currentStatusEffectCombination.damageMultiplier);
+                healthAlteringType = currentStatusEffectCombination.hitEffect.damageType;
+                secondaryHealthAlteringType = currentStatusEffectCombination.bearEffect.damageType;
+                currentStatusEffectCombination = null;
             }
-            healthObject.alterHealth(healthAlteringType, damage);
+            healthObject.alterHealth(healthAlteringType, secondaryHealthAlteringType, damage);
             onDamageDealt(healthObject);
 
         }

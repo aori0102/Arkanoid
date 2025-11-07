@@ -56,4 +56,19 @@ public final class UltimateLaserStat extends EntityStat {
         return VoltraxisData.CRITICAL_DAMAGE;
     }
 
+    @Override
+    public int getMaxHealth() {
+        return 0;
+    }
+
+    @Override
+    public double getMovementSpeed() {
+        return 0;
+    }
+
+    @Override
+    public double getMovementSpeedMultiplier() {
+        return 0;
+    }
+
 }

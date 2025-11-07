@@ -75,7 +75,7 @@ public final class HealthBarUIPrefab extends Prefab {
         // Health text
         var healthTextObject = GameObjectManager.instantiate("Health");
         var healthText = healthTextObject.addComponent(TextUI.class);
-        healthText.setTextColor(Color.WHITE);
+        healthText.setSolidFill(Color.WHITE);
         healthText.setFont(FontDataIndex.Jersey_25);
         healthText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         healthText.setVerticalAlignment(TextVerticalAlignment.Middle);

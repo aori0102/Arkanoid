@@ -31,11 +31,6 @@ public final class BrickHealth extends EntityHealth {
         onHealthReachesZero.addListener(this::brickHealth_onHealthReachesZero);
     }
 
-    @Override
-    public int getMaxHealth() {
-        return brick.getBrickType().maxHealth;
-    }
-
     /**
      * Called when {@link BrickHealth#onHealthReachesZero} is invoked.<br><br>
      * This function destroy the brick upon its health reaches zero.

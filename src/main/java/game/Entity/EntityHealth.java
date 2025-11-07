@@ -26,6 +26,11 @@ public abstract class EntityHealth extends MonoBehaviour {
          */
         public EntityHealthAlterType alterType;
         /**
+         * The second type of HP's change, used to combine with {@link #alterType} in case
+         * of combines damage/healing input.
+         */
+        public EntityHealthAlterType secondaryAlterType;
+        /**
          * The current HP after change.
          */
         public int health;
@@ -33,6 +38,10 @@ public abstract class EntityHealth extends MonoBehaviour {
          * The absolute difference between the previous and current HP.
          */
         public int delta;
+        /**
+         * The amount that was sent to be altered without clamping;
+         */
+        public int alterAmount;
         /**
          * The global position of the object that has these changes.
          */
@@ -52,16 +61,21 @@ public abstract class EntityHealth extends MonoBehaviour {
 
     @Override
     public void awake() {
-        _health = getMaxHealth();
+        _health = entityStat.getMaxHealth();
     }
 
     /**
      * Setter for read-only field {@link #_health}
      *
-     * @param alterType The health altering type.
-     * @param amount    The value to set.
+     * @param alterType          The health altering type.
+     * @param secondaryAlterType The secondary health altering type, can be {@code null} if
+     *                           not combining two damaging/healing input.
+     * @param amount             The value to set.
      */
-    public final void alterHealth(EntityHealthAlterType alterType, int amount) {
+    public final void alterHealth(
+            EntityHealthAlterType alterType,
+            EntityHealthAlterType secondaryAlterType,
+            int amount) {
 
         var previous = _health;
 
@@ -73,11 +87,13 @@ public abstract class EntityHealth extends MonoBehaviour {
             _health -= actualDamage;
         }
 
-        _health = Math.clamp(_health, 0, getMaxHealth());
+        _health = Math.clamp(_health, 0, entityStat.getMaxHealth());
 
         var onHealthChangedEventArgs = new OnHealthChangedEventArgs();
         onHealthChangedEventArgs.delta = Math.abs(_health - previous);
         onHealthChangedEventArgs.alterType = alterType;
+        onHealthChangedEventArgs.alterAmount = amount;
+        onHealthChangedEventArgs.secondaryAlterType = secondaryAlterType;
         onHealthChangedEventArgs.health = _health;
         onHealthChangedEventArgs.position = getTransform().getGlobalPosition();
         onHealthChanged.invoke(this, onHealthChangedEventArgs);
@@ -119,11 +135,8 @@ public abstract class EntityHealth extends MonoBehaviour {
      */
     protected abstract Class<? extends EntityStat> getStatComponentClass();
 
-    /**
-     * Get this entity's max health point.
-     *
-     * @return This entity's max health point.
-     */
-    public abstract int getMaxHealth();
+    public final void resetHealth() {
+        _health = entityStat.getMaxHealth();
+    }
 
 }

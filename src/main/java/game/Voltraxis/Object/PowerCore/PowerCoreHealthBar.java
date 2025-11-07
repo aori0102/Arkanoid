@@ -66,7 +66,7 @@ public class PowerCoreHealthBar extends MonoBehaviour {
      */
     private void powerCore_onHealthChanged(Object sender, EntityHealth.OnHealthChangedEventArgs e) {
         var powerCoreHealth = powerCore.getPowerCoreHealth();
-        ratio = (double) powerCoreHealth.getHealth() / powerCoreHealth.getMaxHealth();
+        ratio = (double) powerCoreHealth.getHealth() / powerCore.getPowerCoreStat().getMaxHealth();
         lastHealthChangeTick = Time.getTime();
     }
 

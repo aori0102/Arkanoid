@@ -38,4 +38,10 @@ public abstract class EntityStat extends MonoBehaviour {
 
     public abstract double getCriticalDamage();
 
+    public abstract int getMaxHealth();
+
+    public abstract double getMovementSpeed();
+
+    public abstract double getMovementSpeedMultiplier();
+
 }

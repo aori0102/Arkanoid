@@ -38,7 +38,7 @@ public class BombEvent implements Event {
                 if (!valid(brickGrid, r, c)) continue;
 
                 var brick = brickGrid.get(r).get(c);
-                brick.getBrickHealth().alterHealth(EntityHealthAlterType.NormalDamage, DAMAGE);
+                brick.getBrickHealth().alterHealth(EntityHealthAlterType.NormalDamage, null, DAMAGE);
             }
 
             executeTime = 0;

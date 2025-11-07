@@ -56,6 +56,21 @@ public final class BrickStat extends EntityStat {
         return 0;
     }
 
+    @Override
+    public int getMaxHealth() {
+        return brick.getBrickType().maxHealth;
+    }
+
+    @Override
+    public double getMovementSpeed() {
+        return 0;
+    }
+
+    @Override
+    public double getMovementSpeedMultiplier() {
+        return 0;
+    }
+
     public void setDamageTakenMultiplier(double damageTakenMultiplier) {
         this.damageTakenMultiplier = damageTakenMultiplier;
     }

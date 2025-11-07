@@ -1,6 +1,7 @@
 package game.Voltraxis.Object.PowerCore;
 
 import game.Entity.EntityStat;
+import game.Voltraxis.VoltraxisData;
 import org.GameObject.GameObject;
 
 public final class PowerCoreStat extends EntityStat {
@@ -51,6 +52,21 @@ public final class PowerCoreStat extends EntityStat {
 
     @Override
     public double getCriticalDamage() {
+        return 0;
+    }
+
+    @Override
+    public int getMaxHealth() {
+        return (int) (VoltraxisData.BASE_MAX_HEALTH * VoltraxisData.POWER_CORE_PROPORTIONAL_HEALTH);
+    }
+
+    @Override
+    public double getMovementSpeed() {
+        return 0;
+    }
+
+    @Override
+    public double getMovementSpeedMultiplier() {
         return 0;
     }
 

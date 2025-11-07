@@ -56,4 +56,19 @@ public final class LaserBeamStat extends EntityStat {
         return 0;
     }
 
+    @Override
+    public int getMaxHealth() {
+        return 0;
+    }
+
+    @Override
+    public double getMovementSpeed() {
+        return 0;
+    }
+
+    @Override
+    public double getMovementSpeedMultiplier() {
+        return 0;
+    }
+
 }

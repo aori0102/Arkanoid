@@ -63,7 +63,11 @@ public final class HealthChangePopUpUI extends MonoBehaviour {
     }
 
     public void setHealthAlterType(EntityHealthAlterType type) {
-        damageText.setTextColor(type.displayColor);
+        damageText.setSolidFill(type.displayColor);
+    }
+
+    public void setCombinedHealthAlterType(EntityHealthAlterType firstType, EntityHealthAlterType secondType) {
+        damageText.setGradientFill(firstType.displayColor, 0.25, secondType.displayColor, 0.8);
     }
 
     public void setDirection(Vector2 direction) {

@@ -72,6 +72,21 @@ public final class VoltraxisStat extends EntityStat {
         return VoltraxisData.CRITICAL_DAMAGE;
     }
 
+    @Override
+    public int getMaxHealth() {
+        return VoltraxisData.BASE_MAX_HEALTH;
+    }
+
+    @Override
+    public double getMovementSpeed() {
+        return 0;
+    }
+
+    @Override
+    public double getMovementSpeedMultiplier() {
+        return 0;
+    }
+
     /**
      * Called when {@link VoltraxisEffectManager#onEffectAdded} is invoked.<br><br>
      * This function handles Voltraxis' stat modifiers when a new effect is added.

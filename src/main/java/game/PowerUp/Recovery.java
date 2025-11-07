@@ -23,8 +23,13 @@ public class Recovery extends PowerUp {
     }
 
     private void handleOnRecoveryRequested() {
-        Player.getInstance().getPlayerPaddle().getPaddleHealth()
-                .alterHealth(EntityHealthAlterType.Regeneration, HEAL_AMOUNT);
+        var player = Player.getInstance();
+        if (player != null) {
+            var paddle = player.getPlayerPaddle();
+            if (paddle != null && paddle.getPaddleHealth() != null)
+                paddle.getPaddleHealth()
+                        .alterHealth(EntityHealthAlterType.Regeneration, null, HEAL_AMOUNT);
+        }
     }
 
     @Override

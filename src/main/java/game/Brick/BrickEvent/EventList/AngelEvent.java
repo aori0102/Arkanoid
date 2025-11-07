@@ -42,7 +42,7 @@ public class AngelEvent implements Event {
                 if (!valid(brickGrid, r, c)) continue;
 
                 var brick = brickGrid.get(r).get(c);
-                brick.getBrickHealth().alterHealth(EntityHealthAlterType.Regeneration, DAMAGE);
+                brick.getBrickHealth().alterHealth(EntityHealthAlterType.Regeneration, null, DAMAGE);
             }
 
             executeTime = 0;

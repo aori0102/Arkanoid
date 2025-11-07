@@ -58,8 +58,12 @@ public final class HealthChangeVisualizer extends MonoBehaviour {
         // Instantiate
         var popUp = PrefabManager.instantiatePrefab(PrefabIndex.HealthChange_PopUp)
                 .getComponent(HealthChangePopUpUI.class);
-        popUp.setAmount(e.delta);
-        popUp.setHealthAlterType(e.alterType);
+        popUp.setAmount(e.alterAmount);
+        if (e.secondaryAlterType != null) {
+            popUp.setCombinedHealthAlterType(e.alterType, e.secondaryAlterType);
+        } else {
+            popUp.setHealthAlterType(e.alterType);
+        }
 
         // Set position and shooting direction
         double popUpAngle = MathUtils.deg2rad(Random.range(-MAX_POP_UP_ANGLE, MAX_POP_UP_ANGLE));

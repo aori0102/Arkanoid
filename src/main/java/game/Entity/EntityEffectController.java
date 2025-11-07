@@ -48,7 +48,7 @@ public abstract class EntityEffectController extends MonoBehaviour {
             return;
         }
 
-        if (!canHoldMultipleEffect() && statusMap.isEmpty()) {
+        if (!canHoldMultipleEffect()) {
             removeAllEffect();
         }
 
@@ -89,7 +89,7 @@ public abstract class EntityEffectController extends MonoBehaviour {
             return;
         }
         var damage = (int) (entityStat.getDamageTakenMultiplier() * effect.baseDamageOverTime);
-        entityHealth.alterHealth(effect.damageType, damage);
+        entityHealth.alterHealth(effect.damageType, null, damage);
         if (gameObject.isDestroyed()) {
             return;
         }
