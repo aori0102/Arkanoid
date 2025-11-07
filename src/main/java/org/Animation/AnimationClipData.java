@@ -1,5 +1,13 @@
 package org.Animation;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Objects;
+
 public enum AnimationClipData {
     _Placeholder("/something.json"),
 
@@ -72,14 +80,39 @@ public enum AnimationClipData {
 
     _None("/");
 
-    private final String animationClipDataPath;
+    private SpriteAnimationClip animationClip;
+    private final String path;
 
-    AnimationClipData(String path) {
-        animationClipDataPath = path;
+    private static final Gson animationClipLoader;
+
+    static {
+        animationClipLoader = new GsonBuilder()
+                .registerTypeAdapter(SpriteAnimationClip.class, new AnimationClipAdapter())
+                .create();
+        for (var key : AnimationClipData.values()) {
+
+            System.out.println("Loading animation clip: " + key + " at \"" + key.path + "\"");
+            try {
+                Reader reader = new InputStreamReader(
+                        Objects.requireNonNull(AnimationClipData.class.getResourceAsStream(key.path))
+                );
+                key.animationClip = animationClipLoader
+                        .fromJson(reader, SpriteAnimationClip.class);
+            } catch (JsonSyntaxException e) {
+                System.err.println(SpriteAnimator.class.getSimpleName() + " | Error while loading animation clip: " + e.getMessage());
+            } catch (Exception e) {
+                System.err.println(SpriteAnimator.class.getSimpleName() + " | Unknown error while loading animation clip: " + e.getMessage());
+            }
+
+        }
     }
 
-    public String getAnimationClipDataPath() {
-        return animationClipDataPath;
+    AnimationClipData(String path) {
+        this.path = path;
+    }
+
+    public SpriteAnimationClip getAnimationClip() {
+        return animationClip;
     }
 
 }

@@ -1,30 +1,37 @@
 package org.Animation;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;
 import utils.Time;
-import utils.Vector2;
 
-
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.HashMap;
-import java.util.Objects;
 
+/**
+ * <b>Load and play animation on sprites.</b>
+ * <p>
+ * This component automatically requires a {@link SpriteRenderer}, and some {@link SpriteRenderer}'s
+ * property will be overridden when an animation is playing. These include {@code clip},
+ * {@code renderSize}, {@code rotation}, {@code pivot} and {@code image}.
+ * </p>
+ * <p>
+ * Do note that the above properties can still be set within {@link SpriteRenderer} component, however
+ * it requires to be set continuously to avoid being overridden by {@link SpriteAnimator}.
+ * </p>
+ * <p>
+ * The timing within this system is based on {@link Time#getTime}, which is the game time and is affected
+ * by {@link Time#getTimeScale}. This means that the animation playback speed can be faster or slower
+ * based on the timescale.
+ * </p>
+ */
 public class SpriteAnimator extends MonoBehaviour {
 
-    private static final Gson animationClipLoader = new GsonBuilder()
-            .registerTypeAdapter(SpriteAnimationClip.class, new AnimationClipAdapter())
-            .create();
+    private final SpriteRenderer spriteRenderer = addComponent(SpriteRenderer.class);
+    private final HashMap<AnimationClipData, SpriteAnimationClip> animationClipMap = new HashMap<>();
 
-    private SpriteRenderer spriteRenderer;
-    private HashMap<AnimationClipData, SpriteAnimationClip> animationClipMap;
-    private SpriteAnimationClip.AnimationNode currentAnimationNode;
-    private Time.CoroutineID currentFrameCoroutineID = null;
+    private SpriteAnimationClip.AnimationNode currentAnimationNode = null;
+
+    private Time.CoroutineID progressFrame_coroutineID = null;
     private Runnable currentAnimationFinishCallback = null;
 
     /**
@@ -34,10 +41,6 @@ public class SpriteAnimator extends MonoBehaviour {
      */
     public SpriteAnimator(GameObject owner) {
         super(owner);
-
-        animationClipMap = new HashMap<>();
-        currentAnimationNode = null;
-        spriteRenderer = addComponent(SpriteRenderer.class);
     }
 
     /**
@@ -50,27 +53,16 @@ public class SpriteAnimator extends MonoBehaviour {
         if (animationClipMap.containsKey(clipKey)) {
             throw new RuntimeException("Animation already exists");
         }
-        System.out.println("Loading animation clip: " + clipKey);
-        System.out.println("Path: " + clipKey.getAnimationClipDataPath());
-        System.out.println("Resource: " + getClass().getResourceAsStream(clipKey.getAnimationClipDataPath()));
 
-        try {
-            Reader reader = new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream(clipKey.getAnimationClipDataPath())));
-            var clip = animationClipLoader
-                    .fromJson(reader, SpriteAnimationClip.class);
-            animationClipMap.put(clipKey, clip);
-        } catch (JsonSyntaxException e) {
-            System.err.println(SpriteAnimator.class.getSimpleName() + " | Error while loading animation clip: " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println(SpriteAnimator.class.getSimpleName() + " | Unknown error while loading animation clip: " + e.getMessage());
-        }
+        animationClipMap.put(clipKey, clipKey.getAnimationClip());
 
     }
 
     /**
-     * Start playing an animation clip. This stops the current animation.
+     * Start playing an animation clip and stops the current animation if there is any playing.
      *
      * @param clipKey The animation key to play.
+     * @throws RuntimeException If there is no such animation clip bounds to {@code clipKey}.
      */
     public void playAnimation(AnimationClipData clipKey, Runnable onFinishedCallback) {
 
@@ -78,9 +70,9 @@ public class SpriteAnimator extends MonoBehaviour {
             throw new RuntimeException("Animation clip doesn't exist. Use addAnimationClip() to create an animation clip");
         }
 
-        if (currentFrameCoroutineID != null) {
-            Time.removeCoroutine(currentFrameCoroutineID);
-            currentFrameCoroutineID = null;
+        if (progressFrame_coroutineID != null) {
+            Time.removeCoroutine(progressFrame_coroutineID);
+            progressFrame_coroutineID = null;
         }
 
         currentAnimationFinishCallback = onFinishedCallback;
@@ -124,9 +116,9 @@ public class SpriteAnimator extends MonoBehaviour {
                     currentAnimationNode.frame.getClipAnchor(), currentAnimationNode.frame.getClipSize()
             );
             spriteRenderer.setImageRotation(currentAnimationNode.frame.getRotationAngle());
-            currentFrameCoroutineID = Time.addCoroutine(this::progressFrame, Time.getTime() + currentAnimationNode.frame.getDuration());
+            progressFrame_coroutineID = Time.addCoroutine(this::progressFrame, Time.getTime() + currentAnimationNode.frame.getDuration());
         } else {
-            currentFrameCoroutineID = null;
+            progressFrame_coroutineID = null;
             if (currentAnimationFinishCallback != null) {
                 currentAnimationFinishCallback.run();
                 currentAnimationFinishCallback = null;
@@ -136,8 +128,8 @@ public class SpriteAnimator extends MonoBehaviour {
 
     @Override
     protected void onDestroy() {
-        if (currentFrameCoroutineID != null) {
-            Time.removeCoroutine(currentFrameCoroutineID);
+        if (progressFrame_coroutineID != null) {
+            Time.removeCoroutine(progressFrame_coroutineID);
             currentAnimationNode = null;
         }
     }
