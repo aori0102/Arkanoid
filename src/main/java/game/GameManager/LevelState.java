@@ -1,6 +1,6 @@
 package game.GameManager;
 
-public enum GameState {
+public enum LevelState {
     IntroducingLevel,
     Playing,
     ConcludingLevel,

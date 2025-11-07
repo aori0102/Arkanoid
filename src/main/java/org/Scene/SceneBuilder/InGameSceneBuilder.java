@@ -1,6 +1,5 @@
 package org.Scene.SceneBuilder;
 
-import game.Ball.BallsManager;
 import game.Brick.ExplodingBrickParticleManager;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
@@ -23,12 +22,12 @@ public final class InGameSceneBuilder extends SceneBuilder {
 
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_UIManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_PerkManager);
-        PrefabManager.instantiatePrefab(PrefabIndex.Manager_GameManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_BrickMapManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_RankManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_ScoreManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_ObstacleManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_BallsManager);
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_LevelManager);
 
         PrefabManager.instantiatePrefab(PrefabIndex.Player);
 
@@ -36,12 +35,8 @@ public final class InGameSceneBuilder extends SceneBuilder {
 
         GameObjectManager.instantiate("GamePlayBackground").addComponent(GamePlayBackground.class);
 
-        BallsManager.getInstance().spawnInitialBall();
-
         var powerUpManager = GameObjectManager.instantiate("powerUpManager");
         powerUpManager.addComponent(PowerUpManager.class);
-
-        //new VoltraxisPrefab().instantiatePrefab();
 
         var borderLeft = GameObjectManager.instantiate("Border_Left");
         borderLeft.addComponent(Border.class).setBorderType(BorderType.BorderLeft);

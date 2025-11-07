@@ -5,8 +5,6 @@ import game.UI.Buttons.*;
 import javafx.scene.input.MouseEvent;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
-import org.Scene.SceneKey;
-import org.Scene.SceneManager;
 
 public class PauseMenuController extends MonoBehaviour {
     private PauseButton pauseButton;
@@ -33,18 +31,17 @@ public class PauseMenuController extends MonoBehaviour {
     }
 
     private void onPauseButtonClicked(Object sender, MouseEvent e) {
-        System.out.println("onPauseButtonClicked");
         GameManager.getInstance().pauseGame();
         PauseMenuManager.getInstance().showPauseMenu();
     }
+
     private void onResumeButtonClicked(Object sender, MouseEvent e) {
         GameManager.getInstance().resumeGame();
         PauseMenuManager.getInstance().hidePauseMenu();
-
     }
+
     private void onMenuButtonClicked(Object sender, MouseEvent e) {
-        SceneManager.loadScene(SceneKey.Menu);
-        GameManager.getInstance().resumeGame();
+        GameManager.getInstance().quitToMainMenu();
     }
 
     private void linkButtons() {
@@ -53,7 +50,7 @@ public class PauseMenuController extends MonoBehaviour {
             resumeButton = PauseMenuManager.getInstance().getResumeButton();
             menuButton = PauseMenuManager.getInstance().getMenuButton();
 
-            if(pauseButton == null || resumeButton == null || menuButton == null){
+            if (pauseButton == null || resumeButton == null || menuButton == null) {
                 throw new NullPointerException("PauseMenuButton(s) is null!");
             }
         } catch (Exception e) {
