@@ -64,12 +64,12 @@ public class GameObjectManager {
 
         for (var object : gameObjectSet) {
 
-            if (sceneUpdateAbortion) {
-                return;
-            }
-
             if (!object.isDestroyed() && object.isActive()) {
                 object.handleStart();
+            }
+
+            if (sceneUpdateAbortion) {
+                return;
             }
 
         }
@@ -83,12 +83,12 @@ public class GameObjectManager {
 
         for (var object : gameObjectSet) {
 
-            if (sceneUpdateAbortion) {
-                return;
-            }
-
             if (!object.isDestroyed() && object.isActive()) {
                 object.handleUpdate();
+            }
+
+            if (sceneUpdateAbortion) {
+                return;
             }
 
         }
@@ -102,12 +102,12 @@ public class GameObjectManager {
 
         for (var object : gameObjectSet) {
 
-            if (sceneUpdateAbortion) {
-                return;
-            }
-
             if (!object.isDestroyed() && object.isActive()) {
                 object.handleLateUpdate();
+            }
+
+            if (sceneUpdateAbortion) {
+                return;
             }
 
         }
@@ -121,12 +121,13 @@ public class GameObjectManager {
 
         while (!removedObjectQueue.isEmpty()) {
 
+            var destroyed = removedObjectQueue.poll();
+            destroyed.clearData();
+
             if (sceneUpdateAbortion) {
                 return;
             }
 
-            var destroyed = removedObjectQueue.poll();
-            destroyed.clearData();
             onGameObjectDestroyed.invoke(null, destroyed);
             unregisterGameObject(destroyed);
         }
@@ -212,9 +213,10 @@ public class GameObjectManager {
      */
     public static void destroy(GameObject gameObject) {
 
-        if (gameObjectSet.contains(gameObject)) {
-            gameObject.markDestroyed();
+        if (gameObjectSet.contains(gameObject) && !gameObject.isDestroyed() && !removedObjectQueue.contains(gameObject)) {
+            System.out.println("Processing " + gameObject);
             removedObjectQueue.offer(gameObject);
+            gameObject.markDestroyed();
         }
 
     }
@@ -242,11 +244,15 @@ public class GameObjectManager {
             if (object.isDestroyed() || object.isDoNotDestroyOnLoad()) {
                 continue;
             }
+            if (removedObjectQueue.contains(object)) {
+                continue;
+            }
             try {
+                removedObjectQueue.offer(object);
                 object.markDestroyed();
                 object.clearData();
             } catch (Exception e) {
-                System.out.println("[GameObjectManager] Possible fatal exception: " + e.getMessage());
+                System.err.println("[GameObjectManager] Possible fatal exception: " + e.getMessage());
             }
         }
         gameObjectSet.clear();
@@ -254,6 +260,7 @@ public class GameObjectManager {
         removedObjectQueue.clear();
 
         sceneUpdateAbortion = true;
+
     }
 
 }

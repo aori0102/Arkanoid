@@ -21,7 +21,6 @@ public class GameObject {
     private final Queue<MonoBehaviour> preAwakeMonoBehaviourQueue = new LinkedList<>();
     private final Queue<MonoBehaviour> preStartMonoBehaviourQueue = new LinkedList<>();
     private final Queue<GameObject> childRemovalQueue = new LinkedList<>();
-    private final Queue<GameObject> childAdditionQueue = new LinkedList<>();
     private final HashSet<MonoBehaviour> monoBehaviourSet = new HashSet<>();
     private final Transform transform;
     private final SceneKey registeredSceneKey;
@@ -132,7 +131,7 @@ public class GameObject {
      * otherwise {@code false}.
      */
     public boolean isDestroyed() {
-        return isDestroyed || (parent != null && parent.isDestroyed());
+        return isDestroyed;
     }
 
     /**
@@ -163,7 +162,7 @@ public class GameObject {
      * @param child The child to be added.
      */
     protected void addChild(GameObject child) {
-        childAdditionQueue.offer(child);
+        childSet.add(child);
     }
 
     /**
@@ -306,9 +305,6 @@ public class GameObject {
         while (!childRemovalQueue.isEmpty()) {
             childSet.remove(childRemovalQueue.poll());
         }
-        while (!childAdditionQueue.isEmpty()) {
-            childSet.add(childAdditionQueue.poll());
-        }
     }
 
     /**
@@ -358,6 +354,9 @@ public class GameObject {
     protected void markDestroyed() {
         for (var mono : monoBehaviourSet) {
             mono.onDestroy();
+            if (isDestroyed) {
+                return;
+            }
         }
         isDestroyed = true;
     }
@@ -368,6 +367,8 @@ public class GameObject {
      * <b><i><u>NOTE</u> : Only call within {@link GameObjectManager}.</i></b>
      */
     protected void clearData() {
+
+        isDestroyed = true; // Do this to prevent shallow double deletion. I don't know why but it works.
 
         // Clear components
         monoBehaviourSet.clear();
