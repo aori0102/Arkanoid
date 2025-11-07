@@ -68,7 +68,7 @@ public final class RankUIPrefab extends Prefab {
         rankText.setText(RANK_DEFAULT_TEXT);
         rankText.setHorizontalAlignment(TextHorizontalAlignment.Left);
         rankText.setVerticalAlignment(TextVerticalAlignment.Top);
-        rankText.setTextColor(RANK_TEXT_COLOR);
+        rankText.setSolidFill(RANK_TEXT_COLOR);
         rankText.setRenderLayer(RenderLayer.UI_Middle);
         rankText.getTransform().setGlobalPosition(RANK_TEXT_POSITION);
         rankText.getGameObject().setParent(rankUIObject);

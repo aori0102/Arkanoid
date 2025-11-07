@@ -37,7 +37,7 @@ public final class ScoreUIPrefab extends Prefab {
                 .addComponent(TextUI.class);
         scoreText.setFont(FontDataIndex.Jersey_25);
         scoreText.setFontSize(SCORE_TEXT_SIZE);
-        scoreText.setTextColor(TEXT_COLOR);
+        scoreText.setSolidFill(TEXT_COLOR);
         scoreText.setText(SCORE_TEXT_DEFAULT);
         scoreText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         scoreText.setVerticalAlignment(TextVerticalAlignment.Middle);
@@ -50,7 +50,7 @@ public final class ScoreUIPrefab extends Prefab {
                 .addComponent(TextUI.class);
         levelText.setFont(FontDataIndex.Jersey_25);
         levelText.setFontSize(LEVEL_TEXT_SIZE);
-        levelText.setTextColor(TEXT_COLOR);
+        levelText.setSolidFill(TEXT_COLOR);
         levelText.setText(LEVEL_TEXT_DEFAULT);
         levelText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         levelText.setVerticalAlignment(TextVerticalAlignment.Middle);
@@ -64,7 +64,7 @@ public final class ScoreUIPrefab extends Prefab {
                 .addComponent(TextUI.class);
         comboText.setFont(FontDataIndex.Jersey_25);
         comboText.setFontSize(SCORE_TEXT_SIZE);
-        comboText.setTextColor(TEXT_COLOR);
+        comboText.setSolidFill(TEXT_COLOR);
         comboText.setText(COMBO_TEXT_DEFAULT);
         comboText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         comboText.setVerticalAlignment(TextVerticalAlignment.Middle);

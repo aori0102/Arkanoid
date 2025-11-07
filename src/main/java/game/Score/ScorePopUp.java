@@ -37,7 +37,7 @@ public final class ScorePopUp extends MonoBehaviour {
         scoreText.setFont(FontDataIndex.Jersey_25);
         scoreText.setVerticalAlignment(TextVerticalAlignment.Bottom);
         scoreText.setHorizontalAlignment(TextHorizontalAlignment.Right);
-        scoreText.setTextColor(TEXT_COLOR);
+        scoreText.setSolidFill(TEXT_COLOR);
     }
 
     @Override

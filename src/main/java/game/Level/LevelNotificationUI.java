@@ -31,7 +31,7 @@ public final class LevelNotificationUI extends MonoBehaviour {
 
         levelText.setFontSize(LEVEL_TEXT_SIZE);
         levelText.setRenderLayer(RenderLayer.UI_Middle);
-        levelText.setTextColor(Color.BLUE);
+        levelText.setSolidFill(Color.BLUE);
         levelText.setVerticalAlignment(TextVerticalAlignment.Middle);
         levelText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         levelText.setFont(FontDataIndex.Jersey_25);

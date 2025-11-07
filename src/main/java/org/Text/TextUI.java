@@ -3,6 +3,9 @@ package org.Text;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.GameObject.GameObject;
@@ -15,12 +18,13 @@ public class TextUI extends Renderable {
     private static final String DEFAULT_FONT_FACE = "System";
     private static final double DEFAULT_FONT_SIZE = 12.0;
 
-    private Text text = new Text();
+    private final Text text = new Text();
     private double fontSize = DEFAULT_FONT_SIZE;
     private String fontName = DEFAULT_FONT_FACE;
     private TextVerticalAlignment verticalAlignment = TextVerticalAlignment.Top;
     private TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment.Left;
-    private Color textColor = Color.BLACK;
+    private Color solidFill = Color.BLACK;
+    private LinearGradient gradientFill = null;
 
     public TextUI(GameObject owner) {
         super(owner);
@@ -60,7 +64,7 @@ public class TextUI extends Renderable {
     private void updateFont() {
         var scale = getTransform().getLocalScale();
         text.setFont(Font.font(fontName, fontSize * Math.max(scale.x, scale.y)));
-        text.setFill(textColor);
+        text.setFill(solidFill == null ? gradientFill : solidFill);
         updateRenderPosition();
     }
 
@@ -130,12 +134,32 @@ public class TextUI extends Renderable {
     }
 
     /**
-     * Set the render color for this text.
+     * Set the solid render color for this text.
      *
-     * @param textColor The color for the text.
+     * @param solidFill The color for the text.
      */
-    public void setTextColor(Color textColor) {
-        this.textColor = textColor;
+    public void setSolidFill(Color solidFill) {
+        this.gradientFill = null;
+        this.solidFill = solidFill;
+        updateFont();
+    }
+
+    /**
+     * Set the gradient render color for this text.
+     *
+     * @param from       The first color of the gradient.
+     * @param fromOffset Offset for the first color.
+     * @param to         The second color of the gradient.
+     * @param toOffset   Offset for the second color.
+     */
+    public void setGradientFill(Color from, double fromOffset, Color to, double toOffset) {
+        this.solidFill = null;
+        this.gradientFill = new LinearGradient(
+                0, 0, 1, 0, true,
+                CycleMethod.NO_CYCLE,
+                new Stop(fromOffset, from),
+                new Stop(toOffset, to)
+        );
         updateFont();
     }
 
