@@ -30,8 +30,10 @@ public final class BrickPrefab extends Prefab {
                 .getGameObject();
         brickObject.setLayer(Layer.Brick);
 
+        // Brick component
+        var brick = brickObject.getComponent(Brick.class);
 
-        //Setup visual and ready for rendering object
+        // Setup visual and ready for rendering object
         var brickRenderer = brickObject.addComponent(SpriteRenderer.class);
         brickRenderer.setImage(ImageAsset.ImageIndex.BrickNormal.getImage());
         brickRenderer.setSize(BRICK_SIZE);
@@ -49,6 +51,9 @@ public final class BrickPrefab extends Prefab {
                 .getComponent(HealthChangeVisualizer.class);
         healthVisualizer.linkEntityHealth(brickObject.getComponent(BrickHealth.class));
         healthVisualizer.getGameObject().setParent(brickObject);
+
+        // Link component
+        brickObject.getComponent(BrickStat.class).linkBrick(brick);
 
         return brickObject;
 

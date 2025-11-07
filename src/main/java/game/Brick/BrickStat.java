@@ -1,11 +1,15 @@
 package game.Brick;
 
 import game.Entity.EntityStat;
+import org.Annotation.LinkViaPrefab;
 import org.GameObject.GameObject;
 
 public final class BrickStat extends EntityStat {
 
     private double damageTakenMultiplier = 1.0;
+
+    @LinkViaPrefab
+    private Brick brick = null;
 
     /**
      * Create this MonoBehaviour.
@@ -74,4 +78,16 @@ public final class BrickStat extends EntityStat {
     public void setDamageTakenMultiplier(double damageTakenMultiplier) {
         this.damageTakenMultiplier = damageTakenMultiplier;
     }
+
+    /**
+     * Link the central brick class.<br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link BrickPrefab}
+     * as part of component linking process.</i></b>
+     *
+     * @param brick The central brick class.
+     */
+    public void linkBrick(Brick brick) {
+        this.brick = brick;
+    }
+
 }

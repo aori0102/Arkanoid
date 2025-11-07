@@ -2,10 +2,8 @@ package game.Player;
 
 import game.Entity.EntityHealth;
 import game.Entity.EntityHealthAlterType;
-import game.Player.Paddle.PlayerPaddle;
 import game.Player.Paddle.PaddleHealth;
 import game.Player.Prefab.PlayerHealthBarPrefab;
-import org.Event.EventActionID;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.ImageAsset;
@@ -37,7 +35,7 @@ public final class PlayerHealthUI extends MonoBehaviour {
 
     @Override
     public void start() {
-        Player.getInstance().getPlayerLives().onLivesChanged
+        Player.getInstance().getPlayerLives().onLivesDecreased
                 .addListener(this::playerLives_onLivesChanged);
         Player.getInstance().getPlayerPaddle().getPaddleHealth().onHealthChanged
                 .addListener(this::paddleHealth_onHealthChanged);
@@ -50,7 +48,7 @@ public final class PlayerHealthUI extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link PlayerLives#onLivesChanged} is invoked.<br><br>
+     * Called when {@link PlayerLives#onLivesDecreased} is invoked.<br><br>
      * This function updates the health UI as player lives change.
      */
     private void playerLives_onLivesChanged(Object sender, Void e) {

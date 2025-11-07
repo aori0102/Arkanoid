@@ -22,7 +22,6 @@ public class CircleEmitter extends ParticleEmitter {
         if (!canEmit) return;
         super.update();
         if (isEmitting) {
-            System.out.println("Emitting");
             emit();
         }
     }

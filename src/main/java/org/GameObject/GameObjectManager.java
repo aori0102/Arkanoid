@@ -214,7 +214,6 @@ public class GameObjectManager {
     public static void destroy(GameObject gameObject) {
 
         if (gameObjectSet.contains(gameObject) && !gameObject.isDestroyed() && !removedObjectQueue.contains(gameObject)) {
-            System.out.println("Processing " + gameObject);
             removedObjectQueue.offer(gameObject);
             gameObject.markDestroyed();
         }
@@ -253,6 +252,7 @@ public class GameObjectManager {
                 object.clearData();
             } catch (Exception e) {
                 System.err.println("[GameObjectManager] Possible fatal exception: " + e.getMessage());
+                System.err.println(Arrays.toString(e.getStackTrace()));
             }
         }
         gameObjectSet.clear();

@@ -77,6 +77,13 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
         super(owner);
     }
 
+    @Override
+    public void onDestroy() {
+        for (var tracker : effectTrackingInfoMap.values()) {
+            Time.removeCoroutine(tracker.terminateCoroutineID);
+        }
+    }
+
     /**
      * Add an effect.<br><br>
      * This function initialize a UI for the respective effect and modifies stats based on

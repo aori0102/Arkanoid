@@ -24,6 +24,7 @@ import utils.Time;
 // TODO: Doc
 public class Ball extends MonoBehaviour {
 
+    private static final double NEAR_PARALLEL_THRESHOLD = 0.1;
     private static final double BASE_BALL_SPEED = 500;
 
     private final BallDamageDealer ballDamageDealer = addComponent(BallDamageDealer.class);
@@ -37,6 +38,8 @@ public class Ball extends MonoBehaviour {
     private ConeEmitter coneEmitter = null;
 
     private EventActionID ball_onAnyBallHitBrick_ID = null;
+    private EventActionID ballEffectController_onEffectInflicted_ID = null;
+    private EventActionID ballEffectController_onEffectCleared_ID = null;
 
     public static EventHandler<Void> onAnyBallHitBrick = new EventHandler<>(Ball.class);
     public static EventHandler<Void> onAnyBallJustHitPaddle = new EventHandler<>(Ball.class);
@@ -47,7 +50,6 @@ public class Ball extends MonoBehaviour {
         addComponent(BoxCollider.class).setOnCollisionEnterCallback((data) -> {
             handleHitHandle(data);
             handleCollision(data);
-            System.out.println("Ball collided with " + data.otherCollider.getGameObject());
         });
     }
 
@@ -64,8 +66,10 @@ public class Ball extends MonoBehaviour {
             playerPaddle.isFired = true;
         });
 
-        ballEffectController.onEffectInflicted.addListener(this::ballEffectController_onEffectInflicted);
-        ballEffectController.onEffectCleared.addListener(this::ballEffectController_onEffectCleared);
+        ballEffectController_onEffectInflicted_ID = ballEffectController.onEffectInflicted
+                .addListener(this::ballEffectController_onEffectInflicted);
+        ballEffectController_onEffectCleared_ID = ballEffectController.onEffectCleared
+                .addListener(this::ballEffectController_onEffectCleared);
     }
 
     @Override
@@ -84,6 +88,8 @@ public class Ball extends MonoBehaviour {
         if (BallsManager.getInstance() != null) {
             BallsManager.getInstance().removeBall(this);
         }
+        ballEffectController.onEffectInflicted.removeListener(ballEffectController_onEffectInflicted_ID);
+        ballEffectController.onEffectCleared.removeListener(ballEffectController_onEffectCleared_ID);
         coneEmitter.stopEmit();
         Ball.onAnyBallHitBrick.removeListener(ball_onAnyBallHitBrick_ID);
         onAnyBallDestroyed.invoke(this, null);
@@ -172,9 +178,9 @@ public class Ball extends MonoBehaviour {
             direction = direction.normalize().add(paddle.getMovementVector().normalize().multiply(0.2));
         }
         direction = direction.normalize();
-        if (Vector2.dot(direction, Vector2.left()) < 0.1) {
+        if (Vector2.dot(direction, Vector2.left()) < NEAR_PARALLEL_THRESHOLD) {
             direction = direction.rotateBy(Random.range(-0.019, 0.078));
-        } else if (Vector2.dot(direction, Vector2.right()) < 0.1) {
+        } else if (Vector2.dot(direction, Vector2.right()) < NEAR_PARALLEL_THRESHOLD) {
             direction = direction.rotateBy(Random.range(-0.078, 0.019));
         }
         coneEmitter.setBaseDirection(direction.inverse());

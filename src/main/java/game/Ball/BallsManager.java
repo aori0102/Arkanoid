@@ -4,6 +4,7 @@ import game.Effect.StatusEffectInfo;
 import game.Player.Player;
 import game.Effect.StatusEffect;
 import org.Event.EventHandler;
+import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
@@ -16,7 +17,7 @@ public class BallsManager extends MonoBehaviour {
 
     private static final int MAX_BALL_TO_MULTIPLY = 12;
 
-    private static BallsManager instance;
+    private static BallsManager instance = null;
 
     private final HashSet<Ball> ballSet = new HashSet<>();
     public int index = 1;
@@ -31,11 +32,19 @@ public class BallsManager extends MonoBehaviour {
      */
     public BallsManager(GameObject owner) {
         super(owner);
+        if (instance != null) {
+            throw new ReinitializedSingletonException("BallsManager is a singleton!");
+        }
         instance = this;
     }
 
     public static BallsManager getInstance() {
         return instance;
+    }
+
+    @Override
+    public void onDestroy() {
+        instance = null;
     }
 
     /**

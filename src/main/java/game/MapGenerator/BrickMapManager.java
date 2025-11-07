@@ -95,9 +95,7 @@ public final class BrickMapManager extends MonoBehaviour {
                 var cell = new Cell(row, column);
                 var brick = PrefabManager.instantiatePrefab(PrefabIndex.Brick)
                         .getComponent(Brick.class);
-                System.out.println(brick.getGameObject());
                 brick.setBrickType(typeGrid.get(row).get(column));
-                System.out.println("Set brck t " + typeGrid.get(row).get(column) + " | " + brick.getGameObject());
                 var position = BRICK_MAP_ANCHOR.add((BRICK_OFFSET).scaleUp(new Vector2(column, row)));
                 brick.getTransform().setGlobalPosition(position);
                 brickGrid.get(row).set(column, brick);
@@ -139,7 +137,6 @@ public final class BrickMapManager extends MonoBehaviour {
 
             for (int column = 0; column < COLUMN_COUNT; column++) {
                 var brick = brickGrid.get(row).get(column);
-                brickCoordinateMap.remove(brick);
                 brickGrid.get(row).set(column, null);
                 if (brick != null) {
                     GameObjectManager.destroy(brick.getGameObject());

@@ -16,7 +16,8 @@ public class PowerCore extends MonoBehaviour {
 
     private Vector2 defaultPosition = Vector2.zero();
 
-    private PowerCoreHealth powerCoreHealth = null;
+    private final PowerCoreHealth powerCoreHealth = addComponent(PowerCoreHealth.class);
+    private final PowerCoreStat powerCoreStat = addComponent(PowerCoreStat.class);
 
     public EventHandler<Void> onPowerCoreDestroyed = new EventHandler<>(PowerCore.class);
 
@@ -27,7 +28,6 @@ public class PowerCore extends MonoBehaviour {
      */
     public PowerCore(GameObject owner) {
         super(owner);
-        powerCoreHealth = addComponent(PowerCoreHealth.class);
     }
 
     @Override
@@ -49,6 +49,10 @@ public class PowerCore extends MonoBehaviour {
 
     public PowerCoreHealth getPowerCoreHealth() {
         return powerCoreHealth;
+    }
+
+    public PowerCoreStat getPowerCoreStat() {
+        return powerCoreStat;
     }
 
 }
