@@ -7,9 +7,14 @@ import utils.Vector2;
 import java.util.*;
 
 /**
- * Central logic class to handle basic physical collision.<br><br>
+ * Central logic class to handle basic physical collision.
+ * <p>
  * This manager uses linear interpolation instead of AABB to perform
  * collision checks.
+ * </p>
+ * <p>
+ * Spatial partitioning is also implemented for optimization.
+ * </p>
  */
 public class PhysicsManager {
 
@@ -152,10 +157,22 @@ public class PhysicsManager {
         }
     }
 
+    /**
+     * Return the corresponding spatial partitioning mapping key based on the provided cell.
+     *
+     * @param row    The cell's row.
+     * @param column The cell's column.
+     * @return The corresponding key for the cell.
+     */
     private static long getCellKey(int row, int column) {
         return ((long) row << 32) | (column & 0xFFFFFFFFL);
     }
 
+    /**
+     * Remove this provided collider's spatial partitioning data.
+     *
+     * @param collider The collider whose data is to be removed.
+     */
     private static void removeColliderSpatialPartitioning(BoxCollider collider) {
 
         if (registeredCellRange.containsKey(collider)) {
@@ -173,6 +190,11 @@ public class PhysicsManager {
 
     }
 
+    /**
+     * Add the provided collider's spatial partitioning data.
+     *
+     * @param collider The collider whose data is to be added.
+     */
     private static void assignColliderSpatialPartitioning(BoxCollider collider) {
 
         var range = getCellRangeFromBound(collider.getMinBound(), collider.getMaxBound());
@@ -193,6 +215,12 @@ public class PhysicsManager {
 
     }
 
+    /**
+     * Get a set of unique {@link BoxCollider}s within a cell range.
+     *
+     * @param cellRange The range to detect colliders.
+     * @return A set of unique {@link BoxCollider}s within {@code cellRange}.
+     */
     private static HashSet<BoxCollider> getColliderWithinRange(CellRange cellRange) {
         HashSet<BoxCollider> result = new HashSet<>();
         for (int row = cellRange.fromRow; row <= cellRange.toRow; row++) {
@@ -206,6 +234,15 @@ public class PhysicsManager {
         return result;
     }
 
+    /**
+     * Get the occupied cells based on the movement and its bounding extents. The return {@link CellRange}
+     * is guaranteed to be in correct order, which means min components are not bigger than max components.
+     *
+     * @param from    The starting point of the movement.
+     * @param to      The ending point of the movement.
+     * @param extents The bounding extents.
+     * @return The occupied {@link CellRange} of the movement.
+     */
     private static CellRange getMovementOccupationRange(Vector2 from, Vector2 to, Vector2 extents) {
         var minFrom = from.subtract(extents);
         var minTo = to.subtract(extents);
@@ -222,6 +259,15 @@ public class PhysicsManager {
         return getCellRangeFromBound(minCheckingBound, maxCheckingBound);
     }
 
+    /**
+     * Get the occupied cells based on the center point and extents of the static object.
+     * The return {@link CellRange} is guaranteed to be in correct order, which means min
+     * components are not bigger than max components.
+     *
+     * @param center  The bounding center point.
+     * @param extents The bounding extents.
+     * @return The occupied {@link CellRange} of the movement static object.
+     */
     private static CellRange getStaticOccupationRange(Vector2 center, Vector2 extents) {
         var minBound = center.subtract(extents);
         var maxBound = center.add(extents);
@@ -236,7 +282,25 @@ public class PhysicsManager {
         return getCellRangeFromBound(minCheckingBound, maxCheckingBound);
     }
 
-    private static CellRange getCellRangeFromBound(Vector2 minBound, Vector2 maxBound) {
+    /**
+     * Get the occupied cells based on the bounding provided. The return {@link CellRange}
+     * is guaranteed to be in correct order, which means min components are not bigger than
+     * max components.
+     *
+     * @param firstPoint  The first point of the bounding box.
+     * @param secondPoint The second point of the bounding box.
+     * @return The occupied {@link CellRange} of the bounding.
+     */
+    private static CellRange getCellRangeFromBound(Vector2 firstPoint, Vector2 secondPoint) {
+
+        var minBound = new Vector2(
+                Math.min(firstPoint.x, firstPoint.y),
+                Math.min(firstPoint.y, secondPoint.y)
+        );
+        var maxBound = new Vector2(
+                Math.max(firstPoint.x, firstPoint.y),
+                Math.max(firstPoint.y, secondPoint.y)
+        );
 
         double epsilon = 0.000001;
         var fromRow = (int) ((minBound.y + epsilon) / CELL_PARTITION_SIZE);
@@ -251,20 +315,31 @@ public class PhysicsManager {
     /**
      * Validate an object's movement.
      * <p>
-     * This function checks for physical contacts between the queried {@code collider} with
+     * This function checks for physical contacts between the provided {@code collider} with
      * other objects with {@link BoxCollider}. This function only checks for physical contacts,
      * so any {@link BoxCollider} with {@code isTrigger} enabled will be ignored.
      * </p>
      * <p>
-     * <b><i><u>NOTE</u> : Should only be called within {@link org.GameObject.Transform#translate}.</i></b>
+     * Only {@link BoxCollider}s with the same {@link org.Layer.Layer} included within the provided
+     * {@link BoxCollider}'s constraint and does not exclude the provided {@link BoxCollider}'s
+     * {@link org.Layer.Layer} is queried.
+     * </p>
+     * <p>
+     * This function is based on simple linear interpolation formula. Thus, it can detect collision
+     * between fast moving objects and prevent object glitching when using AABB. Although there is
+     * slightly more calculation, spatial partition is used to optimize how colliders are queried.
+     * </p>
+     * <p>
+     * <b><i><u>NOTE</u> : Should only be called within {@link org.GameObject.Transform#translate}.
+     * </i></b>
      * </p>
      *
      * @param collider The {@link BoxCollider} with movement to process, this collider should
      *                 be non-trigger ({@code isTrigger = false}).
      * @param movement The movement of {@code collider}.
      * @return A {@link CollisionData} object, which holds the information of the collision
-     * of the queried {@link BoxCollider}, or {@code null} if there is no collision. See
-     * {@link CollisionData} for more info about collision parameters.
+     * of the provided {@link BoxCollider}, or {@code null} if there is no collision. See
+     * {@link CollisionData} for more info about collision data.
      */
     public static CollisionData handlePhysicsCollision(BoxCollider collider, Vector2 movement) {
 
@@ -421,13 +496,21 @@ public class PhysicsManager {
     }
 
     /**
-     * <h>
      * Validate an object's movement.
-     * </h>
      * <p>
      * This function checks for trigger contact between the queried {@code collider} with
      * other objects with {@link BoxCollider}. This function only checks for trigger contacts,
      * so any {@link BoxCollider} with {@code isTrigger} disabled will be ignored.
+     * </p>
+     * <p>
+     * Only {@link BoxCollider}s with the same {@link org.Layer.Layer} included within the provided
+     * {@link BoxCollider}'s constraint and does not exclude the provided {@link BoxCollider}'s
+     * {@link org.Layer.Layer} is queried.
+     * </p>
+     * <p>
+     * This function is based on simple linear interpolation formula. Thus, it can detect collision
+     * between fast moving objects and prevent object glitching when using AABB. Although there is
+     * slightly more calculation, spatial partition is used to optimize how colliders are queried.
      * </p>
      * <p>
      * <b><i><u>NOTE</u> : Should only be called within {@link org.GameObject.Transform#translate}.</i></b>
@@ -571,8 +654,12 @@ public class PhysicsManager {
     }
 
     /**
-     * Get all {@link BoxCollider} that is overlapping the provided collider. Note
-     * that only the colliders within the included layer of {@code collider} is processed.
+     * Get all {@link BoxCollider} that is overlapping the provided collider.
+     * <p>
+     * Only {@link BoxCollider}s with the same {@link org.Layer.Layer} included within the provided
+     * {@link BoxCollider}'s constraint and does not exclude the provided {@link BoxCollider}'s
+     * {@link org.Layer.Layer} is queried.
+     * </p>
      *
      * @param collider       The collider to be checked for overlapping.
      * @param processTrigger Whether to process trigger {@link BoxCollider}s.
@@ -629,7 +716,20 @@ public class PhysicsManager {
 
     }
 
-    private static boolean isBoxesOverlap(Vector2 firstCenter, Vector2 secondCenter, Vector2 firstExtents, Vector2 secondExtents) {
+    /**
+     * Check if two boxes overlap using traditional AABB technique.
+     *
+     * @param firstCenter   The center point of the first box.
+     * @param secondCenter  The center point of the second box.
+     * @param firstExtents  The extents of the first box.
+     * @param secondExtents The extents of the second box.
+     * @return {@code true} if two boxes overlap, otherwise {@code false}.
+     */
+    private static boolean isBoxesOverlap(
+            Vector2 firstCenter,
+            Vector2 secondCenter,
+            Vector2 firstExtents,
+            Vector2 secondExtents) {
         Vector2 firstMin = firstCenter.subtract(firstExtents);
         Vector2 firstMax = firstCenter.add(firstExtents);
         Vector2 secondMin = secondCenter.subtract(secondExtents);
@@ -644,12 +744,12 @@ public class PhysicsManager {
      * Check possible collision on one side of the bounding box.
      * <p>
      * This check follows after calculating the collider's path to determine whether a
-     * collision would happen with the side with {@code normal} of the other
-     * collider. For example, checking possible collision between collider {@code A}
-     * with collider {@code B} on the left side of {@code B}. The surface {@code normal}
-     * will be {@link Vector2#left()}, which is {@code (-1, 0)} and is along the
-     * {@code X}-axis. That means you have to pass in {@code from}, {@code to}, {@code extents},
-     * {@code min} and {@code max} value along to {@code Y}-axis
+     * collision would happen against the side of the other collider (with normal
+     * {@code normal}) For example, checking possible collision between collider {@code A}
+     * with collider {@code B} on the left side of {@code B}. The surface has a normal
+     * equals {@link Vector2#left}, which is {@code (-1, 0)} and is along the {@code X}-axis.
+     * That means you have to pass in {@code from}, {@code to}, {@code extents}, {@code min}
+     * and {@code max} value along to {@code Y}-axis
      * </p>
      *
      * @param movement              The movement of this collider.

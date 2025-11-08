@@ -2,6 +2,9 @@ package org.Physics;
 
 import utils.Vector2;
 
+/**
+ * Class containing data about a collision between two objects.
+ */
 public class CollisionData {
     /**
      * The collider that was checked.
