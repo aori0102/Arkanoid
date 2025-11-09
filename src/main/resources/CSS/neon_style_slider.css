@@ -1,0 +1,40 @@
+/* === NEON RETROWAVE SLIDER === */
+
+.slider {
+    -fx-padding: 10 0 10 0;
+}
+
+.slider .track {
+    -fx-background-color: linear-gradient(to right, #00ffff, #ff00ff);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+    -fx-pref-height: 6px;
+    -fx-effect: dropshadow(gaussian, rgba(0,255,255,0.6), 10, 0, 0, 0);
+}
+
+.slider .thumb {
+    -fx-background-color: radial-gradient(center 50% 50%, radius 80%, #ffffff, #00ffff);
+    -fx-background-radius: 50%;
+    -fx-border-color: #ff00ff;
+    -fx-border-width: 2;
+    -fx-border-radius: 50%;
+    -fx-pref-width: 18px;
+    -fx-pref-height: 18px;
+    -fx-effect: dropshadow(gaussian, rgba(255,0,255,0.8), 10, 0, 0, 0);
+    -fx-cursor: hand;
+}
+
+.slider .thumb:hover {
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-effect: dropshadow(gaussian, rgba(0,255,255,1), 20, 0.5, 0, 0);
+}
+
+.slider .track:hover {
+    -fx-background-color: linear-gradient(to right, #00ffff, #ffffff, #ff00ff);
+}
+
+.slider .axis {
+    -fx-tick-label-fill: #ff00ff;
+    -fx-font-size: 10px;
+}

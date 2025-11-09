@@ -2,130 +2,141 @@ package org.Rendering;
 
 import javafx.application.Platform;
 import javafx.scene.Node;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-import javafx.util.Duration;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
+import org.Rendering.Renderable;
+import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
+import uk.co.caprica.vlcj.player.base.MediaPlayer;
+import uk.co.caprica.vlcj.player.base.MediaPlayerEventAdapter;
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
+import uk.co.caprica.vlcj.javafx.videosurface.ImageViewVideoSurface;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Unity-like VideoPlayer for JavaFX-based engine.
- * Works with preloaded VideoAsset.
+ * Unity-like VideoPlayer using VLCJ backend.
+ * Provides stable video playback independent of JavaFX Media limitations.
  */
 public class VideoPlayer extends Renderable {
 
-    // Keep references to prevent GC
-    private static final List<MediaPlayer> activePlayers = new ArrayList<>();
+    private static final List<EmbeddedMediaPlayer> activePlayers = new ArrayList<>();
 
-    private MediaPlayer activeMediaPlayer;
-    private final MediaView mediaView = new MediaView();
+    private final StackPane root = new StackPane();
+    private final ImageView imageView = new ImageView();
 
-    private double currentVolume = 1.0;
-    private boolean isMute = false;
+    private final MediaPlayerFactory mediaFactory;
+    private final EmbeddedMediaPlayer mediaPlayer;
+
     private boolean isLoop = false;
+    private boolean isMute = false;
+    private double currentVolume = 1.0;
+    private String currentMediaPath;
 
     public VideoPlayer(GameObject owner) {
         super(owner);
-        mediaView.setPreserveRatio(true);
+
+        mediaFactory = new MediaPlayerFactory();
+        mediaPlayer = mediaFactory.mediaPlayers().newEmbeddedMediaPlayer();
+        mediaPlayer.videoSurface().set(new ImageViewVideoSurface(imageView));
+
+        imageView.setPreserveRatio(true);
+        root.getChildren().add(imageView);
+
+        // Prevent GC and store
+        activePlayers.add(mediaPlayer);
     }
 
     @Override
     public Node getNode() {
-        return mediaView;
+        return root;
     }
 
-    /**
-     *
-     * @param media
-     */
-    public void setVideo(Media media) {
-        if (media == null) {
-            System.err.println("[VideoPlayer] Cannot set video: media is null");
-            return;
-        }
-        reinitMediaPlayer(media);
+    // ==============================================================
+    //                   MEDIA CONTROL METHODS
+    // ==============================================================
 
-    }
-
-    public void reinitMediaPlayer(Media media) {
-        if(activeMediaPlayer != null) {
-            activeMediaPlayer.stop();
-            activeMediaPlayer.dispose();
-        }
-        activeMediaPlayer = new MediaPlayer(media);
-        mediaView.setMediaPlayer(activeMediaPlayer);
-    }
-
-    /**
-     * Set video using path (optional Unity-like workflow)
-     */
+    /** Load video from file or resource path */
     public void setVideo(String resourcePath) {
-        var url = getClass().getResource(resourcePath);
-        if (url == null) {
-            System.err.println("[VideoPlayer] Resource not found: " + resourcePath);
+        File file = new File(resourcePath);
+        if (!file.exists()) {
+            System.err.println("[VideoPlayer] File not found: " + resourcePath);
             return;
         }
-        Media media = new Media(url.toExternalForm());
-        setVideo(media);
+        this.currentMediaPath = file.getAbsolutePath();
     }
 
-    /** Plays the video */
+    /** Play video */
     public void playVideo() {
-        if (activeMediaPlayer != null) activeMediaPlayer.play();
-    }
-
-    /** Stops the video */
-    public void stopVideo() {
-        if (activeMediaPlayer != null) activeMediaPlayer.stop();
-    }
-
-    /** Pauses the video */
-    public void pauseVideo() {
-        if (activeMediaPlayer != null) activeMediaPlayer.pause();
-    }
-
-    /** Enables/disables looping */
-    public void setLoop(boolean loop) {
-        isLoop = loop;
-        enableLooping(loop);
-    }
-
-    private void enableLooping(boolean loop) {
-        if (activeMediaPlayer == null) return;
-        if (loop) {
-            activeMediaPlayer.setOnEndOfMedia(() -> {
-                activeMediaPlayer.seek(Duration.ZERO);
-                activeMediaPlayer.play();
-            });
-        } else {
-            activeMediaPlayer.setOnEndOfMedia(null);
+        if (currentMediaPath == null) {
+            System.err.println("[VideoPlayer] No media set.");
+            return;
         }
 
-        mediaView.setMediaPlayer(activeMediaPlayer);
+        if (!mediaPlayer.status().isPlaying()) {
+            mediaPlayer.media().play(currentMediaPath);
+            mediaPlayer.audio().setVolume((int) (currentVolume * 100));
+            mediaPlayer.audio().setMute(isMute);
+
+            if (isLoop) {
+                mediaPlayer.events().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
+                    @Override
+                    public void finished(MediaPlayer player) {
+                        Platform.runLater(() -> player.media().play(currentMediaPath));
+                    }
+                });
+            }
+        }
     }
 
-    /** Sets visible width */
-    public void setWidth(double width) {
-        mediaView.setFitWidth(width);
+    /** Pause playback */
+    public void pauseVideo() {
+        if (mediaPlayer.status().isPlaying()) {
+            mediaPlayer.controls().pause();
+        }
     }
 
-    /** Sets visible height */
-    public void setHeight(double height) {
-        mediaView.setFitHeight(height);
+    /** Stop playback */
+    public void stopVideo() {
+        if (mediaPlayer.status().isPlaying()) {
+            mediaPlayer.controls().stop();
+        }
     }
 
-    /** Sets volume (0.0 - 1.0) */
+    /** Looping behavior */
+    public void setLoop(boolean loop) {
+        this.isLoop = loop;
+    }
+
+    /** Volume control (0.0 - 1.0) */
     public void setVolume(double volume) {
-        currentVolume = Math.max(0.0, Math.min(1.0, volume));
-        if (activeMediaPlayer != null) activeMediaPlayer.setVolume(currentVolume);
+        this.currentVolume = Math.max(0.0, Math.min(1.0, volume));
+        mediaPlayer.audio().setVolume((int) (currentVolume * 100));
     }
 
-    /** Mutes/unmutes */
+    /** Mute/unmute */
     public void setMute(boolean mute) {
-        isMute = mute;
-        if (activeMediaPlayer != null) activeMediaPlayer.setMute(mute);
+        this.isMute = mute;
+        mediaPlayer.audio().setMute(mute);
+    }
+
+    /** Resize view */
+    public void setWidth(double width) {
+        imageView.setFitWidth(width);
+    }
+
+    public void setHeight(double height) {
+        imageView.setFitHeight(height);
+    }
+
+    /** Clean up */
+    public void dispose() {
+        stopVideo();
+        mediaPlayer.release();
+        mediaFactory.release();
+        activePlayers.remove(mediaPlayer);
     }
 }

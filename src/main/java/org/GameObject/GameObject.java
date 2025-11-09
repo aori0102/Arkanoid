@@ -537,12 +537,13 @@ public class GameObject {
     /**
      * Get all children of this GameObject.
      *
-     * @return A copy of all children GameObjects.
+     * @return A set of all children GameObjects.
      */
-    public HashSet<GameObject> getChildren() {
+    public Set<GameObject> getChildren() {
         validateObjectLife();
-        return new HashSet<>(childSet); // return a copy
+        return Collections.unmodifiableSet(childSet);
     }
+
 
     /**
      * Get the {@link SceneKey} of the scene this object belongs to.

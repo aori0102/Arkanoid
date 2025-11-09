@@ -30,6 +30,7 @@ public class AttackPerk extends Perk {
 
     @Override
     protected void perk_onPointerClicked(Object sender, MouseEvent e) {
+        super.perk_onPointerClicked(sender, e);
         System.out.println("Increase attack!");
     }
 

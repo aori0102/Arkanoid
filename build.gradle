@@ -26,7 +26,9 @@ dependencies {
     implementation 'org.openjfx:javafx-controls:24.0.2'
     implementation 'org.openjfx:javafx-media:24.0.2'
     // https://mvnrepository.com/artifact/uk.co.caprica/vlcj
-    implementation 'uk.co.caprica:vlcj:4.11.0'
+    implementation "uk.co.caprica:vlcj:4.8.2"
+    implementation "uk.co.caprica:vlcj-javafx:1.2.0"
+
 }
 test {
     useJUnitPlatform()
@@ -39,9 +41,11 @@ run {
     jvmArgs = [
             "-XX:+UseZGC",
             "-Xms512m",
-            "-Xmx1024m"
+            "-Xmx1024m",
+            "--enable-native-access=javafx.media,javafx.graphics"
     ]
 }
+
 
 application {
     mainClass = 'org.Main'

@@ -30,6 +30,7 @@ public class ImageAsset {
         GeneralButtons("/UI/GeneralButtons.png"),
         PauseButton("/UI/PauseButton.png"),
         ResumeButton("/UI/ResumeButton.png"),
+        GoBackButton("/UI/GoBackButton.png"),
         /// Game Title
         GameTitle("/UI/GameTitle.png"),
         /// Background
@@ -89,14 +90,14 @@ public class ImageAsset {
         OrangeBrick("/Brick/OrangeBrick.png"),
         CyanBrick("/Brick/CyanBrick.png"),
         BrickNormal("/Brick/brick_normal.png"),
-        BrickSteel("/Brick/brick_steel.png"),
-        BrickDiamond("/Brick/brick_diamond.png"),
-        BrickGift("/Brick/brick_gift.png"),
-        BrickReborn("/Brick/brick_reborn.png"),
-        BrickRock("/Brick/brick_rock.png"),
-        BrickRocket("/Brick/brick_rocket.png"),
-        BrickAngel("/Brick/brick_angel.png"),
-        BrickBomb("/Brick/brick_bomb.png"),
+        BrickSteel("/Brick/SteelBrick.png"),
+        BrickDiamond("/Brick/DiamondBrick.png"),
+        BrickGift("/Brick/GiftBrick.png"),
+        BrickReborn("/Brick/RebornBrick.png"),
+        BrickRock("/Brick/RockBrick.png"),
+        BrickRocket("/Brick/RocketBrick.png"),
+        BrickAngel("/Brick/AngelBrick.png"),
+        BrickBomb("/Brick/BombBrick.png"),
 
         /// Effects
         HealthLossVignette("/Effect/HealthLossVignette.png"),

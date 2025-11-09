@@ -16,14 +16,19 @@ public final class MenuSceneBuilder extends SceneBuilder {
     protected void build() {
         GameObjectManager.instantiate("MainMenuManager")
                 .addComponent(MainMenuManager.class);
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_OptionsManager);
+
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_GoBackButtonManager);
+
 
         var mainMenuBackground = GameObjectManager.instantiate("MainMenuBackground");
         mainMenuBackground.addComponent(MainMenuBackground.class);
         mainMenuBackground.getTransform()
                 .setGlobalPosition(new Vector2(Main.STAGE_WIDTH / 2, Main.STAGE_HEIGHT / 2));
 
-        var gameTitle = GameObjectManager.instantiate("GameTitle");
-        gameTitle.addComponent(GameTitle.class);
+//        var gameTitle = GameObjectManager.instantiate("GameTitle");
+//        gameTitle.addComponent(GameTitle.class);
+
 
     }
 

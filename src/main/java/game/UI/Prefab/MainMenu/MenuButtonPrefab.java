@@ -1,4 +1,4 @@
-package game.UI.Prefab;
+package game.UI.Prefab.MainMenu;
 
 import game.UI.Buttons.MenuButton;
 import game.UI.PauseMenu.PauseMenuManager;

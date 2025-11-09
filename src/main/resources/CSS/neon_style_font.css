@@ -1,0 +1,17 @@
+.neon-text {
+    -fx-font-weight: bold;
+
+    /* Text fill — bright golden yellow */
+    -fx-text-fill: #FFD500;
+
+    /* Outline stroke — orange */
+    -fx-stroke: #FF6C00;
+    -fx-stroke-width: 2px;
+
+    /* Multi-layer glow using the same yellow */
+    -fx-effect: dropshadow(gaussian, #FFD500, 10, 0.6, 0, 0);
+
+
+    -fx-snap-to-pixels: true;
+}
+

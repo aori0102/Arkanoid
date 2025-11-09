@@ -20,6 +20,9 @@ public final class NodeUtils {
             }
         }
 
+        System.out.println("Collecting from: " + transform.getGameObject().getName());
+        System.out.println("Children: " + transform.getChildren().size());
+
         for (var child : transform.getChildren()) {
             nodes.addAll(collectNodes(child));
         }

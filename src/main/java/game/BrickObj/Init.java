@@ -159,7 +159,6 @@ public class Init {
         private void onBrickCollision(Object curr, Void E) {
             if (curr instanceof Brick brickobj) {
                 CollisionEvent.ColliEvent(brickobj.getRowID(), brickobj.getColID(), brickobj.getBrickType());
-                AudioManager.playSFX(SFXAsset.SFXIndex.OnBrickHit);
             }
         }
 

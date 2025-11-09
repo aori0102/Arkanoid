@@ -1,0 +1,26 @@
+{
+  "imagePath": "GoBackButton",
+  "frameList": [
+    {
+      "clipAnchor": {
+        "x": 131,
+        "y": 2
+      },
+      "clipSize": {
+        "x": 126,
+        "y": 126
+      },
+      "duration": 0.1,
+      "rotationAngle": 0
+    }
+  ],
+  "renderSize": {
+    "x":  100,
+    "y": 100
+  },
+  "pivot": {
+    "x": 0.5,
+    "y": 0.5
+  },
+  "loop": true
+}

@@ -24,6 +24,7 @@ public class MainMenuManager extends MonoBehaviour {
     private RecordButton recordButton;
     private OptionsButton optionsButton;
     private QuitButton quitButton;
+    private GameTitle gameTitle;
     private final List<BaseButton> mainMenuButtons = new ArrayList<>();
 
     private static final double BUTTON_OFFSET = 300;
@@ -47,12 +48,13 @@ public class MainMenuManager extends MonoBehaviour {
         PrefabManager.instantiatePrefab(PrefabIndex.OptionsButton);
         PrefabManager.instantiatePrefab(PrefabIndex.QuitButton);
         PrefabManager.instantiatePrefab(PrefabIndex.ContinueButton);
+        PrefabManager.instantiatePrefab(PrefabIndex.GameTitle);
 
-        startButton.getTransform().setGlobalPosition(new Vector2(- Main.STAGE_WIDTH/2, BUTTON_OFFSET));
-        continueButton.getTransform().setGlobalPosition(new Vector2(- Main.STAGE_WIDTH/2, BUTTON_OFFSET + 100));
-        recordButton.getTransform().setGlobalPosition(new Vector2(- Main.STAGE_WIDTH/2, BUTTON_OFFSET + 200));
-        optionsButton.getTransform().setGlobalPosition(new Vector2(- Main.STAGE_WIDTH/2, BUTTON_OFFSET + 300));
-        quitButton.getTransform().setGlobalPosition(new Vector2(- Main.STAGE_WIDTH/2, BUTTON_OFFSET + 400));
+        startButton.getTransform().setGlobalPosition(new Vector2(-Main.STAGE_WIDTH / 2, BUTTON_OFFSET));
+        continueButton.getTransform().setGlobalPosition(new Vector2(-Main.STAGE_WIDTH / 2, BUTTON_OFFSET + 100));
+        recordButton.getTransform().setGlobalPosition(new Vector2(-Main.STAGE_WIDTH / 2, BUTTON_OFFSET + 200));
+        optionsButton.getTransform().setGlobalPosition(new Vector2(-Main.STAGE_WIDTH / 2, BUTTON_OFFSET + 300));
+        quitButton.getTransform().setGlobalPosition(new Vector2(-Main.STAGE_WIDTH / 2, BUTTON_OFFSET + 400));
 
         GameObjectManager.instantiate("MainMenuController").addComponent(MainMenuController.class);
     }
@@ -64,21 +66,34 @@ public class MainMenuManager extends MonoBehaviour {
 
     @Override
     public void start() {
-        showButtonsAnimation();
+        showUI();
     }
 
-    private void showButtonsAnimation() {
+    public void showUI() {
         double i = 0;
-        for(var button : mainMenuButtons) {
+        for (var button : mainMenuButtons) {
             Tween.to(button.getGameObject())
-                .moveX(SLIDE_DISTANCE, SLIDE_DURATION)
+                    .moveX(SLIDE_DISTANCE, SLIDE_DURATION)
                     .ease(Ease.OUT_BACK)
                     .setDelay(0.0 + i)
                     .ignoreTimeScale(true)
                     .play();
             i += 0.1;
         }
+        gameTitle.startAnimation();
 
+    }
+
+    public void hideUI() {
+        for (var button : mainMenuButtons) {
+            Tween.to(button.getGameObject())
+                    .moveX(-SLIDE_DISTANCE, SLIDE_DURATION)
+                    .ease(Ease.IN_BACK)
+                    .setDelay(0.0)
+                    .ignoreTimeScale(true)
+                    .play();
+        }
+        gameTitle.exitAnimation();
     }
 
     public static MainMenuManager getInstance() {
@@ -108,6 +123,17 @@ public class MainMenuManager extends MonoBehaviour {
     public void linkQuitButton(QuitButton quitButton) {
         this.quitButton = quitButton;
         mainMenuButtons.add(quitButton);
+    }
+
+    /**
+     * <br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link }
+     * as part of component linking process.</i></b>
+     *
+     * @param gameTitle .
+     */
+    public void linkGameTitle(GameTitle gameTitle) {
+        this.gameTitle = gameTitle;
     }
 
     public StartButton getStartButton() {

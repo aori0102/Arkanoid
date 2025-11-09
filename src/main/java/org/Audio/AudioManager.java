@@ -34,7 +34,6 @@ public final class AudioManager {
             if (value == MusicAsset.MusicIndex.None) continue;
             new MusicPlayer(value);
         }
-        setMusicVolume(0.5);
         // Delay listener registration until all players are done constructing
         MusicHandler.initializeMusicHandler();
     }
@@ -62,11 +61,17 @@ public final class AudioManager {
     public static double getMasterVolume() {
         return masterVolume;
     }
+    public static double getMusicVolume() {
+        return musicVolume;
+    }
+    public static double getSfxVolume() {
+        return sfxVolume;
+    }
 
     public static void setCurrentMusicPlayer(MusicAsset.MusicIndex musicIndex) {
         currentMusicPlayer = musicIndexMusicPlayerHashMap.get(musicIndex);
         currentMusicPlayer.setLoop(true);
-        currentMusicPlayer.setVolume(masterVolume * currentMusicPlayer.getVolume());
+        currentMusicPlayer.setVolume(masterVolume * musicVolume);
     }
 
     public static void playMusic() {
@@ -95,6 +100,12 @@ public final class AudioManager {
         var sfx = sfxIndexSFXPlayerHashMap.get(sfxIndex);
         sfx.setVolume(sfxVolume * masterVolume);
         sfx.play();
+    }
+
+    public static void stopSFX(SFXAsset.SFXIndex sfxIndex) {
+        var sfx = sfxIndexSFXPlayerHashMap.get(sfxIndex);
+        sfx.setVolume(sfxVolume * masterVolume);
+        sfx.stop();
     }
 
     // TODO: Stop SFX

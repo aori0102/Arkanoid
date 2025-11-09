@@ -1,18 +1,19 @@
 package org.Rendering;
 
-import javafx.scene.media.Media;
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URL;
 import java.util.EnumMap;
 
 /**
- * Unity-like automatic video preloader.
- * Works just like ImageAsset — videos are loaded automatically when this class is first accessed.
+ * Unity-like automatic video path preloader for VLCJ-based video playback.
+ * This version extracts resource videos to temporary files,
+ * so VLCJ can play them both from IDE and from packaged JARs.
  */
 public class VideoAsset {
 
     public enum VideoIndex {
-        /// Main menu
-        MainMenuBackground("/UI/MainMenuBackground.mp4");
+        MainMenuBackground("/UI/MainMenuBackGround.mp4");
 
         public final String mediaPath;
 
@@ -20,42 +21,44 @@ public class VideoAsset {
             this.mediaPath = path;
         }
 
-        public Media getMedia() {
-            return VideoAsset.getMedia(this);
+        public String getVideoPath() {
+            return VideoAsset.getPath(this);
         }
-
     }
 
-    private static final EnumMap<VideoIndex, Media> videoMediaMap = new EnumMap<>(VideoIndex.class);
+    private static final EnumMap<VideoIndex, String> videoPathMap = new EnumMap<>(VideoIndex.class);
 
-    private static Media getMedia(VideoIndex index) {
-        return videoMediaMap.get(index);
+    private static String getPath(VideoIndex index) {
+        return videoPathMap.get(index);
     }
 
     public static void initializeVideoMedia() {
-
         for (var index : VideoIndex.values()) {
-
-            Media loaded = null;
+            String resolvedPath = null;
             try {
-                var resource = VideoAsset.class.getResource(index.mediaPath);
+                URL resource = VideoAsset.class.getResource(index.mediaPath);
                 if (resource == null) {
-                    throw new IllegalArgumentException("Video not found at path: " + index.mediaPath);
+                    throw new IllegalArgumentException("Video not found: " + index.mediaPath);
                 }
 
-                loaded = new Media(resource.toExternalForm());
-                System.out.println("[VideoAsset] Loaded " + index.mediaPath);
+                var input = VideoAsset.class.getResourceAsStream(index.mediaPath);
+                if (input == null) throw new IllegalStateException("Stream is null for " + index.mediaPath);
+
+                File temp = File.createTempFile("video_", ".mp4");
+                temp.deleteOnExit();
+
+                try (var output = new FileOutputStream(temp)) {
+                    input.transferTo(output);
+                }
+
+                resolvedPath = temp.getAbsolutePath();
+                System.out.println("[VideoAsset] Loaded " + index.mediaPath + " -> " + resolvedPath);
 
             } catch (Exception e) {
-                System.err.println(
-                        "[VideoAsset] Failed to load video at index [" + index + "]: " + e.getMessage()
-                );
+                System.err.println("[VideoAsset] Failed to load video [" + index + "]: " + e.getMessage());
             }
 
-            videoMediaMap.put(index, loaded);
-
+            videoPathMap.put(index, resolvedPath);
         }
-
     }
-
 }
