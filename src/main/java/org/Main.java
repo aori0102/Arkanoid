@@ -26,8 +26,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        // Ensure VLC is found
-        new NativeDiscovery().discover();
+
 
 
         VideoAsset.initializeVideoMedia();

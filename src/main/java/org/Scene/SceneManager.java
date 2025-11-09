@@ -50,7 +50,11 @@ public class SceneManager {
         var sceneKeyArray = SceneKey.values();
         for (var sceneKey : sceneKeyArray) {
             var root = new Group();
-            sceneMap.put(sceneKey, new Scene(root, Main.STAGE_WIDTH, Main.STAGE_HEIGHT));
+            var scene = new Scene(root, Main.STAGE_WIDTH, Main.STAGE_HEIGHT);
+            scene.getStylesheets().add(
+                    SceneManager.class.getResource("/CSS/neon_style_font.css").toExternalForm()
+            );
+            sceneMap.put(sceneKey, scene);
         }
         mainStage = stage;
 

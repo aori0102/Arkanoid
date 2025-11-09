@@ -1,4 +1,4 @@
-package game.UI.Prefab;
+package game.UI.Prefab.MainMenu;
 
 import game.UI.Buttons.RecordButton;
 import game.UI.MainMenu.MainMenuManager;

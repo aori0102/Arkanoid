@@ -3,6 +3,7 @@ package game.UI.MainMenu;
 import javafx.scene.layout.Background;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
+import org.Layer.RenderLayer;
 import org.Main;
 import org.Rendering.SpriteRenderer;
 import org.Rendering.VideoAsset;
@@ -12,7 +13,6 @@ import utils.Vector2;
 public class MainMenuBackground extends MonoBehaviour {
     private VideoPlayer videoPlayer;
 
-    private SpriteRenderer spriteRenderer;
     private Vector2 pivot = new Vector2(0.5, 0.5);
     private final double SCALE = 1.3;
 
@@ -25,6 +25,7 @@ public class MainMenuBackground extends MonoBehaviour {
         super(owner);
 
         videoPlayer = owner.addComponent(VideoPlayer.class);
+        videoPlayer.setRenderLayer(RenderLayer._2);
         setVideoPlayer(videoPlayer);
     }
 

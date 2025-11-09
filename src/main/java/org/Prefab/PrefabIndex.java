@@ -16,7 +16,6 @@ import game.Player.Prefab.PaddlePrefab;
 import game.Player.Prefab.PlayerHealthBarPrefab;
 import game.Player.Prefab.PlayerHealthLossVignettePrefab;
 import game.Player.Prefab.PlayerPrefab;
-import game.PowerUp.DuplicateBall;
 import game.PowerUp.Prefab.*;
 import game.Rank.RankManagerPrefab;
 import game.Rank.RankUIPrefab;
@@ -25,6 +24,8 @@ import game.Score.ScoreManagerPrefab;
 import game.Score.ScorePopUpPrefab;
 import game.Score.ScoreUIPrefab;
 import game.UI.Prefab.*;
+import game.UI.Prefab.MainMenu.*;
+import game.UI.Prefab.OptionsMenu.*;
 import game.UI.UIManagerPrefab;
 import game.Voltraxis.Prefab.*;
 
@@ -51,11 +52,15 @@ public enum PrefabIndex {
     Manager_UIManager(new UIManagerPrefab()),
     Manager_ObstacleManager(new ObstacleManagerPrefab()),
     Manager_BallsManager(new BallsManagerPrefab()),
+    Manager_OptionsManager(new OptionsManagerPrefab()),
+    Manager_GoBackButtonManager(new GoBackButtonManagerPrefab()),
+
 
     /// Health change visualization
     HealthChange_PopUp(new HealthChangePopUpUIPrefab()),
     HealthChange_VisualizeHandler(new HealthChangeVisualizerPrefab()),
     /// UI
+    /// MainMenu
     PauseButton(new PauseButtonPrefab()),
     ResumeButton(new ResumeButtonPrefab()),
     MenuButton(new MenuButtonPrefab()),
@@ -64,6 +69,17 @@ public enum PrefabIndex {
     RecordButton(new RecordButtonPrefab()),
     OptionsButton(new OptionsButtonPrefab()),
     QuitButton(new QuitButtonPrefab()),
+    GameTitle(new GameTitlePrefab()),
+    /// OptionsMenu
+    MasterVolumeSlider(new MasterVolumeSliderPrefab()),
+    MusicVolumeSlider(new MusicVolumeSliderPrefab()),
+    SFXVolumeSlider(new SFXVolumeSliderPrefab()),
+    MasterVolumeText(new MasterVolumeTextPrefab()),
+    SFXVolumeText(new SFXVolumeTextPrefab()),
+    MusicVolumeText(new MusicVolumeTextPrefab()),
+    OptionsTitle(new OptionsTitlePrefab()),
+
+    GoBackButton(new GoBackButtonPrefab()),
 
     /// Voltraxis
     Voltraxis(new VoltraxisPrefab()),

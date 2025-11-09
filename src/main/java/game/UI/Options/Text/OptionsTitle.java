@@ -1,38 +1,43 @@
-package game.UI.MainMenu;
+package game.UI.Options.Text;
 
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
-import org.Layer.RenderLayer;
 import org.Main;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
-import utils.Random;
+import org.Text.FontDataIndex;
+import org.Text.TextHorizontalAlignment;
+import org.Text.TextUI;
+import org.Text.TextVerticalAlignment;
 import utils.Time;
 import utils.UITween.Ease;
 import utils.UITween.Tween;
 import utils.Vector2;
 
-public class GameTitle extends MonoBehaviour {
+public class OptionsTitle extends MonoBehaviour {
+    private TextUI textUI;
+
     private final double FLUCTUATION_RATE = 1.2;
     private Vector2 originalPosition;
     private final double TWEEN_DURATION = 1;
     private final double TWEEN_DISTANCE = 250;
-
     /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
-    public GameTitle(GameObject owner) {
+    public OptionsTitle(GameObject owner) {
         super(owner);
 
-        SpriteRenderer spriteRenderer = owner.addComponent(SpriteRenderer.class);
-        spriteRenderer.setImage(ImageAsset.ImageIndex.GameTitle.getImage());
-        spriteRenderer.getTransform().setGlobalScale(new Vector2(0.5,0.5));
-        spriteRenderer.setPivot(new Vector2(0.5, 0.5));
-        spriteRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        textUI = owner.addComponent(TextUI.class);
+        textUI.setVerticalAlignment(TextVerticalAlignment.Middle);
+        textUI.setHorizontalAlignment(TextHorizontalAlignment.Center);
+        textUI.setFont(FontDataIndex.Jersey_25);
+        textUI.setText("OPTIONS");
+        textUI.getText().getStyleClass().add("neon-text");
+        textUI.setFontSize(100);
 
         getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH/2, - TWEEN_DISTANCE/2 ));
+
+
     }
 
     @Override
@@ -47,7 +52,7 @@ public class GameTitle extends MonoBehaviour {
     public void startAnimation() {
         Tween.to(getGameObject())
                 .moveY(TWEEN_DISTANCE, TWEEN_DURATION)
-                .ease(Ease.OUT_BOUNCE)
+                .ease(Ease.OUT_BACK)
                 .setDelay(0.0)
                 .ignoreTimeScale(true)
                 .play();
@@ -69,5 +74,4 @@ public class GameTitle extends MonoBehaviour {
         double swing = Math.sin(FLUCTUATION_RATE * time * Math.PI + phase) * 5.0; // ±5 px
         getTransform().setGlobalPosition(originalPosition.add(new Vector2(0, swing)));
     }
-
 }

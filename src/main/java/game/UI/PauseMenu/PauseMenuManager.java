@@ -56,9 +56,7 @@ public class PauseMenuManager extends MonoBehaviour {
         pauseButton.getTransform().setGlobalPosition(new Vector2(50, 50));
         resumeButton.getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH / 2, 250));
         menuButton.getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH / 2, 450));
-//
-//        resumeButton.getTransform().setGlobalPosition(new Vector2(SLIDE_DISTANCE, 100));
-//        menuButton.getTransform().setGlobalPosition(new Vector2(SLIDE_DISTANCE, 0));
+
         resumeButton.getGameObject().setActive(false);
         menuButton.getGameObject().setActive(false);
 

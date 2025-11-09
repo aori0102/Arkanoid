@@ -1,6 +1,5 @@
-package game.UI.Prefab;
+package game.UI.Prefab.MainMenu;
 
-import game.GameManager.GameManager;
 import game.UI.Buttons.OptionsButton;
 import game.UI.MainMenu.MainMenuManager;
 import org.GameObject.GameObject;

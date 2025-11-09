@@ -2,6 +2,7 @@ package game.UI.MainMenu;
 
 import game.GameManager.GameManager;
 import game.UI.Buttons.*;
+import game.UI.Options.OptionsManager;
 import javafx.application.Platform;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -53,7 +54,8 @@ public class MainMenuController extends MonoBehaviour {
     }
 
     private void onOptionsButtonClick(Object sender, MouseEvent e) {
-        SceneManager.loadScene(SceneKey.Options);
+        MainMenuManager.getInstance().hideUI();
+        OptionsManager.getInstance().showUI();
     }
 
     private void onQuitButtonClick(Object sender, MouseEvent e) {

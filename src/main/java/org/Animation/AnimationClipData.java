@@ -63,6 +63,11 @@ public enum AnimationClipData {
     Resume_Button_Pressed("/Animation/Button/ResumeButton/Pressed.json"),
     Resume_Button_Released("/Animation/Button/ResumeButton/Released.json"),
     Resume_Button_Clicked("/Animation/Button/ResumeButton/Clicked.json"),
+    GoBack_Button_Idle("/Animation/Button/GoBackButton/Idle.json"),
+    GoBack_Button_Pressed("/Animation/Button/GoBackButton/Pressed.json"),
+    GoBack_Button_Released("/Animation/Button/GoBackButton/Released.json"),
+    GoBack_Button_Clicked("/Animation/Button/GoBackButton/Clicked.json"),
+    GoBack_Button_Hovered("/Animation/Button/GoBackButton/Hovered.json"),
 
     /// Perk
     Health_Perk("/Animation/Perk/HealthPerk.json"),

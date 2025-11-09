@@ -27,6 +27,10 @@ public class SFXPlayer extends AudioPlayer {
         audioClip.play();
     }
 
+    public void stop() {
+        audioClip.stop();
+    }
+
     protected void setAudio(AudioClip audioClip) {
         this.audioClip = audioClip;
     }

@@ -44,9 +44,7 @@ public abstract class Perk extends MonoBehaviour
     private final double ANIMATION_DURATION = 0.1;
     private final double ORIGINAL_SCALE = 1.0;
     private final double TARGET_SCALE = 1.2;
-    private static final double FLUCTUATION_RANDOM_MAX = 5;
     private static final double FLUCTUATION_RATE = 1.2;
-    private static final double randomTime = Random.range(0, FLUCTUATION_RANDOM_MAX);
     private Vector2 oldPosition;
     //ButtonState
     protected enum ButtonState {Idle, Hover, Pressed, Released, Clicked}
@@ -151,7 +149,7 @@ public abstract class Perk extends MonoBehaviour
         }
         double time = Time.getRealTime();
         double phase = (getGameObject().hashCode() % 1000) / 1000.0 * Math.PI * 2; // unique offset
-        double swing = Math.sin(FLUCTUATION_RATE * time * Math.PI / randomTime + phase) * 5.0; // ±5 px
+        double swing = Math.sin(FLUCTUATION_RATE * time * Math.PI + phase) * 5.0; // ±5 px
         getTransform().setGlobalPosition(oldPosition.add(new Vector2(0, swing)));
     }
 
