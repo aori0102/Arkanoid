@@ -20,6 +20,7 @@ public final class InGameSceneBuilder extends SceneBuilder {
         var shield = GameObjectManager.instantiate("Shield").addComponent(Shield.class);
         ParticlePool particlePool = GameObjectManager.instantiate("ParticlePool").addComponent(ParticlePool.class);
 
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_ProgressManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_UIManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_PerkManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_BrickMapManager);

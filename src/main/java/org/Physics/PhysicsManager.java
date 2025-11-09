@@ -183,6 +183,10 @@ public class PhysicsManager {
                     var cellKey = getCellKey(row, column);
                     if (!spatialPartitioningMap.containsKey(cellKey) || !spatialPartitioningMap.get(cellKey).remove(collider)) {
                         throw new RuntimeException("Spatial partitioning not detected for collider " + collider);
+                    } else {
+                        if (spatialPartitioningMap.get(cellKey).isEmpty()) {
+                            spatialPartitioningMap.remove(cellKey);
+                        }
                     }
                 }
             }
@@ -294,11 +298,11 @@ public class PhysicsManager {
     private static CellRange getCellRangeFromBound(Vector2 firstPoint, Vector2 secondPoint) {
 
         var minBound = new Vector2(
-                Math.min(firstPoint.x, firstPoint.y),
+                Math.min(firstPoint.x, secondPoint.x),
                 Math.min(firstPoint.y, secondPoint.y)
         );
         var maxBound = new Vector2(
-                Math.max(firstPoint.x, firstPoint.y),
+                Math.max(firstPoint.x, secondPoint.x),
                 Math.max(firstPoint.y, secondPoint.y)
         );
 

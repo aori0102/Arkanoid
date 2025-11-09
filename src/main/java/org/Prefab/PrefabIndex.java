@@ -4,6 +4,7 @@ import game.Ball.BallParticlePrefab;
 import game.Ball.BallPrefab;
 import game.Ball.BallsManagerPrefab;
 import game.Brick.BrickPrefab;
+import game.Config.ConfigManagerPrefab;
 import game.Damagable.HealthChangePopUpUIPrefab;
 import game.Damagable.HealthChangeVisualizerPrefab;
 import game.GameManager.GameManagerPrefab;
@@ -17,6 +18,7 @@ import game.Player.Prefab.PaddlePrefab;
 import game.Player.Prefab.PlayerHealthBarPrefab;
 import game.Player.Prefab.PlayerHealthLossVignettePrefab;
 import game.Player.Prefab.PlayerPrefab;
+import game.PlayerData.DataManagerPrefab;
 import game.PowerUp.Prefab.*;
 import game.Rank.RankManagerPrefab;
 import game.Rank.RankUIPrefab;
@@ -52,6 +54,8 @@ public enum PrefabIndex {
     Manager_ObstacleManager(new ObstacleManagerPrefab()),
     Manager_BallsManager(new BallsManagerPrefab()),
     Manager_LevelManager(new LevelManagerPrefab()),
+    Manager_ProgressManager(new DataManagerPrefab()),
+    Manager_ConfigManager(new ConfigManagerPrefab()),
 
     /// Health change visualization
     HealthChange_PopUp(new HealthChangePopUpUIPrefab()),

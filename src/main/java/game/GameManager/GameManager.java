@@ -1,22 +1,45 @@
 package game.GameManager;
 
 import game.Level.LevelManager;
+import game.PlayerData.DataManager;
 import javafx.application.Platform;
+import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 import utils.Time;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
- * Class that manages every aspect of game levels, decides what to do when starting,
- * continuing or losing.
+ * Class that manages every aspect of the game and exists across all scenes.
+ * <p>
+ * Below is all of its function:
+ * <ul>
+ *     <li>Save, load player data.</li>
+ *     <li>Save, load player config.</li>
+ *     <li>Jump between scenes.</li>
+ *     <li>Quit game</li>
+ * </ul>
+ * </p>
  */
 public class GameManager extends MonoBehaviour {
 
-    private boolean hasSave = false;
+    public static final Path PLAYER_DATA_DIRECTORY = Paths.get(System.getenv("APPDATA"), "Arkanoid");
+
+    public enum GameLoadingState {
+        LoadProgress,
+        StartGame,
+        None,
+    }
 
     private static GameManager instance = null;
+
+    private GameLoadingState gameLoadingState = GameLoadingState.None;
 
     /**
      * Create this MonoBehaviour.
@@ -25,9 +48,32 @@ public class GameManager extends MonoBehaviour {
      */
     public GameManager(GameObject owner) {
         super(owner);
-        if (instance == null) {
-            instance = this;
+        if (instance != null) {
+            throw new ReinitializedSingletonException("GameManager is a singleton");
         }
+        instance = this;
+        verifyDataIntegrity();
+    }
+
+    @Override
+    public void update() {
+        switch (gameLoadingState) {
+
+            case LoadProgress:
+                gameLoadingState = GameLoadingState.StartGame;
+                break;
+
+            case StartGame:
+                LevelManager.getInstance().startGame();
+                gameLoadingState = GameLoadingState.None;
+                break;
+
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        instance = null;
     }
 
     public static GameManager getInstance() {
@@ -38,25 +84,20 @@ public class GameManager extends MonoBehaviour {
      * @aaa
      */
     public void startNewGame() {
-        startGameScene(0);
+        startGameScene();
+        DataManager.getInstance().resetSave();
     }
 
     /**
      * @aaaa
      */
     public void continueGame() {
-        if (hasSave) {
-            System.out.println("[GameManager] Continuing Game");
-
-            startGameScene(1); // TODO: Change 1 to loaded level index
-        }
-
-        System.out.println("[GameManager] No progress has been saved!");
+        startGameScene();
     }
 
-    private void startGameScene(int startingLevel) {
+    private void startGameScene() {
         SceneManager.loadScene(SceneKey.InGame);
-        LevelManager.getInstance().startGame(startingLevel);
+        gameLoadingState = GameLoadingState.LoadProgress;
     }
 
     public void quitToMainMenu() {
@@ -88,6 +129,14 @@ public class GameManager extends MonoBehaviour {
      */
     public void resumeGame() {
         Time.setTimeScale(1);
+    }
+
+    private void verifyDataIntegrity() {
+        try {
+            Files.createDirectories(PLAYER_DATA_DIRECTORY);
+        } catch (IOException e) {
+            System.err.println("[GameManager] Error while verifying integrity: " + e.getMessage());
+        }
     }
 
 }

@@ -5,7 +5,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.Event.EventHandler;
-import org.GameObject.GameObject;
 import org.Main;
 import org.Scene.SceneBuilder.SceneBuilderManager;
 import utils.NodeUtils;
@@ -32,11 +31,7 @@ public class SceneManager {
     private static final HashMap<SceneKey, Scene> sceneMap = new HashMap<>();
     private static SceneKey currentSceneKey = SceneKey.Menu;
 
-    public static EventHandler<SceneKey> OnSceneChanged = new EventHandler<SceneKey>(SceneManager.class);
-
-    public static void init(Stage stage) {
-        mainStage = stage;
-    }
+    public static EventHandler<SceneKey> onSceneChanged = new EventHandler<>(SceneManager.class);
 
     /**
      * Initialize all scenes available within {@link SceneKey}.
@@ -54,6 +49,8 @@ public class SceneManager {
         }
         mainStage = stage;
 
+        SceneBuilderManager.buildScene(SceneKey.DoNotDestroyOnLoad);
+
         return sceneMap.get(DEFAULT_SCENE_KEY);
 
     }
@@ -69,6 +66,10 @@ public class SceneManager {
 
         try {
 
+            if (sceneKey == SceneKey.DoNotDestroyOnLoad) {
+                throw new Exception("Cannot load scene " + sceneKey + " because it is internal!");
+            }
+
             if (mainStage == null) {
                 throw new IllegalStateException("SceneManager not initialized!");
             }
@@ -82,7 +83,7 @@ public class SceneManager {
             SceneBuilderManager.buildScene(sceneKey);
 
             System.out.println("[Scene Manager] Scene " + sceneKey + " loaded!");
-            OnSceneChanged.invoke(SceneManager.class, currentSceneKey);
+            onSceneChanged.invoke(SceneManager.class, currentSceneKey);
 
         } catch (Exception e) {
             System.err.println(SceneManager.class.getSimpleName() + " | Error while loading scene: " + e.getMessage());
@@ -100,19 +101,11 @@ public class SceneManager {
     }
 
     /**
-     * Returns the {@link Group} root node associated with a given scene.
+     * Get a copy of the scene map which contains {@link Scene} from JavaFX mapping to their respective
+     * {@link SceneKey}.
      *
-     * @param sceneKey The scene key.
-     * @return The root {@link Group} for the scene, or {@code null} if not found.
+     * @return A copy of the scene map.
      */
-    public static Group getSceneRoot(SceneKey sceneKey) {
-        return (Group) sceneMap.get(sceneKey).getRoot();
-    }
-
-    public static boolean isObjectInActiveScene(GameObject gameobject) {
-        return gameobject.getRegisteredSceneKey() == currentSceneKey;
-    }
-
     public static HashMap<SceneKey, Scene> getSceneMap() {
         return sceneMap;
     }

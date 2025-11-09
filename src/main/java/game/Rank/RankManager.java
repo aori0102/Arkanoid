@@ -1,5 +1,6 @@
 package game.Rank;
 
+import game.PlayerData.DataManager;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
@@ -21,44 +22,9 @@ public final class RankManager extends MonoBehaviour {
     private int _currentExp = 0;
 
     /**
-     * Setter for read-only field {@link #_currentExp}
-     *
-     * @param currentExp The value to set.
-     */
-    private void setCurrentExp(int currentExp) {
-
-        var rankExp = getCurrentRankExp();
-        var exceedAmount = currentExp - rankExp;
-        if (exceedAmount < 0) {
-            this._currentExp = currentExp;
-        } else {
-            // Rank up
-            setRank(_rank + 1);
-            this._currentExp = exceedAmount;
-        }
-
-        // Fire event
-        var onExpChangedEventArgs = new OnExpChangedEventArgs();
-        onExpChangedEventArgs.currentExp = _currentExp;
-        onExpChangedEventArgs.expRatio = (double) _currentExp / getCurrentRankExp();
-        onExpChanged.invoke(this, onExpChangedEventArgs);
-
-    }
-
-    /**
      * <b>Read-only. Write via {@link #setRank}.</b>
      */
     private int _rank = 0;
-
-    /**
-     * Setter for read-only field {@link #_rank}
-     *
-     * @param rank The value to set.
-     */
-    private void setRank(int rank) {
-        this._rank = rank;
-        onRankChanged.invoke(this, _rank);
-    }
 
     public EventHandler<OnExpChangedEventArgs> onExpChanged = new EventHandler<>(RankManager.class);
 
@@ -90,6 +56,7 @@ public final class RankManager extends MonoBehaviour {
     public void start() {
         experienceHolder_onAnyExperienceHolderDestroyed_ID = ExperienceHolder.onAnyExperienceHolderDestroyed
                 .addListener(this::experienceHolder_onAnyExperienceHolderDestroyed);
+        loadData();
     }
 
     @Override
@@ -98,6 +65,12 @@ public final class RankManager extends MonoBehaviour {
 
         ExperienceHolder.onAnyExperienceHolderDestroyed
                 .removeListener(experienceHolder_onAnyExperienceHolderDestroyed_ID);
+    }
+
+    private void loadData() {
+        var save = DataManager.getInstance().getSave();
+        setCurrentExp(save.getExp());
+        setRank(save.getRank());
     }
 
     /**
@@ -115,6 +88,49 @@ public final class RankManager extends MonoBehaviour {
 
     private int getCurrentRankExp() {
         return (int) (Math.pow(EXP_MULTIPLIER, _rank) * BASE_EXP);
+    }
+
+    public int getEXP() {
+        return _currentExp;
+    }
+
+    public int getRank() {
+        return _rank;
+    }
+
+    /**
+     * Setter for read-only field {@link #_currentExp}
+     *
+     * @param currentExp The value to set.
+     */
+    private void setCurrentExp(int currentExp) {
+
+        var rankExp = getCurrentRankExp();
+        var exceedAmount = currentExp - rankExp;
+        if (exceedAmount < 0) {
+            this._currentExp = currentExp;
+        } else {
+            // Rank up
+            setRank(_rank + 1);
+            this._currentExp = exceedAmount;
+        }
+
+        // Fire event
+        var onExpChangedEventArgs = new OnExpChangedEventArgs();
+        onExpChangedEventArgs.currentExp = _currentExp;
+        onExpChangedEventArgs.expRatio = (double) _currentExp / getCurrentRankExp();
+        onExpChanged.invoke(this, onExpChangedEventArgs);
+
+    }
+
+    /**
+     * Setter for read-only field {@link #_rank}
+     *
+     * @param rank The value to set.
+     */
+    private void setRank(int rank) {
+        this._rank = rank;
+        onRankChanged.invoke(this, _rank);
     }
 
 }

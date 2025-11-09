@@ -243,6 +243,31 @@ public class GameObjectManager {
                 System.err.println(Arrays.toString(e.getStackTrace()));
             }
         }
+        addedGameObjectQueue.removeIf(gameObject -> gameObject.isDestroyed() || !gameObject.isDoNotDestroyOnLoad());
+        while (!removedObjectQueue.isEmpty()) {
+            gameObjectSet.remove(removedObjectQueue.poll());
+        }
+
+        sceneUpdateAbortion = true;
+
+    }
+
+    /**
+     * Clear every game objects.
+     * <p>
+     * <b><i><u>NOTE</u> : Only call this function when closing the application.</i></b>
+     * </p>
+     */
+    public static void nuke() {
+
+        System.out.println("[GameObjectManager] Nuking every game objects");
+        for (var object : gameObjectSet) {
+            if (object.isDestroyed()) {
+                continue;
+            }
+            object.markDestroyed();
+            object.clearData();
+        }
         gameObjectSet.clear();
         addedGameObjectQueue.clear();
         removedObjectQueue.clear();

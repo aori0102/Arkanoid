@@ -6,6 +6,8 @@ import game.GameManager.LevelState;
 import game.MapGenerator.BrickMapManager;
 import game.Player.Player;
 import game.Player.PlayerLives;
+import game.PlayerData.DataManager;
+import game.PlayerData.ProgressData;
 import game.Voltraxis.Voltraxis;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
@@ -46,6 +48,7 @@ public final class LevelManager extends MonoBehaviour {
     private LevelState _levelState = LevelState.IntroducingLevel;
 
     private int levelIndex = 0;
+    private int clearedLevel = 0;
     private double mapClearingStartTick = 0.0;
 
     private EventActionID brickMapManager_onMapCleared_ID = null;
@@ -58,6 +61,8 @@ public final class LevelManager extends MonoBehaviour {
     private Time.CoroutineID destroyRandomBall_coroutineID = null;
 
     public EventHandler<Void> onLevelCleared = new EventHandler<>(LevelManager.class);
+    public EventHandler<Void> onLevelConcluded = new EventHandler<>(LevelManager.class);
+    public EventHandler<Void> onGameOver = new EventHandler<>(LevelManager.class);
 
     public EventHandler<OnLevelLoadedEventArgs> onLevelLoaded = new EventHandler<>(LevelManager.class);
 
@@ -105,10 +110,16 @@ public final class LevelManager extends MonoBehaviour {
                 .addListener(this::playerLives_onLivesReachZero);
         playerLives_onLivesDecreased_ID = Player.getInstance().getPlayerLives().onLivesDecreased
                 .addListener(this::playerLives_onLivesDecreased);
+        loadSave();
     }
 
     public static LevelManager getInstance() {
         return instance;
+    }
+
+    private void loadSave() {
+        levelIndex = DataManager.getInstance().getSave().getLevel();
+        System.out.println("Save level: " + levelIndex);
     }
 
     /**
@@ -165,13 +176,13 @@ public final class LevelManager extends MonoBehaviour {
         endLevel();
     }
 
-    public void startGame(int levelIndex) {
-        this.levelIndex = levelIndex;
+    public void startGame() {
         loadCurrentLevel();
     }
 
     private void endLevel() {
         onLevelCleared.invoke(this, null);
+        clearedLevel = levelIndex + 1;
         setLevelState(LevelState.ConcludingLevel);
         cleanUpMap();
         displayLevelCleared();
@@ -248,6 +259,7 @@ public final class LevelManager extends MonoBehaviour {
             destroyRandomBall_coroutineID
                     = Time.addCoroutine(this::destroyRandomBall, Time.getTime() + BALL_REMOVAL_DELAY);
         } else {
+            onLevelConcluded.invoke(this, null);
             var clearTime = Time.getTime() - mapClearingStartTick;
             progressToNextLevel_coroutineID
                     = Time.addCoroutine(
@@ -258,11 +270,16 @@ public final class LevelManager extends MonoBehaviour {
     }
 
     private void onGameOver() {
-        System.out.println("GAME OVER");
+        onGameOver.invoke(this, null);
         GameManager.getInstance().quitToMainMenu();
     }
 
     public LevelState getLevelState() {
         return _levelState;
     }
+
+    public int getClearedLevel() {
+        return clearedLevel;
+    }
+
 }

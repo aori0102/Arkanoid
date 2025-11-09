@@ -53,6 +53,11 @@ public class Main extends Application {
 
     }
 
+    @Override
+    public void stop() {
+        GameObjectManager.nuke();
+    }
+
     /**
      * Update of every frame
      */

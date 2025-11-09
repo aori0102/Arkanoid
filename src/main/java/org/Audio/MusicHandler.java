@@ -1,6 +1,5 @@
 package org.Audio;
 
-import game.GameManager.GameManager;
 import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 
@@ -8,7 +7,7 @@ public class MusicHandler {
 
     public static void initializeMusicHandler() {
         System.out.println("add listener to Music Handler!");
-        SceneManager.OnSceneChanged.addListener(MusicHandler::audioHandler_OnSceneChanged);
+        SceneManager.onSceneChanged.addListener(MusicHandler::audioHandler_OnSceneChanged);
     }
 
 

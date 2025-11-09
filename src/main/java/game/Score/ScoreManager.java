@@ -7,6 +7,7 @@ import game.GameManager.LevelState;
 import game.Level.LevelManager;
 import game.MapGenerator.BrickMapManager;
 import game.Player.Paddle.PlayerPaddle;
+import game.PlayerData.DataManager;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
@@ -81,6 +82,7 @@ public final class ScoreManager extends MonoBehaviour {
         ball_onAnyBallDestroyed_ID = Ball.onAnyBallDestroyed.addListener(this::ball_onAnyBallDestroyed);
         ballsManager_onBallCountChanged_ID = BallsManager.getInstance().onBallCountChanged
                 .addListener(this::ballsManager_onBallCountChanged);
+        loadSave();
     }
 
     @Override
@@ -169,4 +171,19 @@ public final class ScoreManager extends MonoBehaviour {
     public static ScoreManager getInstance() {
         return instance;
     }
+
+    private void loadSave() {
+        var save = DataManager.getInstance().getSave();
+        setScore(save.getScore());
+        setCombo(save.getCombo());
+    }
+
+    public int getScore() {
+        return _score;
+    }
+
+    public int getCombo() {
+        return _combo;
+    }
+
 }

@@ -1,6 +1,5 @@
 package org.Scene.SceneBuilder;
 
-import game.UI.Buttons.*;
 import game.UI.MainMenu.GameTitle;
 import game.UI.MainMenu.MainMenuBackground;
 import game.UI.MainMenu.MainMenuManager;
@@ -17,9 +16,6 @@ public final class MenuSceneBuilder extends SceneBuilder {
     protected void build() {
         GameObjectManager.instantiate("MainMenuManager")
                 .addComponent(MainMenuManager.class);
-
-        PrefabManager.instantiatePrefab(PrefabIndex.Manager_GameManager)
-                .setDoNotDestroyOnLoad(true);
 
         var mainMenuBackground = GameObjectManager.instantiate("MainMenuBackground");
         mainMenuBackground.addComponent(MainMenuBackground.class);

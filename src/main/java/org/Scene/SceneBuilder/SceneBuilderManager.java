@@ -14,6 +14,7 @@ public final class SceneBuilderManager {
         sceneBuilderMap.put(SceneKey.InGame, new InGameSceneBuilder());
         sceneBuilderMap.put(SceneKey.Options, new OptionsSceneBuilder());
         sceneBuilderMap.put(SceneKey.Record, new RecordSceneBuilder());
+        sceneBuilderMap.put(SceneKey.DoNotDestroyOnLoad, new DoNotDestroyOnLoadSceneBuilder());
     }
 
     public static void buildScene(SceneKey key) {

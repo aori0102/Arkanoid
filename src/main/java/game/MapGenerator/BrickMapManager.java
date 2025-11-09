@@ -4,6 +4,8 @@ import game.Brick.Brick;
 import game.Brick.BrickEvent.BrickEvent;
 import game.Brick.BrickEvent.EventType;
 import game.Brick.BrickGenMap.GenMap;
+import game.PlayerData.DataManager;
+import game.PlayerData.ProgressData;
 import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
@@ -40,6 +42,8 @@ public final class BrickMapManager extends MonoBehaviour {
     private EventActionID brick_onAnyBrickDestroyed_ID = null;
     private EventActionID brick_onAnyBrickHit_ID = null;
 
+    private int brickDestroyed = 0;
+
     public EventHandler<Void> onMapCleared = new EventHandler<>(BrickMapManager.class);
 
     /**
@@ -73,6 +77,7 @@ public final class BrickMapManager extends MonoBehaviour {
         brick_onAnyBrickHit_ID = Brick.onAnyBrickHit.addListener(
                 this::brick_onAnyBrickHit
         );
+        loadSave();
     }
 
     @Override
@@ -107,6 +112,10 @@ public final class BrickMapManager extends MonoBehaviour {
 
     }
 
+    private void loadSave() {
+        brickDestroyed = DataManager.getInstance().getSave().getBrickDestroyed();
+    }
+
     public static BrickMapManager getInstance() {
         return instance;
     }
@@ -122,6 +131,7 @@ public final class BrickMapManager extends MonoBehaviour {
             if (cell == null) {
                 throw new RuntimeException("Removing a brick which was not registered!");
             }
+            brickDestroyed++;
             brickGrid.get(cell.row).set(cell.column, null);
             PowerUpManager.getInstance().spawnPowerUp(e.brickPosition);
             if (brickCoordinateMap.isEmpty()) {
@@ -181,29 +191,8 @@ public final class BrickMapManager extends MonoBehaviour {
         brickEvent.executeEvent();
     }
 
-//    @Override
-//    public void update() {
-//
-//        for (int row = 0; row < ROW_COUNT; row++) {
-//            for (int col = 0; col < COLUMN_COUNT; col++) {
-//                var brick = brickGrid.get(row).get(col);
-//                if (brick != null && brick.isJustDamaged()) {
-//                    var brickType = brick.getBrickType();
-//                    switch (brickType) {
-//                        case Reborn -> brickEvent.getStartEvent(EventType.Reborn, row, col);
-//                        case Rock -> brickEvent.getStartEvent(EventType.Rock, row, col);
-//                        case Rocket -> brickEvent.getStartEvent(EventType.Rocket, row, col);
-//                        case Gift -> brickEvent.getStartEvent(EventType.Gift, row, col);
-//                        case Angel -> brickEvent.getStartEvent(EventType.Angel, row, col);
-//                        case Bomb -> brickEvent.getStartEvent(EventType.Bomb, row, col);
-//                        default -> {
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        brickEvent.executeEvent();
-//    }
+    public int getBrickDestroyed() {
+        return brickDestroyed;
+    }
 
 }

@@ -4,6 +4,7 @@ import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Exception.AccessingDestroyedObjectException;
 import org.Layer.Layer;
+import org.Scene.SceneBuilder.DoNotDestroyOnLoadSceneBuilder;
 import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 
@@ -555,6 +556,10 @@ public class GameObject {
     /**
      * Set this game object's {@code doNotDestroyOnLoad} property. When enabled,
      * this object will not be destroyed when loading a new scene.
+     * <p>
+     * <b><i><u>NOTE</u> : Any object with this mark HAVE TO BE initialized within
+     * {@link DoNotDestroyOnLoadSceneBuilder}.</i></b>
+     * </p>
      *
      * @param doNotDestroyOnLoad Whether this object should be kept alive when
      *                           loading new scene.
