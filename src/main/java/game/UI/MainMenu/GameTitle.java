@@ -1,5 +1,6 @@
 package game.UI.MainMenu;
 
+import game.UI.Title;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Layer.RenderLayer;
@@ -12,11 +13,8 @@ import utils.UITween.Ease;
 import utils.UITween.Tween;
 import utils.Vector2;
 
-public class GameTitle extends MonoBehaviour {
-    private final double FLUCTUATION_RATE = 1.2;
-    private Vector2 originalPosition;
-    private final double TWEEN_DURATION = 1;
-    private final double TWEEN_DISTANCE = 250;
+public class GameTitle extends Title {
+
 
     /**
      * Create this MonoBehaviour.
@@ -35,39 +33,5 @@ public class GameTitle extends MonoBehaviour {
         getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH/2, - TWEEN_DISTANCE/2 ));
     }
 
-    @Override
-    public void start() {
-        startAnimation();
-    }
-
-    public void update() {
-        idleAnimation();
-    }
-
-    public void startAnimation() {
-        Tween.to(getGameObject())
-                .moveY(TWEEN_DISTANCE, TWEEN_DURATION)
-                .ease(Ease.OUT_BOUNCE)
-                .setDelay(0.0)
-                .ignoreTimeScale(true)
-                .play();
-    }
-    public void exitAnimation() {
-        Tween.to(getGameObject())
-                .moveY(- TWEEN_DISTANCE, TWEEN_DURATION)
-                .ease(Ease.OUT_BOUNCE)
-                .setDelay(0.0)
-                .ignoreTimeScale(true)
-                .play();
-    }
-    private void idleAnimation() {
-        if(originalPosition == null) {
-            originalPosition = getTransform().getGlobalPosition();
-        }
-        double time = Time.getRealTime();
-        double phase = (getGameObject().hashCode() % 1000) / 1000.0 * Math.PI * 2; // unique offset
-        double swing = Math.sin(FLUCTUATION_RATE * time * Math.PI + phase) * 5.0; // ±5 px
-        getTransform().setGlobalPosition(originalPosition.add(new Vector2(0, swing)));
-    }
 
 }
