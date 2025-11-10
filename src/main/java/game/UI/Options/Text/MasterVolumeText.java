@@ -26,7 +26,7 @@ public class MasterVolumeText extends MonoBehaviour {
         textUI.setFontSize(50);
         textUI.setText("Master Volume");
         textUI.setFont(FontDataIndex.Jersey_25);
-        textUI.setTextColor(Color.YELLOW);
+        textUI.setSolidFill(Color.YELLOW);
         textUI.getText().getStyleClass().add("neon-text");
     }
 }

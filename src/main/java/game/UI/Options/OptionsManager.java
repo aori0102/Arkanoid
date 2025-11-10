@@ -14,7 +14,6 @@ import org.GameObject.MonoBehaviour;
 import org.Main;
 import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
-import org.w3c.dom.Text;
 import utils.UITween.Ease;
 import utils.UITween.Tween;
 import utils.Vector2;
@@ -26,12 +25,10 @@ public class OptionsManager extends MonoBehaviour {
     private SFXVolumeSlider sFXVolumeSlider = null;
     private boolean isOptionsMenuShowed = false;
 
-
     private final double SLIDE_DISTANCE = -Main.STAGE_WIDTH;
     private final double SLIDE_DURATION = 0.8;
     private final double SLIDER_OFFSET = 100;
     private final double TEXT_OFFSET = 45;
-
 
     /**
      * Create this MonoBehaviour.

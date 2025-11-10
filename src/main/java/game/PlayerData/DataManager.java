@@ -20,6 +20,8 @@ import java.util.List;
 
 public final class DataManager extends MonoBehaviour {
 
+    private static final int MAX_RECORD = 10;
+
     public final Path RECORD_FILE = GameManager.PLAYER_DATA_DIRECTORY.resolve("Record.json");
     public final Path SAVE_FILE = GameManager.PLAYER_DATA_DIRECTORY.resolve("Save.json");
 
@@ -156,6 +158,10 @@ public final class DataManager extends MonoBehaviour {
 
     private void generateNewRecord() {
         recordList.add(new Record(progressData));
+        recordList.sort(recordComparator);
+        while (recordList.size() > MAX_RECORD) {
+            recordList.removeLast();
+        }
     }
 
     public void resetSave() {

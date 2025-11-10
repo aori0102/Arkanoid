@@ -36,7 +36,6 @@ public final class InGameSceneBuilder extends SceneBuilder {
         PrefabManager.instantiatePrefab(PrefabIndex.PlayerInfoBoard);
 
         GameObjectManager.instantiate("GamePlayBackground").addComponent(GamePlayBackground.class);
-        PerkManager.getInstance().instantiatePerks();
 
         var powerUpManager = GameObjectManager.instantiate("powerUpManager");
         powerUpManager.addComponent(PowerUpManager.class);

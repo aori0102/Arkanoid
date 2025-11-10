@@ -24,7 +24,7 @@ public class SFXVolumeText extends MonoBehaviour {
         textUI.setHorizontalAlignment(TextHorizontalAlignment.Center);
         textUI.setFontSize(50);
         textUI.setText("SFX Volume");
-        textUI.setTextColor(Color.YELLOW);
+        textUI.setSolidFill(Color.YELLOW);
         textUI.setFont(FontDataIndex.Jersey_25);
         textUI.getText().getStyleClass().add("neon-text");
     }

@@ -14,12 +14,10 @@ public final class MenuSceneBuilder extends SceneBuilder {
 
     @Override
     protected void build() {
-        GameObjectManager.instantiate("MainMenuManager")
-                .addComponent(MainMenuManager.class);
+
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_OptionsManager);
-
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_MainMenuManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_GoBackButtonManager);
-
 
         var mainMenuBackground = GameObjectManager.instantiate("MainMenuBackground");
         mainMenuBackground.addComponent(MainMenuBackground.class);

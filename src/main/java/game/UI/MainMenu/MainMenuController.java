@@ -50,7 +50,6 @@ public class MainMenuController extends MonoBehaviour {
     }
 
     private void onOptionsButtonClick(Object sender, MouseEvent e) {
-        GameManager.getInstance().showOptions();
         MainMenuManager.getInstance().hideUI();
         OptionsManager.getInstance().showUI();
     }

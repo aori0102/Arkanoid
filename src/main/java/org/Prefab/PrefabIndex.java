@@ -26,6 +26,7 @@ import game.PlayerInfoBoard.PlayerInfoBoardPrefab;
 import game.Score.ScoreManagerPrefab;
 import game.Score.ScorePopUpPrefab;
 import game.Score.ScoreUIPrefab;
+import game.UI.MainMenu.MainMenuManagerPrefab;
 import game.UI.Prefab.*;
 import game.UI.Prefab.MainMenu.*;
 import game.UI.Prefab.OptionsMenu.*;
@@ -57,7 +58,7 @@ public enum PrefabIndex {
     Manager_BallsManager(new BallsManagerPrefab()),
     Manager_OptionsManager(new OptionsManagerPrefab()),
     Manager_GoBackButtonManager(new GoBackButtonManagerPrefab()),
-
+    Manager_MainMenuManager(new MainMenuManagerPrefab()),
     Manager_LevelManager(new LevelManagerPrefab()),
     Manager_ProgressManager(new DataManagerPrefab()),
     Manager_ConfigManager(new ConfigManagerPrefab()),

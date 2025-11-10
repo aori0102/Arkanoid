@@ -14,6 +14,8 @@ public final class RankManager extends MonoBehaviour {
 
     private static RankManager instance = null;
 
+    private int accumulatedRank = 0;
+
     private EventActionID experienceHolder_onAnyExperienceHolderDestroyed_ID = null;
 
     /**
@@ -69,8 +71,8 @@ public final class RankManager extends MonoBehaviour {
 
     private void loadData() {
         var save = DataManager.getInstance().getSave();
-        setCurrentExp(save.getExp());
         setRank(save.getRank());
+        setCurrentExp(save.getExp());
     }
 
     /**
@@ -129,8 +131,17 @@ public final class RankManager extends MonoBehaviour {
      * @param rank The value to set.
      */
     private void setRank(int rank) {
+        accumulatedRank += Math.max(0, rank - this._rank);
+        System.out.println("Accumulated rank: " + accumulatedRank);
         this._rank = rank;
         onRankChanged.invoke(this, _rank);
     }
 
+    public boolean fetchAccumulatedRank() {
+        if (accumulatedRank > 0) {
+            accumulatedRank--;
+            return true;
+        }
+        return false;
+    }
 }

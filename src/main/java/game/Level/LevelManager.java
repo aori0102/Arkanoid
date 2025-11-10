@@ -4,6 +4,7 @@ import game.Ball.BallsManager;
 import game.GameManager.GameManager;
 import game.GameManager.LevelState;
 import game.MapGenerator.BrickMapManager;
+import game.Perks.Index.PerkManager;
 import game.Player.Player;
 import game.Player.PlayerLives;
 import game.PlayerData.DataManager;
@@ -55,12 +56,14 @@ public final class LevelManager extends MonoBehaviour {
     private EventActionID voltraxis_onBossDestroyed_ID = null;
     private EventActionID playerLives_onLivesReachZero_ID = null;
     private EventActionID playerLives_onLivesDecreased_ID = null;
+    private EventActionID perkManager_onPerkSelectionCompleted_ID = null;
 
     private Time.CoroutineID enablePlaying_coroutineID = null;
     private Time.CoroutineID progressToNextLevel_coroutineID = null;
     private Time.CoroutineID destroyRandomBall_coroutineID = null;
 
     public EventHandler<Void> onLevelCleared = new EventHandler<>(LevelManager.class);
+    public EventHandler<Void> onPerkSelectionRequested = new EventHandler<>(LevelManager.class);
     public EventHandler<Void> onLevelConcluded = new EventHandler<>(LevelManager.class);
     public EventHandler<Void> onGameOver = new EventHandler<>(LevelManager.class);
 
@@ -97,6 +100,10 @@ public final class LevelManager extends MonoBehaviour {
             Player.getInstance().getPlayerLives().onLivesReachZero.removeListener(playerLives_onLivesReachZero_ID);
             Player.getInstance().getPlayerLives().onLivesReachZero.removeListener(playerLives_onLivesDecreased_ID);
         }
+        if (PerkManager.getInstance() != null) {
+            PerkManager.getInstance().onPerkSelectionCompleted
+                    .removeListener(perkManager_onPerkSelectionCompleted_ID);
+        }
         Time.removeCoroutine(enablePlaying_coroutineID);
         Time.removeCoroutine(progressToNextLevel_coroutineID);
         Time.removeCoroutine(destroyRandomBall_coroutineID);
@@ -110,6 +117,8 @@ public final class LevelManager extends MonoBehaviour {
                 .addListener(this::playerLives_onLivesReachZero);
         playerLives_onLivesDecreased_ID = Player.getInstance().getPlayerLives().onLivesDecreased
                 .addListener(this::playerLives_onLivesDecreased);
+        perkManager_onPerkSelectionCompleted_ID = PerkManager.getInstance().onPerkSelectionCompleted
+                .addListener(this::perkManager_onPerkSelectionCompleted);
         loadSave();
     }
 
@@ -174,6 +183,20 @@ public final class LevelManager extends MonoBehaviour {
     private void voltraxis_onBossDestroyed(Object sender, Void e) {
         Voltraxis.getInstance().onBossDestroyed.removeListener(voltraxis_onBossDestroyed_ID);
         endLevel();
+    }
+
+    /**
+     * Called when {@link PerkManager#onPerkSelectionCompleted} is invoked.<br><br>
+     * This function ends perk selection to load new round.
+     *
+     * @param sender Event caller {@link PerkManager}.
+     * @param e      Empty event argument.
+     */
+    private void perkManager_onPerkSelectionCompleted(Object sender, Void e) {
+        if (_levelState != LevelState.PerkSelection) {
+            throw new RuntimeException("Perk selection done not within " + LevelState.PerkSelection);
+        }
+        progressToNextLevel();
     }
 
     public void startGame() {
@@ -263,10 +286,15 @@ public final class LevelManager extends MonoBehaviour {
             var clearTime = Time.getTime() - mapClearingStartTick;
             progressToNextLevel_coroutineID
                     = Time.addCoroutine(
-                    this::progressToNextLevel,
+                    this::selectPerk,
                     Time.getTime() + Math.max(0.0, LEVEL_CONCLUDING_TIME - clearTime)
             );
         }
+    }
+
+    private void selectPerk() {
+        setLevelState(LevelState.PerkSelection);
+        onPerkSelectionRequested.invoke(this, null);
     }
 
     private void onGameOver() {

@@ -42,7 +42,6 @@ public class MainMenuManager extends MonoBehaviour {
             throw new ReinitializedSingletonException("MainMenuManager is a singleton");
         }
         instance = this;
-
         PrefabManager.instantiatePrefab(PrefabIndex.StartButton);
         PrefabManager.instantiatePrefab(PrefabIndex.RecordButton);
         PrefabManager.instantiatePrefab(PrefabIndex.OptionsButton);

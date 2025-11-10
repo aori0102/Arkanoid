@@ -26,7 +26,6 @@ public class MusicVolumeText extends MonoBehaviour {
         textUI.setFontSize(50);
         textUI.setText("Music Volume");
         textUI.setFont(FontDataIndex.Jersey_25);
-        textUI.setTextColor(Color.YELLOW);
         textUI.getText().getStyleClass().add("neon-text");
     }
 }
