@@ -33,6 +33,8 @@ import game.UI.MainMenu.MainMenuManagerPrefab;
 import game.UI.Prefab.*;
 import game.UI.Prefab.MainMenu.*;
 import game.UI.Prefab.OptionsMenu.*;
+import game.UI.Prefab.RecordMenu.RecordMenuManagerPrefab;
+import game.UI.Prefab.RecordMenu.RecordTitlePrefab;
 import game.UI.UIManagerPrefab;
 import game.Voltraxis.Prefab.*;
 
@@ -65,6 +67,7 @@ public enum PrefabIndex {
     Manager_LevelManager(new LevelManagerPrefab()),
     Manager_ProgressManager(new DataManagerPrefab()),
     Manager_ConfigManager(new ConfigManagerPrefab()),
+    Manager_RecordMenuManager(new RecordMenuManagerPrefab()),
 
     /// Health change visualization
     HealthChange_PopUp(new HealthChangePopUpUIPrefab()),
@@ -90,6 +93,9 @@ public enum PrefabIndex {
     OptionsTitle(new OptionsTitlePrefab()),
 
     GoBackButton(new GoBackButtonPrefab()),
+
+    /// RecordsMenu
+    RecordTitle(new RecordTitlePrefab()),
 
     /// Voltraxis
     Voltraxis(new VoltraxisPrefab()),

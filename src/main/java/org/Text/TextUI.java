@@ -35,6 +35,10 @@ public class TextUI extends Renderable {
 
     }
 
+    public void setGlow(){
+        getText().getStyleClass().add("neon-text");
+    }
+
     /**
      * Called when {@link Renderable#onRenderSizeChanged} is invoked.<br><br>
      * This function adjust the text size to match with the object's scale.

@@ -216,6 +216,8 @@ public class GameObjectManager {
         if (gameObjectSet.contains(gameObject) && !gameObject.isDestroyed() && !removedObjectQueue.contains(gameObject)) {
             removedObjectQueue.offer(gameObject);
             gameObject.markDestroyed();
+
+            System.out.println("Destroy:" + gameObject);
         }
 
     }

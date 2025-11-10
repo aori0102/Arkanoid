@@ -20,7 +20,7 @@ import java.util.List;
 
 public final class DataManager extends MonoBehaviour {
 
-    private static final int MAX_RECORD = 10;
+    private static final int MAX_RECORD = 5;
 
     public final Path RECORD_FILE = GameManager.PLAYER_DATA_DIRECTORY.resolve("Record.json");
     public final Path SAVE_FILE = GameManager.PLAYER_DATA_DIRECTORY.resolve("Save.json");
@@ -33,7 +33,8 @@ public final class DataManager extends MonoBehaviour {
             = Comparator.comparing(Record::getScore)
             .thenComparing(Record::getLevelCleared)
             .thenComparing(Record::getRank)
-            .thenComparing(Record::getBrickDestroyed);
+            .thenComparing(Record::getBrickDestroyed)
+            .reversed();
 
     private EventActionID levelManager_onLevelConcluded_ID = null;
     private EventActionID levelManager_onGameOver_ID = null;
@@ -206,6 +207,10 @@ public final class DataManager extends MonoBehaviour {
             System.err.println("[ProgressManager] Error while saving records: " + e.getMessage());
         }
 
+    }
+
+    public List<Record> getRecords() {
+        return recordList;
     }
 
 }

@@ -93,7 +93,7 @@ public class PlayerSkillsHandler extends MonoBehaviour {
 
             if (currentSkillCharge < maxSkillCharge) {
                 skillDataMap.get(key).skillCooldownTime -= Time.getDeltaTime();
-                System.out.println("This is called" +skillDataMap.get(key).skillCooldownTime);
+//                System.out.println("This is called" +skillDataMap.get(key).skillCooldownTime);
 
                 if (skillDataMap.get(key).skillCooldownTime <= 0) {
                     skillDataMap.get(key).skillCharge++;

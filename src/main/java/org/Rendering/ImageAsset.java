@@ -109,6 +109,9 @@ public class ImageAsset {
         BallParticle("/Particle/BallParticle.png"),
         ExplodingBrickParticle("/Particle/ExplodingBrickParticle.png"),
 
+        /// RecordUI
+        RecordUI("/UI/RecordUI.png"),
+
         None("");
 
         private final Image image;
