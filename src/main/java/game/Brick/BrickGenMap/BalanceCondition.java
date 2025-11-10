@@ -11,7 +11,7 @@ import static java.lang.Math.abs;
 
 public class BalanceCondition {
 
-    private final static int  atLeastNumGate = 4;
+    private final static int atLeastNumGate = 4;
 
     public static void balanceCondition(Matrix g) {
         bottomNotFullDiamond(g);
@@ -177,7 +177,7 @@ public class BalanceCondition {
                     } else {
                         BrickType[] pool = {
                                 BrickType.Rock, BrickType.Bomb,
-                                BrickType.Gift, BrickType.Reborn,
+                                BrickType.Gift, BrickType.Wheel,
                                 BrickType.Rocket, BrickType.Angel
                         };
                         BrickType pick = pool[rng.nextInt(pool.length)];

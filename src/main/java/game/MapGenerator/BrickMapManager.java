@@ -166,8 +166,11 @@ public final class BrickMapManager extends MonoBehaviour {
             var row = cell.row;
             var col = cell.column;
             var brickType = brick.getBrickType();
+
+            brickEvent.getStartEvent(EventType.Wave, row, col);
+
             switch (brickType) {
-                case Reborn -> brickEvent.getStartEvent(EventType.Reborn, row, col);
+                case Wheel -> brickEvent.getStartEvent(EventType.Wheel, row, col);
                 case Rock -> brickEvent.getStartEvent(EventType.Rock, row, col);
                 case Rocket -> brickEvent.getStartEvent(EventType.Rocket, row, col);
                 case Gift -> brickEvent.getStartEvent(EventType.Gift, row, col);

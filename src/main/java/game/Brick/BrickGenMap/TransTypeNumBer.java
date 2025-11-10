@@ -12,7 +12,7 @@ public class TransTypeNumBer {
             case 3 -> BrickType.Rocket;
             case 4 -> BrickType.Bomb;
             case 5 -> BrickType.Gift;
-            case 6 -> BrickType.Reborn;
+            case 6 -> BrickType.Wheel;
             case 7 -> BrickType.Rock;
             case 8 -> BrickType.Angel;
             default -> BrickType.Normal;
@@ -27,7 +27,7 @@ public class TransTypeNumBer {
             case BrickType.Rocket -> 3;
             case BrickType.Bomb -> 4;
             case BrickType.Gift-> 5 ;
-            case BrickType.Reborn -> 6;
+            case BrickType.Wheel -> 6;
             case BrickType.Rock -> 7;
             case BrickType.Angel -> 8;
             default -> 0;

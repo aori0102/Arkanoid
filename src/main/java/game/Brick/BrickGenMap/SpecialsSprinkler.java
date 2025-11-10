@@ -28,7 +28,7 @@ public final class SpecialsSprinkler {
             switch (t) {
                 case Bomb   -> bomb++;
                 case Rock   -> rock++;
-                case Reborn -> reborn++;
+                case Wheel -> reborn++;
                 case Gift   -> gift++;
                 case Rocket -> rocket++;
                 case Angel  -> angel++;
@@ -40,7 +40,7 @@ public final class SpecialsSprinkler {
             switch (t) {
                 case Bomb   -> bomb   = Math.max(0, bomb   - 1);
                 case Rock   -> rock   = Math.max(0, rock   - 1);
-                case Reborn -> reborn = Math.max(0, reborn - 1);
+                case Wheel -> reborn = Math.max(0, reborn - 1);
                 case Gift   -> gift   = Math.max(0, gift   - 1);
                 case Rocket -> rocket = Math.max(0, rocket - 1);
                 case Angel  -> angel  = Math.max(0, angel  - 1);
@@ -57,7 +57,7 @@ public final class SpecialsSprinkler {
             return switch (t) {
                 case Bomb   -> bomb   < maxBomb;
                 case Rock   -> rock   < maxRock;
-                case Reborn -> reborn < maxReborn;
+                case Wheel -> reborn < maxReborn;
                 case Gift   -> gift   < maxGift;
                 case Rocket -> rocket < maxOtherEach;
                 case Angel  -> angel  < maxOtherEach;
@@ -87,10 +87,10 @@ public final class SpecialsSprinkler {
 
         final Counters cnt = new Counters(
                 /*maxBomb*/3,
-                /*maxRock*/3,
-                /*maxReborn*/4,
+                /*maxRock*/2,
+                /*maxWheel*/2,
                 /*maxGift*/5,
-                /*maxOtherEach*/6
+                /*maxOtherEach*/4
         );
 
 
@@ -131,9 +131,9 @@ public final class SpecialsSprinkler {
                 }
 
                 if (x < bombP + rockP + rebornP) {
-                    if (current != BrickType.Reborn && cnt.canPlace(BrickType.Reborn)) {
-                        g.set(r, c, transTypeToNumber(BrickType.Reborn));
-                        cnt.applyReplaceDelta(current, BrickType.Reborn);
+                    if (current != BrickType.Wheel && cnt.canPlace(BrickType.Wheel)) {
+                        g.set(r, c, transTypeToNumber(BrickType.Wheel));
+                        cnt.applyReplaceDelta(current, BrickType.Wheel);
                     }
                     continue;
                 }

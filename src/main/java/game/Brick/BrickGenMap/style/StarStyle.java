@@ -15,7 +15,7 @@ public final class StarStyle implements StyleGenerator {
     @Override
     public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);
-        Matrix g = new Matrix(rows, cols);
+        Matrix grid = new Matrix(rows, cols);
 
         int rays = 5 + (int)Math.round(lerp(0, 3, difficulty));
         int cx = rows / 2, cy = cols / 2, len = Math.max(rows, cols);
@@ -27,15 +27,15 @@ public final class StarStyle implements StyleGenerator {
             for (int t = 0; t < len; t++) {
                 int r = (int)Math.round(cx + dx * t), c = (int)Math.round(cy + dy * t);
                 if (!inBounds(r, c, rows, cols)) break;
-                g.set(r, c, transTypeToNumber(wall));
+                grid.set(r, c, transTypeToNumber(wall));
                 if (difficulty > 0.5) {
-                    g.set(r + 1, c, transTypeToNumber(wall));
-                    g.set(r, c + 1, transTypeToNumber(wall));
+                    grid.set(r + 1, c, transTypeToNumber(wall));
+                    grid.set(r, c + 1, transTypeToNumber(wall));
                 }
             }
         }
 
-        SpecialsSprinkler.sprinkle(g, rng, difficulty);
-        return g;
+        SpecialsSprinkler.sprinkle(grid, rng, difficulty);
+        return grid;
     }
 }
