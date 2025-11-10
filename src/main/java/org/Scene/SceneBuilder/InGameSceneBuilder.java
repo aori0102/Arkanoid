@@ -5,6 +5,8 @@ import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import game.GameObject.Shield;
 import game.Perks.Index.PerkManager;
+import game.Player.PlayerSkills.Skills.Dash;
+import game.Player.PlayerSkills.Skills.Updraft;
 import game.PowerUp.Index.PowerUpManager;
 import game.UI.GamePlayBackground;
 import game.UI.PauseMenu.PauseMenuManager;
@@ -18,7 +20,6 @@ public final class InGameSceneBuilder extends SceneBuilder {
 
     @Override
     protected void build() {
-        var shield = GameObjectManager.instantiate("Shield").addComponent(Shield.class);
         ParticlePool particlePool = GameObjectManager.instantiate("ParticlePool").addComponent(ParticlePool.class);
 
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_ProgressManager);
@@ -58,6 +59,9 @@ public final class InGameSceneBuilder extends SceneBuilder {
 
         GameObjectManager.instantiate("PauseMenuManager").addComponent(PauseMenuManager.class);
         GameObjectManager.instantiate("ExplodingBrickCaller").addComponent(ExplodingBrickParticleManager.class);
+        GameObjectManager.instantiate("Dash").addComponent(Dash.class);
+        GameObjectManager.instantiate("Shield").addComponent(Shield.class);
+        GameObjectManager.instantiate("Magnet").addComponent(Updraft.class);
 
     }
 

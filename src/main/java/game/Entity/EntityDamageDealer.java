@@ -54,20 +54,20 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
 
         for (var collider : overlappedList) {
 
+            // Inflict effect
+            var effectControllingObject = collider.getComponent(EntityEffectController.class);
+            if (effectControllingObject != null) {
+
+                handleEffectInflicting(effectControllingObject);
+                if (gameObject.isDestroyed()) {
+                    return;
+                }
+                onEffectInflicted(effectControllingObject);
+
+            }
+
             var healthObject = collider.getComponent(EntityHealth.class);
             if (healthObject != null) {
-
-                // Inflict effect
-                var effectControllingObject = collider.getComponent(EntityEffectController.class);
-                if (effectControllingObject != null) {
-
-                    handleEffectInflicting(effectControllingObject);
-                    if (gameObject.isDestroyed()) {
-                        return;
-                    }
-                    onEffectInflicted(effectControllingObject);
-
-                }
 
                 // Deal damage
                 handleHealthManipulation(healthObject);

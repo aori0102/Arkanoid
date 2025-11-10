@@ -10,6 +10,7 @@ import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
+import utils.Vector2;
 
 import java.util.HashSet;
 

@@ -1,0 +1,28 @@
+package game.Player.PlayerSkills.Skills;
+
+import game.Ball.BallsManager;
+import game.Player.Player;
+import org.GameObject.GameObject;
+import utils.Vector2;
+
+public class Updraft extends Skill {
+    /**
+     * Create this MonoBehaviour.
+     *
+     * @param owner The owner of this component.
+     */
+    public Updraft(GameObject owner) {
+        super(owner);
+    }
+
+    @Override
+    public void invoke() {
+        for (var ball : BallsManager.getInstance().getBallSet()) {
+            Vector2 ballDirection = ball.getDirection();
+            if (ballDirection.y > 0) {
+                Vector2 newDirection = new Vector2(ballDirection.x, ballDirection.y * (-1));
+                ball.setDirection(newDirection.normalize());
+            }
+        }
+    }
+}

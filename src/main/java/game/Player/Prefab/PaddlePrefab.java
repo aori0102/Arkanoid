@@ -2,6 +2,8 @@ package game.Player.Prefab;
 
 import game.Damagable.HealthChangeVisualizer;
 import game.GameObject.Arrow;
+import game.Particle.PaddleParticle;
+import game.Player.Paddle.PaddleEffectController;
 import game.Player.Paddle.PaddleHealth;
 import game.Player.Paddle.PaddleStat;
 import game.Player.Paddle.PlayerPaddle;
@@ -25,9 +27,10 @@ public class PaddlePrefab extends Prefab {
         paddle.getTransform().setGlobalPosition(new Vector2(300, 700));
         paddle.addComponent(PlayerPaddle.class)
                 .addComponent(PaddleHealth.class)
+                .addComponent(PaddleEffectController.class)
                 .addComponent(PaddleStat.class)
                 .addComponent(BoxCollider.class);
-        paddle.setLayer(Layer.Player);
+        paddle.setLayer(Layer.Paddle);
 
         // Collider
         var collider = paddle.getComponent(BoxCollider.class);
@@ -55,6 +58,18 @@ public class PaddlePrefab extends Prefab {
                 .getComponent(HealthChangeVisualizer.class);
         healthChangeVisualizer.getGameObject().setParent(paddle);
         healthChangeVisualizer.linkEntityHealth(paddle.getComponent(PaddleHealth.class));
+        var paddleParticle = GameObjectManager.instantiate("PaddleParticle").addComponent(PaddleParticle.class);
+        paddleParticle.setPosition(new Vector2(40, 0));
+        paddleParticle.setDirection(Vector2.down());
+        paddleParticle.setParent(paddle);
+        paddleParticle.startEmit();
+
+        var paddleParticle1 = GameObjectManager.instantiate("PaddleParticle").addComponent(PaddleParticle.class);
+        paddleParticle1.setPosition(new Vector2(-40, 0));
+        paddleParticle1.setDirection(Vector2.down());
+        paddleParticle1.setParent(paddle);
+        paddleParticle1.startEmit();
+
 
         return paddle;
 

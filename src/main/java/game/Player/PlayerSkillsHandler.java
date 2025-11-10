@@ -1,9 +1,10 @@
 package game.Player;
 
-import game.Player.Paddle.PlayerPaddle;
-import game.Player.PlayerSkills.LaserBeam.LaserBeam;
-import game.Player.PlayerSkills.PlayerSkillsPrefab.Dash;
-import game.Player.PlayerSkills.Skill;
+import game.Player.PlayerSkills.Skills.Invincible;
+import game.Player.PlayerSkills.Skills.LaserBeam.LaserBeam;
+import game.Player.PlayerSkills.Skills.Dash;
+import game.Player.PlayerSkills.Skills.Updraft;
+import game.Player.PlayerSkills.Skills.Skill;
 import game.Player.PlayerSkills.SkillPrefabGenerator;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -15,11 +16,9 @@ import static game.Player.PlayerSkills.SkillPrefabGenerator.skillDataMap;
 
 public class PlayerSkillsHandler extends MonoBehaviour {
 
-    private static final int DASH_SPEED = 1500;
-    private static final double DASH_TIME = 0.2;
-
-    private PlayerPaddle playerPaddle;
-    private Time.CoroutineID dashCoroutineID;
+    private Dash dash;
+    private Updraft updraft;
+    private Invincible invincible;
 
     /**
      * Create this MonoBehaviour.
@@ -34,7 +33,13 @@ public class PlayerSkillsHandler extends MonoBehaviour {
     public void awake() {
         Player.getInstance().getPlayerController().getActionMap().
                 onKeyPressed.addListener(this::handleSkillRequest);
-        playerPaddle = getComponent(PlayerPaddle.class);
+
+        dash = PrefabManager.instantiatePrefab(SkillPrefabGenerator
+                .skillPrefabSet.get(Dash.class)).getComponent(Dash.class);
+        updraft = PrefabManager.instantiatePrefab(SkillPrefabGenerator
+                .skillPrefabSet.get(Updraft.class)).getComponent(Updraft.class);
+        invincible = PrefabManager.instantiatePrefab(SkillPrefabGenerator
+                .skillPrefabSet.get(Invincible.class)).getComponent(Invincible.class);
     }
 
     @Override
@@ -44,20 +49,31 @@ public class PlayerSkillsHandler extends MonoBehaviour {
 
     private void handleSkillRequest(Object o, ActionMap.Action action) {
         switch (action) {
+            // Press Q
             case Skill1 -> spawnSkill(LaserBeam.class);
-            case Skill2 -> {
-            }
-            case Skill3 -> {
-            }
-            case Dash -> {
-                var dashData = skillDataMap.get(Dash.class);
-                if (dashData.skillCharge > 0) {
-                    dashData.skillCharge--;
-                    dashData.skillCooldownTime = dashData.baseSkillCooldown;
+            // Press E
+            case Skill2 -> handleLogicBasedSkill(Updraft.class);
+            // Press X
+            case Skill3 -> handleLogicBasedSkill(Invincible.class);
+            //Press SHIFT
+            case Dash -> handleLogicBasedSkill(Dash.class);
+        }
+    }
 
-                    Player.getInstance().setCurrentSpeed(DASH_SPEED);
-                    dashCoroutineID = Time.addCoroutine(this::resetDashSpeed, Time.getTime() + DASH_TIME);
-                }
+    private void handleLogicBasedSkill(Class<? extends Skill> skillClass) {
+        var skillData = skillDataMap.get(skillClass);
+        if (skillData.skillCharge > 0) {
+            skillData.skillCharge--;
+            skillData.skillCooldownTime = skillData.baseSkillCooldown;
+
+            if (skillClass == Dash.class) {
+                dash.invoke();
+            }
+            if (skillClass == Updraft.class) {
+                updraft.invoke();
+            }
+            if (skillClass == Invincible.class) {
+                invincible.invoke();
             }
         }
     }
@@ -77,6 +93,7 @@ public class PlayerSkillsHandler extends MonoBehaviour {
 
             if (currentSkillCharge < maxSkillCharge) {
                 skillDataMap.get(key).skillCooldownTime -= Time.getDeltaTime();
+                System.out.println("This is called" +skillDataMap.get(key).skillCooldownTime);
 
                 if (skillDataMap.get(key).skillCooldownTime <= 0) {
                     skillDataMap.get(key).skillCharge++;
@@ -84,10 +101,5 @@ public class PlayerSkillsHandler extends MonoBehaviour {
                 }
             }
         }
-    }
-
-    private void resetDashSpeed() {
-        Player.getInstance().setCurrentSpeed(Player.getInstance().getBaseSpeed());
-        Time.removeCoroutine(dashCoroutineID);
     }
 }

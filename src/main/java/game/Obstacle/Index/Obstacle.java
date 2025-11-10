@@ -45,8 +45,7 @@ public abstract class Obstacle extends MonoBehaviour {
 
     protected void handleInteraction(CollisionData collisionData) {
         onObstacleCollided.invoke(this, null);
-        if (collisionData.otherCollider.getComponent(PlayerPaddle.class) != null
-            || (collisionData.otherCollider.getComponent(Border.class) != null
+        if ((collisionData.otherCollider.getComponent(Border.class) != null
                && collisionData.otherCollider.getComponent(Border.class).getBorderType() == BorderType.BorderBottom)) {
             GameObjectManager.destroy(gameObject);
         }

@@ -1,5 +1,6 @@
 package game.Obstacle.Laser;
 
+import game.Entity.EntityEffectController;
 import game.Obstacle.Index.Obstacle;
 import org.GameObject.GameObject;
 import org.Layer.Layer;
@@ -11,6 +12,7 @@ public class Laser extends Obstacle {
 
     private static final double LASER_SPEED = 1000;
     private static final int LASER_DAMAGE = 10;
+
 
     /**
      * Create this MonoBehaviour.
