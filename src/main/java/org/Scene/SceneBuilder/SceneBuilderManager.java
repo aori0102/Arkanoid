@@ -16,7 +16,6 @@ public final class SceneBuilderManager {
     }
 
     public static void buildScene(SceneKey key) {
-        GameObjectManager.clearCurrentScene();
         sceneBuilderMap.get(key).build();
     }
 }

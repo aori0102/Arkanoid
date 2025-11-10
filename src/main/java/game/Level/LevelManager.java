@@ -209,6 +209,7 @@ public final class LevelManager extends MonoBehaviour {
     }
 
     private void progressToNextLevel() {
+        DataManager.getInstance().updateSave();
         levelIndex++;
         loadCurrentLevel();
     }
@@ -295,6 +296,8 @@ public final class LevelManager extends MonoBehaviour {
     }
 
     private void onGameOver() {
+        DataManager.getInstance().resetSave();
+        DataManager.getInstance().generateNewRecord();
         onGameOver.invoke(this, null);
         GameManager.getInstance().quitToMainMenu();
     }

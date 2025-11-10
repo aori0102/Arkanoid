@@ -6,9 +6,11 @@ import game.Player.Player;
 import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
-import utils.Random;
 
 public class AttackPerk extends Perk {
+
+    private static final double THE_MULTIPLIER_CUZ_DUI_IS_FUCKING_STUPID = 0.1;
+
     /**
      * Create this MonoBehaviour.
      *
@@ -34,7 +36,7 @@ public class AttackPerk extends Perk {
         super.perk_onPointerClicked(sender, e);
         PaddleStat paddleStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
 
-        paddleStat.setAttackMultiplier(paddleStat.getAttackMultiplier() + 0.1);
+        paddleStat.setAttackMultiplier(paddleStat.getAttackMultiplier() + THE_MULTIPLIER_CUZ_DUI_IS_FUCKING_STUPID);
     }
 
 }

@@ -78,6 +78,9 @@ public final class ScoreUI extends MonoBehaviour {
      * @param e      Empty event argument.
      */
     private void scoreManager_onComboChanged(Object sender, Integer e) {
+        if (comboText.getGameObject().isDestroyed()) {
+            return;
+        }
         if (e > 0) {
             comboText.getTransform().setLocalScale(Vector2.one().multiply(COMBO_POP_UP_SIZE));
         }

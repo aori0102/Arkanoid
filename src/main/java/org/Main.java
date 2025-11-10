@@ -29,7 +29,7 @@ public class Main extends Application {
         AudioManager.initializeAudioManager();
 
         Random.init();
-        var defaultScene = SceneManager.createScenes(stage);
+        var defaultScene = SceneManager.initialize(stage);
         RendererManager.initializeRenderSystem(stage, defaultScene);
         EditorView.init();
         FPSCounter.init();
@@ -63,6 +63,7 @@ public class Main extends Application {
      * Update of every frame
      */
     private void update() {
+        SceneManager.handleLoadScene();
         Time.update();
         GameObjectManager.runCycle();
         FPSCounter.update();

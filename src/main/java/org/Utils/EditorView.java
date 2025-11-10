@@ -57,8 +57,8 @@ public final class EditorView {
         var title = new Label("Hierarchy");
         var content = new VBox();
 
-        var sceneMap = SceneManager.getSceneMap();
-        for (var key : sceneMap.keySet()) {
+        var keyArray = SceneKey.values();
+        for (var key : keyArray) {
 
             var keyName = key.name();
             var panel = new TitledPane();
@@ -81,7 +81,7 @@ public final class EditorView {
 
         sceneSelector.setOnAction(e -> {
             SceneKey selected = sceneSelector.getValue();
-            for (var key : sceneMap.keySet()) {
+            for (var key : keyArray) {
                 if (key == selected) {
                     content.getChildren().clear();
                     content.getChildren().add(treeInfoMap.get(key).view);

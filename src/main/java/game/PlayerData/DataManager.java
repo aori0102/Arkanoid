@@ -36,9 +36,6 @@ public final class DataManager extends MonoBehaviour {
             .thenComparing(Record::getBrickDestroyed)
             .reversed();
 
-    private EventActionID levelManager_onLevelConcluded_ID = null;
-    private EventActionID levelManager_onGameOver_ID = null;
-
     /**
      * Create this MonoBehaviour.
      *
@@ -62,43 +59,7 @@ public final class DataManager extends MonoBehaviour {
     public void onDestroy() {
         saveProgress();
         saveRecords();
-        if (LevelManager.getInstance() != null) {
-            LevelManager.getInstance().onLevelConcluded
-                    .removeListener(levelManager_onLevelConcluded_ID);
-            LevelManager.getInstance().onGameOver
-                    .removeListener(levelManager_onGameOver_ID);
-        }
         instance = null;
-    }
-
-    @Override
-    public void start() {
-        levelManager_onLevelConcluded_ID = LevelManager.getInstance().onLevelConcluded
-                .addListener(this::levelManager_onLevelConcluded);
-        levelManager_onGameOver_ID = LevelManager.getInstance().onGameOver
-                .addListener(this::levelManager_onGameOver);
-    }
-
-    /**
-     * Called when {@link LevelManager#onGameOver} is invoked.<br><br>
-     * This function saves a new record and remove current save when a game is over.
-     *
-     * @param sender Event caller {@link LevelManager}.
-     * @param e      Empty event argument.
-     */
-    private void levelManager_onGameOver(Object sender, Void e) {
-        generateNewRecord();
-    }
-
-    /**
-     * Called when {@link LevelManager#onLevelConcluded} is invoked.<br><br>
-     * This function saves the progress when a level is concluded.
-     *
-     * @param sender Event caller {@link LevelManager}.
-     * @param e      Empty event argument.
-     */
-    private void levelManager_onLevelConcluded(Object sender, Void e) {
-        updateSave();
     }
 
     public void loadProgress() {
@@ -139,7 +100,7 @@ public final class DataManager extends MonoBehaviour {
     }
 
     // TODO: update save when perk is selected
-    private void updateSave() {
+    public void updateSave() {
         progressData.setScore(ScoreManager.getInstance().getScore());
         progressData.setCombo(ScoreManager.getInstance().getCombo());
 
@@ -157,7 +118,7 @@ public final class DataManager extends MonoBehaviour {
         progressData.setHealth(Player.getInstance().getPlayerPaddle().getPaddleHealth().getHealth());
     }
 
-    private void generateNewRecord() {
+    public void generateNewRecord() {
         recordList.add(new Record(progressData));
         recordList.sort(recordComparator);
         while (recordList.size() > MAX_RECORD) {

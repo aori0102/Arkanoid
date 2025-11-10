@@ -7,6 +7,7 @@ import game.PlayerData.DataManager;
 import game.Rank.RankManager;
 import game.Score.ScoreManager;
 import javafx.application.Platform;
+import org.Event.EventActionID;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -122,9 +123,6 @@ public class GameManager extends MonoBehaviour {
     public void quitGame() {
         Platform.exit();
     }
-
-
-
 
     /**
      * @aaa

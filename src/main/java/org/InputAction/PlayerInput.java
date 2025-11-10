@@ -30,25 +30,20 @@ public class PlayerInput extends MonoBehaviour {
      */
     public void handlePlayerInput() {
 
-        var sceneMap = SceneManager.getSceneMap();
-        var sceneCollection = sceneMap.values();
-        for (var scene : sceneCollection) {
-
-            scene.setOnKeyPressed(e -> {
-                pressedKey.add(e.getCode());
-            });
-            scene.setOnKeyReleased(e -> {
-                pressedKey.remove(e.getCode());
-            });
-            scene.setOnMouseDragged(e -> {
-                pressedMouse.put(e.getButton(), e);
-            });
-            scene.setOnMouseReleased(e -> {
-                pressedMouse.remove(e.getButton());
-                isMouseReleased = true;
-            });
-
-        }
+        var scene=SceneManager.getScene();
+        scene.setOnKeyPressed(e -> {
+            pressedKey.add(e.getCode());
+        });
+        scene.setOnKeyReleased(e -> {
+            pressedKey.remove(e.getCode());
+        });
+        scene.setOnMouseDragged(e -> {
+            pressedMouse.put(e.getButton(), e);
+        });
+        scene.setOnMouseReleased(e -> {
+            pressedMouse.remove(e.getButton());
+            isMouseReleased = true;
+        });
 
     }
 

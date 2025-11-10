@@ -99,6 +99,9 @@ public final class ScoreManager extends MonoBehaviour {
      * @param e      Empty event argument.
      */
     private void ball_onAnyBallDestroyed(Object sender, Void e) {
+        if (LevelManager.getInstance() == null) {
+            return;
+        }
         var levelState = LevelManager.getInstance().getLevelState();
         if (levelState == LevelState.ConcludingLevel) {
             setScore(_score + _combo + BALL_SCORE_WHEN_CLEARED);

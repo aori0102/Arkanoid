@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.Event.EventActionID;
 import org.Layer.RenderLayer;
-import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 
 import java.util.EnumMap;
@@ -13,13 +12,7 @@ import java.util.HashMap;
 
 public class RendererManager {
 
-    private static class SceneInfo {
-        public Scene scene = null;
-        public Group root = null;
-        public EnumMap<RenderLayer, Group> renderLayerGroupMap = null;
-    }
-
-    private final static EnumMap<SceneKey, SceneInfo> sceneInfoMap = new EnumMap<>(SceneKey.class);
+    private final static EnumMap<RenderLayer, Group> groupByLayerMap = new EnumMap<>(RenderLayer.class);
     private final static HashMap<Renderable, EventActionID> renderableLayerChangeEventIDMap = new HashMap<>();
 
     /**
@@ -31,32 +24,15 @@ public class RendererManager {
     public static void initializeRenderSystem(Stage stage, Scene mainScene) {
 
         // Children rendering nodes for per-layer rendering
+        var scene = SceneManager.getScene();
+        var root = (Group) scene.getRoot();
         var renderLayerArray = RenderLayer.values();
-        var sceneArray = SceneKey.values();
-        var sceneMap = SceneManager.getSceneMap();
-        for (var sceneKey : sceneArray) {
 
-            if (!sceneMap.containsKey(sceneKey)) {
-                throw new IllegalStateException("Scene " + sceneKey + " doesn't exist");
-            }
+        for (var renderLayer : renderLayerArray) {
 
-            var scene = sceneMap.get(sceneKey);
-            var root = (Group) scene.getRoot();
-            EnumMap<RenderLayer, Group> renderLayerMap = new EnumMap<>(RenderLayer.class);
-
-            for (var renderLayer : renderLayerArray) {
-
-                Group childGroup = new Group();
-                root.getChildren().add(childGroup);
-                renderLayerMap.put(renderLayer, childGroup);
-
-            }
-
-            var sceneInfo = new SceneInfo();
-            sceneInfo.scene = scene;
-            sceneInfo.root = root;
-            sceneInfo.renderLayerGroupMap = renderLayerMap;
-            sceneInfoMap.put(sceneKey, sceneInfo);
+            Group childGroup = new Group();
+            root.getChildren().add(childGroup);
+            groupByLayerMap.put(renderLayer, childGroup);
 
         }
 
@@ -81,8 +57,7 @@ public class RendererManager {
                 renderable,
                 renderable.onRenderLayerChanged.addListener(RendererManager::renderable_onRenderLayerChanged)
         );
-        var sceneKey = renderable.getGameObject().getRegisteredSceneKey();
-        sceneInfoMap.get(sceneKey).renderLayerGroupMap.get(renderable.getRenderLayer())
+        groupByLayerMap.get(renderable.getRenderLayer())
                 .getChildren().add(renderable.getNode());
     }
 
@@ -93,18 +68,16 @@ public class RendererManager {
      */
     protected static void unregisterNode(Renderable renderable) {
         renderable.onRenderLayerChanged.removeListener(renderableLayerChangeEventIDMap.get(renderable));
-        var sceneKey = renderable.getGameObject().getRegisteredSceneKey();
-        sceneInfoMap.get(sceneKey).renderLayerGroupMap.get(renderable.getRenderLayer())
+        groupByLayerMap.get(renderable.getRenderLayer())
                 .getChildren().remove(renderable.getNode());
     }
 
     private static void renderable_onRenderLayerChanged(Object sender, Renderable.OnRenderLayerChangedEventArgs e) {
 
         if (sender instanceof Renderable renderable) {
-            var sceneKey = renderable.getGameObject().getRegisteredSceneKey();
-            sceneInfoMap.get(sceneKey).renderLayerGroupMap.get(e.previousLayer())
+            groupByLayerMap.get(e.previousLayer())
                     .getChildren().remove(renderable.getNode());
-            sceneInfoMap.get(sceneKey).renderLayerGroupMap.get(e.newLayer())
+            groupByLayerMap.get(e.newLayer())
                     .getChildren().add(renderable.getNode());
         }
 
