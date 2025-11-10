@@ -124,11 +124,6 @@ public class PerkManager extends MonoBehaviour {
                     .moveY(SLIDE_DISTANCE, SLIDE_DURATION)
                     .ease(Ease.IN_OUT_BACK)
                     .play();
-
-            Tween.to(perk.textUI.getGameObject())
-                    .moveY(SLIDE_DISTANCE, SLIDE_DURATION)
-                    .ease(Ease.IN_OUT_BACK)
-                    .play();
             System.out.println("Showing perks animation " + perk.textUI.getTransform().getGlobalPosition());
         }
 
