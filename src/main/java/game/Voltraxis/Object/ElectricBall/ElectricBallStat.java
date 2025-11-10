@@ -47,7 +47,7 @@ public final class ElectricBallStat extends EntityStat {
     }
 
     @Override
-    public double getCriticalChange() {
+    public double getCriticalChance() {
         return VoltraxisData.CRITICAL_CHANCE;
     }
 

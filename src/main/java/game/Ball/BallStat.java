@@ -49,7 +49,7 @@ public final class BallStat extends EntityStat {
     }
 
     @Override
-    public double getCriticalChange() {
+    public double getCriticalChance() {
         return BALL_CRITICAL_CHANCE;
     }
 

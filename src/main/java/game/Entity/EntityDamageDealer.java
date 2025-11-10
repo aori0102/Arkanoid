@@ -120,7 +120,7 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
         if (healthObject != null && isDamageTarget(healthObject)) {
 
             // Check for critical hit
-            boolean critical = Random.range(0.0, 1.0) < entityStat.getCriticalChange();
+            boolean critical = Random.range(0.0, 1.0) < entityStat.getCriticalChance();
             EntityHealthAlterType healthAlteringType;
             EntityHealthAlterType secondaryHealthAlteringType = null;
             if (isPlayerHealth(healthObject)) {

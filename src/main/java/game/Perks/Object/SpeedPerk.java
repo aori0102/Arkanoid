@@ -1,6 +1,8 @@
 package game.Perks.Object;
 
 import game.Perks.Index.Perk;
+import game.Player.Paddle.PaddleStat;
+import game.Player.Player;
 import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
@@ -32,5 +34,7 @@ public class SpeedPerk extends Perk {
     protected void perk_onPointerClicked(Object sender, MouseEvent e) {
         super.perk_onPointerClicked(sender, e);
         System.out.println("Increase speed!");
+        PaddleStat paddleStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
+        paddleStat.setMovementSpeed(paddleStat.getMovementSpeed() + 50);
     }
 }
