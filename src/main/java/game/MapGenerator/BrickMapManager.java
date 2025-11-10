@@ -129,7 +129,7 @@ public final class BrickMapManager extends MonoBehaviour {
         if (sender instanceof Brick brick) {
             var cell = brickCoordinateMap.remove(brick);
             if (cell == null) {
-                throw new RuntimeException("Removing a brick which was not registered!");
+                return;
             }
             brickDestroyed++;
             brickGrid.get(cell.row).set(cell.column, null);
@@ -168,7 +168,7 @@ public final class BrickMapManager extends MonoBehaviour {
         if (sender instanceof Brick brick) {
             var cell = brickCoordinateMap.get(brick);
             if (cell == null) {
-                throw new RuntimeException("Hit stranded brick (not assigned into grid)");
+                return;
             }
             var row = cell.row;
             var col = cell.column;
