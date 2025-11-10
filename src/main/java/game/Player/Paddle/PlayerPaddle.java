@@ -81,6 +81,11 @@ public class PlayerPaddle extends MonoBehaviour {
         handlePowerUps();
     }
 
+    @Override
+    protected void onDestroy() {
+        Time.removeCoroutine(stunnedCoroutineID);
+    }
+
     private void handlePowerUps() {
 
         var overlapCollider = PhysicsManager.getOverlapColliders(boxCollider, true);

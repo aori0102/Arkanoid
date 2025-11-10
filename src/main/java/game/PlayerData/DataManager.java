@@ -93,6 +93,8 @@ public final class DataManager extends MonoBehaviour {
             String json = gsonSaver.toJson(progressData);
             Files.writeString(SAVE_FILE, json);
 
+            System.out.println("[DataManager] Player progress saved to " + SAVE_FILE);
+
         } catch (Exception e) {
             System.err.println("[ProgressManager] Error while saving records: " + e.getMessage());
         }
