@@ -24,7 +24,7 @@ public class Invincible extends Skill{
     @Override
     public void invoke() {
         Player.getInstance().getPlayerPaddle().setCanBeDamaged(false);
-        Player.getInstance().getPlayerPaddle().getTransform().setGlobalScale(new Vector2(1.5, 1.5));
+        Player.getInstance().getPlayerPaddle().getTransform().setGlobalScale(new Vector2(2.5, 1.25));
         Player.getInstance().setCurrentSpeed(Player.getInstance().getCurrentSpeed() * SPEED_BOOSTED_MULTIPLIER);
         Shield.getInstance().turnOn();
         invincibleCoroutineID = Time.addCoroutine(this :: turnOff, Time.getTime() + INVINCIBLE_TIME);

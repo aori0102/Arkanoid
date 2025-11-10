@@ -1,14 +1,9 @@
 package game.Player.Paddle;
 
-import game.Ball.Ball;
 import game.Effect.StatusEffect;
-import game.Entity.EntityHealthAlterType;
-import game.GameManager.GameManager;
-import game.GameManager.GameState;
 import game.GameManager.LevelState;
 import game.GameObject.Arrow;
 import game.Level.LevelManager;
-import game.Obstacle.Index.ObstacleManager;
 import game.Player.Player;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Recovery;
