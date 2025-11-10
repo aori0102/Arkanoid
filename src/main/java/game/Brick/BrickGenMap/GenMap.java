@@ -1,8 +1,10 @@
 package game.Brick.BrickGenMap;
 
 import static game.Brick.BrickGenMap.BalanceCondition.balanceCondition;
+import static game.Brick.BrickGenMap.MapStyle.RANDOM;
 import static game.Brick.BrickGenMap.Mathx.*;
 import static game.Brick.BrickGenMap.TransTypeNumBer.transNumberToType;
+import static java.lang.Math.min;
 
 import game.Brick.BrickType;
 import game.Brick.Init.Matrix;
@@ -30,7 +32,7 @@ public final class GenMap {
     }
 
     private void registerDefaults() {
-        strategies.put(MapStyle.RANDOM, new RandomStyle());
+        strategies.put(RANDOM, new RandomStyle());
         strategies.put(MapStyle.GRADIENT, new GradientStyle());
         strategies.put(MapStyle.STRIPES, new StripesStyle());
         strategies.put(MapStyle.CHECKER, new CheckerStyle());
@@ -53,13 +55,15 @@ public final class GenMap {
             throw new IllegalStateException("No registered map styles!");
         }
 
+//        return MapStyle.SYMMETRIC;
+
         List<MapStyle> styles = new ArrayList<>(strategies.keySet());
         return styles.get(rng.nextInt(styles.size()));
     }
 
     private double getRandomDouble() {
-        double base = Math.min(0.8, level * 0.02);
-        double add = rng.nextDouble() * 0.002;
+        double base = min(0.8, level * 0.02);
+        double add = min(rng.nextDouble() * 0.002, 0.02);
         return keep01(base + add);
     }
 

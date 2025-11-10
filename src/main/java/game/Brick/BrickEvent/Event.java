@@ -1,7 +1,7 @@
 package game.Brick.BrickEvent;
 
 public interface Event {
-    int NumFrameForEachRunTime = 7;
+    double UPDATE_INTERVAL = 0.05; // 20 TimeExecute per seconds
     void runEvent();
     void getStartEvent(int r, int c);
 }

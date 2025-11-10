@@ -4,6 +4,7 @@ import game.Brick.Brick;
 import game.Brick.BrickEvent.Event;
 import game.Brick.Init;
 import game.Entity.EntityHealthAlterType;
+import utils.Time;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,15 +15,16 @@ import static game.Brick.Init.*;
 
 public class AngelEvent implements Event {
 
-    private final int rowData;
-    private final int colData;
-    private final List<List<Brick>> brickGrid;
-    private final int MAX_TARGETS = 10;
-    private final int EXECUTE_TIME = 15;
-    private final int DAMAGE = 30;
-    private boolean flag = false;
-    private final List<IntPair> targets;
-    private int timeFrame = 0, executeTime = 0;
+    private final int rowData; // size of row
+    private final int colData; // size of col
+    private final List<List<Brick>> brickGrid; // Reference to the grid manager all the brick
+    private final int MAX_TARGETS = 10; // the maximum number of object that have effected
+    private final int EXECUTE_TIME = 15; // Delay time maximum
+    private final int DAMAGE = 30; // Amount increase health
+    private boolean flag = false; // Detection
+    private final List<IntPair> targets; // List of object that will be effected
+    private int executeTime = 0; // Delay time
+    private double timeAccum = 0; // Time from the last execution
 
     public AngelEvent(int row, int col, List<List<Brick>> matrix) {
         this.rowData = row;
@@ -31,10 +33,14 @@ public class AngelEvent implements Event {
         this.targets = new ArrayList<>();
     }
 
+    /**
+     * Execute
+     */
     @Override
     public void runEvent() {
+        timeAccum += Time.getDeltaTime();
 
-        if (timeFrame == 0 && executeTime == EXECUTE_TIME && flag) {
+        if (timeAccum >= UPDATE_INTERVAL && executeTime == EXECUTE_TIME && flag) {
             for (var index : targets) {
                 int r = index.fi();
                 int c = index.se();
@@ -51,7 +57,7 @@ public class AngelEvent implements Event {
         }
 
         if (flag) {
-            if (timeFrame % 2 == 0) {
+            if (executeTime % 2 == 0) {
                 for (var index : targets) {
                     int r = index.fi();
                     int c = index.se();
@@ -62,19 +68,22 @@ public class AngelEvent implements Event {
                     brick.setRedRender();
                 }
             } else {
-                for (int r = 0; r < rowData; r++) {
-                    for (int c = 0; c < colData; c++) {
-                        if (valid(brickGrid, r, c)) {
-                            brickGrid.get(r).get(c).resetRenderColor();
-                        }
-                    }
+                for (var index : targets) {
+                    int r = index.fi();
+                    int c = index.se();
+
+                    if (!valid(brickGrid, r, c)) continue;
+
+                    var brick = brickGrid.get(r).get(c);
+                    brick.setYellowRender();
                 }
             }
         }
 
-        if (timeFrame == 0 && flag) executeTime++;
-        timeFrame++;
-        timeFrame %= NumFrameForEachRunTime;
+        if (timeAccum >= UPDATE_INTERVAL) {
+            if(flag) executeTime++;
+            timeAccum = 0;
+        }
     }
 
     @Override
@@ -100,7 +109,7 @@ public class AngelEvent implements Event {
             }
 
             flag = true;
-            timeFrame = 0;
+            timeAccum = 0;
             executeTime = 0;
         }
     }

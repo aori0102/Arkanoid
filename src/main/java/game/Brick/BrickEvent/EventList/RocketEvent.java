@@ -4,6 +4,7 @@ import game.Brick.Brick;
 import game.Brick.BrickEvent.Event;
 import game.Brick.Init;
 import game.Entity.EntityHealthAlterType;
+import utils.Time;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,11 +19,12 @@ public class RocketEvent implements Event {
     private final int colData;
     private final List<List<Brick>> brickGrid;
     private final int MAX_TARGETS = 10;
-    private final int EXECUTE_TIME = 15;
-    private final int DAMAGE = 30;
+    private final int EXECUTE_TIME = 21;
+    private final int DAMAGE = 300000;
     private boolean flag = false;
     private final List<IntPair> targets;
-    private int timeFrame = 0, executeTime = 0;
+    private int executeTime = 0;
+    private double timeAccum = 0.0;
 
     public RocketEvent(int row, int col, List<List<Brick>> matrix) {
         this.rowData = row;
@@ -33,8 +35,9 @@ public class RocketEvent implements Event {
 
     @Override
     public void runEvent() {
+        timeAccum += Time.getDeltaTime();
 
-        if (timeFrame == 0 && executeTime == EXECUTE_TIME && flag) {
+        if (timeAccum >= UPDATE_INTERVAL && executeTime == EXECUTE_TIME && flag) {
             for (var index : targets) {
                 int r = index.fi();
                 int c = index.se();
@@ -51,7 +54,7 @@ public class RocketEvent implements Event {
         }
 
         if (flag) {
-            if (timeFrame % 2 == 0) {
+            if (executeTime % 4 != 0) {
                 for (var index : targets) {
                     int r = index.fi();
                     int c = index.se();
@@ -62,19 +65,22 @@ public class RocketEvent implements Event {
                     brick.setRedRender();
                 }
             } else {
-                for (int r = 0; r < rowData; r++) {
-                    for (int c = 0; c < colData; c++) {
-                        if (valid(brickGrid, r, c)) {
-                            brickGrid.get(r).get(c).resetRenderColor();
-                        }
-                    }
+                for (var index : targets) {
+                    int r = index.fi();
+                    int c = index.se();
+
+                    if (!valid(brickGrid, r, c)) continue;
+
+                    var brick = brickGrid.get(r).get(c);
+                    brick.maxBrightness();
                 }
             }
         }
 
-        if (timeFrame == 0 && flag) executeTime++;
-        timeFrame++;
-        timeFrame %= NumFrameForEachRunTime;
+        if (timeAccum >= UPDATE_INTERVAL) {
+            if(flag) executeTime++;
+            timeAccum = 0;
+        }
     }
 
     @Override
@@ -100,7 +106,7 @@ public class RocketEvent implements Event {
             }
 
             flag = true;
-            timeFrame = 0;
+            timeAccum = 0;
             executeTime = 0;
         }
     }

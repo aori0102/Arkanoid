@@ -3,6 +3,7 @@ package game.Brick.BrickEvent.EventList;
 import game.Brick.Brick;
 import game.Brick.BrickEvent.Event;
 import game.Entity.EntityHealthAlterType;
+import utils.Time;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,9 @@ public class GiftEvent implements Event {
     private final int EXECUTE_TIME = 15;
     private final int DAMAGE = 30;
     private boolean flag = false;
-    private final List<IntPair> targets;  // ✅ init
-    private int timeFrame = 0, executeTime = 0;
+    private final List<IntPair> targets;
+    private int executeTime = 0;
+    private double timeAccum = 0;
 
     public GiftEvent(int row, int col, List<List<Brick>> matrix) {
         this.rowData = row;
@@ -29,8 +31,9 @@ public class GiftEvent implements Event {
 
     @Override
     public void runEvent() {
+        timeAccum += Time.getDeltaTime();
 
-        if (timeFrame == 0 && executeTime == EXECUTE_TIME && flag) {
+        if (timeAccum >= UPDATE_INTERVAL && executeTime == EXECUTE_TIME && flag) {
             for (var index : targets) {
                 int r = index.fi();
                 int c = index.se();
@@ -41,13 +44,14 @@ public class GiftEvent implements Event {
                 brick.getBrickHealth().alterHealth(EntityHealthAlterType.NormalDamage, null, DAMAGE);
             }
 
+            timeAccum = 0;
             executeTime = 0;
             targets.clear();
             flag = false;
         }
 
         if (flag) {
-            if (timeFrame % 2 == 0) {
+            if (executeTime % 2 == 0) {
                 for (var index : targets) {
                     int r = index.fi();
                     int c = index.se();
@@ -56,19 +60,20 @@ public class GiftEvent implements Event {
                     brickGrid.get(r).get(c).setYellowRender();
                 }
             } else {
-                for (int r = 0; r < rowData; r++) {
-                    for (int c = 0; c < colData; c++) {
-                        if (valid(brickGrid, r, c)) {
-                            brickGrid.get(r).get(c).resetRenderColor();
-                        }
-                    }
+                for (var index : targets) {
+                    int r = index.fi();
+                    int c = index.se();
+
+                    if (!valid(brickGrid, r, c)) continue;
+                    brickGrid.get(r).get(c).maxBrightness();
                 }
             }
         }
 
-        if (timeFrame == 0 && flag) executeTime++;
-        timeFrame++;
-        timeFrame %= NumFrameForEachRunTime;
+        if (timeAccum >= UPDATE_INTERVAL && flag) {
+            executeTime++;
+            timeAccum = 0;
+        }
     }
 
     @Override
@@ -91,7 +96,7 @@ public class GiftEvent implements Event {
             }
 
             flag = true;
-            timeFrame = 0;
+            timeAccum = 0;
             executeTime = 0;
         }
     }

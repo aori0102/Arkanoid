@@ -2,6 +2,7 @@ package game.Brick.BrickEvent.EventList;
 
 import game.Brick.Brick;
 import game.Brick.BrickEvent.Event;
+import utils.Time;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ public final class WaveEvent implements Event {
 
     private static final int DESTROYED = -2;
     private static final int EMPTY = -1;
+    private static final int WAVE_LIMIT = 1000;
 
     private final List<IntPair> justDamaged = new ArrayList<>();
     private final int rowData;
@@ -19,7 +21,7 @@ public final class WaveEvent implements Event {
     private final List<List<Brick>> brickGrid;
     private final Matrix state;
 
-    private int timeFrame = 0;
+    private double timeAccum = 0.0;
 
     public WaveEvent(int rowData, int colData, List<List<Brick>> matrix) {
         this.rowData = rowData;
@@ -30,16 +32,19 @@ public final class WaveEvent implements Event {
 
     @Override
     public void runEvent() {
-        if (timeFrame == 0) {
+        timeAccum += Time.getDeltaTime();
+
+        if (timeAccum >= UPDATE_INTERVAL) {
             runAllWave();
+            timeAccum = 0.0;
         }
-        timeFrame++;
-        timeFrame %= NumFrameForEachRunTime;
     }
 
     @Override
     public void getStartEvent(int r, int c) {
-
+        if(justDamaged.size() + activeWaves.size() + 1 <= WAVE_LIMIT) {
+            justDamaged.add(new IntPair(r, c));
+        }
     }
 
     private static final class WaveLayer {
@@ -53,20 +58,11 @@ public final class WaveEvent implements Event {
 
     public void runAllWave() {
 
-        justDamaged.clear();
-        for (int r = 0; r < rowData; r++) {
-            for (int c = 0; c < colData; c++) {
-                if (valid(brickGrid, r, c) && isJustDamaged(brickGrid, r, c)) {
-                    justDamaged.add(new IntPair(r, c));
-                }
-            }
-        }
-
         state.fill(EMPTY);
 
         for (int i = 0; i < rowData; i++) {
             for (int j = 0; j < colData; j++) {
-                if (!valid(brickGrid, i, j) && isDestroyed(brickGrid, i, j)) {
+                if (!valid(brickGrid, i, j) || isDestroyed(brickGrid, i, j)) {
                     state.set(i, j, DESTROYED);
                 }
             }
@@ -137,5 +133,7 @@ public final class WaveEvent implements Event {
                     brickGrid.get(row).get(col).setWaveIndex(state.get(row, col));
             }
         }
+
+        justDamaged.clear();
     }
 }

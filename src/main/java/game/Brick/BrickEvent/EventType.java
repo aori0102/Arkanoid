@@ -1,5 +1,5 @@
 package game.Brick.BrickEvent;
 
 public enum EventType {
-    Wave, Bomb, Gift, Rock, Rocket, Reborn, Angel
+    Wave, Bomb, Gift, Rock, Rocket, Wheel, Angel
 }

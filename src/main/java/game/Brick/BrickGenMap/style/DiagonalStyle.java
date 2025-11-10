@@ -3,30 +3,33 @@ package game.Brick.BrickGenMap.style;
 import static game.Brick.BrickGenMap.TransTypeNumBer.transTypeToNumber;
 import static game.Brick.BrickGenMap.Mathx.*;
 
+import game.Brick.BrickGenMap.SpecialsSprinkler;
 import game.Brick.BrickType;
 import game.Brick.Init.Matrix;
-import game.Brick.BrickGenMap.SpecialsSprinkler;
 import game.Brick.BrickGenMap.StyleGenerator;
-import game.Brick.BrickGenMap.TypePickers;
 import java.util.Random;
 
-/** DIAGONAL: repeated diagonal hard stripes. */
 public final class DiagonalStyle implements StyleGenerator {
     @Override
     public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);
         Matrix g = new Matrix(rows, cols);
-
-        int period = Math.max(2, (int)Math.round(lerp(6, 3, difficulty)));
-        int thick  = Math.max(1, (int)Math.round(lerp(1, 2, difficulty)));
-        BrickType wall = TypePickers.pickFromTopHard(rng, 0.55 + 0.3 * difficulty);
-
+        BrickType normal = BrickType.Normal, steel = BrickType.Steel, diamond = BrickType.Diamond;
         for (int r = 0; r < rows; r++)
-            for (int c = 0; c < cols; c++) {
-                int k = Math.floorMod(r - c, period);
-                if (k < thick) g.set(r, c, transTypeToNumber(wall));
-            }
-
+            for (int c = 0; c < cols; c++)
+                if (r == 0 || c == 0 || r == rows - 1 || c == cols - 1)
+                    g.set(r, c, transTypeToNumber(diamond));
+                else {
+                    int k = Math.floorMod(r - c, 4);
+                    if (k == 0) g.set(r, c, transTypeToNumber(steel));
+                    else if (rng.nextDouble() < 0.1 * difficulty) g.set(r, c, transTypeToNumber(diamond));
+                    else g.set(r, c, transTypeToNumber(normal));
+                }
+        int paths = 2 + rng.nextInt(2);
+        for (int p = 0; p < paths; p++) {
+            int c = 2 + rng.nextInt(cols - 4);
+            for (int r = rows - 2; r > 0; r--) g.set(r, c, transTypeToNumber(normal));
+        }
         SpecialsSprinkler.sprinkle(g, rng, difficulty);
         return g;
     }

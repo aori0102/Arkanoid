@@ -2,7 +2,7 @@ package game.Brick.BrickEvent.EventList;
 
 import game.Brick.Brick;
 import game.Brick.BrickEvent.Event;
-import game.Brick.Init;
+import utils.Time;
 
 import java.util.*;
 
@@ -12,66 +12,179 @@ public class RockEvent implements Event {
     private final int rowData;
     private final int colData;
     private final List<List<Brick>> brickGrid;
-    private int timeFrame = 0;
+    private double timeAccum = 0.0;
 
-    private final List<Init.IntPair> listDown = new LinkedList<>();
-    private final List<Init.IntPair> listUp = new LinkedList<>();
-    private final List<Init.IntPair> listLeft = new LinkedList<>();
-    private final List<Init.IntPair> listRight = new LinkedList<>();
+    private List<cellExecute> listDectecPhare = new ArrayList<>();
+    private List<cellExecute> listDestroyPhare = new ArrayList<>();
+
     public RockEvent(int row, int col, List<List<Brick>> matrix) {
         this.rowData = row;
         this.colData = col;
         this.brickGrid = matrix;
     }
 
-    @Override
-    public void runEvent() {
-        if (timeFrame != 0) {
-            propagate(listUp, -1, 0);
-            propagate(listDown, 1, 0);
-            propagate(listLeft, 0, -1);
-            propagate(listRight, 0, 1);
+    static class cellExecute {
+        private final int row, col;
+        private final IntPair start;
+        private IntPair downDirec, upDirec, leftDirec, rightDirec;
+        private int loopTime = 0;
+
+        public cellExecute(IntPair cell, int row, int col) {
+            start = cell;
+            upDirec = new IntPair(cell.fi(), cell.se());
+            leftDirec = new IntPair(cell.fi(), cell.se());
+            rightDirec = new IntPair(cell.fi(), cell.se());
+            downDirec = new IntPair(cell.fi(), cell.se());
+
+            this.row =  row;
+            this.col = col;
         }
 
-        timeFrame++;
-        timeFrame = timeFrame % NumFrameForEachRunTime;
+        public IntPair getDownDirec() {
+            return downDirec;
+        }
+
+        public IntPair getUpDirec() {
+            return upDirec;
+        }
+
+        public IntPair getLeftDirec() {
+            return leftDirec;
+        }
+
+        public IntPair getRightDirec() {
+            return rightDirec;
+        }
+
+        public IntPair getStart() {
+            return start;
+        }
+
+        public void execute() {
+            downDirec = new IntPair(downDirec.fi() + 1, downDirec.se());
+            upDirec = new IntPair(upDirec.fi() - 1, upDirec.se());
+            leftDirec = new IntPair(leftDirec.fi(), leftDirec.se() - 1);
+            rightDirec = new IntPair(rightDirec.fi(), rightDirec.se() + 1);
+        }
+
+        public void restart() {
+            downDirec = start;
+            upDirec = start;
+            leftDirec = start;
+            rightDirec = start;
+        }
+
+        public void restartLoop() {
+            loopTime = 0;
+        }
+
+        public boolean isDestroyTime() {
+            return loopTime == 4;
+        }
+
+        public void runTime() {
+            loopTime++;
+        }
+
+        public int getTime() {
+            return loopTime;
+        }
+
+        public boolean allOutBounds() {
+            return (downDirec.fi() >= row) && (upDirec.fi() < 0) && (leftDirec.se() < 0) &&  (rightDirec.se() >= col);
+        }
     }
 
-    private void propagate(List<IntPair> directionList, int dr, int dc) {
-        if (directionList.isEmpty()) return;
+    @Override
+    public void runEvent() {
 
-        List<IntPair> next = new LinkedList<>();
+        timeAccum += Time.getDeltaTime();
 
-        for (Init.IntPair p : directionList) {
-            int r = p.fi(), c = p.se();
+        if (timeAccum >= UPDATE_INTERVAL) {
+            timeAccum = 0.0;
+            List<cellExecute> newListDectec = new ArrayList<>();
+            List<cellExecute> newListDestroy = new ArrayList<>();
 
-            int nextR = r + dr;
-            int nextC = c + dc;
-
-            if (valid(brickGrid, nextR, nextC)) {
-                next.add(new Init.IntPair(nextR, nextC));
-                brickGrid.get(nextR).get(nextC).maxBrightness();
+            for (cellExecute cell: listDestroyPhare) {
+                executeDestroy(cell);
+                if (!cell.allOutBounds()) {
+                    newListDestroy.add(cell);
+                }
             }
 
-            if (valid(brickGrid, r, c)) {
-                destroyBrick(brickGrid, r, c);
+            for (cellExecute cell : listDectecPhare) {
+                executeDetection(cell);
+                if(cell.allOutBounds()) {
+                    cell.restart();
+                    newListDestroy.add(cell);
+                }
+                else {
+                    newListDectec.add(cell);
+                }
+            }
+
+            listDectecPhare.clear();
+            listDectecPhare = newListDectec;
+            listDestroyPhare.clear();
+            listDestroyPhare = newListDestroy;
+        }
+    }
+
+    private void executeDestroy(cellExecute obj) {
+        obj.runTime();
+
+        List<IntPair> listCell = new ArrayList<>();
+        listCell.add(obj.getDownDirec());
+        listCell.add(obj.getUpDirec());
+        listCell.add(obj.getLeftDirec());
+        listCell.add(obj.getRightDirec());
+
+        for (IntPair cell: listCell) {
+            if (valid(brickGrid, cell.fi(), cell.se())) {
+                if (obj.isDestroyTime()) {
+                    destroyBrick(brickGrid,  cell.fi(), cell.se());
+                }
+                else {
+                    if (obj.getTime() % 2 == 0) {
+                        brickGrid.get(cell.fi()).get(cell.se()).setRedRender();
+                    }
+                    else {
+                        brickGrid.get(cell.fi()).get(cell.se()).setYellowRender();
+                    }
+                }
             }
         }
 
-        directionList.clear();
-        directionList.addAll(next);
+        if(obj.isDestroyTime()) {
+            obj.restartLoop();
+            obj.execute();
+        }
+    }
+
+    private void executeDetection(cellExecute obj) {
+
+        List<IntPair> listCell = new ArrayList<>();
+        listCell.add(obj.getDownDirec());
+        listCell.add(obj.getUpDirec());
+        listCell.add(obj.getLeftDirec());
+        listCell.add(obj.getRightDirec());
+
+        for (IntPair cell: listCell) {
+            if (valid(brickGrid, cell.fi(), cell.se())) {
+                brickGrid.get(cell.fi()).get(cell.se()).maxBrightness();
+            }
+        }
+
+        obj.execute();
     }
 
     @Override
     public void getStartEvent(int r, int c) {
         if (valid(brickGrid, r, c)) {
-            timeFrame = 0;
+            timeAccum = 0;
             destroyBrick(brickGrid, r, c);
-            var start = new Init.IntPair(r, c);
-            listDown.add(start);
-            listUp.add(start);
-            listLeft.add(start);
-            listRight.add(start);
+            var start = new IntPair(r, c);
+            listDectecPhare.add(new cellExecute(start, rowData, colData));
         }
     }
 }
