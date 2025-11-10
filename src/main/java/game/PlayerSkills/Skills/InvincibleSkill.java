@@ -2,11 +2,12 @@ package game.PlayerSkills.Skills;
 
 import game.GameObject.Shield;
 import game.Player.Player;
+import game.PlayerSkills.SkillIndex;
 import org.GameObject.GameObject;
 import utils.Time;
 import utils.Vector2;
 
-public class Invincible extends Skill{
+public class InvincibleSkill extends Skill {
 
     private static final int SPEED_BOOSTED_MULTIPLIER = 2;
     private static final double INVINCIBLE_TIME = 5.0;
@@ -17,7 +18,7 @@ public class Invincible extends Skill{
      *
      * @param owner The owner of this component.
      */
-    public Invincible(GameObject owner) {
+    public InvincibleSkill(GameObject owner) {
         super(owner);
     }
 
@@ -27,7 +28,12 @@ public class Invincible extends Skill{
         Player.getInstance().getPlayerPaddle().getTransform().setGlobalScale(new Vector2(2.5, 1.25));
         Player.getInstance().setCurrentSpeed(Player.getInstance().getCurrentSpeed() * SPEED_BOOSTED_MULTIPLIER);
         Shield.getInstance().turnOn();
-        invincibleCoroutineID = Time.addCoroutine(this :: turnOff, Time.getTime() + INVINCIBLE_TIME);
+        invincibleCoroutineID = Time.addCoroutine(this::turnOff, Time.getTime() + INVINCIBLE_TIME);
+    }
+
+    @Override
+    protected SkillIndex getSkillIndex() {
+        return SkillIndex.Invincible;
     }
 
     private void turnOff() {

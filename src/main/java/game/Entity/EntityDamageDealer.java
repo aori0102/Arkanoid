@@ -54,6 +54,11 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
 
         for (var collider : overlappedList) {
 
+            var healthObject = collider.getComponent(EntityHealth.class);
+            if (healthObject == null || !isDamageTarget(healthObject)) {
+                continue;
+            }
+
             // Inflict effect
             var effectControllingObject = collider.getComponent(EntityEffectController.class);
             if (effectControllingObject != null) {
@@ -66,17 +71,12 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
 
             }
 
-            var healthObject = collider.getComponent(EntityHealth.class);
-            if (healthObject != null) {
-
-                // Deal damage
-                handleHealthManipulation(healthObject);
-                if (gameObject.isDestroyed()) {
-                    return;
-                }
-                onDamageDealt(healthObject);
-
+            // Deal damage
+            handleHealthManipulation(healthObject);
+            if (gameObject.isDestroyed()) {
+                return;
             }
+            onDamageDealt(healthObject);
 
         }
     }

@@ -17,16 +17,16 @@ public final class ScoreUIPrefab extends Prefab {
     public static final Color TEXT_COLOR_GRADIENT_START = Color.web("#EEDC13");
     public static final Color TEXT_COLOR_GRADIENT_END = Color.web("#EE9A13");
 
-    private static final Vector2 SCORE_TEXT_POSITION = new Vector2(1075.0, 214.0);
+    private static final Vector2 SCORE_TEXT_POSITION = new Vector2(125.0, 214.0);
     private static final String SCORE_TEXT_DEFAULT = "0";
     public static final double SCORE_TEXT_SIZE = 64.0;
 
     public static final double LEVEL_TEXT_SIZE = 36.0;
     private static final String LEVEL_TEXT_DEFAULT = "Level 1";
-    private static final Vector2 LEVEL_TEXT_POSITION = new Vector2(1075.0, 32.0);
+    private static final Vector2 LEVEL_TEXT_POSITION = new Vector2(125.0, 32.0);
 
     private static final String COMBO_TEXT_DEFAULT = "x0";
-    private static final Vector2 COMBO_TEXT_POSITION = new Vector2(1075.0, 348.0);
+    private static final Vector2 COMBO_TEXT_POSITION = new Vector2(125.0, 348.0);
 
     @Override
     public GameObject instantiatePrefab() {

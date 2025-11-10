@@ -52,7 +52,7 @@ public final class ScoreManager extends MonoBehaviour {
     private EventActionID brick_onAnyBrickDestroyed_ID = null;
     private EventActionID ball_onAnyBallHitBrick_ID = null;
     private EventActionID ball_onAnyBallDestroyed_ID = null;
-    private EventActionID ballsManager_onAllBallTouchedPaddle_ID = null;
+    private EventActionID ballsManager_onAllBallDestroyed_ID = null;
 
     public EventHandler<Integer> onScoreChanged = new EventHandler<>(ScoreManager.class);
     public EventHandler<Integer> onComboChanged = new EventHandler<>(ScoreManager.class);
@@ -75,8 +75,8 @@ public final class ScoreManager extends MonoBehaviour {
         brick_onAnyBrickDestroyed_ID = Brick.onAnyBrickDestroyed.addListener(this::brick_onAnyBrickDestroyed);
         ball_onAnyBallHitBrick_ID = Ball.onAnyBallHitBrick.addListener(this::ball_onAnyBallHitBrick);
         ball_onAnyBallDestroyed_ID = Ball.onAnyBallDestroyed.addListener(this::ball_onAnyBallDestroyed);
-        ballsManager_onAllBallTouchedPaddle_ID = BallsManager.getInstance().onAllBallTouchedPaddle
-                .addListener(this::ballsManager_onAllBallTouchedPaddle);
+        ballsManager_onAllBallDestroyed_ID = BallsManager.getInstance().onAllBallDestroyed
+                .addListener(this::ballsManager_onAllBallDestroyed);
         loadSave();
     }
 
@@ -86,8 +86,8 @@ public final class ScoreManager extends MonoBehaviour {
         Ball.onAnyBallHitBrick.removeListener(ball_onAnyBallHitBrick_ID);
         Ball.onAnyBallDestroyed.removeListener(ball_onAnyBallDestroyed_ID);
         if (BallsManager.getInstance() != null) {
-            BallsManager.getInstance().onAllBallTouchedPaddle
-                    .removeListener(ballsManager_onAllBallTouchedPaddle_ID);
+            BallsManager.getInstance().onAllBallDestroyed
+                    .removeListener(ballsManager_onAllBallDestroyed_ID);
         }
         instance = null;
     }
@@ -103,21 +103,6 @@ public final class ScoreManager extends MonoBehaviour {
         var levelState = LevelManager.getInstance().getLevelState();
         if (levelState == LevelState.ConcludingLevel) {
             setScore(_score + _combo + BALL_SCORE_WHEN_CLEARED);
-        } else {
-            setCombo(0);
-        }
-    }
-
-    /**
-     * Called when {@link BallsManager#onAllBallTouchedPaddle} is invoked.<br><br>
-     * This function resets the combo whenever all ball has touched the paddle.
-     *
-     * @param sender Event caller {@link BallsManager}.
-     * @param e      Empty event argument.
-     */
-    private void ballsManager_onAllBallTouchedPaddle(Object sender, Void e) {
-        if (LevelManager.getInstance().getLevelState() == LevelState.Playing) {
-            setCombo(0);
         }
     }
 
@@ -141,6 +126,17 @@ public final class ScoreManager extends MonoBehaviour {
      */
     private void brick_onAnyBrickDestroyed(Object sender, Brick.OnBrickDestroyedEventArgs e) {
         setScore(_score + e.brickType.score + _combo);
+    }
+
+    /**
+     * Called when {@link BallsManager#onAllBallDestroyed} is invoked.<br><br>
+     * This function resets the combo when all ball is destroyed.
+     *
+     * @param sender Event caller {@link BallsManager}.
+     * @param e      Empty event argument.
+     */
+    private void ballsManager_onAllBallDestroyed(Object sender, Void e) {
+        setCombo(0);
     }
 
     public static ScoreManager getInstance() {

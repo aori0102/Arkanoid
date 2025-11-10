@@ -4,20 +4,22 @@ import org.Rendering.ImageAsset;
 
 public enum SkillIndex {
 
-    LaserBeam(ImageAsset.ImageIndex.LaserBeam),
-    Magnet(ImageAsset.ImageIndex.None),
-    Invincible(ImageAsset.ImageIndex.None),
+    LaserBeam(ImageAsset.ImageIndex.Player_UI_Skill_Icon_LaserBeamSkillIcon, 5, 5.0,"Q"),
+    Updraft(ImageAsset.ImageIndex.Player_UI_Skill_Icon_UpdraftSkillIcon, 1, 5.0,"E"),
+    Invincible(ImageAsset.ImageIndex.Player_UI_Skill_Icon_InvincibleSkillIcon, 1, 10.0,"X"),
+    Dash(ImageAsset.ImageIndex.Player_UI_Skill_Icon_DashSkillIcon, 2, 0.5,"SHIFT");
 
-    None(ImageAsset.ImageIndex.None),;
+    public final ImageAsset.ImageIndex skillIcon;
+    public final int maxSkillCharge;
+    public final double baseSkillCooldown;
+    public final String keybind;
 
-    SkillIndex(ImageAsset.ImageIndex imageIndex) {
-        this.imageIndex = imageIndex;
+    SkillIndex(ImageAsset.ImageIndex imageIndex, int maxSkillCharge, double baseSkillCooldown, String keybind) {
+        this.skillIcon = imageIndex;
+        this.maxSkillCharge = maxSkillCharge;
+        this.baseSkillCooldown = baseSkillCooldown;
+        this.keybind = keybind;
     }
 
-    private final ImageAsset.ImageIndex imageIndex;
-
-    public ImageAsset.ImageIndex getImageIndex() {
-        return imageIndex;
-    }
 
 }

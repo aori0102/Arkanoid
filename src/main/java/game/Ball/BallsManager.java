@@ -3,7 +3,6 @@ package game.Ball;
 import game.Effect.StatusEffectInfo;
 import game.Player.Player;
 import game.Effect.StatusEffect;
-import game.Score.ScoreManager;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
@@ -22,16 +21,11 @@ public class BallsManager extends MonoBehaviour {
     private static BallsManager instance = null;
 
     private final HashSet<Ball> ballSet = new HashSet<>();
-    private final HashSet<Ball> touchedPaddleSet = new HashSet<>();
 
     public int index = 1;
 
-    public EventHandler<Void> onBallCountChanged = new EventHandler<>(BallsManager.class);
     public EventHandler<Void> onAllBallDestroyed = new EventHandler<>(BallsManager.class);
-    public EventHandler<Void> onAllBallTouchedPaddle = new EventHandler<>(BallsManager.class);
 
-    private EventActionID ball_onAnyBallJustHitPaddle_ID = null;
-    private EventActionID ball_onAnyBallHitBrick_ID = null;
     private EventActionID ball_onAnyBallDestroyed_ID = null;
     private EventActionID ball_onAnyBallSpawned_ID = null;
 
@@ -54,10 +48,6 @@ public class BallsManager extends MonoBehaviour {
 
     @Override
     public void awake() {
-        ball_onAnyBallJustHitPaddle_ID = Ball.onAnyBallHitPaddle
-                .addListener(this::ball_onAnyBallJustHitPaddle);
-        ball_onAnyBallHitBrick_ID = Ball.onAnyBallHitBrick
-                .addListener(this::ball_onAnyBallHitBrick);
         ball_onAnyBallDestroyed_ID = Ball.onAnyBallDestroyed
                 .addListener(this::ball_onAnyBallDestroyed);
         ball_onAnyBallSpawned_ID = Ball.onAnyBallSpawned
@@ -66,8 +56,6 @@ public class BallsManager extends MonoBehaviour {
 
     @Override
     public void onDestroy() {
-        Ball.onAnyBallHitPaddle.removeListener(ball_onAnyBallJustHitPaddle_ID);
-        Ball.onAnyBallHitBrick.removeListener(ball_onAnyBallHitBrick_ID);
         Ball.onAnyBallDestroyed.removeListener(ball_onAnyBallDestroyed_ID);
         Ball.onAnyBallSpawned.removeListener(ball_onAnyBallSpawned_ID);
         instance = null;
@@ -79,7 +67,6 @@ public class BallsManager extends MonoBehaviour {
      */
     private void addBall(Ball ball) {
         ballSet.add(ball);
-        onBallCountChanged.invoke(this, null);
     }
 
     /**
@@ -88,7 +75,6 @@ public class BallsManager extends MonoBehaviour {
      */
     private void removeBall(Ball ball) {
         ballSet.remove(ball);
-        onBallCountChanged.invoke(this, null);
         if (ballSet.isEmpty()) {
             onAllBallDestroyed.invoke(this, null);
         }
@@ -108,36 +94,6 @@ public class BallsManager extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link Ball#onAnyBallHitPaddle} is invoked.<br><br>
-     * This function adds the ball to {@link #touchedPaddleSet} handling combo through {@link ScoreManager}.
-     *
-     * @param sender Event caller {@link Ball}.
-     * @param e      Empty event argument.
-     */
-    private void ball_onAnyBallJustHitPaddle(Object sender, Void e) {
-        if (sender instanceof Ball ball) {
-            touchedPaddleSet.add(ball);
-            if (touchedPaddleSet.size() == ballSet.size()) {
-                onAllBallTouchedPaddle.invoke(this, null);
-                touchedPaddleSet.clear();
-            }
-        }
-    }
-
-    /**
-     * Called when {@link Ball#onAnyBallHitBrick} is invoked.<br><br>
-     * This function clears hit paddle mark on the ball that hits a brick.
-     *
-     * @param sender Event caller {@link Ball}.
-     * @param e      Empty event argument.
-     */
-    private void ball_onAnyBallHitBrick(Object sender, Void e) {
-        if (sender instanceof Ball ball) {
-            touchedPaddleSet.remove(ball);
-        }
-    }
-
-    /**
      * Called when {@link Ball#onAnyBallDestroyed} is invoked.<br><br>
      * This function removes the destroyed ball from {@link #ballSet}.
      *
@@ -146,12 +102,7 @@ public class BallsManager extends MonoBehaviour {
      */
     private void ball_onAnyBallDestroyed(Object sender, Void e) {
         if (sender instanceof Ball ball) {
-            touchedPaddleSet.remove(ball);
             removeBall(ball);
-            if (touchedPaddleSet.size() == ballSet.size()) {
-                onAllBallTouchedPaddle.invoke(this, null);
-                touchedPaddleSet.clear();
-            }
         }
     }
 

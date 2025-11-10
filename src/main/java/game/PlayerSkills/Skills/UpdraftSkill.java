@@ -1,16 +1,18 @@
 package game.PlayerSkills.Skills;
 
 import game.Ball.BallsManager;
+import game.PlayerSkills.SkillIndex;
 import org.GameObject.GameObject;
 import utils.Vector2;
 
-public class Updraft extends Skill {
+public class UpdraftSkill extends Skill {
+
     /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
-    public Updraft(GameObject owner) {
+    public UpdraftSkill(GameObject owner) {
         super(owner);
     }
 
@@ -24,4 +26,10 @@ public class Updraft extends Skill {
             }
         }
     }
+
+    @Override
+    protected SkillIndex getSkillIndex() {
+        return SkillIndex.Updraft;
+    }
+
 }

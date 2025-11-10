@@ -31,12 +31,15 @@ public class ImageAsset {
         PauseButton("/UI/PauseButton.png"),
         ResumeButton("/UI/ResumeButton.png"),
         GoBackButton("/UI/GoBackButton.png"),
+
         /// Game Title
         GameTitle("/UI/GameTitle.png"),
+
         /// Background
         GamePlayBackground_Normal("/UI/GamePlayBackground_Normal.png"),
         GamePlayBackground_Boss("/UI/GamePlayBackground_Boss.png"),
         DimmedBackground("/UI/DimmedBackground.png"),
+
         /// Perks
         Perks("/UI/Perks.png"),
 
@@ -84,6 +87,20 @@ public class ImageAsset {
         Player_UI_Rank_Fill("/Player/UI/Scoreboard/Rank/Fill.png"),
         Player_UI_Rank_Outline("/Player/UI/Scoreboard/Rank/Outline.png"),
         Player_UI_Rank_LevelUpIcon("/Player/UI/Scoreboard/Rank/LevelUpIcon.png"),
+
+        /// Player skill
+        Player_UI_Skill_SkillBackground("/Player/UI/Skill/SkillBackground.png"),
+        Player_UI_Skill_ChargingRing("/Player/UI/Skill/ChargingRing.png"),
+        Player_UI_Skill_NotReadyOverlay("/Player/UI/Skill/NotReadyOverlay.png"),
+        Player_UI_Skill_ReadyOverlay("/Player/UI/Skill/ReadyOverlay.png"),
+        Player_UI_Skill_ChargingIndicatorNob("/Player/UI/Skill/ChargingIndicatorNob.png"),
+        Player_UI_Skill_TooltipBackground("/Player/UI/Skill/TooltipBackground.png"),
+
+        /// Player skill icon
+        Player_UI_Skill_Icon_InvincibleSkillIcon("/Player/UI/Skill/Icon/InvincibleSkillIcon.png"),
+        Player_UI_Skill_Icon_DashSkillIcon("/Player/UI/Skill/Icon/DashSkillIcon.png"),
+        Player_UI_Skill_Icon_LaserBeamSkillIcon("/Player/UI/Skill/Icon/LaserBeamSkillIcon.png"),
+        Player_UI_Skill_Icon_UpdraftSkillIcon("/Player/UI/Skill/Icon/UpdraftSkillIcon.png"),
 
         /// Bricks
         PurpleBrick("/Brick/PurpleBrick.png"),

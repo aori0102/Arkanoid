@@ -63,7 +63,7 @@ public final class ScoreUI extends MonoBehaviour {
      */
     private void scoreManager_onScoreChanged(Object sender, Integer e) {
         scoreText.setText(String.valueOf(e));
-        var popUp = PrefabManager.instantiatePrefab(PrefabIndex.PlayerInfoBoard_ScoreUI_PopUp)
+        var popUp = PrefabManager.instantiatePrefab(PrefabIndex.Scoreboard_ScoreUI_PopUp)
                 .getComponent(ScorePopUp.class);
         popUp.setAmount(e);
         popUp.setEntryPoint(scoreText.getTransform().getGlobalPosition());

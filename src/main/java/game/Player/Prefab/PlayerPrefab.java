@@ -2,6 +2,11 @@ package game.Player.Prefab;
 
 import game.Player.*;
 import game.Player.Paddle.PlayerPaddle;
+import game.PlayerSkills.SkillIndex;
+import game.PlayerSkills.Skills.DashSkill;
+import game.PlayerSkills.Skills.InvincibleSkill;
+import game.PlayerSkills.Skills.LaserBeamSkill;
+import game.PlayerSkills.Skills.UpdraftSkill;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Prefab.Prefab;
@@ -41,12 +46,47 @@ public class PlayerPrefab extends Prefab {
         var healthLossVignetteObject = PrefabManager.instantiatePrefab(PrefabIndex.Player_HealthLossVignette);
         healthLossVignetteObject.setParent(playerObject);
 
-        //Player paddle
+        // Player paddle
         var paddle = PrefabManager.instantiatePrefab(PrefabIndex.Player_Paddle);
         paddle.getTransform().setGlobalScale(new Vector2(1.25, 1.25));
         player.linkPlayerPaddle(paddle.getComponent(PlayerPaddle.class));
 
+        instantiateSkillKit(playerObject.getComponent(PlayerSkillsHandler.class))
+                .setParent(playerObject);
+
         return playerObject;
+    }
+
+    private GameObject instantiateSkillKit(PlayerSkillsHandler playerSkillsHandler) {
+
+        var skillKitObject = GameObjectManager.instantiate("SkillKit");
+
+        // Dash
+        var dash = GameObjectManager.instantiate("Dash")
+                .addComponent(DashSkill.class);
+        playerSkillsHandler.assignSkill(SkillIndex.Dash, dash);
+        dash.getGameObject().setParent(skillKitObject);
+
+        // Updraft
+        var updraft = GameObjectManager.instantiate("Updraft")
+                .addComponent(UpdraftSkill.class);
+        playerSkillsHandler.assignSkill(SkillIndex.Updraft, updraft);
+        updraft.getGameObject().setParent(skillKitObject);
+
+        // Invincible
+        var invincible = GameObjectManager.instantiate("Invincible")
+                .addComponent(InvincibleSkill.class);
+        playerSkillsHandler.assignSkill(SkillIndex.Invincible, invincible);
+        invincible.getGameObject().setParent(skillKitObject);
+
+        // Laser beam
+        var laserBeam = GameObjectManager.instantiate("LaserBeam")
+                .addComponent(LaserBeamSkill.class);
+        playerSkillsHandler.assignSkill(SkillIndex.LaserBeam, laserBeam);
+        laserBeam.getGameObject().setParent(skillKitObject);
+
+        return skillKitObject;
+
     }
 
 }

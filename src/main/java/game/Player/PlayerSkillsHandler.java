@@ -1,24 +1,16 @@
 package game.Player;
 
-import game.PlayerSkills.Skills.Invincible;
-import game.PlayerSkills.Skills.LaserBeam.LaserBeam;
-import game.PlayerSkills.Skills.Dash;
-import game.PlayerSkills.Skills.Updraft;
-import game.PlayerSkills.Skills.Skill;
-import game.PlayerSkills.SkillPrefabGenerator;
+import game.PlayerSkills.SkillIndex;
+import game.PlayerSkills.Skills.*;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
-import org.Prefab.PrefabManager;
-import utils.Time;
 
-import static game.PlayerSkills.SkillPrefabGenerator.skillDataMap;
+import java.util.EnumMap;
 
 public class PlayerSkillsHandler extends MonoBehaviour {
 
-    private Dash dash;
-    private Updraft updraft;
-    private Invincible invincible;
+    private final EnumMap<SkillIndex, Skill> skillMap = new EnumMap<>(SkillIndex.class);
 
     /**
      * Create this MonoBehaviour.
@@ -33,72 +25,31 @@ public class PlayerSkillsHandler extends MonoBehaviour {
     public void awake() {
         Player.getInstance().getPlayerController().getActionMap().
                 onKeyPressed.addListener(this::handleSkillRequest);
-
-        dash = PrefabManager.instantiatePrefab(SkillPrefabGenerator
-                .skillPrefabSet.get(Dash.class)).getComponent(Dash.class);
-        updraft = PrefabManager.instantiatePrefab(SkillPrefabGenerator
-                .skillPrefabSet.get(Updraft.class)).getComponent(Updraft.class);
-        invincible = PrefabManager.instantiatePrefab(SkillPrefabGenerator
-                .skillPrefabSet.get(Invincible.class)).getComponent(Invincible.class);
-    }
-
-    @Override
-    public void update() {
-        handleSKillCooldown();
     }
 
     private void handleSkillRequest(Object o, ActionMap.Action action) {
         switch (action) {
             // Press Q
-            case Skill1 -> spawnSkill(LaserBeam.class);
+            case Skill1 -> handleLogicBasedSkill(SkillIndex.LaserBeam);
             // Press E
-            case Skill2 -> handleLogicBasedSkill(Updraft.class);
+            case Skill2 -> handleLogicBasedSkill(SkillIndex.Updraft);
             // Press X
-            case Skill3 -> handleLogicBasedSkill(Invincible.class);
-            //Press SHIFT
-            case Dash -> handleLogicBasedSkill(Dash.class);
+            case Skill3 -> handleLogicBasedSkill(SkillIndex.Invincible);
+            // Press SHIFT
+            case Dash -> handleLogicBasedSkill(SkillIndex.Dash);
         }
     }
 
-    private void handleLogicBasedSkill(Class<? extends Skill> skillClass) {
-        var skillData = skillDataMap.get(skillClass);
-        if (skillData.skillCharge > 0) {
-            skillData.skillCharge--;
-            skillData.skillCooldownTime = skillData.baseSkillCooldown;
-
-            if (skillClass == Dash.class) {
-                dash.invoke();
-            }
-            if (skillClass == Updraft.class) {
-                updraft.invoke();
-            }
-            if (skillClass == Invincible.class) {
-                invincible.invoke();
-            }
-        }
+    private void handleLogicBasedSkill(SkillIndex skillIndex) {
+        skillMap.get(skillIndex).useSkill();
     }
 
-    private void spawnSkill(Class<? extends Skill> skillClass) {
-
-        if (skillDataMap.get(skillClass).skillCharge > 0) {
-            PrefabManager.instantiatePrefab(SkillPrefabGenerator.skillPrefabSet.get(skillClass));
-            skillDataMap.get(skillClass).skillCharge--;
-        }
+    public Skill getSkillData(SkillIndex skillIndex) {
+        return skillMap.get(skillIndex);
     }
 
-    private void handleSKillCooldown() {
-        for (var key : skillDataMap.keySet()) {
-            int currentSkillCharge = skillDataMap.get(key).skillCharge;
-            int maxSkillCharge = skillDataMap.get(key).maxSkillCharge;
-
-            if (currentSkillCharge < maxSkillCharge) {
-                skillDataMap.get(key).skillCooldownTime -= Time.getDeltaTime();
-
-                if (skillDataMap.get(key).skillCooldownTime <= 0) {
-                    skillDataMap.get(key).skillCharge++;
-                    skillDataMap.get(key).skillCooldownTime = skillDataMap.get(key).baseSkillCooldown;
-                }
-            }
-        }
+    public void assignSkill(SkillIndex skillIndex, Skill skill) {
+        skillMap.put(skillIndex, skill);
     }
+
 }

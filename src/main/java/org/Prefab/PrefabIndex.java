@@ -8,27 +8,27 @@ import game.Config.ConfigManagerPrefab;
 import game.Damagable.HealthChangePopUpUIPrefab;
 import game.Damagable.HealthChangeVisualizerPrefab;
 import game.GameManager.GameManagerPrefab;
+import game.LaserBeam.LaserBeamPrefab;
 import game.Level.LevelManagerPrefab;
 import game.Level.LevelUIPrefab;
 import game.MapGenerator.BrickMapManagerPrefab;
 import game.Obstacle.Index.ObstacleManagerPrefab;
 import game.Perks.Index.PerkManagerPrefab;
-import game.PlayerSkills.PlayerSkillsPrefab.DashPrefab;
-import game.PlayerSkills.PlayerSkillsPrefab.InvinciblePrefab;
-import game.PlayerSkills.PlayerSkillsPrefab.LaserBeamPrefab;
-import game.PlayerSkills.PlayerSkillsPrefab.UpdraftPrefab;
 import game.Player.Prefab.PaddlePrefab;
 import game.Player.Prefab.PlayerHealthBarPrefab;
 import game.Player.Prefab.PlayerHealthLossVignettePrefab;
 import game.Player.Prefab.PlayerPrefab;
 import game.PlayerData.DataManagerPrefab;
+import game.PlayerSkills.SkillSetUIPrefab;
+import game.PlayerSkills.SkillUIPrefab;
 import game.PowerUp.Prefab.*;
 import game.Rank.RankManagerPrefab;
 import game.Rank.RankUIPrefab;
-import game.PlayerInfoBoard.PlayerInfoBoardPrefab;
+import game.Scoreboard.ScoreboardPrefab;
 import game.Score.ScoreManagerPrefab;
 import game.Score.ScorePopUpPrefab;
 import game.Score.ScoreUIPrefab;
+import game.StatBoard.StatBoardPrefab;
 import game.UI.MainMenu.MainMenuManagerPrefab;
 import game.UI.Prefab.*;
 import game.UI.Prefab.MainMenu.*;
@@ -45,10 +45,17 @@ public enum PrefabIndex {
     LevelNotificationUI(new LevelUIPrefab()),
 
     /// Player info board
-    PlayerInfoBoard(new PlayerInfoBoardPrefab()),
-    PlayerInfoBoard_RankUI(new RankUIPrefab()),
-    PlayerInfoBoard_ScoreUI(new ScoreUIPrefab()),
-    PlayerInfoBoard_ScoreUI_PopUp(new ScorePopUpPrefab()),
+    Scoreboard(new ScoreboardPrefab()),
+    Scoreboard_RankUI(new RankUIPrefab()),
+    Scoreboard_ScoreUI(new ScoreUIPrefab()),
+    Scoreboard_ScoreUI_PopUp(new ScorePopUpPrefab()),
+
+    /// Stat Board
+    StatBoard(new StatBoardPrefab()),
+
+    /// Skill set
+    SkillUI(new SkillUIPrefab()),
+    SkillSetUI(new SkillSetUIPrefab()),
 
     /// Manager
     Manager_ScoreManager(new ScoreManagerPrefab()),
@@ -109,9 +116,6 @@ public enum PrefabIndex {
 
     /// Skill
     LaserBeam(new LaserBeamPrefab()),
-    Dash(new DashPrefab()),
-    Updraft(new UpdraftPrefab()),
-    Invincible(new InvinciblePrefab()),
 
     /// Power up
     PowerUp_Placeholder(new PowerUpPlaceholderPrefab()),
@@ -124,11 +128,8 @@ public enum PrefabIndex {
 
     /// Player
     Player(new PlayerPrefab()),
-
     Player_Paddle(new PaddlePrefab()),
-
     Player_HealthBar(new PlayerHealthBarPrefab()),
-
     Player_HealthLossVignette(new PlayerHealthLossVignettePrefab()),
 
     /// Particle;

@@ -1,4 +1,4 @@
-package game.PlayerSkills.Skills.LaserBeam;
+package game.LaserBeam;
 
 import game.Entity.EntityStat;
 import org.GameObject.GameObject;

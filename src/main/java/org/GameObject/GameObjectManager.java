@@ -262,12 +262,14 @@ public class GameObjectManager {
 
         System.out.println("[GameObjectManager] Nuking every game objects");
         for (var object : gameObjectSet) {
+            System.out.println("Destroying " + object);
             if (object.isDestroyed()) {
                 continue;
             }
             object.markDestroyed();
             object.clearData();
         }
+        System.out.println("Done");
         gameObjectSet.clear();
         addedGameObjectQueue.clear();
         removedObjectQueue.clear();

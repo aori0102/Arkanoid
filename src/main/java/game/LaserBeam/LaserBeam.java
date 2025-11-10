@@ -1,19 +1,19 @@
-package game.PlayerSkills.Skills.LaserBeam;
+package game.LaserBeam;
 
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import game.Player.Player;
-import game.PlayerSkills.Skills.Skill;
-import game.PlayerSkills.SkillIndex;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
+import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
 
-public class LaserBeam extends Skill {
+public class LaserBeam extends MonoBehaviour {
 
     private static final double LASER_SPEED = 1000;
     private final Layer[] colliderLayers = {Layer.Boss, Layer.Brick};
@@ -29,7 +29,6 @@ public class LaserBeam extends Skill {
 
     @Override
     public void awake() {
-        setSkillIndex(SkillIndex.LaserBeam);
         getComponent(BoxCollider.class).setIncludeLayer(Layer.combineLayerMask(colliderLayers));
         getComponent(BoxCollider.class).setOnCollisionEnterCallback(this::handleCollision);
     }
@@ -56,11 +55,6 @@ public class LaserBeam extends Skill {
         if (border != null && border.getBorderType() == BorderType.BorderTop) {
             GameObjectManager.destroy(gameObject);
         }
-    }
-
-    @Override
-    public void invoke() {
-        //TODO: Add event
     }
 
 }

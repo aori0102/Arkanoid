@@ -1,4 +1,4 @@
-package game.PlayerSkills.Skills.LaserBeam;
+package game.LaserBeam;
 
 import game.Brick.BrickHealth;
 import game.Effect.StatusEffectInfo;

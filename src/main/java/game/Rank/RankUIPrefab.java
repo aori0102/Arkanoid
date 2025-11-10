@@ -15,14 +15,14 @@ import utils.Vector2;
 
 public final class RankUIPrefab extends Prefab {
 
-    private static final Vector2 EXP_BAR_POSITION = new Vector2(1075.0, 506.0);
+    private static final Vector2 EXP_BAR_POSITION = new Vector2(125.0, 506.0);
 
-    private static final Vector2 RANK_TEXT_POSITION = new Vector2(975.0, 521.0);
+    private static final Vector2 RANK_TEXT_POSITION = new Vector2(53.0, 521.0);
     private static final double RANK_TEXT_SIZE = 36.0;
     private static final String RANK_DEFAULT_TEXT = "Rank 0";
     private static final Color RANK_TEXT_COLOR = Color.web("#EEDC13");
 
-    private static final Vector2 RANK_UP_ICON_POSITION = new Vector2(1147.0, 527.0);
+    private static final Vector2 RANK_UP_ICON_POSITION = new Vector2(225.0, 527.0);
 
     @Override
     public GameObject instantiatePrefab() {

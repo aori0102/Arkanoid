@@ -33,7 +33,7 @@ public final class UltimateLaserPrefab extends Prefab {
         var boxCollider = laserObject.addComponent(BoxCollider.class);
         boxCollider.setLocalSize(LASER_SIZE);
         boxCollider.setLocalCenter(LASER_COLLIDER_OFFSET);
-        boxCollider.setIncludeLayer(Layer.Player.getUnderlyingValue());
+        boxCollider.setIncludeLayer(Layer.Paddle.getUnderlyingValue());
         boxCollider.setTrigger(true);
 
         // Visual

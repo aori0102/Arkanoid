@@ -1,7 +1,6 @@
 package org;
 
 import org.Audio.AudioManager;
-import org.Audio.MusicHandler;
 import org.GameObject.GameObjectManager;
 import org.Rendering.RendererManager;
 import org.Rendering.VideoAsset;
@@ -15,8 +14,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 import utils.UITween.TweenManager;
-import uk.co.caprica.vlcj.factory.discovery.NativeDiscovery;
-
 
 public class Main extends Application {
 
@@ -26,7 +23,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
 
 
         VideoAsset.initializeVideoMedia();
@@ -60,6 +56,7 @@ public class Main extends Application {
     @Override
     public void stop() {
         GameObjectManager.nuke();
+        System.out.println("Closing game");
     }
 
     /**

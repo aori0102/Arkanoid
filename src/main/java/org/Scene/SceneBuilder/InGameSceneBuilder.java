@@ -4,8 +4,6 @@ import game.Brick.ExplodingBrickParticleManager;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import game.GameObject.Shield;
-import game.PlayerSkills.Skills.Dash;
-import game.PlayerSkills.Skills.Updraft;
 import game.PowerUp.Index.PowerUpManager;
 import game.UI.GamePlayBackground;
 import game.UI.PauseMenu.PauseMenuManager;
@@ -33,7 +31,9 @@ public final class InGameSceneBuilder extends SceneBuilder {
 
         PrefabManager.instantiatePrefab(PrefabIndex.Player);
 
-        PrefabManager.instantiatePrefab(PrefabIndex.PlayerInfoBoard);
+        PrefabManager.instantiatePrefab(PrefabIndex.Scoreboard);
+        PrefabManager.instantiatePrefab(PrefabIndex.StatBoard);
+        PrefabManager.instantiatePrefab(PrefabIndex.SkillSetUI);
 
         GameObjectManager.instantiate("GamePlayBackground").addComponent(GamePlayBackground.class);
 
@@ -58,9 +58,7 @@ public final class InGameSceneBuilder extends SceneBuilder {
 
         GameObjectManager.instantiate("PauseMenuManager").addComponent(PauseMenuManager.class);
         GameObjectManager.instantiate("ExplodingBrickCaller").addComponent(ExplodingBrickParticleManager.class);
-        GameObjectManager.instantiate("Dash").addComponent(Dash.class);
         GameObjectManager.instantiate("Shield").addComponent(Shield.class);
-        GameObjectManager.instantiate("Magnet").addComponent(Updraft.class);
 
     }
 
