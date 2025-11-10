@@ -1,8 +1,10 @@
 package game.UI.MainMenu;
 
 import game.GameManager.GameManager;
+import game.PlayerData.Record;
 import game.UI.Buttons.*;
 import game.UI.Options.OptionsManager;
+import game.UI.RecordMenu.RecordMenuManager;
 import javafx.application.Platform;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -46,7 +48,8 @@ public class MainMenuController extends MonoBehaviour {
     }
 
     private void onRecordButtonClick(Object sender, MouseEvent e) {
-        GameManager.getInstance().showRecord();
+        MainMenuManager.getInstance().hideUI();
+        RecordMenuManager.getInstance().showUI();
     }
 
     private void onOptionsButtonClick(Object sender, MouseEvent e) {

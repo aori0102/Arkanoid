@@ -123,13 +123,8 @@ public class GameManager extends MonoBehaviour {
         Platform.exit();
     }
 
-    public void showRecord() {
-        SceneManager.loadScene(SceneKey.Record);
-    }
 
-    public void showOptions() {
-        SceneManager.loadScene(SceneKey.Options);
-    }
+
 
     /**
      * @aaa

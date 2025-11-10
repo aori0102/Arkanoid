@@ -1,4 +1,4 @@
-package game.Perks.Object;
+package game.Perks.Object.CooldownPerks;
 
 import game.Perks.Index.Perk;
 import game.Player.Paddle.PaddleStat;
@@ -6,37 +6,32 @@ import game.Player.Player;
 import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
-import utils.Random;
 
-public class HealthPerk extends Perk {
-
+public class UpdraftCooldownPerk extends Perk {
     /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
-    public HealthPerk(GameObject owner) {
+    public UpdraftCooldownPerk(GameObject owner) {
         super(owner);
     }
-
     @Override
     public void awake() {
         super.awake();
     }
-
     @Override
     protected void setUpVisual() {
-        textUI.setText("Increase health!");
-        perkKey = AnimationClipData.Health_Perk;
-
+        textUI.setText("Decrease updraft cooldown");
+        perkKey = AnimationClipData.Cooldown_Perk;
     }
-
     @Override
     protected void perk_onPointerClicked(Object sender, MouseEvent e) {
         super.perk_onPointerClicked(sender, e);
-        System.out.println("Increase health!");
+        System.out.println("Decrease cooldown!");
         PaddleStat paddleStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
-        paddleStat.setMaxHealth(paddleStat.getMaxHealth() + 25);
+        if (paddleStat.getUpdraftCooldown() > 0.5) {
+            paddleStat.setUpdraftCooldown(paddleStat.getUpdraftCooldown() - 0.5);
+        }
     }
-
 }

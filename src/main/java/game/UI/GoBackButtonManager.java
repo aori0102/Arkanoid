@@ -3,6 +3,7 @@ package game.UI;
 import game.UI.Buttons.GoBackButton;
 import game.UI.MainMenu.MainMenuManager;
 import game.UI.Options.OptionsManager;
+import game.UI.RecordMenu.RecordMenuManager;
 import javafx.scene.input.MouseEvent;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -46,7 +47,11 @@ public class GoBackButtonManager extends MonoBehaviour {
 
     public void goBackButtonManager_onPointerClicked(Object sender, MouseEvent mouseEvent) {
         MainMenuManager.getInstance().showUI();
-        OptionsManager.getInstance().hideUI();
+        if (OptionsManager.getInstance().isOptionsMenuShowed()) {
+            OptionsManager.getInstance().hideUI();
+        } else if (RecordMenuManager.getInstance().isRecordMenuShowed()) {
+            RecordMenuManager.getInstance().hideUI();
+        }
         hideUI();
     }
 

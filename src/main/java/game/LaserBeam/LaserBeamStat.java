@@ -47,7 +47,7 @@ public final class LaserBeamStat extends EntityStat {
     }
 
     @Override
-    public double getCriticalChange() {
+    public double getCriticalChance() {
         return 0;
     }
 

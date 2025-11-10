@@ -2,7 +2,9 @@ package game.Perks.Index.Prefab;
 
 import game.Perks.Index.Perk;
 import game.Perks.Object.AttackPerk;
-import game.Perks.Object.CooldownPerk;
+import game.Perks.Object.CooldownPerks.InvincibleCooldownPerk;
+import game.Perks.Object.CooldownPerks.LaserBeamCooldownPerk;
+import game.Perks.Object.CooldownPerks.UpdraftCooldownPerk;
 import game.Perks.Object.HealthPerk;
 import game.Perks.Object.SpeedPerk;
 import org.GameObject.GameObjectManager;
@@ -18,8 +20,10 @@ public final class PerkPrefabGenerator {
     static {
         perks.add(HealthPerk.class);
         perks.add(AttackPerk.class);
-        perks.add(CooldownPerk.class);
+        perks.add(InvincibleCooldownPerk.class);
         perks.add(SpeedPerk.class);
+        perks.add(LaserBeamCooldownPerk.class);
+        perks.add(UpdraftCooldownPerk.class);
     }
 
     /**

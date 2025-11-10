@@ -19,7 +19,6 @@ public final class InGameSceneBuilder extends SceneBuilder {
     protected void build() {
         ParticlePool particlePool = GameObjectManager.instantiate("ParticlePool").addComponent(ParticlePool.class);
 
-        PrefabManager.instantiatePrefab(PrefabIndex.Manager_ProgressManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_UIManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_PerkManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_BrickMapManager);
@@ -34,6 +33,7 @@ public final class InGameSceneBuilder extends SceneBuilder {
         PrefabManager.instantiatePrefab(PrefabIndex.Scoreboard);
         PrefabManager.instantiatePrefab(PrefabIndex.StatBoard);
         PrefabManager.instantiatePrefab(PrefabIndex.SkillSetUI);
+
 
         GameObjectManager.instantiate("GamePlayBackground").addComponent(GamePlayBackground.class);
 

@@ -4,6 +4,4 @@ public enum SceneKey {
     DoNotDestroyOnLoad,
     Menu,
     InGame,
-    Record,
-    Options,
 }

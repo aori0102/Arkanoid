@@ -46,7 +46,7 @@ public final class PowerCoreStat extends EntityStat {
     }
 
     @Override
-    public double getCriticalChange() {
+    public double getCriticalChance() {
         return 0;
     }
 

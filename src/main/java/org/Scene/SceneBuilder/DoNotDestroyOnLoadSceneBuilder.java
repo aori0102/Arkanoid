@@ -10,5 +10,7 @@ public final class DoNotDestroyOnLoadSceneBuilder extends SceneBuilder {
                 .setDoNotDestroyOnLoad(true);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_ConfigManager)
                 .setDoNotDestroyOnLoad(true);
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_ProgressManager)
+                .setDoNotDestroyOnLoad(true);
     }
 }

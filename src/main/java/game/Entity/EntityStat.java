@@ -34,7 +34,7 @@ public abstract class EntityStat extends MonoBehaviour {
 
     public abstract double getRegenerationMultiplier();
 
-    public abstract double getCriticalChange();
+    public abstract double getCriticalChance();
 
     public abstract double getCriticalDamage();
 

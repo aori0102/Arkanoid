@@ -151,4 +151,5 @@ public class Brick extends MonoBehaviour {
         BrickVisual.resetRender(this);
     }
 
+
 }

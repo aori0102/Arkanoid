@@ -70,9 +70,6 @@ public abstract class Perk extends MonoBehaviour
         attachPointerEnter(getTransform());
         attachPointerExited(getTransform());
 
-        attachPointerClick(textUI.getTransform());
-        attachPointerEnter(textUI.getTransform());
-        attachPointerEnter(textUI.getTransform());
 
     }
 
