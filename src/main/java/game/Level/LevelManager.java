@@ -8,7 +8,6 @@ import game.Perks.Index.PerkManager;
 import game.Player.Player;
 import game.Player.PlayerLives;
 import game.PlayerData.DataManager;
-import game.PlayerData.ProgressData;
 import game.Voltraxis.Voltraxis;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
@@ -119,16 +118,14 @@ public final class LevelManager extends MonoBehaviour {
                 .addListener(this::playerLives_onLivesDecreased);
         perkManager_onPerkSelectionCompleted_ID = PerkManager.getInstance().onPerkSelectionCompleted
                 .addListener(this::perkManager_onPerkSelectionCompleted);
-        loadSave();
     }
 
     public static LevelManager getInstance() {
         return instance;
     }
 
-    private void loadSave() {
-        levelIndex = DataManager.getInstance().getSave().getLevel();
-        System.out.println("Save level: " + levelIndex);
+    public void loadProgress() {
+        levelIndex = DataManager.getInstance().getProgress().getLevel();
     }
 
     /**

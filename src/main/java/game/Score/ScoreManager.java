@@ -77,7 +77,6 @@ public final class ScoreManager extends MonoBehaviour {
         ball_onAnyBallDestroyed_ID = Ball.onAnyBallDestroyed.addListener(this::ball_onAnyBallDestroyed);
         ballsManager_onAllBallDestroyed_ID = BallsManager.getInstance().onAllBallDestroyed
                 .addListener(this::ballsManager_onAllBallDestroyed);
-        loadSave();
     }
 
     @Override
@@ -143,8 +142,8 @@ public final class ScoreManager extends MonoBehaviour {
         return instance;
     }
 
-    private void loadSave() {
-        var save = DataManager.getInstance().getSave();
+    public void loadProgress() {
+        var save = DataManager.getInstance().getProgress();
         setScore(save.getScore());
         setCombo(save.getCombo());
     }

@@ -18,7 +18,8 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
     private static final double SEQUENCE_DELAY = 0.35;
     private static final double SHOOTING_DELAY = 0.4;
 
-    private Time.CoroutineID normalAttackCoroutineID = null;
+    private Time.CoroutineID basicSkill_coroutineID = null;
+    private Time.CoroutineID shootBalls_coroutineID = null;
 
     public EventHandler<Void> onBasicAttackCommenced = new EventHandler<>(VoltraxisNormalAttackBrain.class);
 
@@ -33,7 +34,7 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
 
     @Override
     public void awake() {
-        normalAttackCoroutineID = Time.addCoroutine(
+        basicSkill_coroutineID = Time.addCoroutine(
                 this::basicSkill,
                 Time.getTime() + Voltraxis.getInstance().getVoltraxisStatManager().getBasicSkillCooldown()
         );
@@ -44,12 +45,18 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
                 .addListener(this::voltraxisCharging_onChargingTerminated);
     }
 
+    @Override
+    public void onDestroy() {
+        Time.removeCoroutine(basicSkill_coroutineID);
+        Time.removeCoroutine(shootBalls_coroutineID);
+    }
+
     /**
      * Called when {@link VoltraxisCharging#onChargingTerminated} is invoked.<br><br>
      * This function re-enable normal attack function of Voltraxis after its EX.
      */
     private void voltraxisCharging_onChargingTerminated(Object sender, Void e) {
-        normalAttackCoroutineID = Time.addCoroutine(
+        basicSkill_coroutineID = Time.addCoroutine(
                 this::basicSkill,
                 Time.getTime() + Voltraxis.getInstance().getVoltraxisStatManager().getBasicSkillCooldown()
         );
@@ -60,9 +67,9 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
      * This function disable normal attack function of Voltraxis when entering its charging phase.
      */
     private void voltraxisCharging_onChargingEntered(Object sender, Void e) {
-        if (normalAttackCoroutineID != null) {
-            Time.removeCoroutine(normalAttackCoroutineID);
-            normalAttackCoroutineID = null;
+        if (basicSkill_coroutineID != null) {
+            Time.removeCoroutine(basicSkill_coroutineID);
+            basicSkill_coroutineID = null;
         }
     }
 
@@ -76,10 +83,10 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
 
         for (int i = 0; i < MAX_SHOT_SEQUENCE; i++) {
             var delay = SEQUENCE_DELAY * i + SHOOTING_DELAY;
-            Time.addCoroutine(this::shootBalls, Time.getTime() + delay);
+            shootBalls_coroutineID = Time.addCoroutine(this::shootBalls, Time.getTime() + delay);
         }
         onBasicAttackCommenced.invoke(this, null);
-        normalAttackCoroutineID = Time.addCoroutine(
+        basicSkill_coroutineID = Time.addCoroutine(
                 this::basicSkill,
                 Time.getTime() + Voltraxis.getInstance().getVoltraxisStatManager().getBasicSkillCooldown()
         );

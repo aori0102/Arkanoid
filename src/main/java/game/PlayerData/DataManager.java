@@ -168,7 +168,7 @@ public final class DataManager extends MonoBehaviour {
         progressData.reset();
     }
 
-    public ProgressData getSave() {
+    public ProgressData getProgress() {
         return progressData;
     }
 

@@ -33,7 +33,7 @@ public class PowerCoreVisual extends MonoBehaviour {
 
     @Override
     public void onDestroy() {
-        if (chargingPhaseChangedEventID != null) {
+        if (Voltraxis.getInstance() != null) {
             Voltraxis.getInstance().getVoltraxisCharging().onChargingPhaseChanged
                     .removeListener(chargingPhaseChangedEventID);
         }

@@ -32,6 +32,7 @@ public final class ScoreUI extends MonoBehaviour {
 
     @Override
     public void start() {
+        System.out.println("Starting ScoreUI");
         scoreManager_onScoreChanged_ID = ScoreManager.getInstance().onScoreChanged
                 .addListener(this::scoreManager_onScoreChanged);
         scoreManager_onComboChanged_ID = ScoreManager.getInstance().onComboChanged

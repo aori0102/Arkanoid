@@ -5,7 +5,6 @@ import game.Brick.BrickEvent.BrickEvent;
 import game.Brick.BrickEvent.EventType;
 import game.Brick.BrickGenMap.GenMap;
 import game.PlayerData.DataManager;
-import game.PlayerData.ProgressData;
 import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
@@ -77,7 +76,6 @@ public final class BrickMapManager extends MonoBehaviour {
         brick_onAnyBrickHit_ID = Brick.onAnyBrickHit.addListener(
                 this::brick_onAnyBrickHit
         );
-        loadSave();
     }
 
     @Override
@@ -112,8 +110,8 @@ public final class BrickMapManager extends MonoBehaviour {
 
     }
 
-    private void loadSave() {
-        brickDestroyed = DataManager.getInstance().getSave().getBrickDestroyed();
+    public void loadProgress() {
+        brickDestroyed = DataManager.getInstance().getProgress().getBrickDestroyed();
     }
 
     public static BrickMapManager getInstance() {

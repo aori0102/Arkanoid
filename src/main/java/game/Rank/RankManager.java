@@ -58,7 +58,6 @@ public final class RankManager extends MonoBehaviour {
     public void start() {
         experienceHolder_onAnyExperienceHolderDestroyed_ID = ExperienceHolder.onAnyExperienceHolderDestroyed
                 .addListener(this::experienceHolder_onAnyExperienceHolderDestroyed);
-        loadData();
     }
 
     @Override
@@ -69,8 +68,8 @@ public final class RankManager extends MonoBehaviour {
                 .removeListener(experienceHolder_onAnyExperienceHolderDestroyed_ID);
     }
 
-    private void loadData() {
-        var save = DataManager.getInstance().getSave();
+    public void loadProgress() {
+        var save = DataManager.getInstance().getProgress();
         setRank(save.getRank());
         setCurrentExp(save.getExp());
     }

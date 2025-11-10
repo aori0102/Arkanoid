@@ -1,13 +1,14 @@
 package game.Ball;
 
 import game.Entity.EntityStat;
+import game.Player.Player;
 import org.GameObject.GameObject;
 
 public final class BallStat extends EntityStat {
 
     private static final double BALL_CRITICAL_CHANCE = 0.27;
     private static final double BALL_CRITICAL_AMOUNT = 0.59;
-    private static final int BALL_DAMAGE = 16;
+    private static final int BALL_DAMAGE = 160;
 
     /**
      * Create this MonoBehaviour.

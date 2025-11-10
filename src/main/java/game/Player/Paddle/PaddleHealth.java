@@ -1,7 +1,10 @@
 package game.Player.Paddle;
 
 import game.Entity.EntityHealth;
+import game.Entity.EntityHealthAlterType;
 import game.Entity.EntityStat;
+import game.Player.PlayerData;
+import game.PlayerData.DataManager;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 
@@ -21,6 +24,11 @@ public final class PaddleHealth extends EntityHealth {
     @Override
     protected Class<? extends EntityStat> getStatComponentClass() {
         return PaddleStat.class;
+    }
+
+    public void loadProgress() {
+        var health = DataManager.getInstance().getProgress().getHealth();
+        alterHealth(EntityHealthAlterType.NormalDamage, null, PlayerData.MAX_HEALTH - health);
     }
 
 }

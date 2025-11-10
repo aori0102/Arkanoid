@@ -122,6 +122,10 @@ public class VoltraxisCharging extends MonoBehaviour {
      */
     private void voltraxisPowerCoreManager_onPowerCoreDestroyed(Object sender, Void e) {
 
+        if (Voltraxis.getInstance() == null) {
+            return;
+        }
+
         if (!isCharging || isFullyCharged()) {
             return;
         }

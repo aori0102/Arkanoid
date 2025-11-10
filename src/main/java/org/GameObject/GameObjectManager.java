@@ -226,26 +226,32 @@ public class GameObjectManager {
      */
     public static void clearCurrentScene() {
 
-        System.out.println("[GameObjectManager] Clearing game object scene");
-        for (var object : gameObjectSet) {
-            if (object.isDestroyed() || object.isDoNotDestroyOnLoad()) {
-                continue;
+        try {
+
+            System.out.println("[GameObjectManager] Clearing game object scene");
+            for (var object : gameObjectSet) {
+                if (object.isDestroyed() || object.isDoNotDestroyOnLoad()) {
+                    continue;
+                }
+                if (removedObjectQueue.contains(object)) {
+                    continue;
+                }
+                try {
+                    removedObjectQueue.offer(object);
+                    object.markDestroyed();
+                    object.clearData();
+                } catch (Exception e) {
+                    System.err.println("[GameObjectManager] Possible fatal exception: " + e.getMessage());
+                    System.err.println(Arrays.toString(e.getStackTrace()));
+                }
             }
-            if (removedObjectQueue.contains(object)) {
-                continue;
+            addedGameObjectQueue.removeIf(gameObject -> gameObject.isDestroyed() || !gameObject.isDoNotDestroyOnLoad());
+            while (!removedObjectQueue.isEmpty()) {
+                gameObjectSet.remove(removedObjectQueue.poll());
             }
-            try {
-                removedObjectQueue.offer(object);
-                object.markDestroyed();
-                object.clearData();
-            } catch (Exception e) {
-                System.err.println("[GameObjectManager] Possible fatal exception: " + e.getMessage());
-                System.err.println(Arrays.toString(e.getStackTrace()));
-            }
-        }
-        addedGameObjectQueue.removeIf(gameObject -> gameObject.isDestroyed() || !gameObject.isDoNotDestroyOnLoad());
-        while (!removedObjectQueue.isEmpty()) {
-            gameObjectSet.remove(removedObjectQueue.poll());
+
+        } catch (Exception e) {
+            System.out.println("[GameObjectManager] Error while clearing scene: " + e.getMessage());
         }
 
         sceneUpdateAbortion = true;

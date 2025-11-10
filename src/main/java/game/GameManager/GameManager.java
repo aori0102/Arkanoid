@@ -1,7 +1,11 @@
 package game.GameManager;
 
 import game.Level.LevelManager;
+import game.MapGenerator.BrickMapManager;
+import game.Player.Player;
 import game.PlayerData.DataManager;
+import game.Rank.RankManager;
+import game.Score.ScoreManager;
 import javafx.application.Platform;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
@@ -32,6 +36,7 @@ public class GameManager extends MonoBehaviour {
     public static final Path PLAYER_DATA_DIRECTORY = Paths.get(System.getenv("APPDATA"), "Arkanoid");
 
     public enum GameLoadingState {
+        WaitForSpawn,
         LoadProgress,
         StartGame,
         None,
@@ -59,7 +64,16 @@ public class GameManager extends MonoBehaviour {
     public void update() {
         switch (gameLoadingState) {
 
+            case WaitForSpawn:
+                gameLoadingState = GameLoadingState.LoadProgress;
+                break;
+
             case LoadProgress:
+                ScoreManager.getInstance().loadProgress();
+                RankManager.getInstance().loadProgress();
+                BrickMapManager.getInstance().loadProgress();
+                LevelManager.getInstance().loadProgress();
+                Player.getInstance().getPlayerPaddle().getPaddleHealth().loadProgress();
                 gameLoadingState = GameLoadingState.StartGame;
                 break;
 
@@ -97,7 +111,7 @@ public class GameManager extends MonoBehaviour {
 
     private void startGameScene() {
         SceneManager.loadScene(SceneKey.InGame);
-        gameLoadingState = GameLoadingState.LoadProgress;
+        gameLoadingState = GameLoadingState.WaitForSpawn;
     }
 
     public void quitToMainMenu() {
