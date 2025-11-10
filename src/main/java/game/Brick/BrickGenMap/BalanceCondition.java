@@ -12,6 +12,7 @@ import static java.lang.Math.abs;
 public class BalanceCondition {
 
     private final static int atLeastNumGate = 4;
+    private final static int Max_Diamond = 15;
 
     public static void balanceCondition(Matrix g) {
         bottomNotFullDiamond(g);
@@ -29,17 +30,16 @@ public class BalanceCondition {
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
 
-                if (r == 0 || c == 0 || c == cols - 1 || r ==  rows - 1) continue;
-
                 if (transNumberToType(g.get(r, c)) == BrickType.Diamond) {
                     diamondsPos.add(new IntPair(r, c));
                 }
+
             }
         }
 
         if (diamondsPos.isEmpty()) return;
 
-        int maxDiamond = (int) Math.max(1, (rows - 1) * (cols - 1) * 0.4);
+        int maxDiamond = Max_Diamond;
         Collections.shuffle(diamondsPos, rng);
         Set<IntPair> keep = new HashSet<>(diamondsPos.subList(0, Math.min(maxDiamond, diamondsPos.size())));
         List<IntPair> needToChange = new ArrayList<>();
@@ -144,7 +144,7 @@ public class BalanceCondition {
             parent.put(start, null);
 
             boolean found = false;
-            while (!q.isEmpty() && !found) {
+            while (!q.isEmpty()) {
                 IntPair cur = q.poll();
                 if (cur.equals(end)) {
                     found = true;
@@ -155,7 +155,7 @@ public class BalanceCondition {
                     int nc = cur.se() + dy[k];
                     if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
                     IntPair nxt = new IntPair(nr, nc);
-                    if (parent.containsKey(nxt)) continue; // visited
+                    if (parent.containsKey(nxt)) continue;
                     parent.put(nxt, cur);
                     q.add(nxt);
                 }
