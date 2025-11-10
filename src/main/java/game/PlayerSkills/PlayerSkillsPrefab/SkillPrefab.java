@@ -1,7 +1,7 @@
-package game.Player.PlayerSkills.PlayerSkillsPrefab;
+package game.PlayerSkills.PlayerSkillsPrefab;
 
 import game.Player.Paddle.PlayerPaddle;
-import game.Player.PlayerSkills.Skills.Skill;
+import game.PlayerSkills.Skills.Skill;
 
 public abstract class SkillPrefab {
     public abstract Skill skillGenerator(PlayerPaddle playerPaddle);

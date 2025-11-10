@@ -1,4 +1,4 @@
-package game.Player.PlayerSkills.Skills;
+package game.PlayerSkills.Skills;
 
 import game.Player.Player;
 import org.GameObject.GameObject;

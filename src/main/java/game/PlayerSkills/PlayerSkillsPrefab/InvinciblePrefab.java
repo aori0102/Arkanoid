@@ -1,6 +1,6 @@
-package game.Player.PlayerSkills.PlayerSkillsPrefab;
+package game.PlayerSkills.PlayerSkillsPrefab;
 
-import game.Player.PlayerSkills.Skills.Invincible;
+import game.PlayerSkills.Skills.Invincible;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Prefab.Prefab;

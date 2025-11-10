@@ -1,6 +1,7 @@
 package game.Score;
 
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Stop;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.RenderLayer;
@@ -13,7 +14,8 @@ import utils.Vector2;
 
 public final class ScoreUIPrefab extends Prefab {
 
-    public static final Color TEXT_COLOR = Color.web("#EEDC13");
+    public static final Color TEXT_COLOR_GRADIENT_START = Color.web("#EEDC13");
+    public static final Color TEXT_COLOR_GRADIENT_END = Color.web("#EE9A13");
 
     private static final Vector2 SCORE_TEXT_POSITION = new Vector2(1075.0, 214.0);
     private static final String SCORE_TEXT_DEFAULT = "0";
@@ -37,7 +39,12 @@ public final class ScoreUIPrefab extends Prefab {
                 .addComponent(TextUI.class);
         scoreText.setFont(FontDataIndex.Jersey_25);
         scoreText.setFontSize(SCORE_TEXT_SIZE);
-        scoreText.setSolidFill(TEXT_COLOR);
+        scoreText.setGradientFill(
+                new Vector2(0.5, 0.0),
+                new Vector2(0.5, 1.0),
+                new Stop(0.0, TEXT_COLOR_GRADIENT_START),
+                new Stop(1.0, TEXT_COLOR_GRADIENT_END)
+        );
         scoreText.setText(SCORE_TEXT_DEFAULT);
         scoreText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         scoreText.setVerticalAlignment(TextVerticalAlignment.Middle);
@@ -50,7 +57,12 @@ public final class ScoreUIPrefab extends Prefab {
                 .addComponent(TextUI.class);
         levelText.setFont(FontDataIndex.Jersey_25);
         levelText.setFontSize(LEVEL_TEXT_SIZE);
-        levelText.setSolidFill(TEXT_COLOR);
+        levelText.setGradientFill(
+                new Vector2(0.5, 0.0),
+                new Vector2(0.5, 1.0),
+                new Stop(0.0, TEXT_COLOR_GRADIENT_START),
+                new Stop(1.0, TEXT_COLOR_GRADIENT_END)
+        );
         levelText.setText(LEVEL_TEXT_DEFAULT);
         levelText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         levelText.setVerticalAlignment(TextVerticalAlignment.Middle);
@@ -64,7 +76,12 @@ public final class ScoreUIPrefab extends Prefab {
                 .addComponent(TextUI.class);
         comboText.setFont(FontDataIndex.Jersey_25);
         comboText.setFontSize(SCORE_TEXT_SIZE);
-        comboText.setSolidFill(TEXT_COLOR);
+        comboText.setGradientFill(
+                new Vector2(0.5, 0.0),
+                new Vector2(0.5, 1.0),
+                new Stop(0.0, TEXT_COLOR_GRADIENT_START),
+                new Stop(1.0, TEXT_COLOR_GRADIENT_END)
+        );
         comboText.setText(COMBO_TEXT_DEFAULT);
         comboText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         comboText.setVerticalAlignment(TextVerticalAlignment.Middle);

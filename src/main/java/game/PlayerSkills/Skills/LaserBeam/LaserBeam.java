@@ -1,10 +1,10 @@
-package game.Player.PlayerSkills.Skills.LaserBeam;
+package game.PlayerSkills.Skills.LaserBeam;
 
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
 import game.Player.Player;
-import game.Player.PlayerSkills.Skills.Skill;
-import game.Player.PlayerSkills.SkillIndex;
+import game.PlayerSkills.Skills.Skill;
+import game.PlayerSkills.SkillIndex;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.Layer;

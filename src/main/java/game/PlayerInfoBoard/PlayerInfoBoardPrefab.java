@@ -3,7 +3,6 @@ package game.PlayerInfoBoard;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.RenderLayer;
-import org.Main;
 import org.Prefab.Prefab;
 import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
@@ -13,7 +12,7 @@ import utils.Vector2;
 
 public final class PlayerInfoBoardPrefab extends Prefab {
 
-    private static final Vector2 BACKGROUND_POSITION = new Vector2(Main.STAGE_WIDTH, 0.0);
+    private static final Vector2 BACKGROUND_POSITION = new Vector2(934.0, -16.0);
 
     @Override
     public GameObject instantiatePrefab() {
@@ -23,7 +22,6 @@ public final class PlayerInfoBoardPrefab extends Prefab {
         // Background
         var backgroundRenderer = GameObjectManager.instantiate("Background")
                 .addComponent(SpriteRenderer.class);
-        backgroundRenderer.setPivot(new Vector2(1.0, 0.0));
         backgroundRenderer.setImage(ImageAsset.ImageIndex.Player_UI_Scoreboard_Background.getImage());
         backgroundRenderer.setRenderLayer(RenderLayer.UI_Middle);
         backgroundRenderer.getTransform().setGlobalPosition(BACKGROUND_POSITION);

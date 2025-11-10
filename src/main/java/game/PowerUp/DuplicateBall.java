@@ -54,7 +54,6 @@ public class DuplicateBall extends MultipleBall {
             var newBall = PrefabManager.instantiatePrefab(PrefabIndex.Ball)
                     .getComponent(Ball.class);
             newBall.getTransform().setGlobalPosition(ball.getTransform().getGlobalPosition());
-            BallsManager.getInstance().addBall(newBall);
             newBall.setDirection(direction);
         }
     }

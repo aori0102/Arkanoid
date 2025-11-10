@@ -1,6 +1,6 @@
-package game.Player.PlayerSkills.PlayerSkillsPrefab;
+package game.PlayerSkills.PlayerSkillsPrefab;
 
-import game.Player.PlayerSkills.Skills.Updraft;
+import game.PlayerSkills.Skills.Updraft;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Prefab.Prefab;

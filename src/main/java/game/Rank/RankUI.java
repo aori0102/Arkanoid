@@ -14,7 +14,6 @@ public final class RankUI extends MonoBehaviour {
     private static final double FILL_RATE = 4.889;
 
     private static final double RANK_POP_UP_SIZE = 1.34;
-    private static final double RANK_UP_DISPLAY_TIME = 2.33;
     private static final double RANK_SHRINK_RATE = 8.923;
     private static final String RANK_PREFIX = "Rank ";
 
@@ -27,8 +26,6 @@ public final class RankUI extends MonoBehaviour {
 
     private EventActionID rankManager_onExpChanged_ID = null;
     private EventActionID rankManager_onRankChanged_ID = null;
-
-    private Time.CoroutineID hideRankUpImage_ID = null;
 
     /**
      * Create this MonoBehaviour.
@@ -66,8 +63,6 @@ public final class RankUI extends MonoBehaviour {
             RankManager.getInstance().onRankChanged
                     .removeListener(rankManager_onRankChanged_ID);
         }
-
-        Time.removeCoroutine(hideRankUpImage_ID);
     }
 
     private void updateFill() {
@@ -92,10 +87,6 @@ public final class RankUI extends MonoBehaviour {
         rankText.getTransform().setLocalScale(Vector2.one().multiply(RANK_POP_UP_SIZE));
 
         rankUpRenderer.getGameObject().setActive(true);
-        if (hideRankUpImage_ID != null) {
-            Time.removeCoroutine(hideRankUpImage_ID);
-        }
-        hideRankUpImage_ID = Time.addCoroutine(this::hideRankUpImage, Time.getTime() + RANK_UP_DISPLAY_TIME);
     }
 
     /**

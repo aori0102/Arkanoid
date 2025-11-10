@@ -1,18 +1,18 @@
 package game.Player;
 
-import game.Player.PlayerSkills.Skills.Invincible;
-import game.Player.PlayerSkills.Skills.LaserBeam.LaserBeam;
-import game.Player.PlayerSkills.Skills.Dash;
-import game.Player.PlayerSkills.Skills.Updraft;
-import game.Player.PlayerSkills.Skills.Skill;
-import game.Player.PlayerSkills.SkillPrefabGenerator;
+import game.PlayerSkills.Skills.Invincible;
+import game.PlayerSkills.Skills.LaserBeam.LaserBeam;
+import game.PlayerSkills.Skills.Dash;
+import game.PlayerSkills.Skills.Updraft;
+import game.PlayerSkills.Skills.Skill;
+import game.PlayerSkills.SkillPrefabGenerator;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import org.Prefab.PrefabManager;
 import utils.Time;
 
-import static game.Player.PlayerSkills.SkillPrefabGenerator.skillDataMap;
+import static game.PlayerSkills.SkillPrefabGenerator.skillDataMap;
 
 public class PlayerSkillsHandler extends MonoBehaviour {
 
@@ -93,7 +93,6 @@ public class PlayerSkillsHandler extends MonoBehaviour {
 
             if (currentSkillCharge < maxSkillCharge) {
                 skillDataMap.get(key).skillCooldownTime -= Time.getDeltaTime();
-                System.out.println("This is called" +skillDataMap.get(key).skillCooldownTime);
 
                 if (skillDataMap.get(key).skillCooldownTime <= 0) {
                     skillDataMap.get(key).skillCharge++;

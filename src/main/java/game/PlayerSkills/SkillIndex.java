@@ -1,4 +1,4 @@
-package game.Player.PlayerSkills;
+package game.PlayerSkills;
 
 import org.Rendering.ImageAsset;
 

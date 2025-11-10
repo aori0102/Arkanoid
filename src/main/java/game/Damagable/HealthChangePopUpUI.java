@@ -1,6 +1,7 @@
 package game.Damagable;
 
 import game.Entity.EntityHealthAlterType;
+import javafx.scene.paint.Stop;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
@@ -67,7 +68,12 @@ public final class HealthChangePopUpUI extends MonoBehaviour {
     }
 
     public void setCombinedHealthAlterType(EntityHealthAlterType firstType, EntityHealthAlterType secondType) {
-        damageText.setGradientFill(firstType.displayColor, 0.25, secondType.displayColor, 0.8);
+        damageText.setGradientFill(
+                Vector2.zero(),
+                Vector2.one(),
+                new Stop(0.0, firstType.displayColor),
+                new Stop(1.0, secondType.displayColor)
+        );
     }
 
     public void setDirection(Vector2 direction) {

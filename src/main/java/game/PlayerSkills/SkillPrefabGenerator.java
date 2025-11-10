@@ -1,10 +1,10 @@
-package game.Player.PlayerSkills;
+package game.PlayerSkills;
 
-import game.Player.PlayerSkills.Skills.Invincible;
-import game.Player.PlayerSkills.Skills.LaserBeam.LaserBeam;
-import game.Player.PlayerSkills.Skills.Dash;
-import game.Player.PlayerSkills.Skills.Updraft;
-import game.Player.PlayerSkills.Skills.Skill;
+import game.PlayerSkills.Skills.Invincible;
+import game.PlayerSkills.Skills.LaserBeam.LaserBeam;
+import game.PlayerSkills.Skills.Dash;
+import game.PlayerSkills.Skills.Updraft;
+import game.PlayerSkills.Skills.Skill;
 import org.Prefab.PrefabIndex;
 
 import java.util.HashMap;

@@ -147,18 +147,18 @@ public class TextUI extends Renderable {
     /**
      * Set the gradient render color for this text.
      *
-     * @param from       The first color of the gradient.
-     * @param fromOffset Offset for the first color.
-     * @param to         The second color of the gradient.
-     * @param toOffset   Offset for the second color.
+     * @param fromAnchor The offset point from which the gradient starts, value in
+     *                   between {@code (0,0)} and {@code (1,1)}.
+     * @param toAnchor   The offset point from which the gradient ends, value in
+     *                   between {@code (0,0)} and {@code (1,1)}.
+     * @param stops      All stops for this gradient, each containing its respective offset and color.
      */
-    public void setGradientFill(Color from, double fromOffset, Color to, double toOffset) {
+    public void setGradientFill(Vector2 fromAnchor, Vector2 toAnchor, Stop... stops) {
         this.solidFill = null;
         this.gradientFill = new LinearGradient(
-                0, 0, 1, 0, true,
+                fromAnchor.x, fromAnchor.y, toAnchor.x, toAnchor.y, true,
                 CycleMethod.NO_CYCLE,
-                new Stop(fromOffset, from),
-                new Stop(toOffset, to)
+                stops
         );
         updateFont();
     }

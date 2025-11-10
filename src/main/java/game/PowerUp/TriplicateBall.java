@@ -57,13 +57,11 @@ public class TriplicateBall extends MultipleBall {
             var firstBall = PrefabManager.instantiatePrefab(PrefabIndex.Ball)
                     .getComponent(Ball.class);
             firstBall.getTransform().setGlobalPosition(ball.getTransform().getGlobalPosition());
-            BallsManager.getInstance().addBall(firstBall);
             firstBall.setDirection(firstDirection);
 
             var secondBall = PrefabManager.instantiatePrefab(PrefabIndex.Ball)
                     .getComponent(Ball.class);
             secondBall.getTransform().setGlobalPosition(ball.getTransform().getGlobalPosition());
-            BallsManager.getInstance().addBall(secondBall);
             secondBall.setDirection(secondDirection);
         }
 

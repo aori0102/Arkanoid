@@ -1,7 +1,6 @@
-package game.Player.PlayerSkills.Skills;
+package game.PlayerSkills.Skills;
 
 import game.Ball.BallsManager;
-import game.Player.Player;
 import org.GameObject.GameObject;
 import utils.Vector2;
 

@@ -6,7 +6,6 @@ import game.Ball.BallsManager;
 import game.GameManager.LevelState;
 import game.Level.LevelManager;
 import game.MapGenerator.BrickMapManager;
-import game.Player.Paddle.PlayerPaddle;
 import game.PlayerData.DataManager;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
@@ -50,13 +49,10 @@ public final class ScoreManager extends MonoBehaviour {
         onComboChanged.invoke(this, combo);
     }
 
-    private int touchedBall = 0;
-
     private EventActionID brick_onAnyBrickDestroyed_ID = null;
     private EventActionID ball_onAnyBallHitBrick_ID = null;
-    private EventActionID ball_onAnyBallJustHitPaddle_ID = null;
     private EventActionID ball_onAnyBallDestroyed_ID = null;
-    private EventActionID ballsManager_onBallCountChanged_ID = null;
+    private EventActionID ballsManager_onAllBallTouchedPaddle_ID = null;
 
     public EventHandler<Integer> onScoreChanged = new EventHandler<>(ScoreManager.class);
     public EventHandler<Integer> onComboChanged = new EventHandler<>(ScoreManager.class);
@@ -78,10 +74,9 @@ public final class ScoreManager extends MonoBehaviour {
     public void start() {
         brick_onAnyBrickDestroyed_ID = Brick.onAnyBrickDestroyed.addListener(this::brick_onAnyBrickDestroyed);
         ball_onAnyBallHitBrick_ID = Ball.onAnyBallHitBrick.addListener(this::ball_onAnyBallHitBrick);
-        ball_onAnyBallJustHitPaddle_ID = Ball.onAnyBallJustHitPaddle.addListener(this::ball_onAnyBallHitPaddle);
         ball_onAnyBallDestroyed_ID = Ball.onAnyBallDestroyed.addListener(this::ball_onAnyBallDestroyed);
-        ballsManager_onBallCountChanged_ID = BallsManager.getInstance().onBallCountChanged
-                .addListener(this::ballsManager_onBallCountChanged);
+        ballsManager_onAllBallTouchedPaddle_ID = BallsManager.getInstance().onAllBallTouchedPaddle
+                .addListener(this::ballsManager_onAllBallTouchedPaddle);
         loadSave();
     }
 
@@ -89,11 +84,10 @@ public final class ScoreManager extends MonoBehaviour {
     public void onDestroy() {
         Brick.onAnyBrickDestroyed.removeListener(brick_onAnyBrickDestroyed_ID);
         Ball.onAnyBallHitBrick.removeListener(ball_onAnyBallHitBrick_ID);
-        Ball.onAnyBallJustHitPaddle.removeListener(ball_onAnyBallJustHitPaddle_ID);
         Ball.onAnyBallDestroyed.removeListener(ball_onAnyBallDestroyed_ID);
         if (BallsManager.getInstance() != null) {
-            BallsManager.getInstance().onBallCountChanged
-                    .removeListener(ballsManager_onBallCountChanged_ID);
+            BallsManager.getInstance().onAllBallTouchedPaddle
+                    .removeListener(ballsManager_onAllBallTouchedPaddle_ID);
         }
         instance = null;
     }
@@ -109,40 +103,21 @@ public final class ScoreManager extends MonoBehaviour {
         var levelState = LevelManager.getInstance().getLevelState();
         if (levelState == LevelState.ConcludingLevel) {
             setScore(_score + _combo + BALL_SCORE_WHEN_CLEARED);
-        } else if (levelState == LevelState.Playing) {
-            if (sender instanceof Ball ball && ball.isHitPaddle()) {
-                touchedBall--;
-            }
+        } else {
+            setCombo(0);
         }
     }
 
     /**
-     * Called when {@link BallsManager#onBallCountChanged} is invoked.<br><br>
-     * This function resets combo when {@link BallsManager#getBallCount} reaches zero.
+     * Called when {@link BallsManager#onAllBallTouchedPaddle} is invoked.<br><br>
+     * This function resets the combo whenever all ball has touched the paddle.
      *
      * @param sender Event caller {@link BallsManager}.
      * @param e      Empty event argument.
      */
-    private void ballsManager_onBallCountChanged(Object sender, Void e) {
-        int count = BallsManager.getInstance().getBallCount();
-        if (count == 0 || count == touchedBall) {
+    private void ballsManager_onAllBallTouchedPaddle(Object sender, Void e) {
+        if (LevelManager.getInstance().getLevelState() == LevelState.Playing) {
             setCombo(0);
-            touchedBall = 0;
-        }
-    }
-
-    /**
-     * Called when {@link Ball#onAnyBallJustHitPaddle} is invoked.<br><br>
-     * This function handles combo reset when a {@link Ball} hits a {@link PlayerPaddle}.
-     *
-     * @param sender Event caller {@link Ball}.
-     * @param e      Empty event argument.
-     */
-    private void ball_onAnyBallHitPaddle(Object sender, Void e) {
-        touchedBall++;
-        if (touchedBall == BallsManager.getInstance().getBallCount()) {
-            setCombo(0);
-            touchedBall = 0;
         }
     }
 

@@ -22,6 +22,7 @@ import utils.Vector2;
 import utils.Time;
 
 // TODO: Doc
+
 public class Ball extends MonoBehaviour {
 
     private static final double NEAR_PARALLEL_THRESHOLD = 0.1;
@@ -32,18 +33,17 @@ public class Ball extends MonoBehaviour {
 
     private Vector2 direction = Vector2.zero();
     private PlayerPaddle playerPaddle;
-    private boolean hitPaddle = false;
 
     @LinkViaPrefab
     private ConeEmitter coneEmitter = null;
 
-    private EventActionID ball_onAnyBallHitBrick_ID = null;
     private EventActionID ballEffectController_onEffectInflicted_ID = null;
     private EventActionID ballEffectController_onEffectCleared_ID = null;
 
     public static EventHandler<Void> onAnyBallHitBrick = new EventHandler<>(Ball.class);
-    public static EventHandler<Void> onAnyBallJustHitPaddle = new EventHandler<>(Ball.class);
+    public static EventHandler<Void> onAnyBallHitPaddle = new EventHandler<>(Ball.class);
     public static EventHandler<Void> onAnyBallDestroyed = new EventHandler<>(Ball.class);
+    public static EventHandler<Void> onAnyBallSpawned = new EventHandler<>(Ball.class);
 
     public Ball(GameObject owner) {
         super(owner);
@@ -74,8 +74,7 @@ public class Ball extends MonoBehaviour {
 
     @Override
     public void start() {
-        ball_onAnyBallHitBrick_ID = Ball.onAnyBallHitBrick
-                .addListener(this::ball_onAnyBallHitBrick);
+        onAnyBallSpawned.invoke(this, null);
     }
 
     @Override
@@ -85,13 +84,9 @@ public class Ball extends MonoBehaviour {
 
     @Override
     protected void onDestroy() {
-        if (BallsManager.getInstance() != null) {
-            BallsManager.getInstance().removeBall(this);
-        }
         ballEffectController.onEffectInflicted.removeListener(ballEffectController_onEffectInflicted_ID);
         ballEffectController.onEffectCleared.removeListener(ballEffectController_onEffectCleared_ID);
         coneEmitter.stopEmit();
-        Ball.onAnyBallHitBrick.removeListener(ball_onAnyBallHitBrick_ID);
         onAnyBallDestroyed.invoke(this, null);
     }
 
@@ -112,21 +107,6 @@ public class Ball extends MonoBehaviour {
 
     public BallEffectController getBallEffectController() {
         return ballEffectController;
-    }
-
-    public boolean isHitPaddle() {
-        return hitPaddle;
-    }
-
-    /**
-     * Called when {@link Ball#onAnyBallHitBrick} is invoked.<br><br>
-     * This function resets {@link #hitPaddle} when any other ball hits a brick.
-     *
-     * @param sender Event caller {@link Ball}.
-     * @param e      Empty event argument.
-     */
-    private void ball_onAnyBallHitBrick(Object sender, Void e) {
-        hitPaddle = false;
     }
 
     /**
@@ -160,10 +140,7 @@ public class Ball extends MonoBehaviour {
         } else if (isCollidedWith(collisionData, Brick.class)) {
             onAnyBallHitBrick.invoke(this, null);
         } else if (isCollidedWith(collisionData, PlayerPaddle.class)) {
-            if (!hitPaddle) {
-                hitPaddle = true;
-                onAnyBallJustHitPaddle.invoke(this, null);
-            }
+            onAnyBallHitPaddle.invoke(this, null);
         }
     }
 

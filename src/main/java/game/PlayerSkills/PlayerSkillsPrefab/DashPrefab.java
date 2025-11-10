@@ -1,6 +1,6 @@
-package game.Player.PlayerSkills.PlayerSkillsPrefab;
+package game.PlayerSkills.PlayerSkillsPrefab;
 
-import game.Player.PlayerSkills.Skills.Dash;
+import game.PlayerSkills.Skills.Dash;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Prefab.Prefab;
