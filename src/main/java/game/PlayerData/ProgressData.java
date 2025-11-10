@@ -1,5 +1,7 @@
 package game.PlayerData;
 
+import game.Player.PlayerData;
+
 import java.util.Arrays;
 
 public final class ProgressData {
@@ -102,8 +104,8 @@ public final class ProgressData {
         this.level = 0;
         this.score = 0;
         this.combo = 0;
-        this.health = 0;
-        this.lives = 0;
+        this.health = PlayerData.MAX_HEALTH;
+        this.lives = PlayerData.MAX_LIVES;
         this.rank = 0;
         this.exp = 0;
         this.perkList = null;

@@ -1,5 +1,6 @@
 package game.Rank;
 
+import org.Annotation.LinkViaPrefab;
 import org.Event.EventActionID;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -9,6 +10,9 @@ import utils.MathUtils;
 import utils.Time;
 import utils.Vector2;
 
+/**
+ * UI class that handles rank UI components on events called from {@link RankManager}.
+ */
 public final class RankUI extends MonoBehaviour {
 
     private static final double FILL_RATE = 4.889;
@@ -17,8 +21,13 @@ public final class RankUI extends MonoBehaviour {
     private static final double RANK_SHRINK_RATE = 8.923;
     private static final String RANK_PREFIX = "Rank ";
 
+    @LinkViaPrefab
     private SpriteRenderer fillRenderer = null;
+
+    @LinkViaPrefab
     private SpriteRenderer rankUpRenderer = null;
+
+    @LinkViaPrefab
     private TextUI rankText = null;
 
     private double fillRatio = 0.0;
@@ -26,6 +35,8 @@ public final class RankUI extends MonoBehaviour {
 
     private EventActionID rankManager_onExpChanged_ID = null;
     private EventActionID rankManager_onRankChanged_ID = null;
+    private EventActionID rankManager_onAccumulatedRankGained_ID = null;
+    private EventActionID rankManager_onAccumulatedRankEmptied_ID = null;
 
     /**
      * Create this MonoBehaviour.
@@ -47,6 +58,10 @@ public final class RankUI extends MonoBehaviour {
                 .addListener(this::rankManager_onExpChanged);
         rankManager_onRankChanged_ID = RankManager.getInstance().onRankChanged
                 .addListener(this::rankManager_onRankChanged);
+        rankManager_onAccumulatedRankGained_ID = RankManager.getInstance().onAccumulatedRankGained
+                .addListener(this::rankManager_onAccumulatedRankGained);
+        rankManager_onAccumulatedRankEmptied_ID = RankManager.getInstance().onAccumulatedRankEmptied
+                .addListener(this::rankManager_onAccumulatedRankEmptied);
     }
 
     @Override
@@ -62,14 +77,24 @@ public final class RankUI extends MonoBehaviour {
                     .removeListener(rankManager_onExpChanged_ID);
             RankManager.getInstance().onRankChanged
                     .removeListener(rankManager_onRankChanged_ID);
+            RankManager.getInstance().onAccumulatedRankEmptied
+                    .removeListener(rankManager_onAccumulatedRankGained_ID);
+            RankManager.getInstance().onAccumulatedRankGained
+                    .removeListener(rankManager_onAccumulatedRankEmptied_ID);
         }
     }
 
+    /**
+     * Update the filling of {@link #fillRenderer} (The EXP fill bar)
+     */
     private void updateFill() {
         fillRatio = MathUtils.lerp(fillRatio, targetFillRatio, Time.getDeltaTime() * FILL_RATE);
         fillRenderer.setFillAmount(fillRatio);
     }
 
+    /**
+     * Update {@link #rankText} scaling, achieving an enlarge-then-shrink effect.
+     */
     private void updateRankText() {
         var scale = Vector2.lerp(rankText.getTransform().getLocalScale(), Vector2.one(), Time.getDeltaTime() * RANK_SHRINK_RATE);
         rankText.getTransform().setLocalScale(scale);
@@ -85,8 +110,6 @@ public final class RankUI extends MonoBehaviour {
     private void rankManager_onRankChanged(Object sender, Integer e) {
         rankText.setText(RANK_PREFIX + e);
         rankText.getTransform().setLocalScale(Vector2.one().multiply(RANK_POP_UP_SIZE));
-
-        rankUpRenderer.getGameObject().setActive(true);
     }
 
     /**
@@ -100,7 +123,25 @@ public final class RankUI extends MonoBehaviour {
         targetFillRatio = e.expRatio;
     }
 
-    private void hideRankUpImage() {
+    /**
+     * Called when {@link RankManager#onAccumulatedRankGained} is invoked.<br><br>
+     * This function shows the rank up icon.
+     *
+     * @param sender Event caller {@link RankManager}.
+     * @param e      Empty event argument.
+     */
+    private void rankManager_onAccumulatedRankGained(Object sender, Void e) {
+        rankUpRenderer.getGameObject().setActive(true);
+    }
+
+    /**
+     * Called when {@link RankManager#onAccumulatedRankEmptied} is invoked.<br><br>
+     * This function hides the rank up icon.
+     *
+     * @param sender Event caller {@link RankManager}.
+     * @param e      Empty event argument.
+     */
+    private void rankManager_onAccumulatedRankEmptied(Object sender, Void e) {
         rankUpRenderer.getGameObject().setActive(false);
     }
 

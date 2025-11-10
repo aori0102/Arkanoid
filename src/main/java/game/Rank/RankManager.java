@@ -7,6 +7,9 @@ import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 
+/**
+ * Manager class that handles player's rank in game.
+ */
 public final class RankManager extends MonoBehaviour {
 
     private static final int BASE_EXP = 20;
@@ -14,7 +17,10 @@ public final class RankManager extends MonoBehaviour {
 
     private static RankManager instance = null;
 
-    private int accumulatedRank = 0;
+    /**
+     * <b>Read-only. Write via {@link #setAccumulatedRank}.</b>
+     */
+    private int _accumulatedRank = 0;
 
     private EventActionID experienceHolder_onAnyExperienceHolderDestroyed_ID = null;
 
@@ -23,10 +29,7 @@ public final class RankManager extends MonoBehaviour {
      */
     private int _currentExp = 0;
 
-    /**
-     * <b>Read-only. Write via {@link #setRank}.</b>
-     */
-    private int _rank = 0;
+    private int rank = 0;
 
     public EventHandler<OnExpChangedEventArgs> onExpChanged = new EventHandler<>(RankManager.class);
 
@@ -36,6 +39,8 @@ public final class RankManager extends MonoBehaviour {
     }
 
     public EventHandler<Integer> onRankChanged = new EventHandler<>(RankManager.class);
+    public EventHandler<Void> onAccumulatedRankEmptied = new EventHandler<>(RankManager.class);
+    public EventHandler<Void> onAccumulatedRankGained = new EventHandler<>(RankManager.class);
 
     /**
      * Create this MonoBehaviour.
@@ -68,9 +73,12 @@ public final class RankManager extends MonoBehaviour {
                 .removeListener(experienceHolder_onAnyExperienceHolderDestroyed_ID);
     }
 
+    /**
+     * Load the saved progress data from last session.
+     */
     public void loadProgress() {
         var save = DataManager.getInstance().getProgress();
-        setRank(save.getRank());
+        rank = save.getRank();
         setCurrentExp(save.getExp());
     }
 
@@ -87,16 +95,31 @@ public final class RankManager extends MonoBehaviour {
         }
     }
 
+    /**
+     * Get the amount of EXP needed to rank up.
+     *
+     * @return The amount of EXP needed to rank up.
+     */
     private int getCurrentRankExp() {
-        return (int) (Math.pow(EXP_MULTIPLIER, _rank) * BASE_EXP);
+        return (int) (Math.pow(EXP_MULTIPLIER, rank) * BASE_EXP);
     }
 
+    /**
+     * Get the current EXP amount.
+     *
+     * @return The current EXP amount.
+     */
     public int getEXP() {
         return _currentExp;
     }
 
+    /**
+     * Get the current rank.
+     *
+     * @return The current rank.
+     */
     public int getRank() {
-        return _rank;
+        return rank;
     }
 
     /**
@@ -112,7 +135,7 @@ public final class RankManager extends MonoBehaviour {
             this._currentExp = currentExp;
         } else {
             // Rank up
-            setRank(_rank + 1);
+            increaseRank();
             this._currentExp = exceedAmount;
         }
 
@@ -125,22 +148,42 @@ public final class RankManager extends MonoBehaviour {
     }
 
     /**
-     * Setter for read-only field {@link #_rank}
+     * Setter for read-only field {@link #_accumulatedRank}
      *
-     * @param rank The value to set.
+     * @param accumulatedRank The value to set.
      */
-    private void setRank(int rank) {
-        accumulatedRank += Math.max(0, rank - this._rank);
-        System.out.println("Accumulated rank: " + accumulatedRank);
-        this._rank = rank;
-        onRankChanged.invoke(this, _rank);
+    private void setAccumulatedRank(int accumulatedRank) {
+        this._accumulatedRank = accumulatedRank;
+        if (_accumulatedRank > 0) {
+            onAccumulatedRankGained.invoke(this, null);
+        } else {
+            onAccumulatedRankEmptied.invoke(this, null);
+        }
     }
 
-    public boolean fetchAccumulatedRank() {
-        if (accumulatedRank > 0) {
-            accumulatedRank--;
+    /**
+     * Increase rank by {@code 1}. Called within {@link #setCurrentExp} after EXP exceeds
+     * the amount needed to rank up.
+     */
+    private void increaseRank() {
+        setAccumulatedRank(_accumulatedRank + 1);
+        this.rank++;
+        onRankChanged.invoke(this, rank);
+    }
+
+    /**
+     * Try using accumulated rank. This is used by {@link game.Perks.Index.PerkManager} to
+     * check if the player can select perks.
+     *
+     * @return {@code true} if there is still accumulated rank for perk selection, otherwise
+     * {@code false}.
+     */
+    public boolean tryFetchAccumulatedRank() {
+        if (_accumulatedRank > 0) {
+            setAccumulatedRank(_accumulatedRank - 1);
             return true;
         }
         return false;
     }
+
 }

@@ -88,7 +88,7 @@ public class PerkManager extends MonoBehaviour {
     }
 
     public void instantiatePerks() {
-        if (!RankManager.getInstance().fetchAccumulatedRank()) {
+        if (!RankManager.getInstance().tryFetchAccumulatedRank()) {
             onPerkSelectionCompleted.invoke(this, null);
             return;
         }

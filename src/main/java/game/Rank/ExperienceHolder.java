@@ -4,6 +4,9 @@ import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 
+/**
+ * Component for whichever object that releases experience after being destroyed.
+ */
 public final class ExperienceHolder extends MonoBehaviour {
 
     private int exp = 0;
@@ -24,10 +27,20 @@ public final class ExperienceHolder extends MonoBehaviour {
         onAnyExperienceHolderDestroyed.invoke(this, null);
     }
 
+    /**
+     * Get the amount of EXP this object holds.
+     *
+     * @return The amount of EXP this object holds
+     */
     public int getExp() {
         return exp;
     }
 
+    /**
+     * Set the amount of EXP this object holds.
+     *
+     * @param exp The amount of EXP this object holds.
+     */
     public void setExp(int exp) {
         this.exp = exp;
     }
