@@ -1,9 +1,12 @@
 package game.Voltraxis;
 
+import game.Voltraxis.Prefab.VoltraxisVisualPrefab;
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
+import org.Annotation.LinkViaPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
+import org.ParticleSystem.Emitter.ParticleEmitter;
 
 /**
  * Visual component of Voltraxis.
@@ -11,6 +14,9 @@ import org.GameObject.MonoBehaviour;
 public final class VoltraxisVisual extends MonoBehaviour {
 
     private final SpriteAnimator animator = addComponent(SpriteAnimator.class);
+
+    @LinkViaPrefab
+    private ParticleEmitter smokeEmitter = null;
 
     /**
      * Create this MonoBehaviour.
@@ -38,7 +44,21 @@ public final class VoltraxisVisual extends MonoBehaviour {
                 .addListener(this::voltraxisCharging_onUnleashingLaser);
         Voltraxis.getInstance().getVoltraxisCharging().onChargingTerminated
                 .addListener(this::voltraxisCharging_onChargingTerminated);
+        Voltraxis.getInstance().getVoltraxisCharging().onBossWeakened
+                .addListener(this::voltraxisCharging_onBossWeakened);
 
+    }
+
+    /**
+     * Called when {@link VoltraxisCharging#onBossWeakened} is invoked.<br><br>
+     * This function animates Voltraxis on weakened state.
+     *
+     * @param sender Event caller {@link VoltraxisCharging}.
+     * @param e      Empty event argument.
+     */
+    private void voltraxisCharging_onBossWeakened(Object sender, Void e) {
+        animator.playAnimation(AnimationClipData.Voltraxis_Weakened, null);
+        smokeEmitter.startEmit();
     }
 
     /**
@@ -82,6 +102,7 @@ public final class VoltraxisVisual extends MonoBehaviour {
      */
     private void voltraxisCharging_onChargingTerminated(Object sender, Void e) {
         animateIdle();
+        smokeEmitter.stopEmit();
     }
 
     /**
@@ -100,6 +121,17 @@ public final class VoltraxisVisual extends MonoBehaviour {
         if (chargingPhase != VoltraxisCharging.ChargingPhase.None) {
             animator.playAnimation(chargingPhase.animationIndex, null);
         }
+    }
+
+    /**
+     * Link the smoke particle emitter.<br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link VoltraxisVisualPrefab}
+     * as part of component linking process.</i></b>
+     *
+     * @param smokeEmitter The smoke particle emitter.
+     */
+    public void linkSmokeEmitter(ParticleEmitter smokeEmitter) {
+        this.smokeEmitter = smokeEmitter;
     }
 
 }

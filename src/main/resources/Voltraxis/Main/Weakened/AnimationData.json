@@ -1,76 +1,64 @@
 {
-  "imagePath": "Voltraxis_Charging",
+  "imagePath": "Voltraxis_Weakened",
   "frameList": [
     {
       "clipAnchor": {
         "x": 0.0,
-        "y": 384.0
+        "y": 0.0
       },
       "clipSize": {
         "x": 128.0,
         "y": 128.0
       },
-      "duration": 0.02,
+      "duration": 0.3,
       "rotationAngle": 0.0
     },
     {
       "clipAnchor": {
         "x": 128.0,
-        "y": 384.0
+        "y": 0.0
       },
       "clipSize": {
         "x": 128.0,
         "y": 128.0
       },
-      "duration": 0.02,
+      "duration": 0.3,
       "rotationAngle": 0.0
     },
     {
       "clipAnchor": {
         "x": 256.0,
-        "y": 384.0
+        "y": 0.0
       },
       "clipSize": {
         "x": 128.0,
         "y": 128.0
       },
-      "duration": 0.02,
+      "duration": 0.3,
       "rotationAngle": 0.0
     },
     {
       "clipAnchor": {
         "x": 384.0,
-        "y": 384.0
+        "y": 0.0
       },
       "clipSize": {
         "x": 128.0,
         "y": 128.0
       },
-      "duration": 0.02,
+      "duration": 0.3,
       "rotationAngle": 0.0
     },
     {
       "clipAnchor": {
         "x": 512.0,
-        "y": 384.0
+        "y": 0.0
       },
       "clipSize": {
         "x": 128.0,
         "y": 128.0
       },
-      "duration": 0.02,
-      "rotationAngle": 0.0
-    },
-    {
-      "clipAnchor": {
-        "x": 640.0,
-        "y": 384.0
-      },
-      "clipSize": {
-        "x": 128.0,
-        "y": 128.0
-      },
-      "duration": 0.5,
+      "duration": 0.3,
       "rotationAngle": 0.0
     }
   ],
@@ -82,5 +70,5 @@
     "x": 0.5,
     "y": 0.5
   },
-  "loop": false
+  "loop": true
 }

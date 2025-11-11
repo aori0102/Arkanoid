@@ -23,23 +23,24 @@ public final class ElectricBallPrefab extends Prefab {
     public GameObject instantiatePrefab() {
 
         // Main object
-        var electricBall = GameObjectManager.instantiate("Electric Ball")
+        var electricBallObject = GameObjectManager.instantiate("Electric Ball")
                 .addComponent(ElectricBallStat.class)
                 .addComponent(ElectricBallDamageDealer.class)
-                .addComponent(ElectricBall.class);
+                .addComponent(ElectricBall.class)
+                .getGameObject();
 
         // Collider
-        var boxCollider = electricBall.addComponent(BoxCollider.class);
+        var boxCollider = electricBallObject.addComponent(BoxCollider.class);
         boxCollider.setLocalSize(BALL_SIZE);
-        boxCollider.setIncludeLayer(Layer.Player.getUnderlyingValue());
+        boxCollider.setIncludeLayer(Layer.Paddle.getUnderlyingValue());
 
         // Rendering
-        var spriteRenderer = electricBall.addComponent(SpriteRenderer.class);
+        var spriteRenderer = electricBallObject.addComponent(SpriteRenderer.class);
         spriteRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_ElectricBall.getImage());
         spriteRenderer.setSize(BALL_SIZE);
         spriteRenderer.setPivot(new Vector2(0.5, 0.5));
 
-        return electricBall.getGameObject();
+        return electricBallObject;
 
     }
 

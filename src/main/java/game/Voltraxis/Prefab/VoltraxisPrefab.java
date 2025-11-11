@@ -3,6 +3,8 @@ package game.Voltraxis.Prefab;
 import game.Voltraxis.*;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.Layer.Layer;
+import org.Main;
 import org.Physics.BoxCollider;
 import org.Prefab.Prefab;
 import org.Prefab.PrefabIndex;
@@ -14,7 +16,7 @@ import utils.Vector2;
  */
 public final class VoltraxisPrefab extends Prefab {
 
-    private static final Vector2 BOSS_POSITION = new Vector2(600.0, 300.0);
+    private static final Vector2 BOSS_POSITION = new Vector2(Main.STAGE_WIDTH / 2.0, 300.0);
     private static final Vector2 BOSS_COLLIDER_SIZE = new Vector2(230.0, 230.0);
 
     @Override
@@ -22,7 +24,7 @@ public final class VoltraxisPrefab extends Prefab {
 
         var bossObject = GameObjectManager.instantiate("Boss");
 
-        var voltraxis = GameObjectManager.instantiate("Voltraxis")
+        var voltraxisObject = GameObjectManager.instantiate("Voltraxis")
                 .addComponent(Voltraxis.class)
                 .addComponent(VoltraxisCharging.class)
                 .addComponent(VoltraxisEffectManager.class)
@@ -34,14 +36,16 @@ public final class VoltraxisPrefab extends Prefab {
                 .addComponent(BoxCollider.class)
                 .addComponent(VoltraxisHealth.class)
                 .getGameObject();
-        voltraxis.setParent(bossObject);
+        voltraxisObject.setParent(bossObject);
+        voltraxisObject.setLayer(Layer.Boss);
+        var voltraxis = voltraxisObject.getComponent(Voltraxis.class);
 
         // Collider
-        voltraxis.getComponent(BoxCollider.class).setLocalSize(BOSS_COLLIDER_SIZE);
+        voltraxisObject.getComponent(BoxCollider.class).setLocalSize(BOSS_COLLIDER_SIZE);
 
         // Visual
         var visual = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_Visual);
-        visual.setParent(voltraxis);
+        visual.setParent(voltraxisObject);
 
         // Groggy UI
         var groggyUI = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_GroggyUI);
@@ -60,9 +64,12 @@ public final class VoltraxisPrefab extends Prefab {
         healthBarUI.setParent(bossObject);
 
         // Starting position
-        voltraxis.getTransform().setGlobalPosition(BOSS_POSITION);
+        voltraxisObject.getTransform().setGlobalPosition(BOSS_POSITION);
 
-        return voltraxis;
+        // Link component
+        voltraxis.linkBossObject(bossObject);
+
+        return voltraxisObject;
 
     }
 

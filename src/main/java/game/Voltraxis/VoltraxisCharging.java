@@ -126,7 +126,7 @@ public class VoltraxisCharging extends MonoBehaviour {
             return;
         }
 
-        if (!isCharging || isFullyCharged()) {
+        if (isFullyCharged()) {
             return;
         }
 
@@ -135,10 +135,11 @@ public class VoltraxisCharging extends MonoBehaviour {
         Time.removeCoroutine(startCharging_coroutineID);
 
         if (Voltraxis.getInstance().getVoltraxisPowerCoreManager().hasPowerCore()) {
+            System.out.println("Halt");
             haltCharging();
         } else {
+            System.out.println("Weakened");
             weakenBoss();
-            terminateCharging();
         }
 
     }
@@ -181,6 +182,10 @@ public class VoltraxisCharging extends MonoBehaviour {
      * {@link VoltraxisData#CHARGING_HALT_DELAY}.
      */
     private void haltCharging() {
+
+        if (!isCharging) {
+            return;
+        }
 
         isCharging = false;
         setCurrentCharge(_currentCharge - VoltraxisData.CHARGING_HALT_AMOUNT);
@@ -258,7 +263,29 @@ public class VoltraxisCharging extends MonoBehaviour {
      * Force Voltraxis into weaken state after both Power core are destroyed.
      */
     private void weakenBoss() {
+        isCharging = false;
         onBossWeakened.invoke(this, null);
+        terminateCharging_coroutineID = Time.addCoroutine(
+                this::terminateCharging,
+                Time.getTime() + VoltraxisData.WEAKENED_TIME
+        );
+
+        // Reduct DEF by 80%
+        var defenseDecrementEffect = new VoltraxisEffectManager.EffectInputInfo();
+        defenseDecrementEffect.duration = VoltraxisData.WEAKENED_TIME;
+        defenseDecrementEffect.index = VoltraxisData.EffectIndex.DefenceReduction;
+        defenseDecrementEffect.value
+                = VoltraxisData.LOCKDOWN_DEFENCE_REDUCTION_MULTIPLIER
+                * Voltraxis.getInstance().getVoltraxisStatManager().getActualDefense();
+
+        // Increase damage taken by 50%
+        var damageTakenIncrementEffect = new VoltraxisEffectManager.EffectInputInfo();
+        damageTakenIncrementEffect.duration = VoltraxisData.WEAKENED_TIME;
+        damageTakenIncrementEffect.index = VoltraxisData.EffectIndex.DamageTakenIncrement;
+        damageTakenIncrementEffect.value = VoltraxisData.LOCKDOWN_DAMAGE_TAKEN_INCREMENT;
+
+        Voltraxis.getInstance().getVoltraxisEffectManager().addEffect(defenseDecrementEffect);
+        Voltraxis.getInstance().getVoltraxisEffectManager().addEffect(damageTakenIncrementEffect);
     }
 
     /**

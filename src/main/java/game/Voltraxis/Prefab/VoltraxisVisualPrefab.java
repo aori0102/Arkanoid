@@ -5,7 +5,11 @@ import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.ParticleSystem.Emitter.EmitTypes;
+import org.ParticleSystem.EmitterGenerator;
+import org.ParticleSystem.ParticleType;
 import org.Prefab.Prefab;
+import utils.Vector2;
 
 /**
  * Prefab for Voltraxis' visual.
@@ -32,6 +36,15 @@ public final class VoltraxisVisualPrefab extends Prefab {
         animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_UnleashingLaser);
         animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_EnterCharging);
         animator.addAnimationClip(AnimationClipData.Voltraxis_Charging_ExitUltimate);
+        animator.addAnimationClip(AnimationClipData.Voltraxis_Weakened);
+
+        var smokeEmitter = EmitterGenerator.emitterHashMap.get(EmitTypes.Cone)
+                .generateEmitter(27, 340, 599, 1.442, 2.323, 36.0);
+        smokeEmitter.setParticleType(ParticleType.Smoke);
+        smokeEmitter.setBaseDirection(Vector2.up());
+        smokeEmitter.getGameObject().setParent(visualObject);
+
+        visual.linkSmokeEmitter(smokeEmitter);
 
         return visualObject;
 

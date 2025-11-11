@@ -1,8 +1,12 @@
 package game.Voltraxis.Object.PowerCore;
 
+import jdk.jfr.Percentage;
+import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import org.w3c.dom.events.EventTarget;
 import utils.Time;
 import utils.Vector2;
 
@@ -36,6 +40,12 @@ public class PowerCore extends MonoBehaviour {
     }
 
     @Override
+    public void start() {
+        powerCoreHealth.onHealthReachesZero
+                .addListener(this::powerCoreHealth_onHealthReachesZero);
+    }
+
+    @Override
     public void update() {
         var delta = Math.sin(CORE_FLUCTUATION_RATE * Time.getTime() * Math.PI) * MAX_CORE_FLUCTUATION_DISTANCE;
         var deltaVector = new Vector2(0.0, delta);
@@ -53,6 +63,17 @@ public class PowerCore extends MonoBehaviour {
 
     public PowerCoreStat getPowerCoreStat() {
         return powerCoreStat;
+    }
+
+    /**
+     * Called when {@link PowerCoreHealth#onHealthReachesZero} is invoked.<br><br>
+     * This function destroys this power core when its health reaches zero.
+     *
+     * @param sender Event caller {@link PowerCoreHealth}.
+     * @param e      Empty event argument.
+     */
+    private void powerCoreHealth_onHealthReachesZero(Object sender, Void e) {
+        GameObjectManager.destroy(gameObject);
     }
 
 }

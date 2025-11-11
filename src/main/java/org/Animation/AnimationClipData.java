@@ -16,6 +16,7 @@ public enum AnimationClipData {
 
     /// Voltraxis
     Voltraxis_Idle("/Voltraxis/Main/Idle/AnimationData.json"),
+    Voltraxis_Weakened("/Voltraxis/Main/Weakened/AnimationData.json"),
     Voltraxis_NormalAttack("/Voltraxis/Main/NormalAttack/AnimationData.json"),
     Voltraxis_PowerCore_Idle("/Voltraxis/Object/PowerCore/Idle/AnimationData_Idle.json"),
     Voltraxis_PowerCore_Idle_ChargingLow("/Voltraxis/Object/PowerCore/Idle/AnimationData_Low.json"),

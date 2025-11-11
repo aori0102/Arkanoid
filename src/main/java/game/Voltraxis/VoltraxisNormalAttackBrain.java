@@ -14,12 +14,12 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
 
     private static final double MAX_BALL_ANGLE = 40.0;
     private static final int BALL_PER_SHOT = 2;
-    private static final int MAX_SHOT_SEQUENCE = 3;
+    private static final int MAX_SHOT_PER_SEQUENCE = 3;
     private static final double SEQUENCE_DELAY = 0.35;
     private static final double SHOOTING_DELAY = 0.4;
 
     private Time.CoroutineID basicSkill_coroutineID = null;
-    private Time.CoroutineID shootBalls_coroutineID = null;
+    private final Time.CoroutineID[] shootBalls_coroutineIDList = new Time.CoroutineID[MAX_SHOT_PER_SEQUENCE];
 
     public EventHandler<Void> onBasicAttackCommenced = new EventHandler<>(VoltraxisNormalAttackBrain.class);
 
@@ -48,7 +48,9 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
     @Override
     public void onDestroy() {
         Time.removeCoroutine(basicSkill_coroutineID);
-        Time.removeCoroutine(shootBalls_coroutineID);
+        for (var shootBalls_coroutineID : shootBalls_coroutineIDList) {
+            Time.removeCoroutine(shootBalls_coroutineID);
+        }
     }
 
     /**
@@ -81,9 +83,9 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
      */
     private void basicSkill() {
 
-        for (int i = 0; i < MAX_SHOT_SEQUENCE; i++) {
+        for (int i = 0; i < MAX_SHOT_PER_SEQUENCE; i++) {
             var delay = SEQUENCE_DELAY * i + SHOOTING_DELAY;
-            shootBalls_coroutineID = Time.addCoroutine(this::shootBalls, Time.getTime() + delay);
+            shootBalls_coroutineIDList[i] = Time.addCoroutine(this::shootBalls, Time.getTime() + delay);
         }
         onBasicAttackCommenced.invoke(this, null);
         basicSkill_coroutineID = Time.addCoroutine(

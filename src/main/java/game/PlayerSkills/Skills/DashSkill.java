@@ -28,6 +28,11 @@ public class DashSkill extends Skill {
     }
 
     @Override
+    protected void onDestroy() {
+        Time.removeCoroutine(dashCoroutineID);
+    }
+
+    @Override
     protected SkillIndex getSkillIndex() {
         return SkillIndex.Dash;
     }

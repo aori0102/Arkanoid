@@ -296,8 +296,8 @@ public final class LevelManager extends MonoBehaviour {
     }
 
     private void onGameOver() {
-        DataManager.getInstance().resetSave();
         DataManager.getInstance().generateNewRecord();
+        DataManager.getInstance().resetSave();
         onGameOver.invoke(this, null);
         GameManager.getInstance().quitToMainMenu();
     }

@@ -22,6 +22,9 @@ public class Random {
      * @return A random integer within {@code [min, max)}.
      */
     public static int range(int min, int max) {
+        if (min == max) {
+            return min;
+        }
         return random.nextInt(min, max);
     }
 
@@ -33,14 +36,18 @@ public class Random {
      * @return A random decimal number within {@code [min, max)}.
      */
     public static double range(double min, double max) {
+        if (min == max) {
+            return min;
+        }
         return random.nextDouble(min, max);
     }
 
     /**
      * Shuffle the given list.
+     *
      * @param input The list to shuffle.
+     * @param <T>   List type.
      * @return A copied shuffled version of the input list.
-     * @param <T> List type.
      */
     public static <T> List<T> shuffle(List<T> input) {
         var output = new ArrayList<>(input);

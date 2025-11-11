@@ -1,8 +1,11 @@
 package game.Voltraxis;
 
+import game.Voltraxis.Prefab.VoltraxisPrefab;
+import org.Annotation.LinkViaPrefab;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 
 /**
@@ -19,6 +22,9 @@ public class Voltraxis extends MonoBehaviour {
     private VoltraxisSkillHandler voltraxisSkillHandler = null;
     private VoltraxisStat voltraxisStat = null;
     private VoltraxisHealth voltraxisHealth = null;
+
+    @LinkViaPrefab
+    private GameObject bossObject = null;
 
     public EventHandler<Void> onBossDestroyed = new EventHandler<>(Voltraxis.class);
 
@@ -42,6 +48,8 @@ public class Voltraxis extends MonoBehaviour {
         voltraxisSkillHandler = getComponent(VoltraxisSkillHandler.class);
         voltraxisStat = getComponent(VoltraxisStat.class);
         voltraxisHealth = getComponent(VoltraxisHealth.class);
+
+        voltraxisHealth.onHealthReachesZero.addListener(this::voltraxisHealth_onHealthReachesZero);
     }
 
     @Override
@@ -86,8 +94,26 @@ public class Voltraxis extends MonoBehaviour {
         return voltraxisStat;
     }
 
-    public void inflictEffect(VoltraxisEffectManager.EffectInputInfo info) {
-        voltraxisEffectManager.addEffect(info);
+    /**
+     * Called when {@link VoltraxisHealth#onHealthReachesZero} is invoked.<br><br>
+     * This function destroy Voltraxis when its health reaches zero.
+     *
+     * @param sender Event caller {@link VoltraxisHealth}.
+     * @param e      Empty event argument.
+     */
+    private void voltraxisHealth_onHealthReachesZero(Object sender, Void e) {
+        GameObjectManager.destroy(bossObject);
+    }
+
+    /**
+     * Link the parent game object of everything of Voltraxis.<br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link VoltraxisPrefab}
+     * as part of component linking process.</i></b>
+     *
+     * @param bossObject Parent game object containing every boss components including this object.
+     */
+    public void linkBossObject(GameObject bossObject) {
+        this.bossObject = bossObject;
     }
 
 }

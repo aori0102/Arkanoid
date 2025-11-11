@@ -5,6 +5,7 @@ import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
+import org.Layer.Layer;
 import org.Layer.RenderLayer;
 import org.Physics.BoxCollider;
 import org.Prefab.Prefab;
@@ -32,6 +33,7 @@ public final class PowerCorePrefab extends Prefab {
                 .addComponent(PowerCoreHealth.class)
                 .addComponent(PowerCoreStat.class)
                 .getGameObject();
+        powerCoreObject.setLayer(Layer.Boss);
 
         // Collider
         var powerCoreCollider = powerCoreObject.addComponent(BoxCollider.class);

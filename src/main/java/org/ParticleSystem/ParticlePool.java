@@ -4,6 +4,7 @@ import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;
+import utils.Random;
 import utils.Vector2;
 
 import java.util.ArrayList;
@@ -38,9 +39,14 @@ public class ParticlePool extends MonoBehaviour {
                 .addComponent(ParticleObject.class);
         particle.setParticleType(particleType);
 
-        SpriteRenderer sr = particle.addComponent(SpriteRenderer.class);
-        sr.setImage(particleType.getImageIndex().getImage());
-        sr.setPivot(new Vector2(0.5, 0.5));
+        var spriteRenderer = particle.addComponent(SpriteRenderer.class);
+        spriteRenderer.setImage(particleType.imageIndex.getImage());
+        if (particleType.clips.length > 0) {
+            var clip = particleType.clips[Random.range(0, particleType.clips.length)];
+            spriteRenderer.setSpriteClip(clip);
+            spriteRenderer.setSize(new Vector2(clip.getWidth(), clip.getHeight()));
+        }
+        spriteRenderer.setPivot(new Vector2(0.5, 0.5));
 
         particles.add(particle);
         return particle;

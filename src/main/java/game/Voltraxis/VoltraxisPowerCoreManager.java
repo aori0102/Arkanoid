@@ -1,8 +1,6 @@
 package game.Voltraxis;
 
 import game.Voltraxis.Object.PowerCore.PowerCore;
-import game.Voltraxis.Object.PowerCore.PowerCoreHealth;
-import game.Voltraxis.Prefab.PowerCorePrefab;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -37,6 +35,8 @@ public class VoltraxisPowerCoreManager extends MonoBehaviour {
         public VoltraxisEffectManager.EffectInputInfo damageTakenEffectInfo;
     }
 
+    private boolean powerCoreDeployed = false;
+
     private final HashMap<PowerCoreIndex, PowerCoreInfo> powerCoreInfoMap = new HashMap<>();
 
     public EventHandler<Void> onPowerCoreDestroyed = new EventHandler<>(VoltraxisPowerCoreManager.class);
@@ -58,6 +58,8 @@ public class VoltraxisPowerCoreManager extends MonoBehaviour {
                 .addListener(this::voltraxisGroggy_onGroggyToDeployPowerCore);
         Voltraxis.getInstance().getVoltraxisCharging().onFullyCharged
                 .addListener(this::voltraxisCharging_onFullyCharged);
+        Voltraxis.getInstance().getVoltraxisCharging().onChargingTerminated
+                .addListener(this::voltraxisCharging_onChargingTerminated);
     }
 
     /**
@@ -69,6 +71,9 @@ public class VoltraxisPowerCoreManager extends MonoBehaviour {
      */
     private void voltraxisCharging_onFullyCharged(Object sender, Void e) {
         for (var powerCoreInfo : powerCoreInfoMap.values()) {
+            if (powerCoreInfo.core == null) {
+                continue;
+            }
             GameObjectManager.destroy(powerCoreInfo.core.getGameObject());
         }
     }
@@ -81,10 +86,11 @@ public class VoltraxisPowerCoreManager extends MonoBehaviour {
      * @param e      Empty event argument.
      */
     private void voltraxisGroggy_onGroggyToDeployPowerCore(Object sender, Void e) {
-        if (hasPowerCore()) {
+        if (powerCoreDeployed || hasPowerCore()) {
             return;
         }
 
+        powerCoreDeployed = true;
         spawnCore(PowerCoreIndex.Left);
         spawnCore(PowerCoreIndex.Right);
     }
@@ -107,7 +113,8 @@ public class VoltraxisPowerCoreManager extends MonoBehaviour {
         // Instantiate the power core
         var newCore = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_PowerCore)
                 .getComponent(PowerCore.class);
-        newCore.getTransform().setGlobalPosition(powerCoreIndex.corePosition);
+        newCore.getTransform().setLocalPosition(powerCoreIndex.corePosition);
+        newCore.getGameObject().setParent(gameObject);
 
         // Add power core effect
         var powerCoreEffectInfo = new VoltraxisEffectManager.EffectInputInfo();
@@ -170,6 +177,17 @@ public class VoltraxisPowerCoreManager extends MonoBehaviour {
 
         }
 
+    }
+
+    /**
+     * Called when {@link VoltraxisCharging#onChargingTerminated} is invoked.<br><br>
+     * This function reset {@link #powerCoreDeployed} after charging event.
+     *
+     * @param sender Event caller {@link VoltraxisCharging}.
+     * @param e      Empty event argument.
+     */
+    private void voltraxisCharging_onChargingTerminated(Object sender, Void e) {
+        powerCoreDeployed = false;
     }
 
     /**

@@ -115,6 +115,9 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
 
     public void removeEffect(EffectID effectID) {
         var tracker = effectTrackingInfoMap.remove(effectID);
+        if (tracker == null) {
+            return;
+        }
         onEffectRemoved.invoke(this, tracker.info);
         Time.removeCoroutine(tracker.terminateCoroutineID);
     }

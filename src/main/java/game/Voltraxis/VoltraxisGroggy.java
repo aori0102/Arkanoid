@@ -15,9 +15,13 @@ public class VoltraxisGroggy extends MonoBehaviour {
     private static final double MAX_GROGGY = 1.0;
     private static final double GROGGY_DELAY_AFTER_CHARGING = 1.7;
 
-    private double groggy = 0.0;
     private boolean groggyLocked = false;
     private Time.CoroutineID resetGroggyCoroutineID = null;
+
+    /**
+     * <b>Read-only. Write via {@link #setGroggy}.</b>
+     */
+    private double _groggy = 0.0;
 
     /**
      * Fired when Voltraxis' groggy is full<br><br>
@@ -55,6 +59,8 @@ public class VoltraxisGroggy extends MonoBehaviour {
         Voltraxis.getInstance().getVoltraxisHealth().onHealthChanged.addListener(this::voltraxis_onDamaged);
         Voltraxis.getInstance().getVoltraxisCharging().onChargingTerminated
                 .addListener(this::voltraxisCharging_onChargingTerminated);
+        Voltraxis.getInstance().getVoltraxisCharging().onBossWeakened
+                .addListener(this::voltraxisCharging_onBossWeakened);
     }
 
     @Override
@@ -76,16 +82,26 @@ public class VoltraxisGroggy extends MonoBehaviour {
             return;
         }
 
-        groggy += VoltraxisData.GROGGY_DELTA;
+        setGroggy(_groggy + VoltraxisData.GROGGY_DELTA);
         if (isGroggyToDeployPowerCore()) {
             onGroggyToDeployPowerCore.invoke(this, null);
         }
         if (isMaxGroggy()) {
             onGroggyReachedMax.invoke(this, null);
-            groggyLocked = true;
+            lockGroggy();
         }
-        onGroggyRatioChanged.invoke(this, groggy / MAX_GROGGY);
 
+    }
+
+    /**
+     * Called when {@link VoltraxisCharging#onBossWeakened} is invoked.<br><br>
+     * This function disables groggy intake when Voltraxis is weakened.
+     *
+     * @param sender Event caller {@link VoltraxisCharging}.
+     * @param e      Empty event argument.
+     */
+    private void voltraxisCharging_onBossWeakened(Object sender, Void e) {
+        lockGroggy();
     }
 
     /**
@@ -99,7 +115,7 @@ public class VoltraxisGroggy extends MonoBehaviour {
      * {@code false}.
      */
     private boolean isGroggyToDeployPowerCore() {
-        return groggy >= VoltraxisData.MIN_GROGGY_ON_POWER_CORE_DEPLOY;
+        return _groggy >= VoltraxisData.MIN_GROGGY_ON_POWER_CORE_DEPLOY;
     }
 
     /**
@@ -109,7 +125,7 @@ public class VoltraxisGroggy extends MonoBehaviour {
      * @return {@code true} if groggy is max, otherwise {@code false}.
      */
     private boolean isMaxGroggy() {
-        return groggy >= MAX_GROGGY;
+        return _groggy >= MAX_GROGGY;
     }
 
     /**
@@ -120,13 +136,26 @@ public class VoltraxisGroggy extends MonoBehaviour {
      * @param e      Empty event argument.
      */
     private void voltraxisCharging_onChargingTerminated(Object sender, Void e) {
-        groggy = 0.0;
-        onGroggyRatioChanged.invoke(this, 0.0);
+        setGroggy(0.0);
         resetGroggyCoroutineID = Time.addCoroutine(this::resetGroggy, Time.getTime() + GROGGY_DELAY_AFTER_CHARGING);
+    }
+
+    private void lockGroggy() {
+        groggyLocked = true;
     }
 
     private void resetGroggy() {
         groggyLocked = false;
+    }
+
+    /**
+     * Setter for read-only field {@link #_groggy}
+     *
+     * @param groggy The value to set.
+     */
+    private void setGroggy(double groggy) {
+        this._groggy = groggy;
+        onGroggyRatioChanged.invoke(this, groggy / MAX_GROGGY);
     }
 
 }

@@ -71,10 +71,8 @@ public final class PlayerHealthUI extends MonoBehaviour {
      * @param e      Empty event argument.
      */
     private void paddleHealth_onHealthChanged(Object sender, EntityHealth.OnHealthChangedEventArgs e) {
-        if (e.alterType == EntityHealthAlterType.PlayerTakeDamage) {
-            var currentHealth = Player.getInstance().getPlayerPaddle().getPaddleHealth().getHealth();
-            targetRatio = (double) currentHealth / PlayerData.MAX_HEALTH;
-        }
+        var currentHealth = Player.getInstance().getPlayerPaddle().getPaddleHealth().getHealth();
+        targetRatio = (double) currentHealth / PlayerData.MAX_HEALTH;
     }
 
     /**

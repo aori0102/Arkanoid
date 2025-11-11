@@ -31,17 +31,22 @@ public final class VoltraxisData {
     public static final double GROGGY_DURATION = 18.0;
 
     /// Power core
-    public static final double POWER_CORE_PROPORTIONAL_HEALTH = 0.36;
+    public static final double POWER_CORE_PROPORTIONAL_HEALTH = 0.06;
     public static final double POWER_CORE_DAMAGE_TAKEN_REDUCTION = 0.1;
     public static final double MIN_GROGGY_ON_POWER_CORE_DEPLOY = 0.5;
-    public static final Vector2 LEFT_CORE_POSITION = new Vector2(350.0, 400.0);
-    public static final Vector2 RIGHT_CORE_POSITION = new Vector2(750.0, 400.0);
+    public static final Vector2 LEFT_CORE_POSITION = new Vector2(-200.0, 200.0);
+    public static final Vector2 RIGHT_CORE_POSITION = new Vector2(200.0, 200.0);
 
     /// Charging
     public static final double CHARGING_RATE = 9.1;
     public static final double CHARGING_HALT_DELAY = 1.2;
     public static final double CHARGING_HALT_AMOUNT = 42;
     public static final double CHARGING_MAX = 100;
+
+    /// Weakened
+    public static final double WEAKENED_TIME = 10.0;
+    public static final double LOCKDOWN_DEFENCE_REDUCTION_MULTIPLIER = 0.8;
+    public static final double LOCKDOWN_DAMAGE_TAKEN_INCREMENT = 0.5;
 
     /// EX Laser
     public static final double ULTIMATE_LASER_DAMAGE_PROPORTION = 0.27;

@@ -9,7 +9,6 @@ import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import org.GameObject.GameObject;
-import org.GameObject.MonoBehaviour;
 import utils.Vector2;
 
 public class SpriteRenderer extends Renderable {
@@ -168,6 +167,10 @@ public class SpriteRenderer extends Renderable {
 
     public void setSpriteClip(Vector2 clipAnchor, Vector2 clipSize) {
         Rectangle2D clip = new Rectangle2D(clipAnchor.x, clipAnchor.y, clipSize.x, clipSize.y);
+        sprite.setViewport(clip);
+    }
+
+    public void setSpriteClip(Rectangle2D clip) {
         sprite.setViewport(clip);
     }
 
