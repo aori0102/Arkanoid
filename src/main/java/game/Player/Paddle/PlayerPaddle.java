@@ -14,6 +14,7 @@ import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import org.Layer.Layer;
+import org.Main;
 import org.Physics.BoxCollider;
 import org.Physics.PhysicsManager;
 import utils.Time;
@@ -27,6 +28,7 @@ public class PlayerPaddle extends MonoBehaviour {
     private static final double DOT_LIMIT_ANGLE_RIGHT = 30;
     private static final double DOT_LIMIT_ANGLE_LEFT = 150;
     private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0);
+    private static final double PADDLE_MAX_MOVABLE_AMPLITUDE = 680.0;
 
     private final PaddleHealth paddleHealth = addComponent(PaddleHealth.class);
     private final PaddleStat paddleStat = addComponent(PaddleStat.class);
@@ -79,6 +81,7 @@ public class PlayerPaddle extends MonoBehaviour {
     @Override
     public void update() {
         handlePowerUps();
+        clampPaddlePositioning();
     }
 
     @Override
@@ -98,6 +101,18 @@ public class PlayerPaddle extends MonoBehaviour {
             }
         }
 
+    }
+
+    private void clampPaddlePositioning() {
+        var paddleSize = boxCollider.getGlobalSize();
+        var position = getTransform().getGlobalPosition();
+        var movableAmplitudeEachSide = (PADDLE_MAX_MOVABLE_AMPLITUDE - paddleSize.x) / 2.0;
+        position.x = Math.clamp(
+                position.x,
+                Main.STAGE_WIDTH / 2.0 - movableAmplitudeEachSide,
+                Main.STAGE_WIDTH / 2.0 + movableAmplitudeEachSide
+        );
+        getTransform().setGlobalPosition(position);
     }
 
     /**
