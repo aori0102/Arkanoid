@@ -112,6 +112,7 @@ public class PerkManager extends MonoBehaviour {
 
     private void destroyPerks() {
         for (Perk perk : currentPerksOnScreen) {
+            perk.destroyText();
             GameObjectManager.destroy(perk.getGameObject());
         }
 

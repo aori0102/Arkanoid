@@ -36,7 +36,6 @@ public final class AudioManager {
         }
         setMusicVolume(0);
         // Delay listener registration until all players are done constructing
-        MusicHandler.initializeMusicHandler();
     }
 
     public static void setMasterVolume(double volume) {

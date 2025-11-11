@@ -5,8 +5,8 @@ import game.Player.PlayerData;
 import org.GameObject.GameObject;
 
 public final class PaddleStat extends EntityStat {
-    private int attack = 0;
-    private int defence = 0;
+    private int attack = 20;
+    private int defence = 20;
     private double attackMultiplier = 1;
     private double defenceMultiplier = 1;
     private double damageTakenMultiplier = 1;

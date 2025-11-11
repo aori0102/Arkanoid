@@ -42,7 +42,7 @@ public class PlayerPaddle extends MonoBehaviour {
 
     // Event
     public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(PlayerPaddle.class);
-    public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(PlayerPaddle.class);
+    public static EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(PlayerPaddle.class);
 
     public boolean isFired = false;
     private boolean canBeDamaged = true;

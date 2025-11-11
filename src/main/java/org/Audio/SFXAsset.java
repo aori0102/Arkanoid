@@ -10,7 +10,7 @@ public class SFXAsset {
         BossUltimate(("/Audio/SFX/BossUltimate.wav")),
         ButtonClick("/Audio/SFX/ButtonClick.wav"),
         ButtonHover("/Audio/SFX/ButtonHover.wav"),
-        LaserBeamOnShoot("/Audio/SFX/LaserBeamOnShoot.wav"),
+        OnLaserBeamShoot("/Audio/SFX/LaserBeamOnShoot.wav"),
         OnBrickHit("/Audio/SFX/OnBrickHit.wav"),
         OnPaddleHit_Ball("/Audio/SFX/OnPaddleHit(Ball).wav"),
         OnPerkReceived("/Audio/SFX/OnPerkReceived.wav"),

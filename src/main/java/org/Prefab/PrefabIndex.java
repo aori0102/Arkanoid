@@ -1,5 +1,7 @@
 package org.Prefab;
 
+import game.Audio.MusicHandlerPrefab;
+import game.Audio.SFXHandlerPrefab;
 import game.Ball.BallParticlePrefab;
 import game.Ball.BallPrefab;
 import game.Ball.BallsManagerPrefab;
@@ -115,6 +117,7 @@ public enum PrefabIndex {
     Voltraxis_PowerCore(new PowerCorePrefab()),
     Voltraxis_UltimateLaser(new UltimateLaserPrefab()),
     Voltraxis_Visual(new VoltraxisVisualPrefab()),
+    Voltraxis_SFX(new VoltraxisSFXPrefab()),
 
     /// Ball
     Ball(new BallPrefab()),
@@ -137,6 +140,10 @@ public enum PrefabIndex {
     Player_Paddle(new PaddlePrefab()),
     Player_HealthBar(new PlayerHealthBarPrefab()),
     Player_HealthLossVignette(new PlayerHealthLossVignettePrefab()),
+
+    /// Audio
+    SFXHandler(new SFXHandlerPrefab()),
+    MusicHandler(new MusicHandlerPrefab()),
 
     /// Particle;
 

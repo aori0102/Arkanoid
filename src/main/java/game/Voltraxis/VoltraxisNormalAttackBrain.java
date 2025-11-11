@@ -2,6 +2,8 @@ package game.Voltraxis;
 
 import game.Voltraxis.Object.ElectricBall.ElectricBall;
 import game.Voltraxis.Prefab.ElectricBallPrefab;
+import org.Audio.AudioManager;
+import org.Audio.SFXAsset;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -22,6 +24,7 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
     private Time.CoroutineID shootBalls_coroutineID = null;
 
     public EventHandler<Void> onBasicAttackCommenced = new EventHandler<>(VoltraxisNormalAttackBrain.class);
+    public EventHandler<Void> onEachBallShot = new EventHandler<>(VoltraxisNormalAttackBrain.class);
 
     /**
      * Create this MonoBehaviour.
@@ -84,6 +87,7 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
         for (int i = 0; i < MAX_SHOT_SEQUENCE; i++) {
             var delay = SEQUENCE_DELAY * i + SHOOTING_DELAY;
             shootBalls_coroutineID = Time.addCoroutine(this::shootBalls, Time.getTime() + delay);
+
         }
         onBasicAttackCommenced.invoke(this, null);
         basicSkill_coroutineID = Time.addCoroutine(
@@ -110,8 +114,11 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
             electricBall.getTransform().setGlobalPosition(getTransform().getGlobalPosition());
             electricBall.setDirection(direction);
 
+            onEachBallShot.invoke(this, null);
         }
 
     }
+
+
 
 }

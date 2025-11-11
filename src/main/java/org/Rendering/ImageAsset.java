@@ -39,6 +39,7 @@ public class ImageAsset {
         GamePlayBackground_Normal("/UI/GamePlayBackground_Normal.png"),
         GamePlayBackground_Boss("/UI/GamePlayBackground_Boss.png"),
         DimmedBackground("/UI/DimmedBackground.png"),
+        BlackBackground("/UI/BlackBackground.png"),
 
         /// Perks
         Perks("/UI/Perks.png"),
@@ -103,7 +104,7 @@ public class ImageAsset {
         Player_UI_Skill_Icon_UpdraftSkillIcon("/Player/UI/Skill/Icon/UpdraftSkillIcon.png"),
 
         /// Bricks
-        PurpleBrick("/Brick/PurpleBrick.png"),
+        PurpleBrick("/Brick/brick_normal.png"),
         OrangeBrick("/Brick/OrangeBrick.png"),
         CyanBrick("/Brick/CyanBrick.png"),
         BrickNormal("/Brick/brick_normal.png"),

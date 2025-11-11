@@ -53,7 +53,7 @@ public class PauseMenuManager extends MonoBehaviour {
         PrefabManager.instantiatePrefab(PrefabIndex.ResumeButton);
         PrefabManager.instantiatePrefab(PrefabIndex.MenuButton);
 
-        pauseButton.getTransform().setGlobalPosition(new Vector2(50, 50));
+        pauseButton.getTransform().setGlobalPosition(new Vector2(1125, 60));
         resumeButton.getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH / 2, 250));
         menuButton.getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH / 2, 450));
 

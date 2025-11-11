@@ -19,6 +19,7 @@ public class Voltraxis extends MonoBehaviour {
     private VoltraxisSkillHandler voltraxisSkillHandler = null;
     private VoltraxisStat voltraxisStat = null;
     private VoltraxisHealth voltraxisHealth = null;
+    private VoltraxisSFX voltraxisSFX = null;
 
     public EventHandler<Void> onBossDestroyed = new EventHandler<>(Voltraxis.class);
 

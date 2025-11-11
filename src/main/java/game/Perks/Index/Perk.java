@@ -132,9 +132,20 @@ public abstract class Perk extends MonoBehaviour
     }
 
     protected void perk_onPointerExited(Object sender, MouseEvent e) {
-        exitAnimation();
-        buttonState = ButtonState.Idle;
-        System.out.println("[Perk] Idle");
+        if(!getGameObject().isDestroyed()){
+            exitAnimation();
+            buttonState = ButtonState.Idle;
+            System.out.println("[Perk] Idle");
+        }
+
+    }
+
+    public TextUI getTextUI() {
+        return textUI;
+    }
+
+    public void destroyText() {
+        textUI.setText("");
     }
 
     private void idleAnimation() {

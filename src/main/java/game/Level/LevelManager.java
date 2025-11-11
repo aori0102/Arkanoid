@@ -66,7 +66,7 @@ public final class LevelManager extends MonoBehaviour {
     public EventHandler<Void> onLevelConcluded = new EventHandler<>(LevelManager.class);
     public EventHandler<Void> onGameOver = new EventHandler<>(LevelManager.class);
 
-    public EventHandler<OnLevelLoadedEventArgs> onLevelLoaded = new EventHandler<>(LevelManager.class);
+    public static EventHandler<OnLevelLoadedEventArgs> onLevelLoaded = new EventHandler<>(LevelManager.class);
 
     public static class OnLevelLoadedEventArgs {
         public int index;
