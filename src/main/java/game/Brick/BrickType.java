@@ -22,7 +22,7 @@ public enum BrickType {
     /**
      * An indestructible (or extremely high health) brick.
      */
-    Diamond(999, 280, 8, ImageAsset.ImageIndex.BrickDiamond),
+    Diamond(999, 280, 8, ImageAsset.ImageIndex.BrickCrazyDiamond),
 
     /**
      * A tough brick, stronger than Normal but weaker than Steel.

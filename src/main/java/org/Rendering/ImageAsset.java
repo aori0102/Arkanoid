@@ -108,7 +108,7 @@ public class ImageAsset {
         CyanBrick("/Brick/CyanBrick.png"),
         BrickNormal("/Brick/brick_normal.png"),
         BrickSteel("/Brick/SteelBrick.png"),
-        BrickDiamond("/Brick/DiamondBrick.png"),
+        BrickCrazyDiamond("/Brick/DiamondBrick.png"),
         BrickGift("/Brick/GiftBrick.png"),
         BrickReborn("/Brick/RebornBrick.png"),
         BrickRock("/Brick/RockBrick.png"),
@@ -125,6 +125,7 @@ public class ImageAsset {
         EnergyParticle("/Particle/EnergyParticle.png"),
         BallParticle("/Particle/BallParticle.png"),
         ExplodingBrickParticle("/Particle/ExplodingBrickParticle.png"),
+        DashParticle("/Particle/DashParticle.png"),
 
         /// RecordUI
         RecordUI("/UI/RecordUI.png"),

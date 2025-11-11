@@ -3,10 +3,7 @@ package game.Player.Prefab;
 import game.Damagable.HealthChangeVisualizer;
 import game.GameObject.Arrow;
 import game.Particle.PaddleParticle;
-import game.Player.Paddle.PaddleEffectController;
-import game.Player.Paddle.PaddleHealth;
-import game.Player.Paddle.PaddleStat;
-import game.Player.Paddle.PlayerPaddle;
+import game.Player.Paddle.*;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Layer.Layer;
@@ -69,6 +66,10 @@ public class PaddlePrefab extends Prefab {
         paddleParticle1.setDirection(Vector2.down());
         paddleParticle1.setParent(paddle);
         paddleParticle1.startEmit();
+
+        var dashParticle = GameObjectManager.instantiate("DashParticle").addComponent(PaddleDashParticle.class);
+        dashParticle.setParent(paddle);
+        paddle.getComponent(PlayerPaddle.class).linkPaddleDashParticle(dashParticle);
 
 
         return paddle;

@@ -8,7 +8,8 @@ public enum ParticleType {
     Blizzard(ImageAsset.ImageIndex.None),
     Energy(ImageAsset.ImageIndex.EnergyParticle),
     Ball(ImageAsset.ImageIndex.BallParticle),
-    ExplodingBrick(ImageAsset.ImageIndex.ExplodingBrickParticle),;
+    ExplodingBrick(ImageAsset.ImageIndex.ExplodingBrickParticle),
+    Dash(ImageAsset.ImageIndex.DashParticle),;
 
     private final ImageAsset.ImageIndex imageIndex;
 

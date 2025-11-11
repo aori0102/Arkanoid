@@ -123,6 +123,7 @@ public enum PrefabIndex {
     /// Skill
     LaserBeam(new LaserBeamPrefab()),
 
+
     /// Power up
     PowerUp_Placeholder(new PowerUpPlaceholderPrefab()),
     PowerUp_FireBall(new FireBallPrefab()),

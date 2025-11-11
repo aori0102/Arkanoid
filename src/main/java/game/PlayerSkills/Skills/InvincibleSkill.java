@@ -27,6 +27,7 @@ public class InvincibleSkill extends Skill {
         Player.getInstance().getPlayerPaddle().setCanBeDamaged(false);
         Player.getInstance().getPlayerPaddle().getTransform().setGlobalScale(new Vector2(2.5, 1.25));
         Player.getInstance().setCurrentSpeed(Player.getInstance().getCurrentSpeed() * SPEED_BOOSTED_MULTIPLIER);
+        Player.getInstance().getPlayerPaddle().getPaddleStat().setDamageTakenMultiplier(0);
         Shield.getInstance().turnOn();
         invincibleCoroutineID = Time.addCoroutine(this::turnOff, Time.getTime() + INVINCIBLE_TIME);
     }
@@ -40,6 +41,7 @@ public class InvincibleSkill extends Skill {
         Player.getInstance().getPlayerPaddle().setCanBeDamaged(true);
         Player.getInstance().getPlayerPaddle().getTransform().setGlobalScale(new Vector2(1.25, 1.25));
         Player.getInstance().setCurrentSpeed(Player.getInstance().getBaseSpeed());
+        Player.getInstance().getPlayerPaddle().getPaddleStat().setDamageTakenMultiplier(1);
         Shield.getInstance().turnOff();
         Time.removeCoroutine(invincibleCoroutineID);
     }
