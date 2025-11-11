@@ -8,6 +8,8 @@ import game.Config.ConfigManagerPrefab;
 import game.Damagable.HealthChangePopUpUIPrefab;
 import game.Damagable.HealthChangeVisualizerPrefab;
 import game.GameManager.GameManagerPrefab;
+import game.GameOver.GameOverInfoDisplayUIPrefab;
+import game.GameOver.GameOverManagerPrefab;
 import game.LaserBeam.LaserBeamPrefab;
 import game.Level.LevelManagerPrefab;
 import game.Level.LevelUIPrefab;
@@ -75,6 +77,7 @@ public enum PrefabIndex {
     Manager_ProgressManager(new DataManagerPrefab()),
     Manager_ConfigManager(new ConfigManagerPrefab()),
     Manager_RecordMenuManager(new RecordMenuManagerPrefab()),
+    Manager_GameOverManager(new GameOverManagerPrefab()),
 
     /// Health change visualization
     HealthChange_PopUp(new HealthChangePopUpUIPrefab()),
@@ -98,6 +101,9 @@ public enum PrefabIndex {
     SFXVolumeText(new SFXVolumeTextPrefab()),
     MusicVolumeText(new MusicVolumeTextPrefab()),
     OptionsTitle(new OptionsTitlePrefab()),
+
+    /// Game over
+    GameOverInfoDisplayUI(new GameOverInfoDisplayUIPrefab()),
 
     GoBackButton(new GoBackButtonPrefab()),
 

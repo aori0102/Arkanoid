@@ -41,21 +41,21 @@ public class Vector2 {
     }
 
     /**
-     * Vector representing the global left, shorthand for {@code Vector2(1.0, 0.0)}.
+     * Vector representing the global left, shorthand for {@code Vector2(-1.0, 0.0)}.
      *
      * @return Vector left.
      */
     public static Vector2 left() {
-        return new Vector2(1.0, 0.0);
+        return new Vector2(-1.0, 0.0);
     }
 
     /**
-     * Vector representing the global right, shorthand for {@code Vector2(-1.0, 0.0)}.
+     * Vector representing the global right, shorthand for {@code Vector2(1.0, 0.0)}.
      *
      * @return Vector right
      */
     public static Vector2 right() {
-        return new Vector2(-1.0, 0.0);
+        return new Vector2(1.0, 0.0);
     }
 
     public double x;

@@ -39,6 +39,7 @@ public class ImageAsset {
         GamePlayBackground_Normal("/UI/GamePlayBackground_Normal.png"),
         GamePlayBackground_Boss("/UI/GamePlayBackground_Boss.png"),
         DimmedBackground("/UI/DimmedBackground.png"),
+        GameOverOverlay("/UI/GameOver/Background.png"),
 
         /// Perks
         Perks("/UI/Perks.png"),

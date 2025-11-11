@@ -27,6 +27,7 @@ public final class InGameSceneBuilder extends SceneBuilder {
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_ObstacleManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_BallsManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_LevelManager);
+        PrefabManager.instantiatePrefab(PrefabIndex.Manager_GameOverManager);
 
         PrefabManager.instantiatePrefab(PrefabIndex.Player);
 

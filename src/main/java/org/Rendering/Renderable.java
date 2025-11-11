@@ -31,6 +31,8 @@ public abstract class Renderable extends MonoBehaviour {
      */
     private Vector2 pivot = new Vector2();
 
+    private double opacity = 1.0;
+
     /**
      * Fired when this rendering object's {@link RenderLayer} is changed.<br><br>
      * <b><i><u>NOTE</u>: This function should only be listened to by
@@ -63,6 +65,7 @@ public abstract class Renderable extends MonoBehaviour {
      * @param opacity The image opacity to set.
      */
     public void setOpacity(double opacity) {
+        this.opacity = opacity;
         getNode().setOpacity(opacity);
     }
 
@@ -310,6 +313,10 @@ public abstract class Renderable extends MonoBehaviour {
      */
     public final Vector2 getPivotPoint() {
         return getRenderPosition().add(pivot.scaleUp(getRenderSize()));
+    }
+
+    public final double getOpacity() {
+        return this.opacity;
     }
 
 }

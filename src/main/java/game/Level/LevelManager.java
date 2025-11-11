@@ -3,6 +3,8 @@ package game.Level;
 import game.Ball.BallsManager;
 import game.GameManager.GameManager;
 import game.GameManager.LevelState;
+import game.GameOver.GameOverManager;
+import game.GameOver.GameOverManagerPrefab;
 import game.MapGenerator.BrickMapManager;
 import game.Perks.Index.PerkManager;
 import game.Player.Player;
@@ -13,6 +15,7 @@ import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
@@ -56,6 +59,8 @@ public final class LevelManager extends MonoBehaviour {
     private EventActionID playerLives_onLivesReachZero_ID = null;
     private EventActionID playerLives_onLivesDecreased_ID = null;
     private EventActionID perkManager_onPerkSelectionCompleted_ID = null;
+    private EventActionID gameOverManager_onRetryRequested_ID = null;
+    private EventActionID gameOverManager_onMainMenuRequested_ID = null;
 
     private Time.CoroutineID enablePlaying_coroutineID = null;
     private Time.CoroutineID progressToNextLevel_coroutineID = null;
@@ -103,6 +108,12 @@ public final class LevelManager extends MonoBehaviour {
             PerkManager.getInstance().onPerkSelectionCompleted
                     .removeListener(perkManager_onPerkSelectionCompleted_ID);
         }
+        if (GameOverManager.getInstance() != null) {
+            GameOverManager.getInstance().onRetryRequested
+                    .removeListener(gameOverManager_onRetryRequested_ID);
+            GameOverManager.getInstance().onMainMenuRequested
+                    .removeListener(gameOverManager_onMainMenuRequested_ID);
+        }
         Time.removeCoroutine(enablePlaying_coroutineID);
         Time.removeCoroutine(progressToNextLevel_coroutineID);
         Time.removeCoroutine(destroyRandomBall_coroutineID);
@@ -118,6 +129,10 @@ public final class LevelManager extends MonoBehaviour {
                 .addListener(this::playerLives_onLivesDecreased);
         perkManager_onPerkSelectionCompleted_ID = PerkManager.getInstance().onPerkSelectionCompleted
                 .addListener(this::perkManager_onPerkSelectionCompleted);
+        gameOverManager_onRetryRequested_ID = GameOverManager.getInstance().onRetryRequested
+                .addListener(this::gameOverManager_onRetryRequested);
+        gameOverManager_onMainMenuRequested_ID = GameOverManager.getInstance().onMainMenuRequested
+                .addListener(this::gameOverManager_onMainMenuRequested);
     }
 
     public static LevelManager getInstance() {
@@ -195,6 +210,28 @@ public final class LevelManager extends MonoBehaviour {
             throw new RuntimeException("Perk selection done not within " + LevelState.PerkSelection);
         }
         progressToNextLevel();
+    }
+
+    /**
+     * Called when {@link GameOverManager#onRetryRequested} is invoked.<br><br>
+     * This function starts the game again after game over
+     *
+     * @param sender Event caller {@link GameOverManager}.
+     * @param e      Empty event argument.
+     */
+    private void gameOverManager_onRetryRequested(Object sender, Void e) {
+        startGame();
+    }
+
+    /**
+     * Called when {@link GameOverManager#onMainMenuRequested} is invoked.<br><br>
+     * This function returns to the main menu after game over
+     *
+     * @param sender Event caller {@link GameOverManager}.
+     * @param e      Empty event argument.
+     */
+    private void gameOverManager_onMainMenuRequested(Object sender, Void e) {
+        GameManager.getInstance().quitToMainMenu();
     }
 
     public void startGame() {
@@ -300,7 +337,6 @@ public final class LevelManager extends MonoBehaviour {
         DataManager.getInstance().generateNewRecord();
         DataManager.getInstance().resetSave();
         onGameOver.invoke(this, null);
-        GameManager.getInstance().quitToMainMenu();
     }
 
     public LevelState getLevelState() {
