@@ -11,6 +11,9 @@ import org.Rendering.SpriteRenderer;
 import org.Text.TextUI;
 import utils.Time;
 
+/**
+ * Manager class that handles interaction and UI upon game over.
+ */
 public final class GameOverManager extends MonoBehaviour {
 
     private static final double INFO_TWEEN_DELAY = 1.9;
@@ -118,6 +121,9 @@ public final class GameOverManager extends MonoBehaviour {
         revealInfo_coroutineID = Time.addCoroutine(this::revealInfo, Time.getTime() + INFO_TWEEN_DELAY);
     }
 
+    /**
+     * Gradually reveals record info one by one via {@link GameOverInfoDisplayUI#revealAmount()}.
+     */
     private void revealInfo() {
         var infoIndex = infoIndices[currentDisplayIndex];
         switch (infoIndex) {

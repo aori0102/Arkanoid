@@ -11,6 +11,9 @@ import utils.UITween.Ease;
 import utils.UITween.Tween;
 import utils.Vector2;
 
+/**
+ * UI class that displays a specific record information used by {@link GameOverManager}.
+ */
 public final class GameOverInfoDisplayUI extends MonoBehaviour {
 
     private static final double FLY_IN_DISTANCE = 1200.0;
@@ -67,6 +70,9 @@ public final class GameOverInfoDisplayUI extends MonoBehaviour {
         );
     }
 
+    /**
+     * Fly in the info from the right side of the screen.
+     */
     public void flyInInfo() {
 
         showInfo();
@@ -93,6 +99,9 @@ public final class GameOverInfoDisplayUI extends MonoBehaviour {
                 .play();
     }
 
+    /**
+     * Reveals the true amount with pop-up Tween.
+     */
     public void revealAmount() {
         amountText.setText(amount);
         amountText.getTransform().setLocalScale(AMOUNT_POP_UP_SIZE);
@@ -102,18 +111,27 @@ public final class GameOverInfoDisplayUI extends MonoBehaviour {
         backingText.getTransform().setLocalScale(BACKING_AMOUNT_POP_UP_SIZE);
     }
 
+    /**
+     * Enables UI components
+     */
     private void showInfo() {
         labelText.getGameObject().setActive(true);
         amountText.getGameObject().setActive(true);
         backingText.getGameObject().setActive(true);
     }
 
+    /**
+     * Disable UI components
+     */
     private void hideInfo() {
         backingText.getGameObject().setActive(false);
         labelText.getGameObject().setActive(false);
         amountText.getGameObject().setActive(false);
     }
 
+    /**
+     * Reset the position of UI components to prepare for flying in.
+     */
     private void resetPosition() {
         labelText.getTransform().setGlobalPosition(new Vector2(
                 Main.STAGE_WIDTH / 2.0 - MIDDLE_LINE_OFFSET + FLY_IN_DISTANCE,
@@ -129,10 +147,21 @@ public final class GameOverInfoDisplayUI extends MonoBehaviour {
         ));
     }
 
+    /**
+     * Set the text of the info label.
+     *
+     * @param text The text of the info label.
+     */
     public void setLabelText(String text) {
         this.labelText.setText(text);
     }
 
+    /**
+     * Set the amount to be revealed. This does not update the amount text
+     * immediately until {@link #revealAmount} is used.
+     *
+     * @param text The amount to be revealed.
+     */
     public void setAmountText(String text) {
         amount = text;
     }
