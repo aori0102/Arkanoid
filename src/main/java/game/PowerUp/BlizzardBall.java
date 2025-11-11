@@ -26,9 +26,6 @@ public class BlizzardBall extends PowerUp {
         setPowerUpIndex(PowerUpIndex.Blizzard);
     }
 
-    public void start() {
-    }
-
     public void handleOnBlizzardBallRequested(StatusEffect statusEffect) {
         BallsManager.getInstance().applyStatusPowerUpEffect(statusEffect);
     }

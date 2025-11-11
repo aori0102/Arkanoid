@@ -34,10 +34,6 @@ public class DuplicateBall extends MultipleBall {
         setPowerUpIndex(PowerUpIndex.DuplicateBall);
     }
 
-    @Override
-    public void start() {
-    }
-
     /**
      * Override the handleOnMultipleRequest method from MultipleBall base class
      * Will spawn a ball which direction makes with the current ball direction a

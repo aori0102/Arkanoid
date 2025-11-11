@@ -26,9 +26,6 @@ public class FireBall extends PowerUp {
         setPowerUpIndex(PowerUpIndex.FireBall);
     }
 
-    public void start() {
-    }
-
     private void handleOnFireBallRequested(StatusEffect statusEffect) {
         BallsManager.getInstance().applyStatusPowerUpEffect(statusEffect);
     }

@@ -1,10 +1,11 @@
 package game.PowerUp.Index;
 
+import game.Level.LevelManager;
+import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
-import org.Layer.Layer;
 import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
@@ -18,6 +19,8 @@ public class PowerUp extends MonoBehaviour {
 
     private PowerUpIndex powerUpIndex = null;
 
+    private EventActionID levelManager_onLevelCleared_ID = null;
+
     public static EventHandler<Void> onAnyPowerUpDestroyed = new EventHandler<>(PowerUp.class);
 
     /**
@@ -26,9 +29,13 @@ public class PowerUp extends MonoBehaviour {
      * @param owner The owner of this component.
      */
     public PowerUp(GameObject owner) {
-
         super(owner);
+    }
 
+    @Override
+    public void start() {
+        levelManager_onLevelCleared_ID = LevelManager.getInstance().onLevelCleared
+                .addListener(this::levelManager_onLevelCleared);
     }
 
     @Override
@@ -39,6 +46,10 @@ public class PowerUp extends MonoBehaviour {
     @Override
     public void onDestroy() {
         onAnyPowerUpDestroyed.invoke(this, null);
+        if (LevelManager.getInstance() != null) {
+            LevelManager.getInstance().onLevelCleared
+                    .removeListener(levelManager_onLevelCleared_ID);
+        }
     }
 
     private void handleDroppingMotion() {
@@ -71,6 +82,17 @@ public class PowerUp extends MonoBehaviour {
      * Called when this power up is being applied.
      */
     public void onApplied() {
+        GameObjectManager.destroy(gameObject);
+    }
+
+    /**
+     * Called when {@link LevelManager#onLevelCleared} is invoked.<br><br>
+     * This function destroys this object when a level is cleared.
+     *
+     * @param sender Event caller {@link LevelManager}.
+     * @param e      Empty event argument.
+     */
+    private void levelManager_onLevelCleared(Object sender, Void e) {
         GameObjectManager.destroy(gameObject);
     }
 
