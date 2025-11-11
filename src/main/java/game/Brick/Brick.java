@@ -2,6 +2,7 @@ package game.Brick;
 
 import game.Effect.StatusEffect;
 import game.Rank.ExperienceHolder;
+import javafx.scene.paint.Color;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -140,11 +141,11 @@ public class Brick extends MonoBehaviour {
     }
 
     public void setRedRender() {
-        BrickVisual.setRed(this);
+        spriteRenderer.setOverlayColor(Color.RED);
     }
 
     public void setYellowRender() {
-        BrickVisual.setYellow(this);
+        spriteRenderer.setOverlayColor(Color.YELLOW);
     }
 
     public void resetRenderColor() {

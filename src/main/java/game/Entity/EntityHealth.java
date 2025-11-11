@@ -79,7 +79,7 @@ public abstract class EntityHealth extends MonoBehaviour {
 
         var previous = _health;
 
-        if (isAlterTypeHealing(alterType)) {
+        if (alterType.isHealing()) {
             var actualHealAmount = (int) (amount * entityStat.getRegenerationMultiplier());
             _health += actualHealAmount;
         } else {
@@ -111,17 +111,6 @@ public abstract class EntityHealth extends MonoBehaviour {
      */
     public final int getHealth() {
         return _health;
-    }
-
-    /**
-     * Check if the given {@link EntityHealthAlterType} is a healing type, which means
-     * {@link EntityHealthAlterType#Regeneration}.
-     *
-     * @param alterType The health alter type to check for.
-     * @return {@code true} if the alter type is for healing, otherwise {@code false}.
-     */
-    private boolean isAlterTypeHealing(EntityHealthAlterType alterType) {
-        return alterType == EntityHealthAlterType.Regeneration;
     }
 
     /**

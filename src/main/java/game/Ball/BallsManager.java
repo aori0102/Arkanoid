@@ -93,6 +93,13 @@ public class BallsManager extends MonoBehaviour {
 
     }
 
+    public void destroyAllBalls() {
+        var ballSet = new HashSet<>(this.ballSet);
+        for (var ball : ballSet) {
+            GameObjectManager.destroy(ball.getGameObject());
+        }
+    }
+
     /**
      * Called when {@link Ball#onAnyBallDestroyed} is invoked.<br><br>
      * This function removes the destroyed ball from {@link #ballSet}.

@@ -2,8 +2,10 @@ package org.Rendering;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
@@ -53,6 +55,7 @@ public class SpriteRenderer extends Renderable {
     protected ImageView sprite = new ImageView();
     private Rotate rotateProperty = new Rotate();
     private Arc circularClip = new Arc();
+    private Color overlayColor = Color.WHITE;
 
     public SpriteRenderer(GameObject owner) {
 
@@ -75,12 +78,14 @@ public class SpriteRenderer extends Renderable {
         var renderPosition = getRenderPosition();
         sprite.setX(renderPosition.x);
         sprite.setY(renderPosition.y);
+        updateOverlay();
     }
 
     private void updateRenderSize() {
         var renderSize = getRenderSize();
         sprite.setFitWidth(renderSize.x);
         sprite.setFitHeight(renderSize.y);
+        updateOverlay();
     }
 
     private void renderable_onRenderPositionChanged(Object sender, Void e) {
@@ -123,6 +128,23 @@ public class SpriteRenderer extends Renderable {
         var globalPivot = getPivotPoint();
         rotateProperty.setPivotX(globalPivot.x);
         rotateProperty.setPivotY(globalPivot.y);
+    }
+
+    private void updateOverlay() {
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(-0.5);
+
+        ColorInput overlayEffect = new ColorInput(
+                sprite.getX(),
+                sprite.getY(),
+                sprite.getFitWidth(),
+                sprite.getFitHeight(),
+                overlayColor
+        );
+
+        Blend mask = new Blend(BlendMode.SRC_ATOP, colorAdjust, overlayEffect);
+        Blend multiplyBlend = new Blend(BlendMode.MULTIPLY, null, mask);
+        sprite.setEffect(multiplyBlend);
     }
 
     /**
@@ -356,6 +378,16 @@ public class SpriteRenderer extends Renderable {
 
         }
 
+    }
+
+    /**
+     * Set the overlay color of the image.
+     *
+     * @param overlayColor The overlay color of the image.
+     */
+    public void setOverlayColor(Color overlayColor) {
+        this.overlayColor = overlayColor;
+        updateOverlay();
     }
 
     @Override

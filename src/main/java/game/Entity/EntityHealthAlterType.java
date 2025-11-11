@@ -16,4 +16,13 @@ public enum EntityHealthAlterType {
     EntityHealthAlterType(Color displayColor) {
         this.displayColor = displayColor;
     }
+
+    public boolean isHealing() {
+        return this == Regeneration;
+    }
+
+    public boolean isDamage() {
+        return !isHealing();
+    }
+
 }

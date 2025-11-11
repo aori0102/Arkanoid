@@ -167,6 +167,7 @@ public final class LevelManager extends MonoBehaviour {
      * @param e      Empty event argument.
      */
     private void playerLives_onLivesDecreased(Object sender, Void e) {
+        BallsManager.getInstance().destroyAllBalls();
         BallsManager.getInstance().spawnInitialBall();
     }
 

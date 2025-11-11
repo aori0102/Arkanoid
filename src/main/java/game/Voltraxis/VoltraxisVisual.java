@@ -1,22 +1,31 @@
 package game.Voltraxis;
 
+import game.Entity.EntityHealth;
 import game.Voltraxis.Prefab.VoltraxisVisualPrefab;
+import javafx.scene.paint.Color;
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
 import org.Annotation.LinkViaPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.ParticleSystem.Emitter.ParticleEmitter;
+import org.Rendering.SpriteRenderer;
+import utils.Time;
 
 /**
  * Visual component of Voltraxis.
  */
 public final class VoltraxisVisual extends MonoBehaviour {
 
+    private static final double DAMAGE_FLASHING_TIME = 0.1;
+
     private final SpriteAnimator animator = addComponent(SpriteAnimator.class);
+    private final SpriteRenderer spriteRenderer = addComponent(SpriteRenderer.class);
 
     @LinkViaPrefab
     private ParticleEmitter smokeEmitter = null;
+
+    private Time.CoroutineID disableDamageTint_coroutineID = null;
 
     /**
      * Create this MonoBehaviour.
@@ -46,7 +55,33 @@ public final class VoltraxisVisual extends MonoBehaviour {
                 .addListener(this::voltraxisCharging_onChargingTerminated);
         Voltraxis.getInstance().getVoltraxisCharging().onBossWeakened
                 .addListener(this::voltraxisCharging_onBossWeakened);
+        Voltraxis.getInstance().getVoltraxisHealth().onHealthChanged
+                .addListener(this::voltraxisHealth_onHealthChanged);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        Time.removeCoroutine(disableDamageTint_coroutineID);
+    }
+
+    /**
+     * Called when {@link VoltraxisHealth#onHealthChanged} is invoked.<br><br>
+     * This function sets a brief red tint when {@link Voltraxis} is damaged.
+     *
+     * @param sender Event caller {@link VoltraxisHealth}.
+     * @param e      Event argument containing information on the health change.
+     */
+    private void voltraxisHealth_onHealthChanged(Object sender, EntityHealth.OnHealthChangedEventArgs e) {
+        if (e.alterType.isDamage()) {
+            spriteRenderer.setOverlayColor(Color.RED);
+            disableDamageTint_coroutineID
+                    = Time.addCoroutine(this::disableDamageTint, Time.getTime() + DAMAGE_FLASHING_TIME);
+        }
+    }
+
+    private void disableDamageTint() {
+        spriteRenderer.setOverlayColor(Color.WHITE);
     }
 
     /**

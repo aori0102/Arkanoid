@@ -15,6 +15,7 @@ import org.GameObject.MonoBehaviour;
 public class PlayerLives extends MonoBehaviour {
 
     private int lives = PlayerData.MAX_LIVES;
+    private boolean dead = false;
 
     private EventActionID ballsManager_onAllBallDestroyed_ID = null;
 
@@ -70,12 +71,17 @@ public class PlayerLives extends MonoBehaviour {
     }
 
     private void onPlayerDead() {
+        if (dead) {
+            return;
+        }
+        dead = true;
         lives--;
         if (lives == 0) {
             onLivesReachZero.invoke(this, null);
         } else {
             onLivesDecreased.invoke(this, null);
             Player.getInstance().getPlayerPaddle().getPaddleHealth().resetHealth();
+            dead = false;
         }
     }
 
