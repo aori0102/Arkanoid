@@ -16,6 +16,8 @@ public final class SkillUI extends MonoBehaviour {
 
     private static final double CHARGING_NOB_OFFSET_RADIUS = 32.0;
     private static final double READY_OVERLAY_FADE_RATE = 9.332;
+    private static final double ICON_SHRINKING_RATE = 5.119;
+    private static final Vector2 ICON_POP_UP_SIZE = Vector2.one().multiply(1.4);
     private static final Vector2 SKILL_ICON_SIZE = new Vector2(64.0, 64.0);
 
     @LinkViaPrefab
@@ -47,6 +49,7 @@ public final class SkillUI extends MonoBehaviour {
     private EventActionID skillData_onChargeAmountChanged_ID = null;
     private EventActionID skillData_onChargeReachesZero_ID = null;
     private EventActionID skillData_onNewChargeObtained_ID = null;
+    private EventActionID skill_onSkillUsed_ID = null;
 
     /**
      * Create this MonoBehaviour.
@@ -69,6 +72,8 @@ public final class SkillUI extends MonoBehaviour {
                 .addListener(this::skillData_onChargeReachesZero);
         skillData_onNewChargeObtained_ID = skill.onNewChargeObtained
                 .addListener(this::skillData_onNewChargeObtained);
+        skill_onSkillUsed_ID = skill.onSkillUsed
+                .addListener(this::skill_onSkillUsed);
         presetSkillData();
     }
 
@@ -76,6 +81,14 @@ public final class SkillUI extends MonoBehaviour {
     public void update() {
         readyOverlayOpacity = MathUtils.lerp(readyOverlayOpacity, 0.0, Time.getDeltaTime() * READY_OVERLAY_FADE_RATE);
         readyOverlay.setOpacity(readyOverlayOpacity);
+
+        skillIcon.getTransform().setGlobalScale(
+                Vector2.lerp(
+                        skillIcon.getTransform().getGlobalScale(),
+                        Vector2.one(),
+                        Time.getDeltaTime() * ICON_SHRINKING_RATE
+                )
+        );
     }
 
     @Override
@@ -84,6 +97,7 @@ public final class SkillUI extends MonoBehaviour {
         skill.onChargeReachesZero.removeListener(skillData_onChargeReachesZero_ID);
         skill.onChargingRatioChanged.removeListener(skillData_onChargingRatioChanged_ID);
         skill.onChargeAmountChanged.removeListener(skillData_onChargeAmountChanged_ID);
+        skill.onSkillUsed.removeListener(skill_onSkillUsed_ID);
     }
 
     private void presetSkillData() {
@@ -146,6 +160,17 @@ public final class SkillUI extends MonoBehaviour {
 
         readyOverlay.getGameObject().setActive(true);
         readyOverlayOpacity = 1.0;
+    }
+
+    /**
+     * Called when {@link Skill#onSkillUsed} is invoked.<br><br>
+     * This function does a little pop-up on the icon when the skill is used.
+     *
+     * @param sender Event caller {@link Skill}.
+     * @param e      Empty event argument.
+     */
+    private void skill_onSkillUsed(Object sender, Void e) {
+        skillIcon.getTransform().setGlobalScale(ICON_POP_UP_SIZE);
     }
 
     /**

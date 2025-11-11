@@ -22,6 +22,7 @@ public abstract class Skill extends MonoBehaviour {
     public EventHandler<Void> onChargeAmountChanged = new EventHandler<>(Skill.class);
     public EventHandler<Void> onNewChargeObtained = new EventHandler<>(Skill.class);
     public EventHandler<Void> onChargeReachesZero = new EventHandler<>(Skill.class);
+    public EventHandler<Void> onSkillUsed = new EventHandler<>(Skill.class);
 
     /**
      * Create this MonoBehaviour.
@@ -62,6 +63,7 @@ public abstract class Skill extends MonoBehaviour {
         if (_skillCharge > 0) {
             setSkillCharge(_skillCharge - 1);
             invoke();
+            onSkillUsed.invoke(this, null);
             if (_skillCharge == 0) {
                 onChargeReachesZero.invoke(this, null);
             }
