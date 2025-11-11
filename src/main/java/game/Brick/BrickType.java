@@ -25,12 +25,12 @@ public enum BrickType {
     Diamond(999, 280, 8, ImageAsset.ImageIndex.BrickDiamond),
 
     /**
-     * A tough brick, stronger than Normal but weaker than Steel.
+     * A special brick that can destroy all brick have the same row index or col index with its.
      */
     Rock(100, 130, 4, ImageAsset.ImageIndex.BrickRock),
 
     /**
-     * A special brick that may trigger a rocket power-up or effect.
+     * A special brick that can destroy amount of randomly brick that still alive.
      */
     Rocket(100, 110, 7, ImageAsset.ImageIndex.BrickRocket),
 
@@ -40,12 +40,12 @@ public enum BrickType {
     Bomb(100, 90, 3, ImageAsset.ImageIndex.BrickBomb),
 
     /**
-     * A special brick that may drop a gift or power-up.
+     * A special brick that will increase health for all brick have the same side with its.
      */
     Gift(100, 50, 2, ImageAsset.ImageIndex.BrickGift),
 
     /**
-     * A special brick (visual appears to be 'Reborn').
+     * A special brick that will choose 2 column randomly .
      */
     Wheel(100, 210, 4, ImageAsset.ImageIndex.BrickReborn),
 

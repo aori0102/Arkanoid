@@ -11,13 +11,20 @@ import static java.lang.Math.abs;
 
 public class BalanceCondition {
 
-    private final static int atLeastNumGate = 4;
-    private final static int Max_Diamond = 15;
+    private final static int AT_LEAST_NUM_GATE = 4;
+    private final static int MAX_DIAMOND = 15;
+    private final static double RATIO_NORMAL = 0.6;
+    private final static double RATIO_STEEL = 0.3;
+    private final static int MAX_ROCK = 3;
+    private final static int MAX_ROCKET = 5;
+    private final static int MAX_BOMB = 5;
+    private final static int MAX_WHEEL = 2;
 
     public static void balanceCondition(Matrix g) {
         bottomNotFullDiamond(g);
         alwayHavePath(g);
         diamondBalance(g);
+        limitSpecialBrick(g);
     }
 
     private static void diamondBalance(Matrix g) {
@@ -39,9 +46,8 @@ public class BalanceCondition {
 
         if (diamondsPos.isEmpty()) return;
 
-        int maxDiamond = Max_Diamond;
         Collections.shuffle(diamondsPos, rng);
-        Set<IntPair> keep = new HashSet<>(diamondsPos.subList(0, Math.min(maxDiamond, diamondsPos.size())));
+        Set<IntPair> keep = new HashSet<>(diamondsPos.subList(0, Math.min(MAX_DIAMOND, diamondsPos.size())));
         List<IntPair> needToChange = new ArrayList<>();
 
         for (int r = 0; r < rows; r++) {
@@ -170,9 +176,9 @@ public class BalanceCondition {
                 BrickType cur = transNumberToType(g.get(r, c));
                 if (cur == BrickType.Diamond) {
                     double x = rng.nextDouble();
-                    if (x < 0.6) {
+                    if (x < RATIO_NORMAL) {
                         g.set(r, c, transTypeToNumber(BrickType.Normal));
-                    } else if (x < 0.9) {
+                    } else if (x < RATIO_STEEL + RATIO_NORMAL) {
                         g.set(r, c, transTypeToNumber(BrickType.Steel));
                     } else {
                         BrickType[] pool = {
@@ -199,7 +205,7 @@ public class BalanceCondition {
             }
         }
 
-        if (num < atLeastNumGate) {
+        if (num < AT_LEAST_NUM_GATE) {
             List<Integer> rngList = new ArrayList<>();
             for (int col = 0; col < cols; col++) {
                 rngList.add(col);
@@ -207,11 +213,82 @@ public class BalanceCondition {
 
             Collections.shuffle(rngList);
 
-            for (int i = 0; i < atLeastNumGate - num; i++) {
+            for (int i = 0; i < AT_LEAST_NUM_GATE - num; i++) {
                 int row = rows - 1;
                 int col = rngList.get(i);
 
                 g.set(row, col, transTypeToNumber(BrickType.Normal));
+            }
+        }
+    }
+
+    /**
+     * This function will limit the number of special brick by replace special brick with normal brick.
+     * @param g the matrix
+     */
+    public static void limitSpecialBrick(Matrix g) {
+        final int rows = g.rows();
+        final int cols = g.columns();
+
+        List<IntPair> listBomb = new ArrayList<>();
+        List<IntPair> listRocket = new ArrayList<>();
+        List<IntPair> listWheel = new ArrayList<>();
+        List<IntPair> listRock = new ArrayList<>();
+
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                BrickType type = transNumberToType(g.get(row, col));
+
+                switch (type) {
+                    case Bomb -> listBomb.add(new IntPair(row, col));
+                    case Rocket -> listRocket.add(new IntPair(row, col));
+                    case Wheel -> listWheel.add(new IntPair(row, col));
+                    case Rock -> listRock.add(new IntPair(row, col));
+                    default -> {}
+                }
+            }
+        }
+
+        // 2. Call the helper function to limit each type
+        // The excess bricks are replaced with BrickType.Normal
+        limitBrickType(g, listBomb, MAX_BOMB, BrickType.Normal);
+        limitBrickType(g, listRocket, MAX_ROCKET, BrickType.Normal);
+        limitBrickType(g, listWheel, MAX_WHEEL, BrickType.Normal);
+        limitBrickType(g, listRock, MAX_ROCK, BrickType.Normal);
+    }
+
+    /**
+     * A private helper method to limit the count of a single brick type.
+     * It checks if the number of bricks in {@code positions} exceeds
+     * {@code maxAllowed}. If it does, it shuffles the list, takes the
+     * excess amount from the start of the shuffled list, and replaces
+     * them in the matrix {@code g} with {@code replaceType}.
+     *
+     * @param g           The game map Matrix to modify.
+     * @param positions   A list of {@link IntPair} coordinates for all bricks of a specific type.
+     * @param maxAllowed  The maximum number of this brick type allowed to remain.
+     * @param replaceType The {@link BrickType} to use as a replacement (e.g., Normal).
+     */
+    private static void limitBrickType(Matrix g, List<IntPair> positions, int maxAllowed, BrickType replaceType) {
+        // Only act if the current count exceeds the maximum allowed
+        if (positions.size() > maxAllowed) {
+
+            // Shuffle the list to randomize which bricks are removed
+            Collections.shuffle(positions);
+
+            // Calculate how many bricks we need to remove
+            int excessCount = positions.size() - maxAllowed;
+
+            // Loop 'excessCount' times, removing the "excess" bricks
+            // from the beginning of the shuffled list.
+            for (int i = 0; i < excessCount; i++) {
+                IntPair cell = positions.get(i);
+                int r = cell.fi();
+                int c = cell.se();
+
+                // Set the excess brick to the replacement type
+                g.set(r, c, transTypeToNumber(replaceType));
             }
         }
     }

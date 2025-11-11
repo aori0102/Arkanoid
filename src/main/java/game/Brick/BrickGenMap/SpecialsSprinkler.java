@@ -9,6 +9,13 @@ import game.Brick.Init.Matrix;
 import java.util.Random;
 
 public final class SpecialsSprinkler {
+
+    private static final double BASE_RATIO_BOMB = 0.3;
+    private static final double BASE_RATIO_ROCK = 0.2;
+    private static final double BASE_RATIO_GIFT = 0.2;
+    private static final double BASE_RATIO_REBORN = 0.1;
+    private static final double BASE_RATIO_OTHER = 0.3;
+
     private SpecialsSprinkler() {}
 
     private static final class Counters {
@@ -35,6 +42,7 @@ public final class SpecialsSprinkler {
                 default     -> {}
             }
         }
+
         void dec(BrickType t) {
             if (t == null) return;
             switch (t) {
@@ -47,6 +55,7 @@ public final class SpecialsSprinkler {
                 default     -> {}
             }
         }
+
         void applyReplaceDelta(BrickType oldT, BrickType newT) {
             if (oldT != newT) {
                 dec(oldT);
@@ -78,12 +87,12 @@ public final class SpecialsSprinkler {
     public static void sprinkle(Matrix g, Random rng, double difficulty) {
         if (g == null || rng == null) return;
 
-        final double bombP = keep01(0.2 - 6 * difficulty);
-        final double rockP = keep01(0.1 - 6 * difficulty);
+        final double bombP = keep01(BASE_RATIO_BOMB - 6 * difficulty);
+        final double rockP = keep01(BASE_RATIO_ROCK - 6 * difficulty);
 
-        final double rebornP = keep01(0.1 + 4 * difficulty);
-        final double giftP   = keep01(0.2 + 5 * difficulty);
-        final double otherP  = keep01(0.3 + 3 * difficulty);
+        final double rebornP = keep01(BASE_RATIO_REBORN + 4 * difficulty);
+        final double giftP   = keep01(BASE_RATIO_GIFT + 5 * difficulty);
+        final double otherP  = keep01(BASE_RATIO_OTHER + 3 * difficulty);
 
         final Counters cnt = new Counters(
                 /*maxBomb*/3,

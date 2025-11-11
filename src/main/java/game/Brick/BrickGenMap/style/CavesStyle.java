@@ -23,7 +23,6 @@ public final class CavesStyle implements StyleGenerator {
         for (int step = 0; step < 3; step++) {
             wall = smooth(wall);
         }
-
         keepLargestOpenRegion(wall, rows, cols);
         addVerticalPaths(wall, rng, rows, cols);
         Matrix grid = new Matrix(rows, cols);

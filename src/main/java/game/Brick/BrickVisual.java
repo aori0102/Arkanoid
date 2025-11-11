@@ -14,6 +14,8 @@ public class BrickVisual {
      * The maximum value used in the brightness wave calculation.
      */
     private static final int maxBrightnessWave = 4;
+    private static final double MAX_BRIGHTNESS = 0.25;
+    private static final double MIN_BRIGHTNESS = -0.25;
 
     /**
      * Maps a given index to a brightness value within a defined range.
@@ -26,8 +28,8 @@ public class BrickVisual {
      */
     public static double mapWaveToBrightness(int index, int maxWave) {
         index += 2;
-        double minB = -0.25;
-        double maxB =  0.25;
+        double minB = MIN_BRIGHTNESS;
+        double maxB = MAX_BRIGHTNESS;
         return minB + (maxB - minB) * ((double) index / maxWave);
     }
 

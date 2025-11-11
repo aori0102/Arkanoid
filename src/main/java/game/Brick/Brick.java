@@ -150,6 +150,4 @@ public class Brick extends MonoBehaviour {
     public void resetRenderColor() {
         BrickVisual.resetRender(this);
     }
-
-
 }
