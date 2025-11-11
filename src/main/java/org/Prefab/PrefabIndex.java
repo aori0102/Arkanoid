@@ -8,6 +8,7 @@ import game.Config.ConfigManagerPrefab;
 import game.Damagable.HealthChangePopUpUIPrefab;
 import game.Damagable.HealthChangeVisualizerPrefab;
 import game.GameManager.GameManagerPrefab;
+import game.GameObject.Shield.ShieldPrefab;
 import game.LaserBeam.LaserBeamPrefab;
 import game.Level.LevelManagerPrefab;
 import game.Level.LevelUIPrefab;
@@ -22,6 +23,7 @@ import game.PlayerData.DataManagerPrefab;
 import game.PlayerSkills.SkillSetUIPrefab;
 import game.PlayerSkills.SkillUIPrefab;
 import game.PowerUp.Prefab.*;
+import game.PowerUp.Shield.ShieldPowerUpPrefab;
 import game.Rank.RankManagerPrefab;
 import game.Rank.RankUIPrefab;
 import game.Scoreboard.ScoreboardPrefab;
@@ -129,7 +131,7 @@ public enum PrefabIndex {
     PowerUp_FireBall(new FireBallPrefab()),
     PowerUp_BlizzardBall(new BlizzardBallPrefab()),
     PowerUp_Recovery(new RecoveryPrefab()),
-    PowerUp_Shield(new ShieldPrefab()),
+    PowerUp_Shield(new ShieldPowerUpPrefab()),
     PowerUp_Duplicate(new DuplicateBallPrefab()),
     PowerUp_Triplicate(new TriplicateBallPrefab()),
 
@@ -139,7 +141,8 @@ public enum PrefabIndex {
     Player_HealthBar(new PlayerHealthBarPrefab()),
     Player_HealthLossVignette(new PlayerHealthLossVignettePrefab()),
 
-    /// Particle;
+    /// Shield
+    Shield(new ShieldPrefab()),
 
     None(null);
 

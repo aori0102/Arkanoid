@@ -1,6 +1,6 @@
 package game.PlayerSkills.Skills;
 
-import game.GameObject.Shield;
+import game.GameObject.Shield.Shield;
 import game.Player.Player;
 import game.PlayerSkills.SkillIndex;
 import org.GameObject.GameObject;

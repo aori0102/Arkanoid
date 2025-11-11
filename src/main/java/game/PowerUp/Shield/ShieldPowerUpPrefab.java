@@ -1,4 +1,4 @@
-package game.PowerUp.Prefab;
+package game.PowerUp.Shield;
 
 import game.PowerUp.ShieldPowerUp;
 import org.GameObject.GameObject;
@@ -7,7 +7,7 @@ import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
 import utils.Vector2;
 
-public class ShieldPrefab extends Prefab {
+public class ShieldPowerUpPrefab extends Prefab {
 
     @Override
     public GameObject instantiatePrefab() {

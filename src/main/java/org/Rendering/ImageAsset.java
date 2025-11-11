@@ -21,6 +21,7 @@ public class ImageAsset {
         /// Player object
         Ball("/ball.png"),
         Paddle("/paddle.png"),
+        Shield("/ShieldPower.png"),
 
         /// Obstacle
         Laser("/laser.png"),

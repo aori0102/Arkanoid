@@ -1,4 +1,4 @@
-package game.GameObject;
+package game.GameObject.Shield;
 
 import game.Player.Player;
 import org.GameObject.GameObject;
@@ -17,6 +17,7 @@ public class Shield extends MonoBehaviour {
 
     private boolean isExisted = false;
     private double counter = 0;
+    private GameObject shieldVisual;
 
     /**
      * Create this MonoBehaviour.
@@ -27,7 +28,6 @@ public class Shield extends MonoBehaviour {
         super(owner);
         instance = this;
         addComponent(BoxCollider.class);
-        addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.PurpleBrick.getImage());
     }
 
     public static Shield getInstance() {
@@ -62,12 +62,25 @@ public class Shield extends MonoBehaviour {
 
     public void turnOn() {
         gameObject.setActive(true);
+        shieldVisual.setActive(true);
         isExisted = true;
     }
 
     public void turnOff() {
         gameObject.setActive(false);
+        shieldVisual.setActive(false);
         isExisted = false;
         counter = 0;
+    }
+
+    /**
+     * <br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link }
+     * as part of component linking process.</i></b>
+     *
+     * @param shieldVisual .
+     */
+    public void linkSpriteRenderer(GameObject shieldVisual) {
+        this.shieldVisual = shieldVisual;
     }
 }
