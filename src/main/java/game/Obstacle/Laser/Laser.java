@@ -44,5 +44,4 @@ public class Laser extends Obstacle {
     protected void handleMovement() {
         getTransform().translate(Vector2.down().multiply(LASER_SPEED * Time.getDeltaTime()));
     }
-
 }

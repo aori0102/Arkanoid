@@ -126,6 +126,8 @@ public class ImageAsset {
         BallParticle("/Particle/BallParticle.png"),
         ExplodingBrickParticle("/Particle/ExplodingBrickParticle.png"),
         DashParticle("/Particle/DashParticle.png"),
+        LaserParticle("/Particle/LaserParticle.png"),
+        LaserBeamParticle("/Particle/LaserBeamParticle.png"),
 
         /// RecordUI
         RecordUI("/UI/RecordUI.png"),

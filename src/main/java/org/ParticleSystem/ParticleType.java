@@ -9,7 +9,9 @@ public enum ParticleType {
     Energy(ImageAsset.ImageIndex.EnergyParticle),
     Ball(ImageAsset.ImageIndex.BallParticle),
     ExplodingBrick(ImageAsset.ImageIndex.ExplodingBrickParticle),
-    Dash(ImageAsset.ImageIndex.DashParticle),;
+    Dash(ImageAsset.ImageIndex.DashParticle),
+    Laser(ImageAsset.ImageIndex.LaserParticle),
+    LaserBeam(ImageAsset.ImageIndex.LaserBeamParticle),;
 
     private final ImageAsset.ImageIndex imageIndex;
 

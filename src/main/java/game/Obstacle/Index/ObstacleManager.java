@@ -150,7 +150,7 @@ public class ObstacleManager extends MonoBehaviour {
     private Vector2 sampleSpawnPosition() {
         int tries = 10;
         for (int i = 0; i < tries; i++) {
-            double x = 50 + Random.range(0.0, 1.0) * (1200 - 100);
+            double x = 50 + Random.range(0.0, 1.0) * (900 - 300);
             double y = 0;
 
             Vector2 pos = new Vector2(x, y);
