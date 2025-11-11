@@ -8,6 +8,7 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import org.GameObject.GameObject;
 import org.GameObject.Transform;
 import org.Rendering.Renderable;
@@ -25,6 +26,7 @@ public class TextUI extends Renderable {
     private TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment.Left;
     private Color solidFill = Color.BLACK;
     private LinearGradient gradientFill = null;
+    private double wrapWidth = 0.0;
 
     public TextUI(GameObject owner) {
         super(owner);
@@ -35,7 +37,7 @@ public class TextUI extends Renderable {
 
     }
 
-    public void setGlow(){
+    public void setGlow() {
         getText().getStyleClass().add("neon-text");
     }
 
@@ -68,6 +70,7 @@ public class TextUI extends Renderable {
     private void updateFont() {
         var scale = getTransform().getLocalScale();
         text.setFont(Font.font(fontName, fontSize * Math.max(scale.x, scale.y)));
+        text.setWrappingWidth(wrapWidth);
         text.setFill(solidFill == null ? gradientFill : solidFill);
         updateRenderPosition();
     }
@@ -196,6 +199,11 @@ public class TextUI extends Renderable {
      */
     public void setHorizontalAlignment(TextHorizontalAlignment alignment) {
         horizontalAlignment = alignment;
+        text.setTextAlignment(switch (alignment) {
+            case Left -> TextAlignment.LEFT;
+            case Right -> TextAlignment.RIGHT;
+            case Center -> TextAlignment.CENTER;
+        });
         updateRenderPosition();
     }
 
@@ -221,6 +229,20 @@ public class TextUI extends Renderable {
         text.setX(renderPosition.x);
         text.setY(renderPosition.y);
 
+    }
+
+    /**
+     * Set this text's wrapping width.
+     * <p>
+     * By default, a text is unwrapped.
+     * </p>
+     *
+     * @param wrapWidth The width to wrap the text. If {@code wrapWidth} is non-positive,
+     *                  wrapping is disabled.
+     */
+    public void setWrapWidth(double wrapWidth) {
+        this.wrapWidth = Math.max(0, wrapWidth);
+        updateFont();
     }
 
     @Override
