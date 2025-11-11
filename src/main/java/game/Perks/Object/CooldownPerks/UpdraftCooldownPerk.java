@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
 
-public class UpdraftCooldownPerk extends Perk {
+public final class UpdraftCooldownPerk extends Perk {
     /**
      * Create this MonoBehaviour.
      *

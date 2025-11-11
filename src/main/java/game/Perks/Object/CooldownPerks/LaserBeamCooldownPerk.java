@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
 
-public class LaserBeamCooldownPerk extends Perk {
+public final class LaserBeamCooldownPerk extends Perk {
     /**
      * Create this MonoBehaviour.
      *

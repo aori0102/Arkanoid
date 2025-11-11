@@ -8,7 +8,7 @@ import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
 import utils.Random;
 
-public class HealthPerk extends Perk {
+public final class HealthPerk extends Perk {
 
     /**
      * Create this MonoBehaviour.

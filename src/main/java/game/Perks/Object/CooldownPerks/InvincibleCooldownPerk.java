@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
 
-public class InvincibleCooldownPerk extends Perk {
+public final class InvincibleCooldownPerk extends Perk {
     /**
      * Create this MonoBehaviour.
      *

@@ -8,7 +8,7 @@ import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
 import utils.Random;
 
-public class SpeedPerk extends Perk {
+public final class SpeedPerk extends Perk {
     /**
      * Create this MonoBehaviour.
      *

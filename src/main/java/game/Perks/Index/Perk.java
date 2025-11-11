@@ -1,11 +1,8 @@
 package game.Perks.Index;
 
-import com.sun.javafx.util.Utils;
-import game.Brick.BrickEvent.Event;
 import game.Interface.IPointerClickHandler;
 import game.Interface.IPointerEnterHandler;
 import game.Interface.IPointerExitHandler;
-import game.UI.Buttons.BaseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.Animation.AnimationClipData;
@@ -16,12 +13,10 @@ import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
-import org.Rendering.SpriteRenderer;
 import org.Text.FontDataIndex;
 import org.Text.TextHorizontalAlignment;
 import org.Text.TextUI;
 import org.Text.TextVerticalAlignment;
-import utils.Random;
 import utils.Time;
 import utils.UITween.Ease;
 import utils.UITween.Tween;
@@ -32,6 +27,14 @@ public abstract class Perk extends MonoBehaviour
         IPointerEnterHandler,
         IPointerExitHandler {
 
+    private static final double TEXT_SIZE = 20.0;
+    private static final double ANIMATION_DURATION = 0.1;
+    private static final double TEXT_DISPLAY_WIDTH = 160.0;
+    private static final double ORIGINAL_SCALE = 1.0;
+    private static final double TARGET_SCALE = 1.2;
+    private static final double FLUCTUATION_RATE = 1.2;
+    private static final Vector2 TEXT_OFFSET = new Vector2(0.0, -16.0);
+
     public EventHandler<MouseEvent> onPointerClicked = new EventHandler<>(Perk.class);
     public EventHandler<MouseEvent> onPointerEntered = new EventHandler<>(Perk.class);
     public EventHandler<MouseEvent> onPointerExited = new EventHandler<>(Perk.class);
@@ -40,12 +43,8 @@ public abstract class Perk extends MonoBehaviour
     protected SpriteAnimator spriteAnimator;
 
     protected AnimationClipData perkKey;
-    private static final double TEXT_SIZE = 20.0;
-    private final double ANIMATION_DURATION = 0.1;
-    private final double ORIGINAL_SCALE = 1.0;
-    private final double TARGET_SCALE = 1.2;
-    private static final double FLUCTUATION_RATE = 1.2;
     private Vector2 oldPosition;
+
     //ButtonState
     protected enum ButtonState {Idle, Hover, Pressed, Released, Clicked}
 
@@ -65,6 +64,12 @@ public abstract class Perk extends MonoBehaviour
                 .addComponent(TextUI.class);
         textUI.getGameObject().setParent(owner);
         textUI.setFont(FontDataIndex.Jersey_25);
+        textUI.setWrapWidth(TEXT_DISPLAY_WIDTH);
+        textUI.setVerticalAlignment(TextVerticalAlignment.Top);
+        textUI.setHorizontalAlignment(TextHorizontalAlignment.Center);
+        textUI.setFontSize(TEXT_SIZE);
+        textUI.getText().setFill(Color.YELLOW);
+        textUI.getTransform().setLocalPosition(TEXT_OFFSET);
         //attach pointer
         attachPointerClick(getTransform());
         attachPointerEnter(getTransform());
@@ -76,7 +81,6 @@ public abstract class Perk extends MonoBehaviour
     @Override
     public void awake() {
         setUpVisual();
-        setTextVisual();
         spriteAnimator.addAnimationClip(perkKey);
 
         onPointerEntered.addListener(this::perk_onPointerEntered);
@@ -98,9 +102,24 @@ public abstract class Perk extends MonoBehaviour
         idleAnimation();
     }
 
+    @Override
+    public void onPointerClicked(MouseEvent event) {
+        onPointerClicked.invoke(this, null);
+    }
+
+    @Override
+    public void onPointerEntered(MouseEvent event) {
+        onPointerEntered.invoke(this, null);
+    }
+
+    @Override
+    public void onPointerExited(MouseEvent event) {
+        onPointerExited.invoke(this, null);
+    }
+
     protected abstract void setUpVisual();
 
-    protected void perk_onPointerClicked(Object sender, MouseEvent e){
+    protected void perk_onPointerClicked(Object sender, MouseEvent e) {
         System.out.println("perk_onPointerClicked");
         AudioManager.playSFX(SFXAsset.SFXIndex.OnPerkReceived);
     }
@@ -118,30 +137,8 @@ public abstract class Perk extends MonoBehaviour
         System.out.println("[Perk] Idle");
     }
 
-    @Override
-    public void onPointerClicked(MouseEvent event) {
-        onPointerClicked.invoke(this, null);
-    }
-
-    @Override
-    public void onPointerEntered(MouseEvent event) {
-        onPointerEntered.invoke(this, null);
-    }
-
-    @Override
-    public void onPointerExited(MouseEvent event) {
-        onPointerExited.invoke(this, null);
-    }
-
-    private void setTextVisual() {
-        textUI.setVerticalAlignment(TextVerticalAlignment.Middle);
-        textUI.setHorizontalAlignment(TextHorizontalAlignment.Center);
-        textUI.setFontSize(TEXT_SIZE);
-        textUI.getText().setFill(Color.YELLOW);
-    }
-
     private void idleAnimation() {
-        if(oldPosition == null) {
+        if (oldPosition == null) {
             oldPosition = getTransform().getGlobalPosition();
         }
         double time = Time.getRealTime();
@@ -150,28 +147,25 @@ public abstract class Perk extends MonoBehaviour
         getTransform().setGlobalPosition(oldPosition.add(new Vector2(0, swing)));
     }
 
-    private void hoverAnimation(){
+    private void hoverAnimation() {
         Tween.to(getGameObject())
                 .scaleTo(TARGET_SCALE, ANIMATION_DURATION)
                 .ease(Ease.IN_OUT)
                 .play();
     }
 
-    private void exitAnimation(){
+    private void exitAnimation() {
         Tween.to(getGameObject())
                 .scaleTo(ORIGINAL_SCALE, ANIMATION_DURATION)
                 .ease(Ease.IN_OUT)
                 .play();
     }
 
-    private void startAnimation(){
+    private void startAnimation() {
         Tween.to(getGameObject())
                 .moveY(400, 0.3)
                 .ease(Ease.IN_OUT)
                 .play();
     }
-
-
-
 
 }

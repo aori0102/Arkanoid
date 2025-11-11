@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
 
-public class AttackPerk extends Perk {
+public final class AttackPerk extends Perk {
 
     private static final double THE_MULTIPLIER_CUZ_DUI_IS_FUCKING_STUPID = 0.1;
 
