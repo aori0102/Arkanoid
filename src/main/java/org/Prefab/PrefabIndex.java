@@ -33,11 +33,12 @@ import game.Score.ScoreUIPrefab;
 import game.StatBoard.StatBoardPrefab;
 import game.UI.MainMenu.MainMenuManagerPrefab;
 import game.UI.Prefab.*;
+import game.UI.Prefab.GameOverMenu.GameOverMenuButtonPrefab;
+import game.UI.Prefab.GameOverMenu.RestartButtonPrefab;
 import game.UI.Prefab.MainMenu.*;
 import game.UI.Prefab.OptionsMenu.*;
 import game.UI.Prefab.RecordMenu.RecordMenuManagerPrefab;
 import game.UI.Prefab.RecordMenu.RecordTitlePrefab;
-import game.UI.UIManagerPrefab;
 import game.Voltraxis.Prefab.*;
 
 public enum PrefabIndex {
@@ -67,7 +68,6 @@ public enum PrefabIndex {
     Manager_BrickMapManager(new BrickMapManagerPrefab()),
     Manager_GameManager(new GameManagerPrefab()),
     Manager_PerkManager(new PerkManagerPrefab()),
-    Manager_UIManager(new UIManagerPrefab()),
     Manager_ObstacleManager(new ObstacleManagerPrefab()),
     Manager_BallsManager(new BallsManagerPrefab()),
     Manager_OptionsManager(new OptionsManagerPrefab()),
@@ -92,6 +92,7 @@ public enum PrefabIndex {
     OptionsButton(new OptionsButtonPrefab()),
     QuitButton(new QuitButtonPrefab()),
     GameTitle(new GameTitlePrefab()),
+
     /// OptionsMenu
     MasterVolumeSlider(new MasterVolumeSliderPrefab()),
     MusicVolumeSlider(new MusicVolumeSliderPrefab()),
@@ -105,6 +106,10 @@ public enum PrefabIndex {
 
     /// RecordsMenu
     RecordTitle(new RecordTitlePrefab()),
+
+    /// GameOverMenu
+    GameOverMenuButton(new GameOverMenuButtonPrefab()),
+    RestartMenuButton(new RestartButtonPrefab()),
 
     /// Voltraxis
     Voltraxis(new VoltraxisPrefab()),
