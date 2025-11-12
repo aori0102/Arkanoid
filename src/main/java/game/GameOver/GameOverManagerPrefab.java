@@ -57,7 +57,7 @@ public final class GameOverManagerPrefab extends Prefab {
         var backgroundRenderer = GameObjectManager.instantiate("Background")
                 .addComponent(SpriteRenderer.class);
         backgroundRenderer.setImage(ImageAsset.ImageIndex.GameOverOverlay.getImage());
-        backgroundRenderer.setRenderLayer(RenderLayer.UI_Top);
+        backgroundRenderer.setRenderLayer(RenderLayer.UI_4);
         backgroundRenderer.getGameObject().setParent(gameOverManagerObject);
 
         // Game over text
@@ -74,7 +74,7 @@ public final class GameOverManagerPrefab extends Prefab {
                 new Stop(0.0, TEXT_COLOR_GRADIENT_START),
                 new Stop(1.0, TEXT_COLOR_GRADIENT_END)
         );
-        gameOverText.setRenderLayer(RenderLayer.UI_Top);
+        gameOverText.setRenderLayer(RenderLayer.UI_4);
         gameOverText.getTransform().setGlobalPosition(GAME_OVER_TEXT_POSITION);
         gameOverText.getGameObject().setParent(gameOverManagerObject);
 

@@ -32,7 +32,7 @@ public final class GroggyUIPrefab extends Prefab {
         var backgroundRenderer = backgroundObject.addComponent(SpriteRenderer.class);
         backgroundRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_Groggy_Background.getImage());
         backgroundRenderer.setPivot(centerPivot);
-        backgroundRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        backgroundRenderer.setRenderLayer(RenderLayer.UI_3);
         backgroundRenderer.setSize(GROGGY_GAUGE_SIZE);
         backgroundObject.setParent(groggyUIObject);
 
@@ -41,7 +41,7 @@ public final class GroggyUIPrefab extends Prefab {
         var fillRenderer = fillObject.addComponent(SpriteRenderer.class);
         fillRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_Groggy_Fill.getImage());
         fillRenderer.setPivot(centerPivot);
-        fillRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        fillRenderer.setRenderLayer(RenderLayer.UI_3);
         fillRenderer.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);
         fillRenderer.setSize(GROGGY_GAUGE_SIZE);
         fillObject.setParent(groggyUIObject);
@@ -51,7 +51,7 @@ public final class GroggyUIPrefab extends Prefab {
         var outlineRenderer = outlineObject.addComponent(SpriteRenderer.class);
         outlineRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_Groggy_Outline.getImage());
         outlineRenderer.setPivot(centerPivot);
-        outlineRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        outlineRenderer.setRenderLayer(RenderLayer.UI_3);
         outlineRenderer.setSize(GROGGY_GAUGE_SIZE);
         outlineObject.setParent(groggyUIObject);
 

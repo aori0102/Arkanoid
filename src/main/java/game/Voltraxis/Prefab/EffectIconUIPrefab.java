@@ -23,7 +23,7 @@ public final class EffectIconUIPrefab extends Prefab {
                 .getGameObject();
         var effectRenderer = effectIconObject.getComponent(SpriteRenderer.class);
         effectRenderer.setPivot(centerPivot);
-        effectRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        effectRenderer.setRenderLayer(RenderLayer.UI_3);
 
         return effectIconObject;
 

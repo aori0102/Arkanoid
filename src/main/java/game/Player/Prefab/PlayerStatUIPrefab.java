@@ -33,7 +33,7 @@ public final class PlayerStatUIPrefab extends Prefab {
         labelText.setSolidFill(Color.YELLOW);
         labelText.setHorizontalAlignment(TextHorizontalAlignment.Left);
         labelText.setVerticalAlignment(TextVerticalAlignment.Bottom);
-        labelText.setRenderLayer(RenderLayer.UI_Top);
+        labelText.setRenderLayer(RenderLayer.UI_3);
         labelText.getTransform().setLocalPosition(Vector2.left().multiply(OFFSET_FROM_MIDDLE));
         labelText.getGameObject().setParent(playerStatUIObject);
 
@@ -45,7 +45,7 @@ public final class PlayerStatUIPrefab extends Prefab {
         amountText.setSolidFill(Color.YELLOW);
         amountText.setHorizontalAlignment(TextHorizontalAlignment.Right);
         amountText.setVerticalAlignment(TextVerticalAlignment.Bottom);
-        amountText.setRenderLayer(RenderLayer.UI_Top);
+        amountText.setRenderLayer(RenderLayer.UI_3);
         amountText.getTransform().setLocalPosition(Vector2.right().multiply(OFFSET_FROM_MIDDLE));
         amountText.getGameObject().setParent(playerStatUIObject);
 

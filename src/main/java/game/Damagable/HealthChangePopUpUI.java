@@ -41,7 +41,7 @@ public final class HealthChangePopUpUI extends MonoBehaviour {
     public void awake() {
         Time.addCoroutine(() -> GameObjectManager.destroy(gameObject), LIFE_TIME);
         spawnTime = Time.getTime();
-        damageText.setRenderLayer(RenderLayer.UI_Middle);
+        damageText.setRenderLayer(RenderLayer.UI_3);
         damageText.setFontSize(TEXT_SIZE);
         damageText.setFont(FontDataIndex.Jersey_25);
     }

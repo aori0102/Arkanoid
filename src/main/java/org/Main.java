@@ -36,12 +36,9 @@ public class Main extends Application {
         Random.init();
         var defaultScene = SceneManager.initialize(stage);
         RendererManager.initializeRenderSystem(stage, defaultScene);
-        EditorView.init();
         FPSCounter.init();
 
         SceneManager.loadScene(SceneKey.Introduction);
-
-        EditorView.wakeHierarchy();
 
         // --- Game/render loop ---
         AnimationTimer loop = new AnimationTimer() {

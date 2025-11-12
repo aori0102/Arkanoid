@@ -15,13 +15,13 @@ public enum RenderLayer {
     _7(7),
     Foreground(8),
     _9(9),
-    _10(10),
-    Overlay(11),
-    _12(12),
-    UI_Bottom(13),
-    UI_Middle(14),
-    UI_Top(15),
-    _16(16);
+    Overlay(10),
+    UI_0(11),
+    UI_1(12),
+    UI_2(13),
+    UI_3(14),
+    UI_4(15),
+    UI_5(16);
 
     private static final int MAX_LAYER = 16;
     private final int layerIndex;

@@ -1,6 +1,5 @@
 package game.UI.PauseMenu;
 
-import game.UI.Buttons.BaseButton;
 import game.UI.Buttons.MenuButton;
 import game.UI.Buttons.PauseButton;
 import game.UI.Buttons.ResumeButton;
@@ -17,10 +16,6 @@ import org.Rendering.SpriteRenderer;
 import utils.UITween.Ease;
 import utils.UITween.Tween;
 import utils.Vector2;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PauseMenuManager extends MonoBehaviour {
     private static PauseMenuManager instance;
@@ -48,7 +43,7 @@ public class PauseMenuManager extends MonoBehaviour {
         dimmedBackground = GameObjectManager.instantiate("DimmedBackground");
         var spriteRenderer = dimmedBackground.addComponent(SpriteRenderer.class);
         spriteRenderer.setImage(ImageAsset.ImageIndex.DimmedBackground.getImage());
-        spriteRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        spriteRenderer.setRenderLayer(RenderLayer.UI_3);
         PrefabManager.instantiatePrefab(PrefabIndex.PauseButton);
         PrefabManager.instantiatePrefab(PrefabIndex.ResumeButton);
         PrefabManager.instantiatePrefab(PrefabIndex.MenuButton);
