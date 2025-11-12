@@ -88,7 +88,6 @@ public abstract class Perk extends MonoBehaviour
         attachPointerEnter(getTransform());
         attachPointerExited(getTransform());
 
-        owner.getComponent(SpriteRenderer.class).setRenderLayer(RenderLayer.UI_Bottom);
 
     }
 

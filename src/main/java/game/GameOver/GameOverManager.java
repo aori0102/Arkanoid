@@ -193,7 +193,7 @@ public final class GameOverManager extends MonoBehaviour {
             revealInfo_coroutineID = Time.addCoroutine(this::revealInfo, DELAY_BETWEEN_REVEAL);
         } else {
             toMenu_coroutineID
-                    = Time.addCoroutine(() -> onMainMenuRequested.invoke(this, null), DELAY_TO_MENU);
+                    = Time.addCoroutine(() -> onAllInfoRevealed.invoke(this, null), DELAY_TO_MENU);
         }
     }
 

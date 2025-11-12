@@ -144,8 +144,6 @@ public final class LevelManager extends MonoBehaviour implements
                 .addListener(this::perkManager_onPerkSelectionCompleted);
         gameOverManager_onRetryRequested_ID = GameOverManager.getInstance().onRetryRequested
                 .addListener(this::gameOverManager_onRetryRequested);
-        gameOverManager_onMainMenuRequested_ID = GameOverManager.getInstance().onMainMenuRequested
-                .addListener(this::gameOverManager_onMainMenuRequested);
     }
 
     public static LevelManager getInstance() {
@@ -240,16 +238,8 @@ public final class LevelManager extends MonoBehaviour implements
         startGame();
     }
 
-    /**
-     * Called when {@link GameOverManager#onMainMenuRequested} is invoked.<br><br>
-     * This function returns to the main menu after game over
-     *
-     * @param sender Event caller {@link GameOverManager}.
-     * @param e      Empty event argument.
-     */
-    private void gameOverManager_onMainMenuRequested(Object sender, Void e) {
-        GameManager.getInstance().quitToMainMenu();
-    }
+
+
 
     public void startGame() {
         loadCurrentLevel();
