@@ -47,7 +47,7 @@ public final class AudioManager {
         }
 
         // Initial setup for music volume state
-        setMusicVolume(0);
+//        setMusicVolume(0);
     }
 
     /**

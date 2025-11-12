@@ -39,7 +39,7 @@ public class Main extends Application {
         EditorView.init();
         FPSCounter.init();
 
-        SceneManager.loadScene(SceneKey.Menu);
+        SceneManager.loadScene(SceneKey.Introduction);
 
         EditorView.wakeHierarchy();
 
