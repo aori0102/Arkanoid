@@ -8,6 +8,19 @@ import game.Brick.BrickType;
 import game.Brick.Init.Matrix;
 import java.util.Random;
 
+/**
+ * A {@code final} utility class responsible for "sprinkling" special bricks
+ * (like Bomb, Gift, etc.) onto a pre-generated map {@link Matrix}.
+ *
+ * <p>It iterates over an existing map and replaces non-special, non-indestructible
+ * bricks (e.g., Normal) with special bricks. This is based on a set of
+ * probabilities that are influenced by a {@code difficulty} parameter.
+ *
+ * <p>It enforces maximum limits for each special brick type using an
+ * internal {@link Counters} class to prevent over-population.
+ *
+ * <p>This class is not meant to be instantiated.
+ */
 public final class SpecialsSprinkler {
 
     private static final double BASE_RATIO_BOMB = 0.3;
@@ -20,7 +33,7 @@ public final class SpecialsSprinkler {
 
     private static final class Counters {
         final int maxBomb, maxRock, maxReborn, maxGift, maxOtherEach;
-        int bomb, rock, reborn, gift, rocket, angel, ball;
+        int bomb, rock, reborn, gift, rocket, angel;
 
         Counters(int maxBomb, int maxRock, int maxReborn, int maxGift, int maxOtherEach) {
             this.maxBomb = maxBomb;
@@ -79,11 +92,33 @@ public final class SpecialsSprinkler {
                     && reborn >= maxReborn
                     && gift   >= maxGift
                     && rocket >= maxOtherEach
-                    && angel  >= maxOtherEach
-                    && ball   >= maxOtherEach;
+                    && angel  >= maxOtherEach;
         }
     }
 
+    /**
+     * The main static method that sprinkles special bricks onto a given {@link Matrix}.
+     *
+     * <p>It first calculates the probabilities for each special brick based on the
+     * {@code difficulty}. It then performs two passes:
+     * <ol>
+     * <li><b>Pre-count Pass:</b> Iterates over the entire grid to count any special
+     * bricks that may already exist (e.g., placed by a StyleGenerator).</li>
+     * <li><b>Sprinkle Pass:</b> Iterates again, replacing eligible bricks
+     * (non-Steel, non-Diamond, non-null) with special bricks based on random rolls
+     * and probability, until all maximums are met.</li>
+     * </ol>
+     *
+     * <p><b>Note:</b> The iteration is sequential (top-to-bottom). If the
+     * {@code allReached()} bug were fixed, special bricks might cluster
+     * in the upper portion of the map.
+     *
+     * @param g The {@link Matrix} (map) to be modified in-place.
+     * @param rng The {@link Random} generator to use for all probabilistic checks.
+     * @param difficulty The difficulty value (e.g., 0.0 to 1.0) which modifies the
+     * spawn probabilities. Higher difficulty generally *decreases* Bomb/Rock
+     * spawns and *increases* Gift/Wheel spawns.
+     */
     public static void sprinkle(Matrix g, Random rng, double difficulty) {
         if (g == null || rng == null) return;
 

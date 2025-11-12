@@ -66,6 +66,21 @@ _Có dùng hay không và dùng ở đâu_
 
 **Purpose:** 
 
+### 5. Adapter
+**Used in:**
+
+**Purpose:**
+### 6. Prototype
+**Used in:**
+
+**Purpose:**
+
+### 7. Chain of Responsibility
+**Used in:** `balanceRule`
+
+**Purpose:**
+
+
 
 ---
 

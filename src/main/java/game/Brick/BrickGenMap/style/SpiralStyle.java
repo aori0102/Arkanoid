@@ -12,7 +12,23 @@ import game.Brick.BrickGenMap.TypePickers;
 import java.util.Random;
 
 /**
- * SPIRAL: rectangular spiral wall with cadence-based gaps.
+ * A {@link StyleGenerator} that creates a map with a rectangular spiral wall,
+ * starting from the outer edge and moving inwards.
+ *
+ * <p>The wall is not solid; it contains "gaps" placed at a specific cadence
+ * (frequency). The properties of these gaps are cleverly controlled by the
+ * {@code difficulty} parameter in two ways:
+ * <ol>
+ * <li><b>Gap Frequency ({@code gapEvery}):</b> Higher difficulty
+ * <i>decreases</i> this value (from 6 down to 3), making potential gap
+ * locations <i>more frequent</i>.</li>
+ * <li><b>Gap Chance ({@code lerp}):</b> Higher difficulty <i>decreases</i>
+ * the probability (from 80% down to 25%) that a gap, when triggered,
+ * will actually be created (i.e., it favors placing a hard wall).</li>
+ * </ol>
+ * <p>This results in easy maps (low difficulty) having infrequent but
+ * reliable gaps, while hard maps (high difficulty) have frequent
+ * "potential" gaps that are mostly filled in, creating a more solid wall.
  */
 public final class SpiralStyle implements StyleGenerator {
     @Override
@@ -25,12 +41,21 @@ public final class SpiralStyle implements StyleGenerator {
 
         while (top <= bottom && left <= right) {
             BrickType wall = TypePickers.pickFromTopHard(rng, 0.55 + 0.45 * difficulty);
-            for (int c = left; c <= right; c++) setSpiralCell(g, top, c, wall, step++, gapEvery, difficulty, rng);
-            for (int r = top + 1; r <= bottom; r++) setSpiralCell(g, r, right, wall, step++, gapEvery, difficulty, rng);
-            if (top < bottom) for (int c = right - 1; c >= left; c--)
+            for (int c = left; c <= right; c++) {
+                setSpiralCell(g, top, c, wall, step++, gapEvery, difficulty, rng);
+            }
+
+            for (int r = top + 1; r <= bottom; r++) {
+                setSpiralCell(g, r, right, wall, step++, gapEvery, difficulty, rng);
+            }
+
+            if (top < bottom) for (int c = right - 1; c >= left; c--) {
                 setSpiralCell(g, bottom, c, wall, step++, gapEvery, difficulty, rng);
-            if (left < right) for (int r = bottom - 1; r > top; r--)
+            }
+
+            if (left < right) for (int r = bottom - 1; r > top; r--) {
                 setSpiralCell(g, r, left, wall, step++, gapEvery, difficulty, rng);
+            }
             top++;
             left++;
             bottom--;

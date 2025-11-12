@@ -19,7 +19,7 @@ public final class SineStyle implements StyleGenerator {
 
         double amp = lerp(3, 6, difficulty);
         double freq = lerp(0.8, 1.6, difficulty);
-        int thickness = Math.max(1, (int)Math.round(lerp(1, 3, difficulty)));
+        int thickness = Math.max(1, (int)Math.round(lerp(1, 2, difficulty)));
         BrickType wall = TypePickers.pickFromTopHard(rng, 0.55 + 0.35 * difficulty);
 
         for (int c = 0; c < cols; c++) {

@@ -1,295 +1,55 @@
 package game.Brick.BrickGenMap;
 
-import game.Brick.BrickType;
-import game.Brick.Init.*;
+import game.Brick.BrickGenMap.balanceRule.BalanceHandler;
+import game.Brick.BrickGenMap.balanceRule.ConcreteHandlers.*;
+import game.Brick.Init.Matrix;
 
-import java.util.*;
-
-import static game.Brick.BrickGenMap.TransTypeNumBer.transNumberToType;
-import static game.Brick.BrickGenMap.TransTypeNumBer.transTypeToNumber;
-import static java.lang.Math.abs;
-
-public class BalanceCondition {
-
-    private final static int AT_LEAST_NUM_GATE = 4;
-    private final static int MAX_DIAMOND = 15;
-    private final static double RATIO_NORMAL = 0.6;
-    private final static double RATIO_STEEL = 0.3;
-    private final static int MAX_ROCK = 3;
-    private final static int MAX_ROCKET = 5;
-    private final static int MAX_BOMB = 5;
-    private final static int MAX_WHEEL = 2;
-
-    public static void balanceCondition(Matrix g) {
-        bottomNotFullDiamond(g);
-        alwayHavePath(g);
-        diamondBalance(g);
-        limitSpecialBrick(g);
-    }
-
-    private static void diamondBalance(Matrix g) {
-        final int rows = g.rows();
-        final int cols = g.columns();
-
-        Random rng = new Random();
-
-        List<IntPair> diamondsPos = new ArrayList<>();
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-
-                if (transNumberToType(g.get(r, c)) == BrickType.Diamond) {
-                    diamondsPos.add(new IntPair(r, c));
-                }
-
-            }
-        }
-
-        if (diamondsPos.isEmpty()) return;
-
-        Collections.shuffle(diamondsPos, rng);
-        Set<IntPair> keep = new HashSet<>(diamondsPos.subList(0, Math.min(MAX_DIAMOND, diamondsPos.size())));
-        List<IntPair> needToChange = new ArrayList<>();
-
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                BrickType cur = transNumberToType(g.get(r, c));
-                if (cur != BrickType.Diamond) continue;
-
-                IntPair cell = new IntPair(r, c);
-                if (!keep.contains(cell)) {
-                    needToChange.add(new  IntPair(r, c));
-                }
-            }
-        }
-
-        Collections.shuffle(needToChange, rng);
-        int lengthForNormal = (int) (needToChange.size() * 0.6);
-        int lengthForSteel =  (int) (needToChange.size() * 0.3);
-
-        for (int i = 0; i < lengthForNormal; i++) {
-            IntPair cell = needToChange.get(i);
-            int r = cell.fi();
-            int c = cell.se();
-            g.set(r, c, transTypeToNumber(BrickType.Normal));
-        }
-
-        for (int i = lengthForNormal; i < lengthForSteel + lengthForNormal; i++) {
-            IntPair cell = needToChange.get(i);
-            int r = cell.fi();
-            int c = cell.se();
-            g.set(r, c, transTypeToNumber(BrickType.Steel));
-        }
-
-        for (int i = lengthForNormal + lengthForSteel; i < needToChange.size(); i++) {
-            IntPair cell = needToChange.get(i);
-            int r = cell.fi();
-            int c = cell.se();
-
-            int randType = abs(rng.nextInt() % 6) + 3;
-            g.set(r, c, randType);
-        }
-    }
-
-    public static void alwayHavePath(Matrix g) {
-        final int rows = g.rows();
-        final int cols = g.columns();
-        final Random rng = new Random();
-
-        int[][] comp = new int[rows][cols];
-        for (int[] row : comp) Arrays.fill(row, -1);
-
-        int compCount = 0;
-        int[] dx = {1, -1, 0, 0};
-        int[] dy = {0, 0, 1, -1};
-
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                if (comp[r][c] != -1) continue;
-                if (transNumberToType(g.get(r, c)) == BrickType.Diamond) continue;
-
-                Queue<IntPair> q = new LinkedList<>();
-                q.add(new IntPair(r, c));
-                comp[r][c] = compCount;
-
-                while (!q.isEmpty()) {
-                    IntPair p = q.poll();
-                    for (int k = 0; k < 4; k++) {
-                        int nr = p.fi() + dx[k];
-                        int nc = p.se() + dy[k];
-                        if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
-                        if (comp[nr][nc] != -1) continue;
-                        if (transNumberToType(g.get(nr, nc)) == BrickType.Diamond) continue;
-                        comp[nr][nc] = compCount;
-                        q.add(new IntPair(nr, nc));
-                    }
-                }
-                compCount++;
-            }
-        }
-
-        if (compCount <= 1) return;
-
-        List<List<IntPair>> regions = new ArrayList<>();
-        for (int i = 0; i < compCount; i++) regions.add(new ArrayList<>());
-
-        for (int r = 0; r < rows; r++)
-            for (int c = 0; c < cols; c++)
-                if (comp[r][c] != -1)
-                    regions.get(comp[r][c]).add(new IntPair(r, c));
-
-        for (int i = 0; i < compCount - 1; i++) {
-            List<IntPair> regionA = regions.get(i);
-            List<IntPair> regionB = regions.get(i + 1);
-
-            IntPair start = regionA.get(rng.nextInt(regionA.size()));
-            IntPair end = regionB.get(rng.nextInt(regionB.size()));
-
-            Map<IntPair, IntPair> parent = new HashMap<>();
-            Queue<IntPair> q = new LinkedList<>();
-            q.add(start);
-            parent.put(start, null);
-
-            boolean found = false;
-            while (!q.isEmpty()) {
-                IntPair cur = q.poll();
-                if (cur.equals(end)) {
-                    found = true;
-                    break;
-                }
-                for (int k = 0; k < 4; k++) {
-                    int nr = cur.fi() + dx[k];
-                    int nc = cur.se() + dy[k];
-                    if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
-                    IntPair nxt = new IntPair(nr, nc);
-                    if (parent.containsKey(nxt)) continue;
-                    parent.put(nxt, cur);
-                    q.add(nxt);
-                }
-            }
-
-            if (!found) continue;
-            List<IntPair> path = new ArrayList<>();
-            for (IntPair p = end; p != null; p = parent.get(p)) path.add(p);
-
-            for (IntPair p : path) {
-                int r = p.fi(), c = p.se();
-                BrickType cur = transNumberToType(g.get(r, c));
-                if (cur == BrickType.Diamond) {
-                    double x = rng.nextDouble();
-                    if (x < RATIO_NORMAL) {
-                        g.set(r, c, transTypeToNumber(BrickType.Normal));
-                    } else if (x < RATIO_STEEL + RATIO_NORMAL) {
-                        g.set(r, c, transTypeToNumber(BrickType.Steel));
-                    } else {
-                        BrickType[] pool = {
-                                BrickType.Rock, BrickType.Bomb,
-                                BrickType.Gift, BrickType.Wheel,
-                                BrickType.Rocket, BrickType.Angel
-                        };
-                        BrickType pick = pool[rng.nextInt(pool.length)];
-                        g.set(r, c, transTypeToNumber(pick));
-                    }
-                }
-            }
-        }
-    }
-
-    public static void bottomNotFullDiamond(Matrix g) {
-        int rows = g.rows();
-        int cols = g.columns();
-
-        int num = 0;
-        for (int col = 0; col < cols; col++) {
-            if (g.get(rows - 1, col) != transTypeToNumber(BrickType.Diamond)) {
-                num++;
-            }
-        }
-
-        if (num < AT_LEAST_NUM_GATE) {
-            List<Integer> rngList = new ArrayList<>();
-            for (int col = 0; col < cols; col++) {
-                rngList.add(col);
-            }
-
-            Collections.shuffle(rngList);
-
-            for (int i = 0; i < AT_LEAST_NUM_GATE - num; i++) {
-                int row = rows - 1;
-                int col = rngList.get(i);
-
-                g.set(row, col, transTypeToNumber(BrickType.Normal));
-            }
-        }
-    }
+/**
+ * A static "Facade" class for the map balancing system.
+ *
+ * <p>This class preserves the original static {@code balanceCondition(Matrix g)}
+ * method signature, allowing {@code GenMap} to call it without any changes.
+ *
+ * <p>Internally, it secretly uses the Chain of Responsibility pattern
+ * to execute the various balancing rules.
+ */
+public final class BalanceCondition {
 
     /**
-     * This function will limit the number of special brick by replace special brick with normal brick.
-     * @param g the matrix
+     * The first handler (head) in our Chain of Responsibility.
+     * It is static and final, initialized once.
+     * And with private constructor, we will make sure that it will not have any instance.
      */
-    public static void limitSpecialBrick(Matrix g) {
-        final int rows = g.rows();
-        final int cols = g.columns();
+    private BalanceCondition() {}
+    private static final BalanceHandler balanceChainHead;
 
-        List<IntPair> listBomb = new ArrayList<>();
-        List<IntPair> listRocket = new ArrayList<>();
-        List<IntPair> listWheel = new ArrayList<>();
-        List<IntPair> listRock = new ArrayList<>();
-
-
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                BrickType type = transNumberToType(g.get(row, col));
-
-                switch (type) {
-                    case Bomb -> listBomb.add(new IntPair(row, col));
-                    case Rocket -> listRocket.add(new IntPair(row, col));
-                    case Wheel -> listWheel.add(new IntPair(row, col));
-                    case Rock -> listRock.add(new IntPair(row, col));
-                    default -> {}
-                }
-            }
-        }
-
-        // 2. Call the helper function to limit each type
-        // The excess bricks are replaced with BrickType.Normal
-        limitBrickType(g, listBomb, MAX_BOMB, BrickType.Normal);
-        limitBrickType(g, listRocket, MAX_ROCKET, BrickType.Normal);
-        limitBrickType(g, listWheel, MAX_WHEEL, BrickType.Normal);
-        limitBrickType(g, listRock, MAX_ROCK, BrickType.Normal);
-    }
-
-    /**
-     * A private helper method to limit the count of a single brick type.
-     * It checks if the number of bricks in {@code positions} exceeds
-     * {@code maxAllowed}. If it does, it shuffles the list, takes the
-     * excess amount from the start of the shuffled list, and replaces
-     * them in the matrix {@code g} with {@code replaceType}.
+    /*
+     * This is a "static initializer block".
+     * The code inside this block is executed automatically ONE TIME
+     * when the BalanceCondition class is first loaded by the JVM.
      *
-     * @param g           The game map Matrix to modify.
-     * @param positions   A list of {@link IntPair} coordinates for all bricks of a specific type.
-     * @param maxAllowed  The maximum number of this brick type allowed to remain.
-     * @param replaceType The {@link BrickType} to use as a replacement (e.g., Normal).
+     * <p>This is where we build the chain.
      */
-    private static void limitBrickType(Matrix g, List<IntPair> positions, int maxAllowed, BrickType replaceType) {
-        // Only act if the current count exceeds the maximum allowed
-        if (positions.size() > maxAllowed) {
+    static {
+        BalanceHandler rule1 = new BottomNotFullDiamondRule();
+        BalanceHandler rule2 = new AlwayHavePathRule();
+        BalanceHandler rule3 = new DiamondLimitRule();
+        BalanceHandler rule4 = new SpecialBrickLimitRule();
 
-            // Shuffle the list to randomize which bricks are removed
-            Collections.shuffle(positions);
+        rule1.setNext(rule2).setNext(rule3).setNext(rule4);
 
-            // Calculate how many bricks we need to remove
-            int excessCount = positions.size() - maxAllowed;
+        balanceChainHead = rule1;
+    }
 
-            // Loop 'excessCount' times, removing the "excess" bricks
-            // from the beginning of the shuffled list.
-            for (int i = 0; i < excessCount; i++) {
-                IntPair cell = positions.get(i);
-                int r = cell.fi();
-                int c = cell.se();
-
-                // Set the excess brick to the replacement type
-                g.set(r, c, transTypeToNumber(replaceType));
-            }
+    /**
+     * This is the public method called by GenMap.
+     * It's the one you wanted to keep unchanged.
+     *
+     * @param g The game Matrix to be balanced.
+     */
+    public static void balanceCondition(Matrix g) {
+        if (balanceChainHead != null) {
+            balanceChainHead.handle(g);
         }
     }
 }
