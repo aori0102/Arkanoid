@@ -13,6 +13,13 @@ import utils.UITween.Ease;
 import utils.UITween.Tween;
 import utils.Vector2;
 
+/**
+ * Manages the behavior and visibility of the global "Go Back" button, typically used
+ * to return from sub-menus (like Options or Records) back to the Main Menu.
+ * <p>
+ * This class implements the Singleton pattern via a static {@code instance} and uses
+ * tweening for sliding the button on and off the screen.
+ */
 public class GoBackButtonManager extends MonoBehaviour {
     private static GoBackButtonManager instance;
 
@@ -45,16 +52,24 @@ public class GoBackButtonManager extends MonoBehaviour {
         instance = null;
     }
 
-    public void goBackButtonManager_onPointerClicked(Object sender, MouseEvent mouseEvent) {
+    private void goBackButtonManager_onPointerClicked(Object sender, MouseEvent mouseEvent) {
+        // Show Main Menu first
         MainMenuManager.getInstance().showUI();
+
+        // Hide the currently active sub-menu
         if (OptionsManager.getInstance().isOptionsMenuShowed()) {
             OptionsManager.getInstance().hideUI();
         } else if (RecordMenuManager.getInstance().isRecordMenuShowed()) {
             RecordMenuManager.getInstance().hideUI();
         }
+
+        // Hide the Go Back button
         hideUI();
     }
 
+    /**
+     * Smoothly slides the "Go Back" button into its visible position using a Tween.
+     */
     public void showUI() {
         Tween.to(goBackButton.getGameObject())
                 .moveX(SLIDE_DISTANCE, SLIDE_DURATION)
@@ -63,6 +78,9 @@ public class GoBackButtonManager extends MonoBehaviour {
                 .play();
     }
 
+    /**
+     * Smoothly slides the "Go Back" button off-screen to its hidden position using a Tween.
+     */
     public void hideUI() {
         Tween.to(goBackButton.getGameObject())
                 .moveX(-SLIDE_DISTANCE, SLIDE_DURATION)
@@ -71,7 +89,11 @@ public class GoBackButtonManager extends MonoBehaviour {
                 .play();
     }
 
-
+    /**
+     * Retrieves the Singleton instance of the GoBackButtonManager.
+     *
+     * @return The single active instance of GoBackButtonManager.
+     */
     public static GoBackButtonManager getInstance() {
         return instance;
     }
@@ -79,11 +101,14 @@ public class GoBackButtonManager extends MonoBehaviour {
     private GoBackButton goBackButton = null;
 
     /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
+     * Links the instantiated {@link GoBackButton} component to this manager.
+     * <p>
+     * This method is intended to be called internally by the {@link PrefabManager}
+     * or related linking process immediately after the {@code GoBackButton} prefab
+     * is created.
+     * </p>
      *
-     * @param goBackButton .
+     * @param goBackButton The newly instantiated {@link GoBackButton} component.
      */
     public void linkGoBackButton(GoBackButton goBackButton) {
         this.goBackButton = goBackButton;

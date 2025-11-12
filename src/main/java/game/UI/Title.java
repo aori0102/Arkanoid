@@ -9,11 +9,17 @@ import utils.Vector2;
 
 import javax.swing.*;
 
+/**
+ * Manages the behavior and animation of the title UI element.
+ * This class provides methods for a smooth entry/exit animation and a continuous
+ * subtle "idle" floating animation.
+ */
 public class Title extends MonoBehaviour {
     protected final double FLUCTUATION_RATE = 1.2;
     private Vector2 originalPosition;
     protected final double TWEEN_DURATION = 1;
     protected final double TWEEN_DISTANCE = 250;
+
     /**
      * Create this MonoBehaviour.
      *
@@ -28,6 +34,10 @@ public class Title extends MonoBehaviour {
         idleAnimation();
     }
 
+    /**
+     * Initiates the smooth entry animation (move down) for the title.
+     * Uses the {@link Ease#OUT_BOUNCE} function for a dramatic effect.
+     */
     public void startAnimation() {
         Tween.to(getGameObject())
                 .moveY(TWEEN_DISTANCE, TWEEN_DURATION)
@@ -36,16 +46,31 @@ public class Title extends MonoBehaviour {
                 .ignoreTimeScale(true)
                 .play();
     }
+
+    /**
+     * Initiates the smooth exit animation (move up and off-screen) for the title.
+     * Uses the {@link Ease#OUT_BOUNCE} function.
+     */
     public void exitAnimation() {
         Tween.to(getGameObject())
-                .moveY(- TWEEN_DISTANCE, TWEEN_DURATION)
+                .moveY(-TWEEN_DISTANCE, TWEEN_DURATION)
                 .ease(Ease.OUT_BOUNCE)
                 .setDelay(0.0)
                 .ignoreTimeScale(true)
                 .play();
     }
+
+    /**
+     * Executes the continuous subtle vertical floating animation (idle animation).
+     * <p>
+     * It uses a sine wave function based on real time to create a smooth,
+     * low-amplitude vertical fluctuation (±5 pixels). A unique phase offset is
+     * calculated based on the GameObject's hash code to ensure multiple titles
+     * don't swing in perfect sync.
+     * </p>
+     */
     private void idleAnimation() {
-        if(originalPosition == null) {
+        if (originalPosition == null) {
             originalPosition = getTransform().getGlobalPosition();
         }
         double time = Time.getRealTime();

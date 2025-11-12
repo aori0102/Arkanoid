@@ -50,6 +50,11 @@ public class VideoPlayer extends Renderable {
         activePlayers.add(mediaPlayer);
     }
 
+    /**
+     * Returns the root JavaFX node containing the video view.
+     *
+     * @return The {@link StackPane} that holds the {@link ImageView} displaying the video.
+     */
     @Override
     public Node getNode() {
         return root;
@@ -59,7 +64,12 @@ public class VideoPlayer extends Renderable {
     //                   MEDIA CONTROL METHODS
     // ==============================================================
 
-    /** Load video from file or resource path */
+    /**
+     * Loads a video from the specified file path.
+     * Note: This only sets the media path; {@link #playVideo()} must be called to start playback.
+     *
+     * @param resourcePath The file path (absolute or relative) to the video resource.
+     */
     public void setVideo(String resourcePath) {
         File file = new File(resourcePath);
         if (!file.exists()) {
@@ -69,7 +79,10 @@ public class VideoPlayer extends Renderable {
         this.currentMediaPath = file.getAbsolutePath();
     }
 
-    /** Play video */
+    /**
+     * Starts or resumes video playback from the current media path.
+     * If looping is enabled, an event listener is added to restart the video when it finishes.
+     */
     public void playVideo() {
         if (currentMediaPath == null) {
             System.err.println("[VideoPlayer] No media set.");
@@ -92,47 +105,77 @@ public class VideoPlayer extends Renderable {
         }
     }
 
-    /** Pause playback */
+    /**
+     * Pauses video playback if it is currently playing.
+     */
     public void pauseVideo() {
         if (mediaPlayer.status().isPlaying()) {
             mediaPlayer.controls().pause();
         }
     }
 
-    /** Stop playback */
+    /**
+     * Stops video playback and releases the current media.
+     */
     public void stopVideo() {
         if (mediaPlayer.status().isPlaying()) {
             mediaPlayer.controls().stop();
         }
     }
 
-    /** Looping behavior */
+    /**
+     * Sets whether the video should automatically loop when it finishes.
+     * This setting takes effect the next time {@link #playVideo()} is called.
+     *
+     * @param loop {@code true} to enable looping, {@code false} to disable.
+     */
     public void setLoop(boolean loop) {
         this.isLoop = loop;
     }
 
-    /** Volume control (0.0 - 1.0) */
+    /**
+     * Sets the playback volume.
+     * The volume is clamped between 0.0 (mute) and 1.0 (max volume).
+     *
+     * @param volume The desired volume level, between 0.0 and 1.0.
+     */
     public void setVolume(double volume) {
         this.currentVolume = Math.max(0.0, Math.min(1.0, volume));
         mediaPlayer.audio().setVolume((int) (currentVolume * 100));
     }
 
-    /** Mute/unmute */
+    /**
+     * Toggles the mute state of the video player.
+     *
+     * @param mute {@code true} to mute the audio, {@code false} to unmute.
+     */
     public void setMute(boolean mute) {
         this.isMute = mute;
         mediaPlayer.audio().setMute(mute);
     }
 
-    /** Resize view */
+    /**
+     * Sets the maximum display width for the video {@link ImageView}.
+     *
+     * @param width The fit width in pixels.
+     */
     public void setWidth(double width) {
         imageView.setFitWidth(width);
     }
 
+    /**
+     * Sets the maximum display height for the video {@link ImageView}.
+     *
+     * @param height The fit height in pixels.
+     */
     public void setHeight(double height) {
         imageView.setFitHeight(height);
     }
 
-    /** Clean up */
+    /**
+     * Performs clean-up operations, releasing all native VLCJ resources.
+     * The video player must not be used after this method is called.
+     */
     public void dispose() {
         stopVideo();
         mediaPlayer.release();

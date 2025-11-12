@@ -22,6 +22,13 @@ import utils.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages the "Record Menu" UI, which displays the player's high scores and stats.
+ * <p>
+ * This class implements the Singleton pattern, initializes the static header elements,
+ * dynamically generates the records list from {@link DataManager}, and handles the
+ * sliding animations for showing and hiding the menu.
+ */
 public class RecordMenuManager extends MonoBehaviour {
     private static RecordMenuManager instance;
     private boolean isRecordMenuShowed = false;
@@ -51,23 +58,27 @@ public class RecordMenuManager extends MonoBehaviour {
         }
         instance = this;
 
+        // Instantiate the title component
         PrefabManager.instantiatePrefab(PrefabIndex.RecordTitle);
 
         initTextUI();
 
+        // Apply consistent styling to header texts
         setTextStyle(noNumber);
         setTextStyle(rank);
         setTextStyle(score);
         setTextStyle(brickDestroyed);
         setTextStyle(levelCleared);
 
+        // Set positions for header texts
         noNumber.getTransform().setGlobalPosition(new Vector2(250, TEXT_HEIGHT));
         rank.getTransform().setGlobalPosition(new Vector2(345, TEXT_HEIGHT));
         score.getTransform().setGlobalPosition(new Vector2(570, TEXT_HEIGHT));
         brickDestroyed.getTransform().setGlobalPosition(new Vector2(805, TEXT_HEIGHT));
         levelCleared.getTransform().setGlobalPosition(new Vector2(930, TEXT_HEIGHT));
 
-        for(TextUI textUI: textUIS){
+        // Start header texts faded out
+        for (TextUI textUI : textUIS) {
             Tween.to(textUI.getGameObject())
                     .fadeTo(0, 0.001)
                     .ease(Ease.IN_OUT)
@@ -89,6 +100,10 @@ public class RecordMenuManager extends MonoBehaviour {
 
     }
 
+    /**
+     * Dynamically creates the {@link RecordUI} instances based on the data retrieved
+     * from the {@link DataManager}.
+     */
     public void createRecordsUI() {
         int i = 1;
         for (Record record : DataManager.getInstance().getRecords()) {
@@ -103,6 +118,10 @@ public class RecordMenuManager extends MonoBehaviour {
         }
     }
 
+    /**
+     * Destroys all currently existing dynamic {@link RecordUI} GameObjects.
+     * This prepares the menu for reloading fresh data.
+     */
     public void destroyRecordsUI() {
         for (RecordUI recordUI : recordUIList) {
             GameObjectManager.destroy(recordUI.getGameObject());
@@ -111,14 +130,28 @@ public class RecordMenuManager extends MonoBehaviour {
         recordUIList.clear();
     }
 
+    /**
+     * Retrieves the Singleton instance of the RecordMenuManager.
+     *
+     * @return The single active instance.
+     */
     public static RecordMenuManager getInstance() {
         return instance;
     }
 
+    /**
+     * Retrieves the Singleton instance of the RecordMenuManager.
+     *
+     * @return The single active instance.
+     */
     public boolean isRecordMenuShowed() {
         return isRecordMenuShowed;
     }
 
+    /**
+     * Animates the Record Menu into view by sliding the records from the right
+     * and fading in the header texts.
+     */
     public void showUI() {
         int i = 0;
         for (RecordUI recordUI : recordUIList) {
@@ -129,7 +162,7 @@ public class RecordMenuManager extends MonoBehaviour {
                     .play();
             i++;
         }
-        for(TextUI textUI: textUIS){
+        for (TextUI textUI : textUIS) {
             Tween.to(textUI.getGameObject())
                     .fadeTo(1, TWEEN_DURATION)
                     .ease(Ease.IN_OUT)
@@ -141,6 +174,10 @@ public class RecordMenuManager extends MonoBehaviour {
         recordTitle.startAnimation();
     }
 
+    /**
+     * Animates the Record Menu out of view by sliding the records back to the right
+     * and fading out the header texts.
+     */
     public void hideUI() {
         int i = 0;
         for (RecordUI recordUI : recordUIList) {
@@ -152,7 +189,7 @@ public class RecordMenuManager extends MonoBehaviour {
             i++;
         }
 
-        for(TextUI textUI: textUIS){
+        for (TextUI textUI : textUIS) {
             Tween.to(textUI.getGameObject())
                     .fadeTo(0, TWEEN_DURATION)
                     .ease(Ease.IN_OUT)
@@ -171,16 +208,22 @@ public class RecordMenuManager extends MonoBehaviour {
     private RecordTitle recordTitle = null;
 
     /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
+     * Links the instantiated {@link RecordTitle} component to this manager.
+     * <p>
+     * This method is intended to be called internally during the prefab linking process.
+     * </p>
      *
-     * @param recordTitle .
+     * @param recordTitle The newly instantiated {@link RecordTitle} component.
      */
     public void linkRecordTitle(RecordTitle recordTitle) {
         this.recordTitle = recordTitle;
     }
 
+    /**
+     * Applies standard styling properties to a {@link TextUI} component for the header.
+     *
+     * @param text The {@link TextUI} component to style.
+     */
     private void setTextStyle(TextUI text) {
         text.setFontSize(40);
         text.setFont(FontDataIndex.Jersey_25);
@@ -191,6 +234,10 @@ public class RecordMenuManager extends MonoBehaviour {
         text.setHorizontalAlignment(TextHorizontalAlignment.Center);
     }
 
+    /**
+     * Sets the parent of the header {@link TextUI} GameObjects to the manager's owner GameObject
+     * for proper scene hierarchy organization.
+     */
     private void setParent() {
         noNumber.getGameObject().setParent(getGameObject());
         rank.getGameObject().setParent(getGameObject());
@@ -199,6 +246,10 @@ public class RecordMenuManager extends MonoBehaviour {
         levelCleared.getGameObject().setParent(getGameObject());
     }
 
+    /**
+     * Instantiates and initializes the static header {@link TextUI} components
+     * with their default text content.
+     */
     private void initTextUI() {
         noNumber = GameObjectManager.instantiate("NoNumber").addComponent(TextUI.class);
         rank = GameObjectManager.instantiate("Rank").addComponent(TextUI.class);

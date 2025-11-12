@@ -12,6 +12,7 @@ public class VoltraxisSFX extends MonoBehaviour {
     private EventActionID sfx_onChargingEntered = null;
     private EventActionID sfx_onEachBallShot = null;
     private EventActionID sfx_onUnleashingUltimate = null;
+    private EventActionID sfx_onChargingTerminated = null;
 
     /**
      * Create this MonoBehaviour.
@@ -35,6 +36,8 @@ public class VoltraxisSFX extends MonoBehaviour {
                 .onEachBallShot.addListener(this::sfx_onEachBallShot);
         sfx_onUnleashingUltimate = Voltraxis.getInstance().getVoltraxisCharging()
                 .onUnleashingLaser.addListener(this::sfx_onUnleashingUltimate);
+        sfx_onChargingTerminated = Voltraxis.getInstance().getVoltraxisCharging()
+                .onChargingTerminated.addListener(this::sfx_onChargingTerminated);
     }
 
     public VoltraxisSFX getInstance() {
@@ -62,6 +65,10 @@ public class VoltraxisSFX extends MonoBehaviour {
 
     private void sfx_onUnleashingUltimate(Object sender, Void e) {
         AudioManager.playSFX(SFXAsset.SFXIndex.BossUltimate);
+    }
+
+    private void sfx_onChargingTerminated(Object sender, Void e) {
+        AudioManager.stopSFX(SFXAsset.SFXIndex.BossCharging);
     }
 
 

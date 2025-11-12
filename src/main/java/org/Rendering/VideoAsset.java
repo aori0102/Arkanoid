@@ -12,6 +12,10 @@ import java.util.EnumMap;
  */
 public class VideoAsset {
 
+    /**
+     * Enumeration of all video assets used in the application.
+     * Each constant stores the internal resource path to the video file.
+     */
     public enum VideoIndex {
         MainMenuBackground("/UI/MainMenuBackGround.mp4");
 
@@ -21,6 +25,12 @@ public class VideoAsset {
             this.mediaPath = path;
         }
 
+        /**
+         * Retrieves the resolved file system path for this video asset.
+         * This path points to the temporary file created during initialization.
+         *
+         * @return The absolute path to the extracted video file.
+         */
         public String getVideoPath() {
             return VideoAsset.getPath(this);
         }
@@ -28,10 +38,21 @@ public class VideoAsset {
 
     private static final EnumMap<VideoIndex, String> videoPathMap = new EnumMap<>(VideoIndex.class);
 
+    /**
+     * Internal method to retrieve the resolved path for a given video index.
+     *
+     * @param index The {@link VideoIndex} constant to look up.
+     * @return The absolute path to the temporary video file.
+     */
     private static String getPath(VideoIndex index) {
         return videoPathMap.get(index);
     }
 
+    /**
+     * Initializes all video assets by extracting them from the classpath
+     * (JAR or filesystem) into temporary files. This method must be called once
+     * before any video is played.
+     */
     public static void initializeVideoMedia() {
         for (var index : VideoIndex.values()) {
             String resolvedPath = null;

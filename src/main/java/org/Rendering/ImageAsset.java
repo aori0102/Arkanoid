@@ -31,6 +31,7 @@ public class ImageAsset {
         PauseButton("/UI/PauseButton.png"),
         ResumeButton("/UI/ResumeButton.png"),
         GoBackButton("/UI/GoBackButton.png"),
+        RestartButton("/UI/RestartButton.png"),
 
         /// Game Title
         GameTitle("/UI/GameTitle.png"),
