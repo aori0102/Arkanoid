@@ -8,6 +8,7 @@ import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 import org.Utils.EditorView;
 import org.Utils.FPSCounter;
+import uk.co.caprica.vlcj.factory.discovery.NativeDiscovery;
 import utils.Random;
 import utils.Time;
 import javafx.application.Application;
@@ -23,7 +24,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        System.setProperty("vlcj.lib", "path/to/vlc"); // points to folder containing libvlc
+        System.setProperty("jna.library.path", "path/to/vlc");
 
+        // Optional: if discovery fails, set manually
+        new NativeDiscovery().discover();
 
         VideoAsset.initializeVideoMedia();
         AudioManager.initializeAudioManager();

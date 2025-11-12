@@ -9,7 +9,7 @@ import org.GameObject.GameObject;
 
 public final class AttackPerk extends Perk {
 
-    private static final double THE_MULTIPLIER_CUZ_DUI_IS_FUCKING_STUPID = 0.1;
+    private static final double ADDITIONAL_MUlTIPLIER = 0.1;
 
     /**
      * Create this MonoBehaviour.
@@ -36,7 +36,7 @@ public final class AttackPerk extends Perk {
         super.perk_onPointerClicked(sender, e);
         PaddleStat paddleStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
 
-        paddleStat.setAttackMultiplier(paddleStat.getAttackMultiplier() + THE_MULTIPLIER_CUZ_DUI_IS_FUCKING_STUPID);
+        paddleStat.setAttackMultiplier(paddleStat.getAttackMultiplier() + ADDITIONAL_MUlTIPLIER);
     }
 
 }

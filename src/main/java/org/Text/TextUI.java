@@ -37,6 +37,10 @@ public class TextUI extends Renderable {
 
     }
 
+
+    /**
+     * Set the text's glow
+     */
     public void setGlow() {
         getText().getStyleClass().add("neon-text");
     }

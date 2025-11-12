@@ -3,6 +3,8 @@ package game.Brick;
 import game.Rank.ExperienceHolder;
 import javafx.scene.paint.Color;
 import org.Annotation.LinkViaPrefab;
+import org.Audio.AudioManager;
+import org.Audio.SFXAsset;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;

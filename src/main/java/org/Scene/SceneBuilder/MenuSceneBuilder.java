@@ -25,14 +25,6 @@ public final class MenuSceneBuilder extends SceneBuilder {
         mainMenuBackground.getTransform()
                 .setGlobalPosition(new Vector2(Main.STAGE_WIDTH / 2, Main.STAGE_HEIGHT / 2));
 
-
-
-
-
-//        var gameTitle = GameObjectManager.instantiate("GameTitle");
-//        gameTitle.addComponent(GameTitle.class);
-
-
     }
 
 }

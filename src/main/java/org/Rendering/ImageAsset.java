@@ -31,6 +31,7 @@ public class ImageAsset {
         PauseButton("/UI/PauseButton.png"),
         ResumeButton("/UI/ResumeButton.png"),
         GoBackButton("/UI/GoBackButton.png"),
+        RestartButton("/UI/RestartButton.png"),
 
         /// Game Title
         GameTitle("/UI/GameTitle.png"),
@@ -40,6 +41,7 @@ public class ImageAsset {
         GamePlayBackground_Boss("/UI/GamePlayBackground_Boss.png"),
         DimmedBackground("/UI/DimmedBackground.png"),
         GameOverOverlay("/UI/GameOver/Background.png"),
+        BlackBackground("/UI/BlackBackground.png"),
 
         /// Perks
         Perks("/UI/Perks.png"),
@@ -106,7 +108,7 @@ public class ImageAsset {
         Player_UI_Skill_Icon_UpdraftSkillIcon("/Player/UI/Skill/Icon/UpdraftSkillIcon.png"),
 
         /// Bricks
-        PurpleBrick("/Brick/PurpleBrick.png"),
+        PurpleBrick("/Brick/brick_normal.png"),
         OrangeBrick("/Brick/OrangeBrick.png"),
         CyanBrick("/Brick/CyanBrick.png"),
         BrickNormal("/Brick/brick_normal.png"),

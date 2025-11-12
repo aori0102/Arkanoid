@@ -22,6 +22,7 @@ public class Voltraxis extends MonoBehaviour {
     private VoltraxisSkillHandler voltraxisSkillHandler = null;
     private VoltraxisStat voltraxisStat = null;
     private VoltraxisHealth voltraxisHealth = null;
+    private VoltraxisSFX voltraxisSFX = null;
 
     @LinkViaPrefab
     private GameObject bossObject = null;
