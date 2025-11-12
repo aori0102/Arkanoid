@@ -35,11 +35,7 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 ## UML Diagram
 
 ### Class Diagram
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/uml-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="docs/uml-light.svg">
-  <img alt="Sơ đồ UML" src="src/UML/Arkanoid.drawio.svg">
-</picture>
+![Sơ đồ UML](src/UML/Arkanoid.drawio.svg)
 ---
 
 ## Design Patterns Implementation
@@ -85,7 +81,7 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 ---
 
 ## Multithreading Implementation
-
+No implement.
 ---
 
 ## Installation
@@ -221,5 +217,5 @@ This project is developed for educational purposes only.
 
 ---
 
-*Last updated: [Ngày/Tháng/Năm]*
+*Last updated: [12/11/2025]*
 
