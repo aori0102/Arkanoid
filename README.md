@@ -52,37 +52,39 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 ### 2. Strategy Pattern
 **Used in:** `BrickEvent`, `BrickGenMap`
 
-**Purpose:** 
+**Purpose:** Allows defining a family of algorithms (e.g., different event logics or map generation styles), putting each into a separate class, and making their objects interchangeable.
 ### 3. Factory Pattern
 **Used in:**
 
-**Purpose:**
+**Purpose:** Provides an interface for creating objects, but lets subclasses (or handler classes) decide which class to instantiate. It centralizes object creation logic.
 
 ### 4.Composite Pattern
 **Used in:**
 
-**Purpose:** 
+**Purpose:** Lets you compose objects into tree structures to represent part-whole hierarchies. It allows clients to treat individual objects and compositions of objects uniformly.
 
 ### 5. Adapter
 **Used in:**
 
-**Purpose:**
+**Purpose:** Allows objects with incompatible interfaces to collaborate. It acts as a wrapper or translator between two different interfaces.
 ### 6. Prototype
 **Used in:**
 
-**Purpose:**
+**Purpose:** Lets you copy existing objects (prototypes) without making your code dependent on their concrete classes. Ideal for creating new objects by cloning a pre-configured template.
 
 ### 7. Chain of Responsibility
 **Used in:** `balanceRule`
 
-**Purpose:**
+**Purpose:** Lets you pass requests along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.
 
+### 8. FlyWeight
+**Used in:** ''
 
+**Purpose:** Purpose: Lets you fit more objects into the available RAM by sharing common (intrinsic) state between multiple objects instead of keeping all data in each object.
 
 ---
 
 ## Multithreading Implementation
-Không sử dụng hay cài đặt
 
 ---
 
@@ -90,7 +92,8 @@ Không sử dụng hay cài đặt
 
 1. Clone the project from the repository.
 2. Open the project in the IDE.
-3. Run the project.
+3. Download VLC application.
+4. Run the project.
 
 ## Usage
 
