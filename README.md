@@ -1,10 +1,10 @@
 # Arkanoid Game - Object-Oriented Programming Project
 
 ## Author
-Group [Số nhóm] - Class [Mã lớp]
-1. [Họ tên 1] - [MSSV 1]
-2. [Họ tên 2] - [MSSV 2]
-3. [Họ tên 3] - [MSSV 3]
+Group 8 - Class 2526I-INT2204-11
+1. Đinh Trung Kiên - 24021538
+2. Nguyễn Thanh Duy - 24021449
+3. Nguyễn Thành Dương - 24021441
 4. Đào Văn Đức - 24021409
 
 **Instructor**: Kiều Văn Tuyên / Trần Việt Cường
@@ -119,7 +119,7 @@ Không sử dụng hay cài đặt
 ### Power-ups
 | Icon                                                                 | Name         | Effect |
 |----------------------------------------------------------------------|--------------|---|
-| <img src="src/main/resources/PowerUp/BlizzardBallicon.png" width="50px"> |              ||
+| <img src="src/main/resources/PowerUp/BlizzardBallicon.png" width="50px"> |      Blizzard Ball        |Attach frostbite effect to the ball|
 | <img src="src/main/resources/PowerUp/DuplicateBall.png" width="50px"> | | |
 | <img src="src/main/resources/PowerUp/FireBallIcon.png" width="50px"> | | |
 | <img src="src/main/resources/PowerUp/HealIcon.png" width="50px">     | | |
@@ -199,7 +199,7 @@ Không sử dụng hay cài đặt
 |------------|---------|---------|
 | Java | 17+ | Core language |
 | JavaFX | 19.0.2 | GUI framework |
-| Maven | 3.9+ | Build tool |
+| Gradle | 3.9+ | Build tool |
 | Jackson | 2.15.0 | JSON processing |
 
 ---
