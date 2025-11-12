@@ -3,6 +3,7 @@ package org.InputAction;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import com.sun.javafx.scene.input.KeyCodeMap;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import org.Event.EventHandler;
@@ -55,11 +56,17 @@ public class ActionMap extends MonoBehaviour {
 
     /**
      * Assign the input with corresponding action state.
+     * <p>
+     *     Each type of input will be stored in a specific HashMap. Keyboard input will be stored in
+     *     {@code Key Action Map}. Mouse input will be stored in {@code Mouse Action Map}
+     * </p>
      */
     public void assignActionMap() {
 
         keyActionMap.put(KeyCode.A, Action.GoLeft);
         keyActionMap.put(KeyCode.D, Action.GoRight);
+        keyActionMap.put(KeyCode.RIGHT, Action.GoRight);
+        keyActionMap.put(KeyCode.LEFT, Action.GoLeft);
         keyActionMap.put(KeyCode.Q, Action.Skill1);
         keyActionMap.put(KeyCode.E, Action.Skill2);
         keyActionMap.put(KeyCode.X, Action.Skill3);
@@ -75,6 +82,14 @@ public class ActionMap extends MonoBehaviour {
         handlePlayerInput();
     }
 
+    /**
+     * Handle input from Player
+     * <p>
+     *     When this receives an input, it will check whether it is from keyboard or mouse.
+     *     After that, checking if it is pressed, hold, or clicked then firing an event correspond with
+     *     that input.
+     * </p>
+     */
     public void handlePlayerInput() {
         currentKey.clear();
         currentMouseButton.clear();

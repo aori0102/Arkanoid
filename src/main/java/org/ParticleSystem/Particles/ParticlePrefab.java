@@ -6,7 +6,6 @@ import org.ParticleSystem.Emitter.ParticleEmitter;
 import org.ParticleSystem.ParticleType;
 import utils.Vector2;
 
-// TODO: Doc
 public abstract class ParticlePrefab extends MonoBehaviour {
 
     protected ParticleEmitter particleEmitter;
@@ -20,9 +19,16 @@ public abstract class ParticlePrefab extends MonoBehaviour {
         super(owner);
     }
 
+    /**
+     * Start emitting process.
+     */
     public void startEmit() {
         particleEmitter.startEmit();
     }
+
+    /**
+     * Stop emitting process.
+     */
     public void stopEmit() {
         particleEmitter.stopEmit();
     }

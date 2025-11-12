@@ -25,6 +25,11 @@ public class ParticleObject extends MonoBehaviour {
         particleVisual = getComponent(SpriteRenderer.class);
     }
 
+    /**
+     * Assigning particle specs.
+     * @param speed : travel speed
+     * @param lifeTime : existing time
+     */
     public void assignSpecs(double speed, double lifeTime) {
         this.speed = speed;
         this.lifeTime = lifeTime;
@@ -35,6 +40,15 @@ public class ParticleObject extends MonoBehaviour {
         handleMovement(direction, speed);
     }
 
+    /**
+     * Handle the movement of the particle.
+     * <p>
+     *     Moving on a specific direction.<p></p>
+     *     Fading over the lifetime.
+     * </p>
+     * @param direction
+     * @param speed
+     */
     public void handleMovement(Vector2 direction, double speed) {
         getTransform().translate(direction.normalize().multiply(speed * Time.getDeltaTime()));
 

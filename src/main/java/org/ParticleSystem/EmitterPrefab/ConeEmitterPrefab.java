@@ -4,6 +4,9 @@ import org.GameObject.GameObjectManager;
 import org.ParticleSystem.Emitter.ConeEmitter;
 import org.ParticleSystem.Emitter.ParticleEmitter;
 
+/**
+ * Spawning a cone emitter - which will emit the particle in a cone shape field.
+ */
 public class ConeEmitterPrefab extends EmitterPrefab {
     @Override
     public ParticleEmitter generateEmitter(double emissionRate
