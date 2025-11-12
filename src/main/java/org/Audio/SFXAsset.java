@@ -29,7 +29,6 @@ public class SFXAsset {
         OnPerkReceived("/Audio/SFX/OnPerkReceived.wav"),
         OnPlayerHit_Enemy("/Audio/SFX/OnPlayerHit(Enemy).wav"),
         OnPowerReceived("/Audio/SFX/OnPowerReceived.wav"),
-        PowerUpOnReceive("/Audio/SFX/PowerUpOnReceive.wav"),
         IntroductionVoice(("/Audio/SFX/IntroductionVoice.wav")),
 
         None("");

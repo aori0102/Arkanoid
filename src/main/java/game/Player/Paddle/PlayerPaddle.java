@@ -10,7 +10,6 @@ import game.PowerUp.Recovery;
 import javafx.scene.input.MouseButton;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
-import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import org.Layer.Layer;
@@ -89,15 +88,6 @@ public class PlayerPaddle extends MonoBehaviour {
     }
 
     /**
-     * Subscribe to paddle health event after all Awake calls.
-     */
-    @Override
-    public void start() {
-        paddleHealth.onHealthReachesZero
-                .addListener(this::playerPaddleHealth_onHealthReachesZero);
-    }
-
-    /**
      * Update called every frame.
      * Handles interactions with power-ups on the paddle.
      */
@@ -123,17 +113,6 @@ public class PlayerPaddle extends MonoBehaviour {
                 }
             }
         }
-    }
-
-    /**
-     * Called when {@link PaddleHealth#onHealthReachesZero} is invoked.<br><br>
-     * This function destroys the paddle when paddle's health reaches zero.
-     *
-     * @param sender Event caller {@link PaddleHealth}.
-     * @param e      Empty event argument.
-     */
-    private void playerPaddleHealth_onHealthReachesZero(Object sender, Void e) {
-        GameObjectManager.destroy(gameObject);
     }
 
     private void clampPaddlePositioning() {

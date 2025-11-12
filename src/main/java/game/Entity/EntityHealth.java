@@ -125,7 +125,9 @@ public abstract class EntityHealth extends MonoBehaviour {
     protected abstract Class<? extends EntityStat> getStatComponentClass();
 
     public final void resetHealth() {
+        System.out.println(gameObject + " health: " + entityStat.getActualMaxHealth());
         alterHealth(EntityHealthAlterType.Regeneration, null, entityStat.getActualMaxHealth());
+        System.out.println(gameObject + " health: " + _health);
     }
 
 }

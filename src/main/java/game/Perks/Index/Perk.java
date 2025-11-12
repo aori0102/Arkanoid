@@ -263,8 +263,8 @@ public abstract class Perk extends MonoBehaviour
     /**
      * Applies the specific effect of the perk to the player's paddle statistics.
      *
-     * @param paddleStat The {@link PaddleStat} object of the player's paddle.
+     * @param paddleStat The {@link PlayerStat} object of the player's paddle.
      */
-    protected abstract void applyPerk(PaddleStat paddleStat);
+    protected abstract void applyPerk(PlayerStat paddleStat);
 
 }

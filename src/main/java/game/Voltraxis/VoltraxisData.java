@@ -9,10 +9,10 @@ import utils.Vector2;
 public final class VoltraxisData {
 
     /// Stat
-    public static final int BASE_ATTACK = 18;
-    public static final int BASE_MAX_HEALTH = 14315;
-    public static final int BASE_DEFENSE = 36;
-    public static final double CRITICAL_CHANCE = 0.2;
+    public static final int BASE_ATTACK = 39;
+    public static final int BASE_MAX_HEALTH = 8315;
+    public static final int BASE_DEFENSE = 24;
+    public static final double CRITICAL_CHANCE = 0.31;
     public static final double CRITICAL_DAMAGE = 0.36;
 
     /// Basic skill
@@ -31,7 +31,7 @@ public final class VoltraxisData {
     public static final double GROGGY_DURATION = 18.0;
 
     /// Power core
-    public static final double POWER_CORE_PROPORTIONAL_HEALTH = 0.06;
+    public static final double POWER_CORE_PROPORTIONAL_HEALTH = 0.16;
     public static final double POWER_CORE_DAMAGE_TAKEN_REDUCTION = 0.1;
     public static final double MIN_GROGGY_ON_POWER_CORE_DEPLOY = 0.5;
     public static final Vector2 LEFT_CORE_POSITION = new Vector2(-200.0, 200.0);

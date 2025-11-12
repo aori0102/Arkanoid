@@ -2,8 +2,6 @@ package game.Voltraxis;
 
 import game.Voltraxis.Object.ElectricBall.ElectricBall;
 import game.Voltraxis.Prefab.ElectricBallPrefab;
-import org.Audio.AudioManager;
-import org.Audio.SFXAsset;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -46,6 +44,8 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
                 .addListener(this::voltraxisCharging_onChargingEntered);
         Voltraxis.getInstance().getVoltraxisCharging().onChargingTerminated
                 .addListener(this::voltraxisCharging_onChargingTerminated);
+        Voltraxis.getInstance().getVoltraxisCharging().onBossWeakened
+                .addListener(this::voltraxisCharging_onBossWeakened);
     }
 
     @Override
@@ -76,6 +76,16 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
             Time.removeCoroutine(basicSkill_coroutineID);
             basicSkill_coroutineID = null;
         }
+    }
+
+    /**
+     * Called when {@link VoltraxisCharging#onBossWeakened} is invoked.<br><br>
+     * This function disable normal attack function of Voltraxis when weakened.
+     *
+     * @param sender Event caller {@link VoltraxisCharging}.
+     * @param e      Empty event argument.
+     */
+    private void voltraxisCharging_onBossWeakened(Object sender, Void e) {
     }
 
     /**
@@ -112,8 +122,9 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
             // Instantiate electric ball
             var electricBall = new ElectricBallPrefab().instantiatePrefab()
                     .getComponent(ElectricBall.class);
-            electricBall.getTransform().setGlobalPosition(getTransform().getGlobalPosition());
             electricBall.setDirection(direction);
+            electricBall.getGameObject().setParent(gameObject);
+            electricBall.getTransform().setGlobalPosition(getTransform().getGlobalPosition());
 
             onEachBallShot.invoke(this, null);
         }

@@ -1,5 +1,7 @@
 package game.Voltraxis.Prefab;
 
+import game.Brick.BrickHealth;
+import game.Damagable.HealthChangeVisualizer;
 import game.Voltraxis.*;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -46,6 +48,12 @@ public final class VoltraxisPrefab extends Prefab {
         // Visual
         var visual = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_Visual);
         visual.setParent(voltraxisObject);
+
+        // Health visualizer
+        var healthVisualizer = PrefabManager.instantiatePrefab(PrefabIndex.HealthChange_VisualizeHandler)
+                .getComponent(HealthChangeVisualizer.class);
+        healthVisualizer.linkEntityHealth(voltraxisObject.getComponent(VoltraxisHealth.class));
+        healthVisualizer.getGameObject().setParent(voltraxisObject);
 
         //SFX
         var sfx = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_SFX);

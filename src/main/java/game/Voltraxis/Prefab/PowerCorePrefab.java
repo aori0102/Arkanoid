@@ -1,5 +1,7 @@
 package game.Voltraxis.Prefab;
 
+import game.Brick.BrickHealth;
+import game.Damagable.HealthChangeVisualizer;
 import game.Voltraxis.Object.PowerCore.*;
 import org.Animation.AnimationClipData;
 import org.Animation.SpriteAnimator;
@@ -9,6 +11,8 @@ import org.Layer.Layer;
 import org.Layer.RenderLayer;
 import org.Physics.BoxCollider;
 import org.Prefab.Prefab;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
@@ -34,15 +38,23 @@ public final class PowerCorePrefab extends Prefab {
                 .addComponent(PowerCoreStat.class)
                 .getGameObject();
         powerCoreObject.setLayer(Layer.Boss);
+        var powerCore = powerCoreObject.getComponent(PowerCore.class);
 
         // Collider
         var powerCoreCollider = powerCoreObject.addComponent(BoxCollider.class);
         powerCoreCollider.setLocalSize(POWER_CORE_COLLIDER_SIZE);
 
+        // Health visualizer
+        var healthVisualizer = PrefabManager.instantiatePrefab(PrefabIndex.HealthChange_VisualizeHandler)
+                .getComponent(HealthChangeVisualizer.class);
+        healthVisualizer.linkEntityHealth(powerCoreObject.getComponent(PowerCoreHealth.class));
+        healthVisualizer.getGameObject().setParent(powerCoreObject);
+
         // Visual object
         var powerCoreVisual = GameObjectManager.instantiate("PowerCoreVisual")
                 .addComponent(PowerCoreVisual.class);
         powerCoreVisual.getGameObject().setParent(powerCoreObject);
+        powerCoreVisual.linkPowerCore(powerCore);
         var powerCoreVisualAnimator = powerCoreVisual.getGameObject().addComponent(SpriteAnimator.class);
 
         // Link animation clips

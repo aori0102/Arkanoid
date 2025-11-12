@@ -80,6 +80,9 @@ public final class VoltraxisVisual extends MonoBehaviour {
         }
     }
 
+    /**
+     * Remove red tint after damaged.
+     */
     private void disableDamageTint() {
         spriteRenderer.setOverlayColor(Color.WHITE);
     }

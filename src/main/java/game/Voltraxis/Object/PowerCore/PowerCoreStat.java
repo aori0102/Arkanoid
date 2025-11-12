@@ -42,7 +42,7 @@ public final class PowerCoreStat extends EntityStat {
 
     @Override
     public double getRegenerationMultiplier() {
-        return 0;
+        return 1;
     }
 
     @Override

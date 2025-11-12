@@ -1,12 +1,9 @@
 package game.Voltraxis.Object.PowerCore;
 
-import jdk.jfr.Percentage;
-import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
-import org.w3c.dom.events.EventTarget;
 import utils.Time;
 import utils.Vector2;
 
