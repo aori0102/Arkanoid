@@ -21,8 +21,9 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 2. Implements core OOP principles: Encapsulation, Inheritance, Polymorphism, and Abstraction.
 3. Applies multiple design patterns: Singleton, Factory Method, Strategy, Observer, and State.
 4. Features multithreading for smooth gameplay and responsive UI.
-5. Includes sound effects, animations, and power-up systems.
+5. Includes sound effects, animations.
 6. Supports save/load game functionality and leaderboard system.
+7. Update gameplay by adding a boss, skill system and power-up system. 
 
 **Game mechanics:**
 - Control a paddle to bounce a ball and destroy bricks
