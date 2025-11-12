@@ -54,7 +54,7 @@ public class GamePlayBackground extends MonoBehaviour {
         blackBackground.setPivot(new Vector2(0.5, 0.5));
 
         spriteRenderer.setRenderLayer(RenderLayer._2);
-        blackBackground.setRenderLayer(RenderLayer.Overlay);
+        blackBackground.setRenderLayer(RenderLayer._3);
 
         // Center the background components on the screen
         owner.getTransform().setGlobalPosition(new Vector2((Main.STAGE_WIDTH) / 2, Main.STAGE_HEIGHT / 2));

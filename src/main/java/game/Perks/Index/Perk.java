@@ -15,6 +15,8 @@ import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import org.Layer.RenderLayer;
+import org.Rendering.SpriteRenderer;
 import org.Text.FontDataIndex;
 import org.Text.TextHorizontalAlignment;
 import org.Text.TextUI;
@@ -86,6 +88,7 @@ public abstract class Perk extends MonoBehaviour
         attachPointerEnter(getTransform());
         attachPointerExited(getTransform());
 
+        owner.getComponent(SpriteRenderer.class).setRenderLayer(RenderLayer.UI_Bottom);
 
     }
 

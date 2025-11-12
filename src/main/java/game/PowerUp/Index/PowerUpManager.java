@@ -93,8 +93,8 @@ public class PowerUpManager extends MonoBehaviour {
      */
     public void spawnPowerUp(Vector2 position) {
         var powerUpIndexArray = PowerUpIndex.values();
-        int target = 0;
-        if (Random.range(0, 1) == target) {  // Random chance to spawn
+        int target = 36;
+        if (Random.range(36, 41) == target) {  // Random chance to spawn
 
             var chosenKey = powerUpIndexArray[Random.range(0, powerUpIndexArray.length)];
 
