@@ -5,6 +5,9 @@ import org.ParticleSystem.ParticleObject;
 import utils.Random;
 import utils.Vector2;
 
+/**
+ * Emit particle in a cone shape field
+ */
 public class ConeEmitter extends ParticleEmitter {
 
     public ConeEmitter(GameObject owner) {
@@ -16,6 +19,14 @@ public class ConeEmitter extends ParticleEmitter {
         System.out.println(particleType);
     }
 
+    /**
+     * Emit the particle in a cone shape field.
+     * <p>
+     *  First of all, a spawn position will be generated randomly<br>
+     *  After that, the direction will be calculated by rotating the base direction
+     *  by an offset angle (which is limited by the apex angle)
+     * </p>
+     */
     @Override
     public void emit() {
 
@@ -32,6 +43,10 @@ public class ConeEmitter extends ParticleEmitter {
         particle.setDirection(direction);
     }
 
+    /**
+     * Generate a spawn position in cone field.
+     * @return spawn position
+     */
     @Override
     protected Vector2 generateSpawnPosition() {
         Vector2 center = getTransform().getGlobalPosition();

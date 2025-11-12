@@ -1,9 +1,8 @@
 package game.PowerUp;
 
-import game.GameObject.Shield;
+import game.GameObject.Shield.Shield;
 import game.PowerUp.Index.PowerUp;
 import game.PowerUp.Index.PowerUpIndex;
-import game.PowerUp.Index.PowerUpManager;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 

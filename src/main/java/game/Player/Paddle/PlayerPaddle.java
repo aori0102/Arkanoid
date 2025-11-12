@@ -36,6 +36,7 @@ public class PlayerPaddle extends MonoBehaviour {
     private final PaddleEffectController paddleEffectController = addComponent(PaddleEffectController.class);
 
     private Time.CoroutineID stunnedCoroutineID;
+    private PaddleDashParticle paddleDashParticle;
 
     private Arrow arrow;
     private Vector2 fireDirection = new Vector2();
@@ -230,6 +231,21 @@ public class PlayerPaddle extends MonoBehaviour {
      */
     public void linkArrow(Arrow arrow) {
         this.arrow = arrow;
+    }
+
+    /**
+     * <br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link }
+     * as part of component linking process.</i></b>
+     *
+     * @param paddleDashParticle .
+     */
+    public void linkPaddleDashParticle(PaddleDashParticle paddleDashParticle) {
+        this.paddleDashParticle = paddleDashParticle;
+    }
+
+    public PaddleDashParticle getPaddleDashParticle() {
+        return paddleDashParticle;
     }
 
 

@@ -21,6 +21,7 @@ public class ImageAsset {
         /// Player object
         Ball("/ball.png"),
         Paddle("/paddle.png"),
+        Shield("/ShieldPower.png"),
 
         /// Obstacle
         Laser("/laser.png"),
@@ -113,7 +114,7 @@ public class ImageAsset {
         CyanBrick("/Brick/CyanBrick.png"),
         BrickNormal("/Brick/brick_normal.png"),
         BrickSteel("/Brick/SteelBrick.png"),
-        BrickDiamond("/Brick/DiamondBrick.png"),
+        BrickCrazyDiamond("/Brick/DiamondBrick.png"),
         BrickGift("/Brick/GiftBrick.png"),
         BrickReborn("/Brick/RebornBrick.png"),
         BrickRock("/Brick/RockBrick.png"),
@@ -130,6 +131,9 @@ public class ImageAsset {
         EnergyParticle("/Particle/EnergyParticle.png"),
         BallParticle("/Particle/BallParticle.png"),
         ExplodingBrickParticle("/Particle/ExplodingBrickParticle.png"),
+        DashParticle("/Particle/DashParticle.png"),
+        LaserParticle("/Particle/LaserParticle.png"),
+        LaserBeamParticle("/Particle/LaserBeamParticle.png"),
 
         /// RecordUI
         RecordUI("/UI/RecordUI.png"),

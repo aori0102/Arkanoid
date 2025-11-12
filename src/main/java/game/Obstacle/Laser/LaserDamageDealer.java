@@ -7,7 +7,6 @@ import game.Entity.EntityEffectController;
 import game.Entity.EntityHealth;
 import game.Entity.EntityStat;
 import game.Player.Paddle.PaddleHealth;
-import game.Player.Player;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 
@@ -33,11 +32,7 @@ public class LaserDamageDealer extends EntityDamageDealer {
 
     @Override
     protected boolean isDamageTarget(EntityHealth entityHealth) {
-        if (Player.getInstance().getPlayerPaddle().canBeDamaged()) {
-            return entityHealth instanceof PaddleHealth;
-        } else {
-            return false;
-        }
+        return entityHealth instanceof PaddleHealth;
     }
 
     @Override

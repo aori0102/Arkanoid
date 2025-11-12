@@ -16,7 +16,10 @@ public enum ParticleType {
             new Rectangle2D(64, 0, 64, 64),
             new Rectangle2D(128, 0, 64, 64)
     ),
-    ExplodingBrick(ImageAsset.ImageIndex.ExplodingBrickParticle);
+    ExplodingBrick(ImageAsset.ImageIndex.ExplodingBrickParticle),
+    Dash(ImageAsset.ImageIndex.DashParticle),
+    Laser(ImageAsset.ImageIndex.LaserParticle),
+    LaserBeam(ImageAsset.ImageIndex.LaserBeamParticle),;
 
     public final ImageAsset.ImageIndex imageIndex;
     public final Rectangle2D[] clips;

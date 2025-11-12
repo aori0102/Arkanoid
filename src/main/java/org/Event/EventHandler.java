@@ -27,7 +27,9 @@ public class EventHandler<T> {
 
     /**
      * Add the callback to the list. Corresponding to += in C#.
-     *
+     * <p>
+     *     Will return an event id used for removing event
+     * </p>
      * @param listener : The action that we want to execute.
      * @return An ID attach to this method. Can be used for removing later.
      */

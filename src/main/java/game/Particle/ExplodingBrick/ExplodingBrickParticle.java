@@ -7,7 +7,6 @@ import org.ParticleSystem.EmitterGenerator;
 import org.ParticleSystem.ParticleType;
 import org.ParticleSystem.Particles.ParticlePrefab;
 
-// TODO: Remove if not transferring event from central class to particle emitter
 public class ExplodingBrickParticle extends ParticlePrefab {
     /**
      * Create this MonoBehaviour.

@@ -11,7 +11,7 @@ public abstract class EmitterPrefab {
      * @param minLife minimum lifetime of the particle
      * @param maxLife maximum lifetime of the particle
      * @param spreadAngle the spread angle of the particle - use for randomize position
-     * @return
+     * @return the particle emitter
      */
     public abstract ParticleEmitter generateEmitter(double emissionRate
             , double minsSpeed

@@ -24,6 +24,9 @@ public class DashSkill extends Skill {
     @Override
     public void invoke() {
         Player.getInstance().setCurrentSpeed(DASH_SPEED);
+        Player.getInstance().getPlayerPaddle().getPaddleDashParticle().startEmit();
+        Player.getInstance().getPlayerPaddle().setCanBeDamaged(false);
+        Player.getInstance().getPlayerPaddle().getPaddleStat().setDamageTakenMultiplier(0);
         dashCoroutineID = Time.addCoroutine(this::resetDashSpeed, Time.getTime() + DASH_TIME);
     }
 
@@ -39,6 +42,9 @@ public class DashSkill extends Skill {
 
     private void resetDashSpeed() {
         Player.getInstance().setCurrentSpeed(Player.getInstance().getBaseSpeed());
+        Player.getInstance().getPlayerPaddle().setCanBeDamaged(true);
+        Player.getInstance().getPlayerPaddle().getPaddleStat().setDamageTakenMultiplier(1);
+        Player.getInstance().getPlayerPaddle().getPaddleDashParticle().stopEmit();
         Time.removeCoroutine(dashCoroutineID);
     }
 }

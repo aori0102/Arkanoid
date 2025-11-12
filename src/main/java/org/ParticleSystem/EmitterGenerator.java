@@ -7,6 +7,9 @@ import org.ParticleSystem.EmitterPrefab.EmitterPrefab;
 
 import java.util.HashMap;
 
+/**
+ * A static class used for quick generating an emitter
+ */
 public final class EmitterGenerator {
 
     public static final HashMap<EmitTypes, EmitterPrefab> emitterHashMap = new HashMap<>();

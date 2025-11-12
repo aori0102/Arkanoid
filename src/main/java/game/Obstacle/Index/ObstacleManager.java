@@ -1,6 +1,7 @@
 package game.Obstacle.Index;
 
 
+import game.Level.LevelManager;
 import game.Player.Player;
 import game.Player.Paddle.PlayerPaddle;
 import org.Event.EventHandler;
@@ -106,7 +107,7 @@ public class ObstacleManager extends MonoBehaviour {
     private boolean handleSpawningStatus() {
         timeSinceLastSpawn += Time.getDeltaTime();
         // Expected number of spawned obstacles
-        var level = 1;        // TODO: add a level system then change this part - Aori
+        var level = LevelManager.getInstance().getClearedLevel();
         double lambda = (BASE_DENSITY_PER_MINUTE / 60) * (1 + level * 0.05);
 
         // Current number of active obstacle
@@ -150,7 +151,7 @@ public class ObstacleManager extends MonoBehaviour {
     private Vector2 sampleSpawnPosition() {
         int tries = 10;
         for (int i = 0; i < tries; i++) {
-            double x = 50 + Random.range(0.0, 1.0) * (1200 - 100);
+            double x = 50 + Random.range(0.0, 1.0) * (900 - 300);
             double y = 0;
 
             Vector2 pos = new Vector2(x, y);

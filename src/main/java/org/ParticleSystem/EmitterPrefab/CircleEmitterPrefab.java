@@ -4,6 +4,9 @@ import org.GameObject.GameObjectManager;
 import org.ParticleSystem.Emitter.CircleEmitter;
 import org.ParticleSystem.Emitter.ParticleEmitter;
 
+/**
+ * Spawning a circle emitter - which will emit the particle in a circle shape field.
+ */
 public class CircleEmitterPrefab extends EmitterPrefab{
     @Override
     public ParticleEmitter generateEmitter(double emissionRate

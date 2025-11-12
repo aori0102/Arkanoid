@@ -3,7 +3,7 @@ package org.Scene.SceneBuilder;
 import game.Brick.ExplodingBrickParticleManager;
 import game.GameObject.Border.Border;
 import game.GameObject.Border.BorderType;
-import game.GameObject.Shield;
+import game.GameObject.Shield.Shield;
 import game.PowerUp.Index.PowerUpManager;
 import game.UI.GamePlayBackground;
 import game.UI.PauseMenu.PauseMenuManager;
@@ -26,6 +26,7 @@ public final class InGameSceneBuilder extends SceneBuilder {
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_ObstacleManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_BallsManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_LevelManager);
+        PrefabManager.instantiatePrefab(PrefabIndex.Shield);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_GameOverManager);
 
         PrefabManager.instantiatePrefab(PrefabIndex.Player);
@@ -59,7 +60,6 @@ public final class InGameSceneBuilder extends SceneBuilder {
 
         GameObjectManager.instantiate("PauseMenuManager").addComponent(PauseMenuManager.class);
         GameObjectManager.instantiate("ExplodingBrickCaller").addComponent(ExplodingBrickParticleManager.class);
-        GameObjectManager.instantiate("Shield").addComponent(Shield.class);
 
     }
 

@@ -29,8 +29,8 @@ public class Laser extends Obstacle {
         collider.setLocalCenter(new Vector2(0, 0));
         collider.setLocalSize(new Vector2(30, 90));
         collider.setIncludeLayer(Layer.Paddle.getUnderlyingValue());
-
-        collider.setOnCollisionEnterCallback(this::handleInteraction);
+        collider.setTrigger(true);
+        collider.setOnTriggerEnterCallback(this::handleInteraction);
 
     }
 
@@ -44,5 +44,4 @@ public class Laser extends Obstacle {
     protected void handleMovement() {
         getTransform().translate(Vector2.down().multiply(LASER_SPEED * Time.getDeltaTime()));
     }
-
 }

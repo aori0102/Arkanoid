@@ -18,7 +18,7 @@ public class Render {
         return switch (brickType) {
             case Normal -> ImageAsset.ImageIndex.BrickNormal.getImage();
             case Steel -> ImageAsset.ImageIndex.BrickSteel.getImage();
-            case Diamond -> ImageAsset.ImageIndex.BrickDiamond.getImage();
+            case Diamond -> ImageAsset.ImageIndex.BrickCrazyDiamond.getImage();
             case Rocket -> ImageAsset.ImageIndex.BrickRocket.getImage();
             case Rock -> ImageAsset.ImageIndex.BrickRock.getImage();
             case Bomb -> ImageAsset.ImageIndex.BrickBomb.getImage();

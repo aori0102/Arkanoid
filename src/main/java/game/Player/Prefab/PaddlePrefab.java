@@ -75,6 +75,12 @@ public class PaddlePrefab extends Prefab {
         paddleParticle1.startEmit();
 
         return paddleObject;
+        var dashParticle = GameObjectManager.instantiate("DashParticle").addComponent(PaddleDashParticle.class);
+        dashParticle.setParent(paddle);
+        paddle.getComponent(PlayerPaddle.class).linkPaddleDashParticle(dashParticle);
+
+
+        return paddle;
 
     }
 

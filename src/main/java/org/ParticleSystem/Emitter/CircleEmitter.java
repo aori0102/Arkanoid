@@ -27,6 +27,13 @@ public class CircleEmitter extends ParticleEmitter {
     }
 
 
+    /**
+     * Emit the particles around the object
+     * <p>
+     *     Firstly, generate a spawn position. <br>
+     *     Then calculate the direction by take randomly a direction in a circle
+     * </p>
+     */
     @Override
     public void emit() {
         Vector2 spawnPosition = generateSpawnPosition();
@@ -40,6 +47,10 @@ public class CircleEmitter extends ParticleEmitter {
         particle.setDirection(direction);
     }
 
+    /**
+     * Generate a spawn position in a circle
+     * @return the spawn position
+     */
     @Override
     protected Vector2 generateSpawnPosition() {
         Vector2 center = getTransform().getGlobalPosition();

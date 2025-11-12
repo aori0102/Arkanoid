@@ -4,6 +4,7 @@ import game.Effect.StatusEffect;
 import game.Entity.EntityEffectController;
 import game.Entity.EntityHealth;
 import game.Entity.EntityStat;
+import game.Player.Player;
 import org.GameObject.GameObject;
 
 public class PaddleEffectController extends EntityEffectController {
@@ -18,7 +19,7 @@ public class PaddleEffectController extends EntityEffectController {
 
     @Override
     public boolean canBeInflictedWith(StatusEffect effect) {
-        return true;
+        return Player.getInstance().getPlayerPaddle().canBeDamaged();
     }
 
     @Override

@@ -15,6 +15,7 @@ public class ParticlePool extends MonoBehaviour {
 
     private static ParticlePool instance;
 
+    /// The hash map to store the particle
     private final HashMap<ParticleType, List<ParticleObject>> particleHashMap = new HashMap<>();
 
     public ParticlePool(GameObject owner) {
@@ -26,6 +27,12 @@ public class ParticlePool extends MonoBehaviour {
         return instance;
     }
 
+    /**
+     * Will spawn a new particle if the current particle number is not enough. On the contrary, will return
+     * a particle.
+     * @param particleType: Particle type that we want to get
+     * @return a new particle if not having enough particle or an old existed particle
+     */
     public ParticleObject getParticle(ParticleType particleType) {
         List<ParticleObject> particles = particleHashMap.computeIfAbsent(particleType, k -> new ArrayList<>());
         for (ParticleObject particle : particles) {
@@ -52,6 +59,10 @@ public class ParticlePool extends MonoBehaviour {
         return particle;
     }
 
+    /**
+     * Release particle when not using it.
+     * @param particle : the particle wanted to release
+     */
     public void releaseParticle(ParticleObject particle) {
         particle.getGameObject().setActive(false);
     }

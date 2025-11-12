@@ -11,21 +11,25 @@ import utils.Vector2;
 
 public abstract class ParticleEmitter extends MonoBehaviour {
 
-    /// The spawn rate of particle
+    /// The spawn rate of particle.
     protected double emissionRate;
 
-    ///  Delay time between each spawn
+    ///  Delay time between each spawn.
     protected double emissionTime;
 
-    /// Spread Angle of the particle in the world position
+    /// Spread Angle of the particle in the world position.
     protected double spreadAngle;
 
-    /// Minimum travel speed
+    /// Minimum travel speed.
     protected double minSpeed;
 
-    /// Maximum travel speed
+    /// Maximum travel speed.
     protected double maxSpeed;
+
+    /// Minimum lifetime.
     protected double minLifeTime;
+
+    /// Maximum lifetime.
     protected double maxLifeTime;
     protected double timer = 0;
     protected Vector2 baseDirection = Vector2.zero();
@@ -49,6 +53,9 @@ public abstract class ParticleEmitter extends MonoBehaviour {
         }
     }
 
+    /**
+     * Calculate the time between each particle emitting process
+     */
     protected void emitCounter() {
         timer += Time.getDeltaTime();
         emissionTime = 1 / emissionRate;
@@ -61,8 +68,18 @@ public abstract class ParticleEmitter extends MonoBehaviour {
 
     public abstract void emit();
 
+    /**
+     * Generate spawn position for the particle. This function will be depended on each
+     * type of emitter
+     * @return spawn position
+     */
     protected abstract Vector2 generateSpawnPosition();
 
+    /**
+     * Spawn a new particle and assign it specs.
+     * @param particleType : the type of particle we want to spawn
+     * @return a new particle
+     */
     protected ParticleObject spawnParticles(ParticleType particleType) {
         double speed = Random.range(minSpeed, maxSpeed);
         double lifetime = Random.range(minLifeTime, maxLifeTime);
