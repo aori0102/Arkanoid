@@ -12,24 +12,34 @@ import java.util.List;
  */
 public final class TweenManager {
 
-    private static final List<Tween> activeTweens = new ArrayList<>();
+    private static final List<Tween> activeTweenList = new ArrayList<>();
+    private static final List<Tween> standbyTweenList = new ArrayList<>();
 
-    private TweenManager() {} // prevent instantiation
+    private TweenManager() {
+    } // prevent instantiation
 
-    /** Add a tween to the update list */
+    /**
+     * Add a tween to the update list
+     */
     public static void addTween(Tween tween) {
         if (tween == null) return;
-        activeTweens.add(tween);
+        standbyTweenList.add(tween);
     }
 
-    /** Update all tweens — should be called every frame */
+    /**
+     * Update all tweens — should be called every frame
+     */
     public static void update() {
-        if (activeTweens.isEmpty()) return;
+
+        activeTweenList.addAll(standbyTweenList);
+        standbyTweenList.clear();
+
+        if (activeTweenList.isEmpty()) return;
 
         double delta = Time.getDeltaTime();
         double unscaledDelta = Time.getUnscaledDeltaTime();
 
-        Iterator<Tween> iterator = activeTweens.iterator();
+        Iterator<Tween> iterator = activeTweenList.iterator();
         while (iterator.hasNext()) {
             Tween tween = iterator.next();
 
@@ -44,14 +54,18 @@ public final class TweenManager {
         }
     }
 
-    /** Immediately stop and clear all tweens */
+    /**
+     * Immediately stop and clear all tweens
+     */
     public static void clearAll() {
-        activeTweens.clear();
+        activeTweenList.clear();
     }
 
-    /** Returns the number of active tweens (for debugging) */
+    /**
+     * Returns the number of active tweens (for debugging)
+     */
     public static int getActiveTweenCount() {
-        return activeTweens.size();
+        return activeTweenList.size();
     }
 }
 
