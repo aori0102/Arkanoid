@@ -65,11 +65,15 @@ public class GamePlayBackground extends MonoBehaviour {
 
     private void gamePlayBackground_onLevelLoaded(Object sender, LevelManager.OnLevelLoadedEventArgs e) {
         if (e.type == LevelType.Showdown) {
+            blackBackground.getGameObject().setActive(true);
             // Switch main background image
             spriteRenderer.setImage(ImageAsset.ImageIndex.GamePlayBackground_Boss.getImage());
             // Set the black background image and make it visible (ready for fade-out)
             blackBackground.setImage(ImageAsset.ImageIndex.BlackBackground.getImage());
             blackBackgroundStartAnimation();
+        } else {
+            spriteRenderer.setImage(ImageAsset.ImageIndex.GamePlayBackground_Normal.getImage());
+            blackBackground.getGameObject().setActive(false);
         }
     }
 
@@ -85,6 +89,16 @@ public class GamePlayBackground extends MonoBehaviour {
     public void blackBackgroundStartAnimation() {
         Tween.to(blackBackground.getGameObject())
                 .fadeTo(0, TWEEN_DURATION)
+                .onComplete(()->{
+                    blackBackground.getGameObject().setActive(false);
+                    reinitBlackBackground();
+                })
+                .play();
+    }
+
+    private void reinitBlackBackground(){
+        Tween.to(blackBackground.getGameObject())
+                .fadeTo(1, 0.001)
                 .play();
     }
 }

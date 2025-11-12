@@ -56,6 +56,10 @@ public class MusicHandler extends MonoBehaviour {
             AudioManager.stopMusic();
             AudioManager.setCurrentMusicPlayer(MusicAsset.MusicIndex.BossOST);
             AudioManager.playMusic();
+        } else {
+            AudioManager.stopMusic();
+            AudioManager.setCurrentMusicPlayer(MusicAsset.MusicIndex.GameOST);
+            AudioManager.playMusic();
         }
     }
 
