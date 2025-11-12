@@ -49,7 +49,7 @@ public final class VoltraxisPrefab extends Prefab {
 
         //SFX
         var sfx = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_SFX);
-        sfx.setParent(voltraxis);
+        sfx.setParent(voltraxisObject);
 
         // Groggy UI
         var groggyUI = PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis_GroggyUI);

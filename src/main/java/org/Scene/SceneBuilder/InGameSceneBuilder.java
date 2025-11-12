@@ -19,7 +19,6 @@ public final class InGameSceneBuilder extends SceneBuilder {
     protected void build() {
         ParticlePool particlePool = GameObjectManager.instantiate("ParticlePool").addComponent(ParticlePool.class);
 
-        PrefabManager.instantiatePrefab(PrefabIndex.Manager_UIManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_PerkManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_BrickMapManager);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_RankManager);
