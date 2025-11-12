@@ -67,7 +67,6 @@ public final class ScoreUIPrefab extends Prefab {
         levelText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         levelText.setVerticalAlignment(TextVerticalAlignment.Middle);
         levelText.setRenderLayer(RenderLayer.UI_Middle);
-        levelText.setPivot(new Vector2(0.5, 0.0));
         levelText.getGameObject().setParent(scoreUI.getGameObject());
         levelText.getTransform().setGlobalPosition(LEVEL_TEXT_POSITION);
 
@@ -92,6 +91,7 @@ public final class ScoreUIPrefab extends Prefab {
         // Link component to score manager
         scoreUI.linkScoreText(scoreText);
         scoreUI.linkComboText(comboText);
+        scoreUI.linkLevelText(levelText);
 
         return scoreUI.getGameObject();
 

@@ -71,7 +71,7 @@ public final class LevelManager extends MonoBehaviour implements
     public EventHandler<Void> onLevelConcluded = new EventHandler<>(LevelManager.class);
     public EventHandler<Void> onGameOver = new EventHandler<>(LevelManager.class);
 
-    public static EventHandler<OnLevelLoadedEventArgs> onLevelLoaded = new EventHandler<>(LevelManager.class);
+    public static EventHandler<OnLevelLoadedEventArgs> onAnyLevelLoaded = new EventHandler<>(LevelManager.class);
 
     public static class OnLevelLoadedEventArgs {
         public int index;
@@ -288,7 +288,7 @@ public final class LevelManager extends MonoBehaviour implements
         var onLevelLoadedEventArgs = new OnLevelLoadedEventArgs();
         onLevelLoadedEventArgs.index = levelIndex;
         onLevelLoadedEventArgs.type = LEVEL_DATA[levelIndex];
-        onLevelLoaded.invoke(this, onLevelLoadedEventArgs);
+        onAnyLevelLoaded.invoke(this, onLevelLoadedEventArgs);
 
         BallsManager.getInstance().spawnInitialBall();
 
@@ -335,6 +335,7 @@ public final class LevelManager extends MonoBehaviour implements
     }
 
     private void onGameOver() {
+        DataManager.getInstance().updateSave();
         DataManager.getInstance().generateNewRecord();
         DataManager.getInstance().resetSave();
         onGameOver.invoke(this, null);

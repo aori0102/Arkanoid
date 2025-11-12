@@ -16,7 +16,7 @@ public class GiftEvent implements Event {
     private final int colData;
     private final List<List<Brick>> brickGrid;
     private final int EXECUTE_TIME = 15;
-    private final int DAMAGE = 30;
+    private final int HEALING_AMOUNT = 30;
     private boolean flag = false;
     private final List<IntPair> targets;
     private int executeTime = 0;
@@ -41,7 +41,8 @@ public class GiftEvent implements Event {
                 if (!valid(brickGrid, r, c)) continue;
 
                 var brick = brickGrid.get(r).get(c);
-                brick.getBrickHealth().alterHealth(EntityHealthAlterType.NormalDamage, null, DAMAGE);
+                brick.getBrickHealth()
+                        .alterHealth(EntityHealthAlterType.Regeneration, null, HEALING_AMOUNT);
             }
 
             timeAccum = 0;

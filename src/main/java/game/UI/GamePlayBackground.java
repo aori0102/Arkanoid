@@ -3,7 +3,6 @@ package game.UI;
 import game.Level.LevelManager;
 import game.Level.LevelType;
 import org.Event.EventActionID;
-import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
@@ -61,7 +60,7 @@ public class GamePlayBackground extends MonoBehaviour {
         owner.getTransform().setGlobalPosition(new Vector2((Main.STAGE_WIDTH) / 2, Main.STAGE_HEIGHT / 2));
 
         // Register event listener
-        gamePlayBackground_onLevelLoaded = LevelManager.onLevelLoaded.addListener(this::gamePlayBackground_onLevelLoaded);
+        gamePlayBackground_onLevelLoaded = LevelManager.onAnyLevelLoaded.addListener(this::gamePlayBackground_onLevelLoaded);
     }
 
     private void gamePlayBackground_onLevelLoaded(Object sender, LevelManager.OnLevelLoadedEventArgs e) {
@@ -76,7 +75,7 @@ public class GamePlayBackground extends MonoBehaviour {
 
     @Override
     protected void onDestroy() {
-        LevelManager.onLevelLoaded.removeListener(gamePlayBackground_onLevelLoaded);
+        LevelManager.onAnyLevelLoaded.removeListener(gamePlayBackground_onLevelLoaded);
     }
 
     /**

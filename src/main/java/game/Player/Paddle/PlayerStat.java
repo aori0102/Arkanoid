@@ -2,13 +2,16 @@ package game.Player.Paddle;
 
 import game.Entity.EntityStat;
 import game.Player.PlayerAttributes;
+import game.Player.PlayerData.DataManager;
+import game.Player.PlayerData.IPlayerProgressHolder;
 import game.Player.PlayerSkills.SkillIndex;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 
 import java.util.EnumMap;
 
-public final class PlayerStat extends EntityStat {
+public final class PlayerStat extends EntityStat implements
+        IPlayerProgressHolder {
 
     public enum PlayerStatIndex {
         Attack,
@@ -42,6 +45,23 @@ public final class PlayerStat extends EntityStat {
         skillCooldownMultiplierMap.put(SkillIndex.Dash, 1.0);
         skillCooldownMultiplierMap.put(SkillIndex.Invincible, 1.0);
         skillCooldownMultiplierMap.put(SkillIndex.Updraft, 1.0);
+    }
+
+    @Override
+    public void loadProgress() {
+
+        var progress = DataManager.getInstance().getProgress();
+
+        var skillCooldownMultiplier = progress.getSkillCooldownMultiplierArray();
+        for (var index : SkillIndex.values()) {
+            setSkillCooldownMultiplier(index, skillCooldownMultiplier[index.ordinal()]);
+        }
+
+        var statMultiplier = progress.getStatMultiplierArray();
+        for (var index : PlayerStatIndex.values()) {
+            setStatMultiplier(index, statMultiplier[index.ordinal()]);
+        }
+
     }
 
     @Override

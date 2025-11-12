@@ -10,8 +10,6 @@ import org.GameObject.MonoBehaviour;
 import org.Scene.SceneKey;
 import org.Scene.SceneManager;
 
-import java.beans.EventHandler;
-
 public class MusicHandler extends MonoBehaviour {
 
     private EventActionID musicHandler_onLevelLoaded = null;
@@ -29,13 +27,13 @@ public class MusicHandler extends MonoBehaviour {
 
     @Override
     public void start() {
-        musicHandler_onLevelLoaded = LevelManager.onLevelLoaded.addListener(MusicHandler::audioHandler_onLevelLoaded);
+        musicHandler_onLevelLoaded = LevelManager.onAnyLevelLoaded.addListener(MusicHandler::audioHandler_onLevelLoaded);
 
     }
 
     @Override
     protected void onDestroy() {
-        LevelManager.onLevelLoaded.removeListener(musicHandler_onLevelLoaded);
+        LevelManager.onAnyLevelLoaded.removeListener(musicHandler_onLevelLoaded);
     }
 
 

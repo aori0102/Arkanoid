@@ -1,5 +1,7 @@
 package game.Score;
 
+import game.Level.LevelManager;
+import org.Annotation.LinkViaPrefab;
 import org.Event.EventActionID;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -14,12 +16,20 @@ public final class ScoreUI extends MonoBehaviour {
     private static final double COMBO_SHRINK_RATE = 8.242;
     private static final double COMBO_POP_UP_SIZE = 2.3;
     private static final String COMBO_PREFIX = "x";
+    private static final String LEVEL_PREFIX = "Level ";
 
     private EventActionID scoreManager_onComboChanged_ID = null;
     private EventActionID scoreManager_onScoreChanged_ID = null;
+    private EventActionID levelManager_onLevelLoaded_ID = null;
 
+    @LinkViaPrefab
     private TextUI comboText = null;
+
+    @LinkViaPrefab
     private TextUI scoreText = null;
+
+    @LinkViaPrefab
+    private TextUI levelText = null;
 
     /**
      * Create this MonoBehaviour.
@@ -37,6 +47,8 @@ public final class ScoreUI extends MonoBehaviour {
                 .addListener(this::scoreManager_onScoreChanged);
         scoreManager_onComboChanged_ID = ScoreManager.getInstance().onComboChanged
                 .addListener(this::scoreManager_onComboChanged);
+        levelManager_onLevelLoaded_ID = LevelManager.onAnyLevelLoaded
+                .addListener(this::levelManager_onLevelLoaded);
     }
 
     @Override
@@ -47,6 +59,7 @@ public final class ScoreUI extends MonoBehaviour {
             ScoreManager.getInstance().onScoreChanged
                     .removeListener(scoreManager_onScoreChanged_ID);
         }
+        LevelManager.onAnyLevelLoaded.removeListener(levelManager_onLevelLoaded_ID);
     }
 
     @Override
@@ -87,6 +100,17 @@ public final class ScoreUI extends MonoBehaviour {
         updateComboText(e);
     }
 
+    /**
+     * Called when {@link LevelManager#onAnyLevelLoaded} is invoked.<br><br>
+     * This function updates {@link #levelText} when a level is loaded.
+     *
+     * @param sender Event caller {@link LevelManager}.
+     * @param e      Event argument containing information of the loaded level.
+     */
+    private void levelManager_onLevelLoaded(Object sender, LevelManager.OnLevelLoadedEventArgs e) {
+        levelText.setText(LEVEL_PREFIX + (e.index + 1));
+    }
+
     private void updateComboText(int combo) {
         comboText.setText(COMBO_PREFIX + combo);
     }
@@ -111,6 +135,17 @@ public final class ScoreUI extends MonoBehaviour {
      */
     public void linkScoreText(TextUI scoreText) {
         this.scoreText = scoreText;
+    }
+
+    /**
+     * Link level text<br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link ScoreUIPrefab}
+     * as part of component linking process.</i></b>
+     *
+     * @param levelText The level text.
+     */
+    public void linkLevelText(TextUI levelText) {
+        this.levelText = levelText;
     }
 
 }
