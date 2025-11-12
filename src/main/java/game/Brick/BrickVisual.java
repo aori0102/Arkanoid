@@ -1,107 +1,96 @@
 package game.Brick;
 
-import javafx.scene.effect.ColorAdjust;
+import game.Effect.StatusEffect;
+import javafx.scene.paint.Color;
+import org.GameObject.GameObject;
+import org.GameObject.MonoBehaviour;
+import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
+import org.Annotation.LinkViaPrefab;
 
 /**
- * A utility class for managing the visual effects of {@link Brick} objects.
- * It provides static methods to apply color adjustments (brightness, hue, saturation)
- * to a brick's {@link SpriteRenderer}.
+ * Visual class for a brick.
  */
-public class BrickVisual {
+public final class BrickVisual extends MonoBehaviour {
+
+    private final SpriteRenderer spriteRenderer = addComponent(SpriteRenderer.class);
+
+    @LinkViaPrefab
+    private Brick brick = null;
 
     /**
-     * The maximum value used in the brightness wave calculation.
-     */
-    private static final int maxBrightnessWave = 4;
-
-    /**
-     * Maps a given index to a brightness value within a defined range.
-     * This is used to create a "wave" or "pulse" effect for brightness.
-     * The typical output range is [-0.25, 0.25].
+     * Create this MonoBehaviour.
      *
-     * @param index    The current step or index in the wave.
-     * @param maxWave  The maximum value for the wave's cycle (e.g., {@link #maxBrightnessWave}).
-     * @return A calculated brightness value (double).
+     * @param owner The owner of this component.
      */
-    public static double mapWaveToBrightness(int index, int maxWave) {
-        index += 2;
-        double minB = -0.25;
-        double maxB =  0.25;
-        return minB + (maxB - minB) * ((double) index / maxWave);
+    public BrickVisual(GameObject owner) {
+        super(owner);
+    }
+
+    @Override
+    public void start() {
+        brick.getBrickEffectController().onEffectInflicted
+                .addListener(this::brickEffectController_onEffectInflicted);
+        brick.getBrickEffectController().onEffectCleared
+                .addListener(this::brickEffectController_onEffectCleared);
     }
 
     /**
-     * Sets the brightness of a brick based on a specific index in the brightness wave.
+     * Called when {@link BrickEffectController#onEffectInflicted} is invoked.<br><br>
+     * This function changes the visual of the brick based on the effect inflicted.
      *
-     * @param idx   The index to use for the {@link #mapWaveToBrightness(int, int)} calculation.
-     * @param value The {@link Brick} to modify.
+     * @param sender Event caller {@link BrickEffectController}.
+     * @param e      Event argument indicating the effect that was inflicted.
      */
-    public static void setBrightness(int idx, Brick value) {
-        double brightness = mapWaveToBrightness(idx, maxBrightnessWave);
-
-        SpriteRenderer renderer = value.getComponent(SpriteRenderer.class);
-        ColorAdjust fx = new ColorAdjust();
-        fx.setBrightness(brightness);
-        renderer.getNode().setEffect(fx);
+    private void brickEffectController_onEffectInflicted(Object sender, StatusEffect e) {
+        spriteRenderer.setImage(switch (e) {
+            case Burn -> ImageAsset.ImageIndex.OrangeBrick.getImage();
+            case FrostBite -> ImageAsset.ImageIndex.CyanBrick.getImage();
+            case Electrified -> ImageAsset.ImageIndex.PurpleBrick.getImage();
+            default -> brick.getBrickType().imageIndex.getImage();
+        });
+        spriteRenderer.setSize(Brick.BRICK_SIZE);
     }
 
     /**
-     * Sets the brightness of a brick to its maximum value (1.0).
+     * Called when {@link BrickEffectController#onEffectCleared} is invoked.<br><br>
+     * This function changes the visual of the brick back to normal as the effect is removed.
      *
-     * @param value The {@link Brick} to modify.
+     * @param sender Event callers {@link BrickEffectController}.
+     * @param e      Event argument indicating the effect that was removed.
      */
-    public static void setBrightnessMax(Brick value) {
-        double brightness = 1;
-
-        SpriteRenderer renderer = value.getComponent(SpriteRenderer.class);
-        ColorAdjust fx = new ColorAdjust();
-        fx.setBrightness(brightness);
-        renderer.getNode().setEffect(fx);
+    private void brickEffectController_onEffectCleared(Object sender, StatusEffect e) {
+        if (!brick.getBrickEffectController().hasAnyEffect()) {
+            applyDefaultImage();
+        }
     }
 
     /**
-     * Applies a color adjustment to the brick to make it appear red.
-     * This is achieved by increasing saturation, shifting hue, and slightly decreasing brightness.
-     *
-     * @param value The {@link Brick} to modify.
+     * Set the image for this brick based on the {@link BrickType} provided via {@link Brick#getBrickType}.
      */
-    public static void setRed(Brick value) {
-        SpriteRenderer renderer = value.getComponent(SpriteRenderer.class);
-        ColorAdjust fx = new ColorAdjust();
-        fx.setSaturation(1.0);
-        fx.setHue(-0.9);
-        fx.setBrightness(-0.2);
-        renderer.getNode().setEffect(fx);
+    public void applyDefaultImage() {
+        spriteRenderer.setImage(brick.getBrickType().imageIndex.getImage());
+        spriteRenderer.setSize(Brick.BRICK_SIZE);
     }
 
     /**
-     * Applies a color adjustment to the brick to make it appear yellow.
-     * This is achieved by adjusting saturation, shifting hue, and slightly decreasing brightness.
+     * Set the overlay color for the brick.
      *
-     * @param value The {@link Brick} to modify.
+     * @param color The overlay color to be set.
      */
-    public static void setYellow(Brick value) {
-        SpriteRenderer renderer = value.getComponent(SpriteRenderer.class);
-        ColorAdjust fx = new ColorAdjust();
-        fx.setSaturation(0.15);
-        fx.setHue(1.0);
-        fx.setBrightness(-0.2);
-        renderer.getNode().setEffect(fx);
+    public void setOverlayColor(Color color) {
+        spriteRenderer.setOverlayColor(color);
     }
 
     /**
-     * Resets all color adjustments (Saturation, Hue, Brightness) on the brick's renderer
-     * to their default (0.0) values, removing any visual effects.
+     * Link the central class of brick<br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link BrickPrefab}
+     * as part of component linking process.</i></b>
      *
-     * @param value The {@link Brick} to reset.
+     * @param brick The central class of brick.
      */
-    public static void resetRender(Brick value) {
-        SpriteRenderer renderer = value.getComponent(SpriteRenderer.class);
-        ColorAdjust fx = new ColorAdjust();
-        fx.setSaturation(0.0);
-        fx.setHue(0.0);
-        fx.setBrightness(0.0);
-        renderer.getNode().setEffect(fx);
+    public void linkBrick(Brick brick) {
+        this.brick = brick;
     }
+
 }

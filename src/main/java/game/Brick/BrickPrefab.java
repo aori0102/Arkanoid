@@ -29,19 +29,11 @@ public final class BrickPrefab extends Prefab {
                 .addComponent(BrickStat.class)
                 .getGameObject();
         brickObject.setLayer(Layer.Brick);
-
-        // Brick component
         var brick = brickObject.getComponent(Brick.class);
 
-        // Setup visual and ready for rendering object
-        var brickRenderer = brickObject.addComponent(SpriteRenderer.class);
-        brickRenderer.setImage(ImageAsset.ImageIndex.BrickNormal.getImage());
-        brickRenderer.setSize(BRICK_SIZE);
-        brickRenderer.setPivot(new Vector2(0.5, 0.5));
-
-        // Health component
-        brickObject.getComponent(BrickHealth.class)
-                .linkBrick(brickObject.getComponent(Brick.class));
+        // Visual
+        instantiateVisual(brick)
+                .setParent(brickObject);
 
         // Collider
         brickObject.addComponent(BoxCollider.class).setLocalSize(BRICK_SIZE);
@@ -56,6 +48,27 @@ public final class BrickPrefab extends Prefab {
         brickObject.getComponent(BrickStat.class).linkBrick(brick);
 
         return brickObject;
+
+    }
+
+    private GameObject instantiateVisual(Brick brick) {
+
+        // Main object
+        var brickVisualObject = GameObjectManager.instantiate("BrickVisual")
+                .addComponent(BrickVisual.class)
+                .addComponent(SpriteRenderer.class)
+                .getGameObject();
+        var brickVisual = brickVisualObject.getComponent(BrickVisual.class);
+
+        // Renderer
+        var brickRenderer = brickVisualObject.getComponent(SpriteRenderer.class);
+        brickRenderer.setPivot(new Vector2(0.5, 0.5));
+
+        // Link component
+        brick.linkBrickVisual(brickVisual);
+        brickVisual.linkBrick(brick);
+
+        return brickVisualObject;
 
     }
 

@@ -4,6 +4,9 @@ import game.Entity.EntityStat;
 import org.Annotation.LinkViaPrefab;
 import org.GameObject.GameObject;
 
+/**
+ * Stores brick's stat.
+ */
 public final class BrickStat extends EntityStat {
 
     private double damageTakenMultiplier = 1.0;

@@ -1,4 +1,4 @@
-package game.Particle;
+package game.Particle.ExplodingBrick;
 
 import org.GameObject.GameObject;
 import org.ParticleSystem.Emitter.CircleEmitter;

@@ -1,30 +1,34 @@
 package game.Brick;
 
-import game.Effect.StatusEffect;
 import game.Rank.ExperienceHolder;
 import javafx.scene.paint.Color;
+import org.Annotation.LinkViaPrefab;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
-import org.Rendering.SpriteRenderer;
-import org.Rendering.ImageAsset;
 import utils.Vector2;
 
 // TODO: Refactor
+
+/**
+ * Central class of a brick.
+ */
 public class Brick extends MonoBehaviour {
 
-    private static final Vector2 BRICK_SIZE = new Vector2(64, 32);
+    public static final Vector2 BRICK_SIZE = new Vector2(64, 32);
 
-    private final SpriteRenderer spriteRenderer = addComponent(SpriteRenderer.class);
     private final ExperienceHolder experienceHolder = addComponent(ExperienceHolder.class);
     private final BrickHealth brickHealth = addComponent(BrickHealth.class);
     private final BrickStat brickStat = addComponent(BrickStat.class);
     private final BrickEffectController brickEffectController = addComponent(BrickEffectController.class);
 
+    @LinkViaPrefab
+    private BrickVisual brickVisual = null;
+
     private BrickType brickType = BrickType.Normal;
-    private boolean isJustDamaged = false;
+    private boolean isJustDamaged = false;      // TODO: this can be removed
 
     public static EventHandler<OnBrickDestroyedEventArgs> onAnyBrickDestroyed = new EventHandler<>(Brick.class);
 
@@ -47,17 +51,8 @@ public class Brick extends MonoBehaviour {
 
     @Override
     public void awake() {
-        spriteRenderer.setImage(brickType.imageIndex.getImage());
-        spriteRenderer.setSize(BrickPrefab.BRICK_SIZE);
-        System.out.println("awake " + gameObject);
-
+        brickVisual.applyDefaultImage();
         experienceHolder.setExp(brickType.exp);
-    }
-
-    @Override
-    public void start() {
-        brickEffectController.onEffectInflicted.addListener(this::brickEffectController_onEffectInflicted);
-        brickEffectController.onEffectCleared.addListener(this::brickEffectController_onEffectCleared);
     }
 
     @Override
@@ -85,40 +80,22 @@ public class Brick extends MonoBehaviour {
         return brickStat;
     }
 
+    public BrickVisual getBrickVisual() {
+        return brickVisual;
+    }
+
+    public BrickEffectController getBrickEffectController() {
+        return brickEffectController;
+    }
+
+    /**
+     * Handles upon collision with other objects.
+     *
+     * @param data The information of the collision.
+     */
     private void onCollisionEnter(CollisionData data) {
         onAnyBrickHit.invoke(this, null);
         isJustDamaged = true;
-    }
-
-    /**
-     * Called when {@link BrickEffectController#onEffectInflicted} is invoked.<br><br>
-     * This function changes the visual of the brick based on the effect inflicted.
-     *
-     * @param sender Event caller {@link BrickEffectController}.
-     * @param e      Event argument indicating the effect that was inflicted.
-     */
-    private void brickEffectController_onEffectInflicted(Object sender, StatusEffect e) {
-        spriteRenderer.setImage(switch (e) {
-            case Burn -> ImageAsset.ImageIndex.OrangeBrick.getImage();
-            case FrostBite -> ImageAsset.ImageIndex.CyanBrick.getImage();
-            case Electrified -> ImageAsset.ImageIndex.PurpleBrick.getImage();
-            default -> ImageAsset.ImageIndex.CyanBrick.getImage();
-        });
-        spriteRenderer.setSize(BRICK_SIZE);
-    }
-
-    /**
-     * Called when {@link BrickEffectController#onEffectCleared} is invoked.<br><br>
-     * This function changes the visual of the brick back to normal as the effect is removed.
-     *
-     * @param sender Event callers {@link BrickEffectController}.
-     * @param e      Event argument indicating the effect that was removed.
-     */
-    private void brickEffectController_onEffectCleared(Object sender, StatusEffect e) {
-        if (!brickEffectController.hasAnyEffect()) {
-            spriteRenderer.setImage(brickType.imageIndex.getImage());
-            spriteRenderer.setSize(BRICK_SIZE);
-        }
     }
 
     public void setBrickType(BrickType brickType) {
@@ -133,24 +110,30 @@ public class Brick extends MonoBehaviour {
         if (idx == -2) {
             return;
         }
-        BrickVisual.setBrightness(idx, this);
+        OLDBrickVisual.setBrightness(idx, brickVisual);
     }
 
     public void maxBrightness() {
-        BrickVisual.setBrightnessMax(this);
+        OLDBrickVisual.setBrightnessMax(brickVisual);
     }
 
     public void setRedRender() {
-        spriteRenderer.setOverlayColor(Color.RED);
+        brickVisual.setOverlayColor(Color.RED);
     }
 
     public void setYellowRender() {
-        spriteRenderer.setOverlayColor(Color.YELLOW);
+        brickVisual.setOverlayColor(Color.YELLOW);
     }
 
-    public void resetRenderColor() {
-        BrickVisual.resetRender(this);
+    /**
+     * Link the brick visual<br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link BrickPrefab}
+     * as part of component linking process.</i></b>
+     *
+     * @param brickVisual The brick visual.
+     */
+    public void linkBrickVisual(BrickVisual brickVisual) {
+        this.brickVisual = brickVisual;
     }
-
 
 }

@@ -3,13 +3,16 @@ package game.Brick;
 import org.Event.EventActionID;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
-import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
-import org.ParticleSystem.ParticleType;
-import game.Particle.ExplodingBrickParticle;
+import game.Particle.ExplodingBrick.ExplodingBrickParticle;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import utils.Time;
 import utils.Vector2;
 
+/**
+ * Handles particle when a {@link Brick} is destroyed.
+ */
 public class ExplodingBrickParticleManager extends MonoBehaviour {
 
     private static final double PARTICLE_EXISTING_TIME = 0.3;
@@ -50,12 +53,8 @@ public class ExplodingBrickParticleManager extends MonoBehaviour {
 
     @Override
     public void awake() {
-        // TODO: Can do prefab
-        explodingBrickParticle = GameObjectManager.instantiate("ExplodingBrickParticle")
-                .addComponent(ExplodingBrickParticle.class);
-        explodingBrickParticle.setRadius(10);
-        explodingBrickParticle.setParticleType(ParticleType.ExplodingBrick);
-
+        explodingBrickParticle = PrefabManager.instantiatePrefab(PrefabIndex.ExplodingBrickParticle)
+                .getComponent(ExplodingBrickParticle.class);
         brick_onAnyBrickDestroyed_ID = Brick.onAnyBrickDestroyed
                 .addListener(this::brick_onAnyBrickDestroyed);
     }
@@ -71,12 +70,20 @@ public class ExplodingBrickParticleManager extends MonoBehaviour {
         startEmit(e.brickPosition);
     }
 
+    /**
+     * Starts emitting particle on the destroyed brick.
+     *
+     * @param position The position where the brick was destroyed.
+     */
     public void startEmit(Vector2 position) {
         explodingBrickParticle.setPosition(position);
         explodingBrickParticle.startEmit();
         explodingBrickCoroutineID = Time.addCoroutine(this::stopEmit, Time.getTime() + PARTICLE_EXISTING_TIME);
     }
 
+    /**
+     * Stop emitting particle.
+     */
     public void stopEmit() {
         explodingBrickParticle.stopEmit();
     }

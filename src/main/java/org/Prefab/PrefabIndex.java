@@ -15,6 +15,7 @@ import game.Level.LevelManagerPrefab;
 import game.Level.LevelUIPrefab;
 import game.MapGenerator.BrickMapManagerPrefab;
 import game.Obstacle.Index.ObstacleManagerPrefab;
+import game.Particle.ExplodingBrick.ExplodingBrickParticlePrefab;
 import game.Perks.Index.PerkManagerPrefab;
 import game.Player.Prefab.PaddlePrefab;
 import game.Player.Prefab.PlayerHealthBarPrefab;
@@ -144,7 +145,8 @@ public enum PrefabIndex {
     Player_HealthBar(new PlayerHealthBarPrefab()),
     Player_HealthLossVignette(new PlayerHealthLossVignettePrefab()),
 
-    /// Particle;
+    /// Particle
+    ExplodingBrickParticle(new ExplodingBrickParticlePrefab()),
 
     None(null);
 
