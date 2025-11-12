@@ -1,11 +1,11 @@
 package org.Prefab;
 
 import game.Audio.MusicHandlerPrefab;
-import game.Audio.SFXHandlerPrefab;
 import game.Ball.BallParticlePrefab;
 import game.Ball.BallPrefab;
 import game.Ball.BallsManagerPrefab;
 import game.Brick.BrickPrefab;
+import game.Brick.Sound.BrickSFXHandlerPrefab;
 import game.Config.ConfigManagerPrefab;
 import game.Damagable.HealthChangePopUpUIPrefab;
 import game.Damagable.HealthChangeVisualizerPrefab;
@@ -14,6 +14,7 @@ import game.GameOver.GameOverInfoDisplayUIPrefab;
 import game.GameOver.GameOverManagerPrefab;
 import game.GameObject.Shield.ShieldPrefab;
 import game.LaserBeam.LaserBeamPrefab;
+import game.LaserBeam.LaserBeamSFXHandlerPrefab;
 import game.Level.LevelManagerPrefab;
 import game.Level.LevelUIPrefab;
 import game.MapGenerator.BrickMapManagerPrefab;
@@ -47,6 +48,7 @@ public enum PrefabIndex {
 
     /// Brick
     Brick(new BrickPrefab()),
+    BrickSFXHandler(new BrickSFXHandlerPrefab()),
 
     /// Level notification
     LevelNotificationUI(new LevelUIPrefab()),
@@ -139,7 +141,7 @@ public enum PrefabIndex {
 
     /// Skill
     LaserBeam(new LaserBeamPrefab()),
-
+    LaserBeamSFXHandler(new LaserBeamSFXHandlerPrefab()),
 
     /// Power up
     PowerUp_Placeholder(new PowerUpPlaceholderPrefab()),
@@ -159,7 +161,6 @@ public enum PrefabIndex {
     /// Shield
     Shield(new ShieldPrefab()),
     /// Audio
-    SFXHandler(new SFXHandlerPrefab()),
     MusicHandler(new MusicHandlerPrefab()),
 
     /// Particle

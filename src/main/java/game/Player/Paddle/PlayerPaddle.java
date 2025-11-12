@@ -10,6 +10,7 @@ import game.PowerUp.Recovery;
 import javafx.scene.input.MouseButton;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import org.Layer.Layer;
@@ -18,7 +19,6 @@ import org.Physics.BoxCollider;
 import org.Physics.PhysicsManager;
 import utils.Time;
 import utils.Vector2;
-import javafx.scene.input.MouseEvent;
 
 /**
  * Represents the player's paddle in the game.
@@ -34,6 +34,13 @@ public class PlayerPaddle extends MonoBehaviour {
     private static final double DOT_LIMIT_ANGLE_LEFT = 150;
     private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0); // reference vector for angle calculation
 
+    // --- Stun effect constants ---
+    private static final double STUN_TIME = 3.2;
+    private static final double STUNNED_MOVEMENT_SPEED_MULTIPLIER = 0.1;
+
+    // --- Paddle movement constraint ---
+    private static final double PADDLE_MAX_MOVABLE_AMPLITUDE = 650.0;
+
     // --- Components attached to this paddle ---
     private final PaddleHealth paddleHealth = addComponent(PaddleHealth.class);
     private final PlayerStat playerStat = addComponent(PlayerStat.class);
@@ -48,7 +55,6 @@ public class PlayerPaddle extends MonoBehaviour {
 
     private boolean canInvoke; // if the paddle can fire
     public boolean isFired = false; // indicates if a shot has been fired
-    private boolean canBeDamaged = true; // indicates if paddle can take damage
 
     private Vector2 movementVector = new Vector2(0, 0); // current movement vector
 
@@ -87,8 +93,8 @@ public class PlayerPaddle extends MonoBehaviour {
      */
     @Override
     public void start() {
-        paddleHealth.onPaddleHealthReachesZero
-                .addListener(this::playerPaddleHealth_onPaddleHealthReachesZero);
+        paddleHealth.onHealthReachesZero
+                .addListener(this::playerPaddleHealth_onHealthReachesZero);
     }
 
     /**
@@ -113,20 +119,20 @@ public class PlayerPaddle extends MonoBehaviour {
             var powerUp = other.getComponent(PowerUp.class);
             if (powerUp != null) {
                 if (powerUp instanceof Recovery || isFired) {
-                    onAnyPowerUpConsumed.invoke(this, powerUp);
+                    onPowerUpConsumed.invoke(this, powerUp);
                 }
             }
         }
     }
 
     /**
-     * Called when {@link PaddleHealth#onPaddleHealthReachesZero} is invoked.<br><br>
+     * Called when {@link PaddleHealth#onHealthReachesZero} is invoked.<br><br>
      * This function destroys the paddle when paddle's health reaches zero.
      *
      * @param sender Event caller {@link PaddleHealth}.
      * @param e      Empty event argument.
      */
-    private void playerPaddleHealth_onPaddleHealthReachesZero(Object sender, Void e) {
+    private void playerPaddleHealth_onHealthReachesZero(Object sender, Void e) {
         GameObjectManager.destroy(gameObject);
     }
 
@@ -167,7 +173,8 @@ public class PlayerPaddle extends MonoBehaviour {
         switch (action) {
             case GoLeft -> movementVector = movementVector.add(new Vector2(-1, 0));
             case GoRight -> movementVector = movementVector.add(new Vector2(1, 0));
-            default -> {}
+            default -> {
+            }
         }
 
         if (!movementVector.equals(Vector2.zero())) {

@@ -10,7 +10,6 @@ import org.GameObject.MonoBehaviour;
 import org.Layer.Layer;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
-import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
 
@@ -29,7 +28,7 @@ public class LaserBeam extends MonoBehaviour {
 
     private static final double LASER_SPEED = 1000;
     private final Layer[] colliderLayers = {Layer.Boss, Layer.Brick};
-    public static EventHandler<Void> onLaserBeamShoot = new EventHandler<Void>(LaserBeam.class);
+    public static EventHandler<Void> onAnyLaserBeamSpawned = new EventHandler<Void>(LaserBeam.class);
     /**
      * Constructor.
      *
@@ -53,7 +52,7 @@ public class LaserBeam extends MonoBehaviour {
         getTransform().setGlobalPosition(
                 Player.getInstance().getPlayerPaddle().getTransform().getGlobalPosition()
         );
-        onLaserBeamShoot.invoke(this, null);
+        onAnyLaserBeamSpawned.invoke(this, null);
     }
 
     @Override

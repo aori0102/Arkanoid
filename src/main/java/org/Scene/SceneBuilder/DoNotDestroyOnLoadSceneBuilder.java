@@ -12,8 +12,6 @@ public final class DoNotDestroyOnLoadSceneBuilder extends SceneBuilder {
                 .setDoNotDestroyOnLoad(true);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_ProgressManager)
                 .setDoNotDestroyOnLoad(true);
-        PrefabManager.instantiatePrefab(PrefabIndex.SFXHandler)
-                .setDoNotDestroyOnLoad(true);
         PrefabManager.instantiatePrefab(PrefabIndex.MusicHandler)
                 .setDoNotDestroyOnLoad(true);
     }

@@ -7,6 +7,10 @@ import org.GameObject.GameObject;
 import org.Layer.Layer;
 import utils.Time;
 
+/**
+ * DashSkill is a player skill that allows the player to dash forward quickly
+ * for a short duration. While dashing, the player paddle is invulnerable to damage.
+ */
 public class DashSkill extends Skill {
 
     private static final double DASH_SPEED_MULTIPLIER_INCREMENT = 1.3;
@@ -23,6 +27,15 @@ public class DashSkill extends Skill {
         super(owner);
     }
 
+    /**
+     * Activates the dash skill:
+     * <ul>
+     *     <li>Increase player's movement speed by a certain amount</li>
+     *     <li>Starts dash particle effect</li>
+     *     <li>Makes paddle invulnerable during dash</li>
+     *     <li>Starts a coroutine to reset speed and invulnerability after certain time</li>
+     * </ul>
+     */
     @Override
     public void invoke() {
         var paddle = Player.getInstance().getPlayerPaddle();
@@ -45,6 +58,10 @@ public class DashSkill extends Skill {
         return SkillIndex.Dash;
     }
 
+    /**
+     * Resets the player's speed and invulnerability after dash duration ends.
+     * Stops the dash particle effect and removes the coroutine.
+     */
     private void resetDashSpeed() {
         var paddle = Player.getInstance().getPlayerPaddle();
         paddle.getPaddleStat().setStatMultiplier(

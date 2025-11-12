@@ -7,8 +7,16 @@ import game.Player.PlayerSkills.SkillIndex;
 import org.GameObject.GameObject;
 import org.Layer.Layer;
 import utils.Time;
-import utils.Vector2;
 
+/**
+ * InvincibleSkill grants temporary invincibility to the player paddle.
+ * During this skill:
+ * - Paddle cannot be damaged
+ * - Paddle grows in size
+ * - Player speed is boosted
+ * - Paddle's damage taken is reduced to zero
+ * - Shield visual is displayed
+ */
 public class InvincibleSkill extends Skill {
 
     private static final double SPEED_BOOSTED_MULTIPLIER_INCREMENT = 0.42;
@@ -25,6 +33,16 @@ public class InvincibleSkill extends Skill {
         super(owner);
     }
 
+    /**
+     * Activates the invincibility skill:
+     * <ul>
+     *     <li>Makes paddle invulnerable</li>
+     *     <li>Increases paddle size</li>
+     *     <li>Boosts player speed</li>
+     *     <li>Turns on shield</li>
+     *     <li>Starts coroutine to end invincibility after a set amount of time</li>
+     * </ul>
+     */
     @Override
     public void invoke() {
         var paddle = Player.getInstance().getPlayerPaddle();
@@ -45,6 +63,16 @@ public class InvincibleSkill extends Skill {
         return SkillIndex.Invincible;
     }
 
+    /**
+     * Ends the invincibility effect:
+     * <ul>
+     *     <li>Restores paddle's ability to be damaged</li>
+     *     <li>Resets paddle scale</li>
+     *     <li>Resets paddle speed</li>
+     *     <li>Resets damage taken multiplier</li>
+     *     <li>Turns off shield</li>
+     * </ul>
+     */
     private void turnOff() {
         var paddle = Player.getInstance().getPlayerPaddle();
         paddle.getTransform().setLocalScale(

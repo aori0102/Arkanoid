@@ -56,7 +56,8 @@ public class VoltraxisGroggy extends MonoBehaviour {
 
     @Override
     public void start() {
-        Voltraxis.getInstance().getVoltraxisHealth().onHealthChanged.addListener(this::voltraxis_onDamaged);
+        Voltraxis.getInstance().getVoltraxisHealth().onHealthChanged
+                .addListener(this::voltraxis_onDamaged);
         Voltraxis.getInstance().getVoltraxisCharging().onChargingTerminated
                 .addListener(this::voltraxisCharging_onChargingTerminated);
         Voltraxis.getInstance().getVoltraxisCharging().onBossWeakened

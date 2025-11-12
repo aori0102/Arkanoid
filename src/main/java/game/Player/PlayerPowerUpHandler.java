@@ -32,13 +32,17 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
 
     @Override
     public void start() {
-        paddle_onPowerUpConsumed_ID = PlayerPaddle.onAnyPowerUpConsumed
+        paddle_onPowerUpConsumed_ID = Player.getInstance().getPlayerPaddle().onPowerUpConsumed
                 .addListener(this::paddle_onPowerUpConsumed);
     }
 
     @Override
     protected void onDestroy() {
-        PlayerPaddle.onAnyPowerUpConsumed.removeListener(paddle_onPowerUpConsumed_ID);
+        try {
+            Player.getInstance().getPlayerPaddle().onPowerUpConsumed
+                    .removeListener(paddle_onPowerUpConsumed_ID);
+        } catch (NullPointerException _) {
+        }
     }
 
     /**

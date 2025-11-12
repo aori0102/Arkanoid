@@ -29,6 +29,9 @@ public final class InGameSceneBuilder extends SceneBuilder {
         PrefabManager.instantiatePrefab(PrefabIndex.Shield);
         PrefabManager.instantiatePrefab(PrefabIndex.Manager_GameOverManager);
 
+        PrefabManager.instantiatePrefab(PrefabIndex.BrickSFXHandler);
+        PrefabManager.instantiatePrefab(PrefabIndex.LaserBeamSFXHandler);
+
         PrefabManager.instantiatePrefab(PrefabIndex.Player);
         PrefabManager.instantiatePrefab(PrefabIndex.PlayerStatUIHandler);
 

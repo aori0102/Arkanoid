@@ -34,6 +34,7 @@ public class PlayerPrefab extends Prefab {
                 .addComponent(PlayerSkillsHandler.class)
                 .addComponent(PlayerPowerUpHandler.class)
                 .addComponent(PlayerLives.class)
+                .addComponent(PlayerSFXHandler.class)
                 .getGameObject();
 
         var player = playerObject.getComponent(Player.class);
