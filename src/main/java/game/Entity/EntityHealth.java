@@ -61,7 +61,7 @@ public abstract class EntityHealth extends MonoBehaviour {
 
     @Override
     public void awake() {
-        _health = entityStat.getBaseMaxHealth();
+        resetHealth();
     }
 
     /**
@@ -87,7 +87,7 @@ public abstract class EntityHealth extends MonoBehaviour {
             _health -= actualDamage;
         }
 
-        _health = Math.clamp(_health, 0, entityStat.getBaseMaxHealth());
+        _health = Math.clamp(_health, 0, entityStat.getActualMaxHealth());
 
         var onHealthChangedEventArgs = new OnHealthChangedEventArgs();
         onHealthChangedEventArgs.delta = Math.abs(_health - previous);
@@ -125,7 +125,7 @@ public abstract class EntityHealth extends MonoBehaviour {
     protected abstract Class<? extends EntityStat> getStatComponentClass();
 
     public final void resetHealth() {
-        _health = entityStat.getBaseMaxHealth();
+        alterHealth(EntityHealthAlterType.Regeneration, null, entityStat.getActualMaxHealth());
     }
 
 }

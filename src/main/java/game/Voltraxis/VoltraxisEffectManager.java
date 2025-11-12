@@ -106,7 +106,7 @@ public final class VoltraxisEffectManager extends MonoBehaviour {
         effectTracker.effectStartTick = Time.getTime();
         effectTracker.info = info;
         effectTracker.terminateCoroutineID
-                = Time.addCoroutine(() -> removeEffect(id), Time.getTime() + info.duration);
+                = Time.addCoroutine(() -> removeEffect(id), info.duration);
         effectTrackingInfoMap.put(id, effectTracker);
 
         return id;

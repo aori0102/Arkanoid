@@ -118,7 +118,7 @@ public final class GameOverManager extends MonoBehaviour {
         rankInfo.flyInInfo();
 
         currentDisplayIndex = 0;
-        revealInfo_coroutineID = Time.addCoroutine(this::revealInfo, Time.getTime() + INFO_TWEEN_DELAY);
+        revealInfo_coroutineID = Time.addCoroutine(this::revealInfo, INFO_TWEEN_DELAY);
     }
 
     /**
@@ -134,9 +134,9 @@ public final class GameOverManager extends MonoBehaviour {
         }
         currentDisplayIndex++;
         if (currentDisplayIndex < infoIndices.length) {
-            revealInfo_coroutineID = Time.addCoroutine(this::revealInfo, Time.getTime() + DELAY_BETWEEN_REVEAL);
+            revealInfo_coroutineID = Time.addCoroutine(this::revealInfo, DELAY_BETWEEN_REVEAL);
         } else {
-            Time.addCoroutine(() -> onMainMenuRequested.invoke(this, null), Time.getTime() + 3);
+            Time.addCoroutine(() -> onMainMenuRequested.invoke(this, null), 3);
         }
     }
 

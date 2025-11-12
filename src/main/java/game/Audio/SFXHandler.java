@@ -28,14 +28,14 @@ public class SFXHandler extends MonoBehaviour {
     public void start() {
         sfxHandler_onAnyBrickHit= Brick.onAnyBrickHit.addListener(SFXHandler::sfxHandler_onAnyBrickHit);
         sfxHandler_onLaserBeamShoot = LaserBeam.onLaserBeamShoot.addListener(SFXHandler::sfxHandler_onLaserBeamShoot);
-        sfxHandler_onPowerUpConsumed = PlayerPaddle.onPowerUpConsumed.addListener(SFXHandler::sfxHandler_onPowerUpConsumed);
+        sfxHandler_onPowerUpConsumed = PlayerPaddle.onAnyPowerUpConsumed.addListener(SFXHandler::sfxHandler_onPowerUpConsumed);
     }
 
     @Override
     protected void onDestroy() {
         Brick.onAnyBrickHit.removeListener(sfxHandler_onAnyBrickHit);
         LaserBeam.onLaserBeamShoot.removeListener(sfxHandler_onLaserBeamShoot);
-        PlayerPaddle.onPowerUpConsumed.removeListener(sfxHandler_onPowerUpConsumed);
+        PlayerPaddle.onAnyPowerUpConsumed.removeListener(sfxHandler_onPowerUpConsumed);
     }
 
     private static void sfxHandler_onAnyBrickHit(Object sender, Void e) {

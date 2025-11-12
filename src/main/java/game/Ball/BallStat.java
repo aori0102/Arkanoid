@@ -1,14 +1,13 @@
 package game.Ball;
 
 import game.Entity.EntityStat;
-import game.Player.Paddle.PaddleStat;
+import game.Player.Paddle.PlayerStat;
 import game.Player.Player;
-import game.Player.PlayerStatUIHandler;
 import org.GameObject.GameObject;
 
 public final class BallStat extends EntityStat {
 
-    private PaddleStat paddleStat = null;
+    private PlayerStat playerStat = null;
 
     /**
      * Create this MonoBehaviour.
@@ -21,12 +20,12 @@ public final class BallStat extends EntityStat {
 
     @Override
     public void start() {
-        paddleStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
+        playerStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
     }
 
     @Override
     public int getBaseAttack() {
-        return paddleStat.getBaseAttack();
+        return playerStat.getBaseAttack();
     }
 
     @Override
@@ -36,7 +35,7 @@ public final class BallStat extends EntityStat {
 
     @Override
     public double getAttackMultiplier() {
-        return paddleStat.getAttackMultiplier();
+        return playerStat.getAttackMultiplier();
     }
 
     @Override
@@ -56,12 +55,12 @@ public final class BallStat extends EntityStat {
 
     @Override
     public double getCriticalChance() {
-        return paddleStat.getCriticalChance();
+        return playerStat.getCriticalChance();
     }
 
     @Override
     public double getCriticalDamage() {
-        return paddleStat.getCriticalDamage();
+        return playerStat.getCriticalDamage();
     }
 
     @Override

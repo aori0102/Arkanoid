@@ -24,7 +24,7 @@ public class PaddlePrefab extends Prefab {
                 .addComponent(PlayerPaddle.class)
                 .addComponent(PaddleHealth.class)
                 .addComponent(PaddleEffectController.class)
-                .addComponent(PaddleStat.class)
+                .addComponent(PlayerStat.class)
                 .addComponent(BoxCollider.class)
                 .getGameObject();
         var paddle = paddleObject.getComponent(PlayerPaddle.class);

@@ -7,13 +7,15 @@ import game.GameManager.LevelState;
 import game.Level.LevelManager;
 import game.MapGenerator.BrickMapManager;
 import game.Player.PlayerData.DataManager;
+import game.Player.PlayerData.IPlayerProgressHolder;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 
-public final class ScoreManager extends MonoBehaviour {
+public final class ScoreManager extends MonoBehaviour implements
+        IPlayerProgressHolder {
 
     private static final int BALL_SCORE_WHEN_CLEARED = 12;
 
@@ -145,6 +147,7 @@ public final class ScoreManager extends MonoBehaviour {
         return instance;
     }
 
+    @Override
     public void loadProgress() {
         var save = DataManager.getInstance().getProgress();
         setScore(save.getScore());

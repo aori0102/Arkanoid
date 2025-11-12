@@ -30,11 +30,11 @@ public class PlayerSkillsHandler extends MonoBehaviour {
     private void handleSkillRequest(Object o, ActionMap.Action action) {
         switch (action) {
             // Press Q
-            case Skill1 -> handleLogicBasedSkill(SkillIndex.LaserBeam);
+            case LaserBeam -> handleLogicBasedSkill(SkillIndex.LaserBeam);
             // Press E
-            case Skill2 -> handleLogicBasedSkill(SkillIndex.Updraft);
+            case Updraft -> handleLogicBasedSkill(SkillIndex.Updraft);
             // Press X
-            case Skill3 -> handleLogicBasedSkill(SkillIndex.Invincible);
+            case Invincible -> handleLogicBasedSkill(SkillIndex.Invincible);
             // Press SHIFT
             case Dash -> handleLogicBasedSkill(SkillIndex.Dash);
         }

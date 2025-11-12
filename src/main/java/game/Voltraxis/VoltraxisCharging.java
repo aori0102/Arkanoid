@@ -152,7 +152,7 @@ public class VoltraxisCharging extends MonoBehaviour {
 
         onChargingEntered.invoke(this, null);
         startCharging_coroutineID
-                = Time.addCoroutine(this::startCharging, Time.getTime() + STARTING_DELAY);
+                = Time.addCoroutine(this::startCharging, STARTING_DELAY);
 
     }
 
@@ -192,7 +192,7 @@ public class VoltraxisCharging extends MonoBehaviour {
 
         // Delay before charging again
         resumeCharging_coroutineID
-                = Time.addCoroutine(this::resumeCharging, Time.getTime() + VoltraxisData.CHARGING_HALT_DELAY);
+                = Time.addCoroutine(this::resumeCharging, VoltraxisData.CHARGING_HALT_DELAY);
 
     }
 
@@ -232,7 +232,7 @@ public class VoltraxisCharging extends MonoBehaviour {
         onStartUnleashing.invoke(this, null);
         isCharging = false;
         unleashLaser_coroutineID
-                = Time.addCoroutine(this::unleashLaser, Time.getTime() + START_UNLEASH_DELAY);
+                = Time.addCoroutine(this::unleashLaser, START_UNLEASH_DELAY);
     }
 
     /**
@@ -245,7 +245,7 @@ public class VoltraxisCharging extends MonoBehaviour {
                 getTransform().getGlobalPosition().add(Vector2.down().multiply(ULTIMATE_LASER_OFFSET))
         );
         finishUnleashing_coroutineID
-                = Time.addCoroutine(this::finishUnleashing, Time.getTime() + UNLEASH_DURATION);
+                = Time.addCoroutine(this::finishUnleashing, UNLEASH_DURATION);
     }
 
     /**
@@ -256,7 +256,7 @@ public class VoltraxisCharging extends MonoBehaviour {
         GameObjectManager.destroy(ultimateLaser);
         ultimateLaser = null;
         terminateCharging_coroutineID
-                = Time.addCoroutine(this::terminateCharging, Time.getTime() + FINISH_UNLEASH_DELAY);
+                = Time.addCoroutine(this::terminateCharging, FINISH_UNLEASH_DELAY);
     }
 
     /**
@@ -267,7 +267,7 @@ public class VoltraxisCharging extends MonoBehaviour {
         onBossWeakened.invoke(this, null);
         terminateCharging_coroutineID = Time.addCoroutine(
                 this::terminateCharging,
-                Time.getTime() + VoltraxisData.WEAKENED_TIME
+                VoltraxisData.WEAKENED_TIME
         );
 
         // Reduct DEF by 80%

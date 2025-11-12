@@ -78,7 +78,7 @@ public class ExplodingBrickParticleManager extends MonoBehaviour {
     public void startEmit(Vector2 position) {
         explodingBrickParticle.setPosition(position);
         explodingBrickParticle.startEmit();
-        explodingBrickCoroutineID = Time.addCoroutine(this::stopEmit, Time.getTime() + PARTICLE_EXISTING_TIME);
+        explodingBrickCoroutineID = Time.addCoroutine(this::stopEmit, PARTICLE_EXISTING_TIME);
     }
 
     /**

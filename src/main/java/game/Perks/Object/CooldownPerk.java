@@ -1,7 +1,7 @@
 package game.Perks.Object;
 
 import game.Perks.Index.Perk;
-import game.Player.Paddle.PaddleStat;
+import game.Player.Paddle.PlayerStat;
 import game.Player.PlayerSkills.SkillIndex;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
@@ -58,10 +58,10 @@ public final class CooldownPerk extends Perk {
     }
 
     @Override
-    protected void applyPerk(PaddleStat paddleStat) {
-        paddleStat.setSkillCooldownMultiplier(
+    protected void applyPerk(PlayerStat playerStat) {
+        playerStat.setSkillCooldownMultiplier(
                 skillIndex,
-                paddleStat.getSkillCooldownMultiplier(skillIndex) - getModifierValue()
+                playerStat.getSkillCooldownMultiplier(skillIndex) - getModifierValue()
         );
     }
 

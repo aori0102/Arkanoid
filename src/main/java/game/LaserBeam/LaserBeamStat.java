@@ -1,7 +1,7 @@
 package game.LaserBeam;
 
 import game.Entity.EntityStat;
-import game.Player.Paddle.PaddleStat;
+import game.Player.Paddle.PlayerStat;
 import game.Player.Player;
 import org.GameObject.GameObject;
 
@@ -9,7 +9,7 @@ public final class LaserBeamStat extends EntityStat {
 
     private static final double LASER_DAMAGE_MULTIPLIER = 3.87;
 
-    private PaddleStat paddleStat = null;
+    private PlayerStat playerStat = null;
 
     /**
      * Create this MonoBehaviour.
@@ -22,12 +22,12 @@ public final class LaserBeamStat extends EntityStat {
 
     @Override
     public void start() {
-        paddleStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
+        playerStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
     }
 
     @Override
     public int getBaseAttack() {
-        return paddleStat.getBaseAttack();
+        return playerStat.getBaseAttack();
     }
 
     @Override
@@ -37,7 +37,7 @@ public final class LaserBeamStat extends EntityStat {
 
     @Override
     public double getAttackMultiplier() {
-        return paddleStat.getAttackMultiplier() * LASER_DAMAGE_MULTIPLIER;
+        return playerStat.getAttackMultiplier() * LASER_DAMAGE_MULTIPLIER;
     }
 
     @Override
@@ -57,12 +57,12 @@ public final class LaserBeamStat extends EntityStat {
 
     @Override
     public double getCriticalChance() {
-        return paddleStat.getCriticalChance();
+        return playerStat.getCriticalChance();
     }
 
     @Override
     public double getCriticalDamage() {
-        return paddleStat.getCriticalDamage();
+        return playerStat.getCriticalDamage();
     }
 
     @Override

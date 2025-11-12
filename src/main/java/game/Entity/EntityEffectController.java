@@ -59,11 +59,11 @@ public abstract class EntityEffectController extends MonoBehaviour {
         statusMap.put(info.effect, info);
         removingCoroutineID.put(
                 info.effect,
-                Time.addCoroutine(() -> removeEffect(info.effect), Time.getTime() + info.duration)
+                Time.addCoroutine(() -> removeEffect(info.effect), info.duration)
         );
         inflictingCoroutineID.put(
                 info.effect,
-                Time.addCoroutine(() -> dealDamageOverTime(info.effect), Time.getTime() + info.effect.damageDelay)
+                Time.addCoroutine(() -> dealDamageOverTime(info.effect), info.effect.damageDelay)
         );
 
         onEffectInflicted.invoke(this, info.effect);
@@ -95,7 +95,7 @@ public abstract class EntityEffectController extends MonoBehaviour {
         }
         inflictingCoroutineID.put(
                 effect,
-                Time.addCoroutine(() -> dealDamageOverTime(effect), Time.getTime() + effect.damageDelay)
+                Time.addCoroutine(() -> dealDamageOverTime(effect), effect.damageDelay)
         );
     }
 

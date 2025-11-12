@@ -10,7 +10,6 @@ import game.PowerUp.Recovery;
 import javafx.scene.input.MouseButton;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
-import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;
 import org.Layer.Layer;
@@ -25,33 +24,30 @@ import javafx.scene.input.MouseEvent;
 public class PlayerPaddle extends MonoBehaviour {
 
     // The constant specs of the ball
+    private static final double STUNNED_MOVEMENT_SPEED_MULTIPLIER = 0.1;
     private static final double DOT_LIMIT_ANGLE_RIGHT = 30;
     private static final double DOT_LIMIT_ANGLE_LEFT = 150;
-    private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0);
     private static final double PADDLE_MAX_MOVABLE_AMPLITUDE = 680.0;
+    private static final double STUN_TIME = 3.2;
+    private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0);
 
     private final PaddleHealth paddleHealth = addComponent(PaddleHealth.class);
-    private final PaddleStat paddleStat = addComponent(PaddleStat.class);
+    private final PlayerStat playerStat = addComponent(PlayerStat.class);
     private final BoxCollider boxCollider = addComponent(BoxCollider.class);
     private final PaddleEffectController paddleEffectController = addComponent(PaddleEffectController.class);
 
     private Time.CoroutineID stunnedCoroutineID;
     private PaddleDashParticle paddleDashParticle;
 
+    private boolean canInvoke;
     private Arrow arrow;
     private Vector2 fireDirection = new Vector2();
-
-    private boolean canInvoke;
-
-    // Event
-    public EventHandler<Vector2> onMouseReleased = new EventHandler<Vector2>(PlayerPaddle.class);
-    public static EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(PlayerPaddle.class);
-
     public boolean isFired = false;
-    private boolean canBeDamaged = true;
 
-    private Vector2 movementVector = new Vector2(0, 0);
+    public EventHandler<Vector2> onMouseReleased = new EventHandler<>(PlayerPaddle.class);
+    public static EventHandler<PowerUp> onAnyPowerUpConsumed = new EventHandler<>(PlayerPaddle.class);
 
+    private Vector2 movementVector = Vector2.zero();
 
     public PlayerPaddle(GameObject owner) {
         super(owner);
@@ -74,12 +70,6 @@ public class PlayerPaddle extends MonoBehaviour {
     }
 
     @Override
-    public void start() {
-        paddleHealth.onPaddleHealthReachesZero
-                .addListener(this::playerPaddleHealth_onPaddleHealthReachesZero);
-    }
-
-    @Override
     public void update() {
         handlePowerUps();
         clampPaddlePositioning();
@@ -97,7 +87,7 @@ public class PlayerPaddle extends MonoBehaviour {
             var powerUp = other.getComponent(PowerUp.class);
             if (powerUp != null) {
                 if (powerUp instanceof Recovery || isFired) {
-                    onPowerUpConsumed.invoke(this, powerUp);
+                    onAnyPowerUpConsumed.invoke(this, powerUp);
                 }
             }
         }
@@ -117,17 +107,6 @@ public class PlayerPaddle extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link PaddleHealth#onPaddleHealthReachesZero} is invoked.<br><br>
-     * This function destroys the paddle when paddle's health reaches zero.
-     *
-     * @param sender Event caller {@link PaddleHealth}.
-     * @param e      Empty event argument.
-     */
-    private void playerPaddleHealth_onPaddleHealthReachesZero(Object sender, Void e) {
-        GameObjectManager.destroy(gameObject);
-    }
-
-    /**
      * Get the paddle's current movement vector.
      *
      * @return The paddle's current movement vector.
@@ -140,8 +119,8 @@ public class PlayerPaddle extends MonoBehaviour {
         return paddleHealth;
     }
 
-    public PaddleStat getPaddleStat() {
-        return paddleStat;
+    public PlayerStat getPaddleStat() {
+        return playerStat;
     }
 
     private void handlePaddleMovement(Object e, ActionMap.Action action) {
@@ -157,7 +136,7 @@ public class PlayerPaddle extends MonoBehaviour {
 
         if (!movementVector.equals(Vector2.zero())) {
             movementVector = movementVector.normalize()
-                    .multiply(Player.getInstance().getCurrentSpeed() * Time.getDeltaTime());
+                    .multiply(playerStat.getActualMovementSpeed() * Time.getDeltaTime());
         }
 
         getTransform().translate(movementVector);
@@ -248,29 +227,21 @@ public class PlayerPaddle extends MonoBehaviour {
         return paddleDashParticle;
     }
 
-
     private void paddleEffectController_onEffectInflicted(Object o, StatusEffect statusEffect) {
-        if (!canBeDamaged) {
-            return;
-        }
-
         if (statusEffect == StatusEffect.Stunned) {
-            int currentSpeedSpeed = Player.getInstance().getCurrentSpeed();
-            Player.getInstance().setCurrentSpeed(currentSpeedSpeed /= 10);
-            stunnedCoroutineID = Time.addCoroutine(this::resetPaddleSpeed, Time.getTime() + 3);
+            playerStat.setStatMultiplier(
+                    PlayerStat.PlayerStatIndex.MovementSpeed,
+                    playerStat.getMovementSpeedMultiplier() + STUNNED_MOVEMENT_SPEED_MULTIPLIER
+            );
+            stunnedCoroutineID = Time.addCoroutine(this::resetPaddleSpeed, STUN_TIME);
         }
     }
 
     private void resetPaddleSpeed() {
-        Player.getInstance().setCurrentSpeed(Player.getInstance().getBaseSpeed());
-        Time.removeCoroutine(stunnedCoroutineID);
+        playerStat.setStatMultiplier(
+                PlayerStat.PlayerStatIndex.MovementSpeed,
+                playerStat.getMovementSpeedMultiplier() - STUNNED_MOVEMENT_SPEED_MULTIPLIER
+        );
     }
 
-    public boolean canBeDamaged() {
-        return canBeDamaged;
-    }
-
-    public void setCanBeDamaged(boolean canBeDamaged) {
-        this.canBeDamaged = canBeDamaged;
-    }
 }

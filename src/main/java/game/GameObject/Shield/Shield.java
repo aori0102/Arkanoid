@@ -1,23 +1,23 @@
 package game.GameObject.Shield;
 
-import game.Player.Player;
+import org.Annotation.LinkViaPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Physics.BoxCollider;
-import org.Rendering.ImageAsset;
-import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
 
 // TODO: Doc + Prefab
 public class Shield extends MonoBehaviour {
 
-    private static final double DURATION = 5.0;
+    private static final double SHIELD_DURATION = 7.0;
+
     private static Shield instance;
 
-    private boolean isExisted = false;
-    private double counter = 0;
-    private GameObject shieldVisual;
+    @LinkViaPrefab
+    private GameObject shieldVisual = null;
+
+    private Time.CoroutineID turnOff_coroutineID = null;
 
     /**
      * Create this MonoBehaviour.
@@ -43,44 +43,30 @@ public class Shield extends MonoBehaviour {
         turnOff();
     }
 
-    public void update() {
-        if (isExisted) {
-            handleShieldDuration(DURATION);
-        }
-    }
-
-    private void handleShieldDuration(double duration) {
-        if (!Player.getInstance().getPlayerPaddle().canBeDamaged()) {
-            return;
-        }
-        counter += Time.getDeltaTime();
-
-        if (counter >= duration) {
-            turnOff();
-        }
-    }
-
     public void turnOn() {
         gameObject.setActive(true);
         shieldVisual.setActive(true);
-        isExisted = true;
+
+        if (Time.hasCoroutine(turnOff_coroutineID)) {
+            Time.resetCoroutine(turnOff_coroutineID);
+        } else {
+            turnOff_coroutineID = Time.addCoroutine(this::turnOff, SHIELD_DURATION);
+        }
     }
 
     public void turnOff() {
         gameObject.setActive(false);
         shieldVisual.setActive(false);
-        isExisted = false;
-        counter = 0;
     }
 
     /**
-     * <br><br>
+     * Link this shield's visual<br><br>
      * <b><i><u>NOTE</u> : Only use within {@link }
      * as part of component linking process.</i></b>
      *
-     * @param shieldVisual .
+     * @param shieldVisual The visual of this shield.
      */
-    public void linkSpriteRenderer(GameObject shieldVisual) {
+    public void linkShieldVisual(GameObject shieldVisual) {
         this.shieldVisual = shieldVisual;
     }
 }

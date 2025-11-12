@@ -1,5 +1,9 @@
 package game.Config;
 
+import org.Audio.AudioManager;
+
+import javax.swing.*;
+
 public final class Config {
 
     private double masterVolume = 1.0;
@@ -34,6 +38,18 @@ public final class Config {
         masterVolume = config.masterVolume;
         sfxVolume = config.sfxVolume;
         musicVolume = config.musicVolume;
+    }
+
+    public void loadToAudioManager() {
+        AudioManager.setMusicVolume(musicVolume);
+        AudioManager.setMasterVolume(masterVolume);
+        AudioManager.setSfxVolume(sfxVolume);
+    }
+
+    public void saveFromAudioManager() {
+        musicVolume = AudioManager.getMusicVolume();
+        sfxVolume = AudioManager.getSfxVolume();
+        masterVolume = AudioManager.getMasterVolume();
     }
 
     @Override

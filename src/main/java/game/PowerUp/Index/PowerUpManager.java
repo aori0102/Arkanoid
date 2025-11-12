@@ -68,7 +68,6 @@ public class PowerUpManager extends MonoBehaviour {
     }
 
     public void spawnPowerUp(Vector2 position) {
-
         var powerUpIndexArray = PowerUpIndex.values();
         int target = 0;
         if (Random.range(0, 1) == target) {

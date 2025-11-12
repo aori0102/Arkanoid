@@ -74,6 +74,7 @@ public class GameManager extends MonoBehaviour {
                 BrickMapManager.getInstance().loadProgress();
                 LevelManager.getInstance().loadProgress();
                 Player.getInstance().getPlayerPaddle().getPaddleHealth().loadProgress();
+                Player.getInstance().getPlayerLives().loadProgress();
                 gameLoadingState = GameLoadingState.StartGame;
                 break;
 

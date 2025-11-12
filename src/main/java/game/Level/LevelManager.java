@@ -8,6 +8,7 @@ import game.MapGenerator.BrickMapManager;
 import game.Perks.Index.PerkManager;
 import game.Player.Player;
 import game.Player.PlayerData.DataManager;
+import game.Player.PlayerData.IPlayerProgressHolder;
 import game.Player.PlayerLives;
 import game.Voltraxis.Voltraxis;
 import org.Event.EventActionID;
@@ -19,7 +20,8 @@ import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
 import utils.Time;
 
-public final class LevelManager extends MonoBehaviour {
+public final class LevelManager extends MonoBehaviour implements
+        IPlayerProgressHolder {
 
     public static final double LEVEL_INTRODUCING_TIME = 3.2;
     public static final double LEVEL_CONCLUDING_TIME = 3.0;
@@ -123,7 +125,7 @@ public final class LevelManager extends MonoBehaviour {
                 .addListener(this::brickMapManager_onMapCleared);
         playerLives_onLivesReachZero_ID = Player.getInstance().getPlayerLives().onLivesReachZero
                 .addListener(this::playerLives_onLivesReachZero);
-        playerLives_onLivesDecreased_ID = Player.getInstance().getPlayerLives().onLivesDecreased
+        playerLives_onLivesDecreased_ID = Player.getInstance().getPlayerLives().onLivesChanged
                 .addListener(this::playerLives_onLivesDecreased);
         perkManager_onPerkSelectionCompleted_ID = PerkManager.getInstance().onPerkSelectionCompleted
                 .addListener(this::perkManager_onPerkSelectionCompleted);
@@ -137,6 +139,7 @@ public final class LevelManager extends MonoBehaviour {
         return instance;
     }
 
+    @Override
     public void loadProgress() {
         levelIndex = DataManager.getInstance().getProgress().getLevel();
     }
@@ -173,7 +176,7 @@ public final class LevelManager extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link PlayerLives#onLivesDecreased} is invoked.<br><br>
+     * Called when {@link PlayerLives#onLivesChanged} is invoked.<br><br>
      * This function creates a ball as player loses a live.
      *
      * @param sender Event caller {@link PlayerLives}.
@@ -291,7 +294,7 @@ public final class LevelManager extends MonoBehaviour {
 
         // Delay before enable playing
         enablePlaying_coroutineID
-                = Time.addCoroutine(this::enablePlaying, Time.getTime() + LEVEL_INTRODUCING_TIME);
+                = Time.addCoroutine(this::enablePlaying, LEVEL_INTRODUCING_TIME);
 
     }
 
@@ -307,21 +310,21 @@ public final class LevelManager extends MonoBehaviour {
 
     private void cleanUpMap() {
         destroyRandomBall_coroutineID
-                = Time.addCoroutine(this::destroyRandomBall, Time.getTime() + BALL_REMOVAL_DELAY);
+                = Time.addCoroutine(this::destroyRandomBall, BALL_REMOVAL_DELAY);
         mapClearingStartTick = Time.getTime();
     }
 
     private void destroyRandomBall() {
         if (BallsManager.getInstance().removeRandomBall()) {
             destroyRandomBall_coroutineID
-                    = Time.addCoroutine(this::destroyRandomBall, Time.getTime() + BALL_REMOVAL_DELAY);
+                    = Time.addCoroutine(this::destroyRandomBall, BALL_REMOVAL_DELAY);
         } else {
             onLevelConcluded.invoke(this, null);
             var clearTime = Time.getTime() - mapClearingStartTick;
             progressToNextLevel_coroutineID
                     = Time.addCoroutine(
                     this::selectPerk,
-                    Time.getTime() + Math.max(0.0, LEVEL_CONCLUDING_TIME - clearTime)
+                    Math.max(0.0, LEVEL_CONCLUDING_TIME - clearTime)
             );
         }
     }

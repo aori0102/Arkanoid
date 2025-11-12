@@ -2,6 +2,7 @@ package game.Player;
 
 import game.Player.Paddle.PlayerPaddle;
 import game.PowerUp.Index.PowerUp;
+import org.Annotation.LinkViaPrefab;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -15,12 +16,9 @@ public class Player extends MonoBehaviour {
     /// Singleton
     private static Player instance = null;
 
-    /// Attributes
-    private static final int BASE_SPEED = 800;
-    private int currentSpeed;
+    @LinkViaPrefab
     private PlayerPaddle playerPaddle = null;
 
-    /// Player core components
     private final PlayerPowerUpHandler playerPowerUpHandler = addComponent(PlayerPowerUpHandler.class);
     private final PlayerLives playerLives = addComponent(PlayerLives.class);
     private final PlayerSkillsHandler playerSkillsHandler = addComponent(PlayerSkillsHandler.class);
@@ -39,8 +37,6 @@ public class Player extends MonoBehaviour {
             throw new ReinitializedSingletonException("Player is a singleton");
         }
         instance = this;
-        currentSpeed = BASE_SPEED;
-
     }
 
     public static Player getInstance() {
@@ -72,24 +68,12 @@ public class Player extends MonoBehaviour {
         return playerController;
     }
 
-    public int getBaseSpeed() {
-        return BASE_SPEED;
-    }
-
-    public int getCurrentSpeed() {
-        return currentSpeed;
-    }
-
-    public void setCurrentSpeed(int currentSpeed) {
-        this.currentSpeed = currentSpeed;
-    }
-
     /**
-     * <br><br>
+     * Link the paddle the player will control.<br><br>
      * <b><i><u>NOTE</u> : Only use within {@link }
      * as part of component linking process.</i></b>
      *
-     * @param playerPaddle .
+     * @param playerPaddle This player's paddle.
      */
     public void linkPlayerPaddle(PlayerPaddle playerPaddle) {
         this.playerPaddle = playerPaddle;

@@ -1,6 +1,8 @@
 package game.Player.PlayerData;
 
+import game.Player.Paddle.PlayerStat;
 import game.Player.PlayerAttributes;
+import game.Player.PlayerSkills.SkillIndex;
 
 import java.util.Arrays;
 
@@ -14,7 +16,12 @@ public final class ProgressData {
     private int rank = 0;
     private int exp = 0;
     private int brickDestroyed = 0;
-    private Integer[] perkList = null;    // TODO: Set to Perk Index list
+    private double[] statMultiplierArray = new double[PlayerStat.PlayerStatIndex.values().length];
+    private double[] skillCooldownMultiplierArray = new double[SkillIndex.values().length];
+
+    public ProgressData() {
+        toDefault();
+    }
 
     public int getLevel() {
         return level;
@@ -56,14 +63,6 @@ public final class ProgressData {
         this.lives = lives;
     }
 
-    public Integer[] getPerkList() {
-        return perkList;
-    }
-
-    public void setPerkList(Integer[] perkList) {
-        this.perkList = perkList;
-    }
-
     public int getRank() {
         return rank;
     }
@@ -88,6 +87,22 @@ public final class ProgressData {
         this.brickDestroyed = brickDestroyed;
     }
 
+    public double[] getStatMultiplierArray() {
+        return statMultiplierArray;
+    }
+
+    public void setStatMultiplierArray(double[] statMultiplierArray) {
+        this.statMultiplierArray = statMultiplierArray;
+    }
+
+    public double[] getSkillCooldownMultiplierArray() {
+        return skillCooldownMultiplierArray;
+    }
+
+    public void setSkillCooldownMultiplierArray(double[] skillCooldownMultiplierArray) {
+        this.skillCooldownMultiplierArray = skillCooldownMultiplierArray;
+    }
+
     public void overrideSave(ProgressData progressData) {
         this.brickDestroyed = progressData.getBrickDestroyed();
         this.level = progressData.getLevel();
@@ -97,10 +112,11 @@ public final class ProgressData {
         this.lives = progressData.getLives();
         this.rank = progressData.getRank();
         this.exp = progressData.getExp();
-        this.perkList = progressData.getPerkList();
+        this.skillCooldownMultiplierArray = progressData.getSkillCooldownMultiplierArray();
+        this.statMultiplierArray = progressData.getStatMultiplierArray();
     }
 
-    public void reset() {
+    public void toDefault() {
         this.level = 0;
         this.score = 0;
         this.combo = 0;
@@ -108,13 +124,14 @@ public final class ProgressData {
         this.lives = PlayerAttributes.MAX_LIVES;
         this.rank = 0;
         this.exp = 0;
-        this.perkList = null;
         this.brickDestroyed = 0;
+        Arrays.fill(skillCooldownMultiplierArray, 1.0);
+        Arrays.fill(statMultiplierArray, 1.0);
     }
 
     @Override
     public String toString() {
-        return "Player Current Progress:\n"
+        StringBuilder info = new StringBuilder("Player Current Progress:\n"
                 + "- Level : [" + level + "]\n"
                 + "- Score : [" + score + "]\n"
                 + "- Combo : [" + combo + "]\n"
@@ -123,7 +140,24 @@ public final class ProgressData {
                 + "- Rank : [" + rank + "]\n"
                 + "- Exp : [" + exp + "]\n"
                 + "- Brick Destroyed : [" + brickDestroyed + "]\n"
-                + "- Perk : " + Arrays.toString(perkList);
+                + "- Stat Multiplier : \n");
+        for (var index : PlayerStat.PlayerStatIndex.values()) {
+            info.append("\t- ")
+                    .append(index)
+                    .append(" : [")
+                    .append(statMultiplierArray[index.ordinal()])
+                    .append("]\n");
+        }
+        info.append("- Skill Cooldown Multiplier : \n");
+        for (var index : SkillIndex.values()) {
+            info.append("\t- ")
+                    .append(index)
+                    .append(" : [")
+                    .append(skillCooldownMultiplierArray[index.ordinal()])
+                    .append("]\n");
+        }
+
+        return info.toString();
     }
 
 }

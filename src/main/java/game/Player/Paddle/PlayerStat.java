@@ -8,26 +8,35 @@ import org.GameObject.GameObject;
 
 import java.util.EnumMap;
 
-public final class PaddleStat extends EntityStat {
+public final class PlayerStat extends EntityStat {
 
-    private double attackMultiplier = 1;
-    private double defenceMultiplier = 1;
-    private double damageTakenMultiplier = 1;
-    private double maxHealthMultiplier = 1;
-    private double regenerationMultiplier = 1;
-    private double movementSpeedMultiplier = 1;
+    public enum PlayerStatIndex {
+        Attack,
+        Defense,
+        DamageTaken,
+        MaxHealth,
+        MovementSpeed,
+    }
 
+    private final EnumMap<PlayerStatIndex, Double> statMultiplierMap = new EnumMap<>(PlayerStatIndex.class);
     private final EnumMap<SkillIndex, Double> skillCooldownMultiplierMap = new EnumMap<>(SkillIndex.class);
 
-    public EventHandler<Void> onStatChanged = new EventHandler<>(PaddleStat.class);
+    public EventHandler<PlayerStatIndex> onStatChanged = new EventHandler<>(PlayerStat.class);
+    public EventHandler<SkillIndex> onSkillCooldownChanged = new EventHandler<>(PlayerStat.class);
 
     /**
      * Create this MonoBehaviour.
      *
      * @param owner The owner of this component.
      */
-    public PaddleStat(GameObject owner) {
+    public PlayerStat(GameObject owner) {
         super(owner);
+
+        statMultiplierMap.put(PlayerStatIndex.Attack, 1.0);
+        statMultiplierMap.put(PlayerStatIndex.Defense, 1.0);
+        statMultiplierMap.put(PlayerStatIndex.DamageTaken, 1.0);
+        statMultiplierMap.put(PlayerStatIndex.MaxHealth, 1.0);
+        statMultiplierMap.put(PlayerStatIndex.MovementSpeed, 1.0);
 
         skillCooldownMultiplierMap.put(SkillIndex.LaserBeam, 1.0);
         skillCooldownMultiplierMap.put(SkillIndex.Dash, 1.0);
@@ -47,22 +56,22 @@ public final class PaddleStat extends EntityStat {
 
     @Override
     public double getAttackMultiplier() {
-        return attackMultiplier;
+        return statMultiplierMap.get(PlayerStatIndex.Attack);
     }
 
     @Override
     public double getDefenceMultiplier() {
-        return defenceMultiplier;
+        return statMultiplierMap.get(PlayerStatIndex.Defense);
     }
 
     @Override
     public double getDamageTakenMultiplier() {
-        return damageTakenMultiplier;
+        return statMultiplierMap.get(PlayerStatIndex.DamageTaken);
     }
 
     @Override
     public double getRegenerationMultiplier() {
-        return regenerationMultiplier;
+        return 1;
     }
 
     @Override
@@ -82,7 +91,7 @@ public final class PaddleStat extends EntityStat {
 
     @Override
     public double getMaxHealthMultiplier() {
-        return maxHealthMultiplier;
+        return statMultiplierMap.get(PlayerStatIndex.MaxHealth);
     }
 
     @Override
@@ -92,7 +101,7 @@ public final class PaddleStat extends EntityStat {
 
     @Override
     public double getMovementSpeedMultiplier() {
-        return movementSpeedMultiplier;
+        return statMultiplierMap.get(PlayerStatIndex.MovementSpeed);
     }
 
     public double getSkillCooldownMultiplier(SkillIndex skillIndex) {
@@ -104,39 +113,18 @@ public final class PaddleStat extends EntityStat {
                 * skillCooldownMultiplierMap.get(skillIndex);
     }
 
-    public void setDamageTakenMultiplier(double value) {
-        damageTakenMultiplier = value;
-        onStatChanged.invoke(this, null);
+    public double getStatMultiplier(PlayerStatIndex playerStatIndex) {
+        return statMultiplierMap.get(playerStatIndex);
     }
 
-    public void setRegenerationMultiplier(double value) {
-        regenerationMultiplier = value;
-        onStatChanged.invoke(this, null);
-    }
-
-    public void setMovementSpeedMultiplier(double value) {
-        movementSpeedMultiplier = value;
-        onStatChanged.invoke(this, null);
-    }
-
-    public void setAttackMultiplier(double value) {
-        attackMultiplier = value;
-        onStatChanged.invoke(this, null);
-    }
-
-    public void setDefenceMultiplier(double value) {
-        defenceMultiplier = value;
-        onStatChanged.invoke(this, null);
-    }
-
-    public void setMaxHealthMultiplier(double maxHealthMultiplier) {
-        this.maxHealthMultiplier = maxHealthMultiplier;
+    public void setStatMultiplier(PlayerStatIndex playerStatIndex, double statMultiplier) {
+        statMultiplierMap.put(playerStatIndex, statMultiplier);
         onStatChanged.invoke(this, null);
     }
 
     public void setSkillCooldownMultiplier(SkillIndex skillIndex, double invincibilityMultiplier) {
         skillCooldownMultiplierMap.put(skillIndex, invincibilityMultiplier);
-        onStatChanged.invoke(this, null);
+        onSkillCooldownChanged.invoke(this, skillIndex);
     }
 
 }

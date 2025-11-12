@@ -137,7 +137,7 @@ public class VoltraxisGroggy extends MonoBehaviour {
      */
     private void voltraxisCharging_onChargingTerminated(Object sender, Void e) {
         setGroggy(0.0);
-        resetGroggyCoroutineID = Time.addCoroutine(this::resetGroggy, Time.getTime() + GROGGY_DELAY_AFTER_CHARGING);
+        resetGroggyCoroutineID = Time.addCoroutine(this::resetGroggy, GROGGY_DELAY_AFTER_CHARGING);
     }
 
     private void lockGroggy() {

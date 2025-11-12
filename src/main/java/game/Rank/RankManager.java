@@ -1,6 +1,7 @@
 package game.Rank;
 
 import game.Player.PlayerData.DataManager;
+import game.Player.PlayerData.IPlayerProgressHolder;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
@@ -10,7 +11,8 @@ import org.GameObject.MonoBehaviour;
 /**
  * Manager class that handles player's rank in game.
  */
-public final class RankManager extends MonoBehaviour {
+public final class RankManager extends MonoBehaviour implements
+        IPlayerProgressHolder {
 
     private static final int BASE_EXP = 20;
     private static final double EXP_MULTIPLIER = 1.6;
@@ -76,6 +78,7 @@ public final class RankManager extends MonoBehaviour {
     /**
      * Load the saved progress data from last session.
      */
+    @Override
     public void loadProgress() {
         var save = DataManager.getInstance().getProgress();
         rank = save.getRank();

@@ -28,7 +28,7 @@ public final class PlayerStatUI extends MonoBehaviour {
     }
 
     public void setAmountText(double amount, double multiplier) {
-        var multiplierDifference = Math.round((multiplier - 1) * 1000) / 10.0;
+        var multiplierDifference = toHundreds(multiplier - 1);
         String multiplierPrefix = "";
         if (multiplierDifference > 0) {
             multiplierPrefix = "+";
@@ -42,7 +42,7 @@ public final class PlayerStatUI extends MonoBehaviour {
     }
 
     public void setAmountText(int amount, double multiplier) {
-        var multiplierDifference = Math.round((multiplier - 1) * 1000) / 10.0;
+        var multiplierDifference = toHundreds(multiplier - 1);
         String multiplierPrefix = "";
         if (multiplierDifference > 0) {
             multiplierPrefix = "+";
@@ -53,6 +53,10 @@ public final class PlayerStatUI extends MonoBehaviour {
                 + multiplierPrefix
                 + String.format("%.1f", Math.abs(multiplierDifference)) + "%)";
         amountText.setText(text);
+    }
+
+    private double toHundreds(double amount) {
+        return Math.round(amount * 1000) / 10.0;
     }
 
     /**

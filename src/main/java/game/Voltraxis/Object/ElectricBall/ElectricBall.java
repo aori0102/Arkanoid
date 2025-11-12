@@ -30,7 +30,7 @@ public class ElectricBall extends MonoBehaviour {
     @Override
     public void awake() {
         onBallLifespanReached_coroutineID
-                = Time.addCoroutine(this::onBallLifespanReached, Time.getTime() + BALL_LIFESPAN);
+                = Time.addCoroutine(this::onBallLifespanReached, BALL_LIFESPAN);
     }
 
     @Override

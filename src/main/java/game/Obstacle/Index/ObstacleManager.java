@@ -1,6 +1,7 @@
 package game.Obstacle.Index;
 
 
+import game.GameManager.LevelState;
 import game.Level.LevelManager;
 import game.Player.Player;
 import game.Player.Paddle.PlayerPaddle;
@@ -83,7 +84,9 @@ public class ObstacleManager extends MonoBehaviour {
 
     @Override
     public void update() {
-        spawnObstacles();
+        if (LevelManager.getInstance().getLevelState() == LevelState.Playing) {
+            spawnObstacles();
+        }
     }
 
     @Override

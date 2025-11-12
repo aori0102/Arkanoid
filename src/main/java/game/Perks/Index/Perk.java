@@ -3,7 +3,7 @@ package game.Perks.Index;
 import game.Interface.IPointerClickHandler;
 import game.Interface.IPointerEnterHandler;
 import game.Interface.IPointerExitHandler;
-import game.Player.Paddle.PaddleStat;
+import game.Player.Paddle.PlayerStat;
 import game.Player.Player;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -196,6 +196,6 @@ public abstract class Perk extends MonoBehaviour
 
     protected abstract AnimationClipData getPerkAnimationKey();
 
-    protected abstract void applyPerk(PaddleStat paddleStat);
+    protected abstract void applyPerk(PlayerStat playerStat);
 
 }

@@ -1,6 +1,8 @@
 package game.Player.PlayerSkills.Skills;
 
-import game.Player.Paddle.PaddleStat;
+import game.GameManager.LevelState;
+import game.Level.LevelManager;
+import game.Player.Paddle.PlayerStat;
 import game.Player.Player;
 import game.Player.PlayerSkills.SkillIndex;
 import org.Event.EventHandler;
@@ -20,7 +22,7 @@ public abstract class Skill extends MonoBehaviour {
      */
     private int _skillCharge = 0;
 
-    private PaddleStat paddleStat = null;
+    private PlayerStat playerStat = null;
 
     public EventHandler<Void> onChargingRatioChanged = new EventHandler<>(Skill.class);
     public EventHandler<Void> onChargeAmountChanged = new EventHandler<>(Skill.class);
@@ -39,10 +41,10 @@ public abstract class Skill extends MonoBehaviour {
 
     @Override
     public void start() {
-        paddleStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
+        playerStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
 
         setSkillCharge(getSkillIndex().maxSkillCharge);
-        setSkillCooldownTime(paddleStat.getSkillCooldown(getSkillIndex()));
+        setSkillCooldownTime(playerStat.getSkillCooldown(getSkillIndex()));
     }
 
     @Override
@@ -66,6 +68,11 @@ public abstract class Skill extends MonoBehaviour {
     }
 
     public void useSkill() {
+
+        if (LevelManager.getInstance().getLevelState() != LevelState.Playing) {
+            return;
+        }
+
         if (_skillCharge > 0) {
             setSkillCharge(_skillCharge - 1);
             invoke();
@@ -74,10 +81,11 @@ public abstract class Skill extends MonoBehaviour {
                 onChargeReachesZero.invoke(this, null);
             }
         }
+
     }
 
     private void resetCooldown() {
-        _skillCooldownTime = paddleStat.getSkillCooldown(getSkillIndex());
+        _skillCooldownTime = playerStat.getSkillCooldown(getSkillIndex());
     }
 
     /**
@@ -105,7 +113,7 @@ public abstract class Skill extends MonoBehaviour {
     }
 
     public double getChargingRatio() {
-        var base = paddleStat.getSkillCooldown(getSkillIndex());
+        var base = playerStat.getSkillCooldown(getSkillIndex());
         return maxCharge()
                 ? 1.0
                 : (base - _skillCooldownTime) / base;

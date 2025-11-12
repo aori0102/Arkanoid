@@ -51,6 +51,7 @@ public final class ConfigManager extends MonoBehaviour {
             String json = Files.readString(CONFIG_FILE);
 
             config.overrideConfig(gsonLoader.fromJson(json, Config.class));
+            config.loadToAudioManager();
 
             System.out.println("[ConfigManager] Config file loaded.");
             System.out.println(config);
@@ -66,6 +67,7 @@ public final class ConfigManager extends MonoBehaviour {
         try {
 
             Gson gsonSaver = new Gson();
+            config.saveFromAudioManager();
             String json = gsonSaver.toJson(config);
             Files.writeString(CONFIG_FILE, json);
             System.out.println("[ConfigManager] Config file saved to \"" + CONFIG_FILE + "\".");

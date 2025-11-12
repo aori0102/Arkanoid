@@ -4,6 +4,8 @@ import game.Ball.BallsManager;
 import game.GameManager.LevelState;
 import game.Level.LevelManager;
 import game.Player.Paddle.PaddleHealth;
+import game.Player.PlayerData.DataManager;
+import game.Player.PlayerData.IPlayerProgressHolder;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
@@ -12,15 +14,17 @@ import org.GameObject.MonoBehaviour;
 /**
  * Class that handles player's health and lives as the game progresses.
  */
-public class PlayerLives extends MonoBehaviour {
+public class PlayerLives extends MonoBehaviour implements
+        IPlayerProgressHolder {
 
     private int lives = PlayerAttributes.MAX_LIVES;
     private boolean dead = false;
 
     private EventActionID ballsManager_onAllBallDestroyed_ID = null;
 
-    public EventHandler<Void> onLivesDecreased = new EventHandler<>(PlayerLives.class);
+    public EventHandler<Void> onLivesChanged = new EventHandler<>(PlayerLives.class);
     public EventHandler<Void> onLivesReachZero = new EventHandler<>(PlayerLives.class);
+    public EventHandler<Void> onPlayerDead = new EventHandler<>(PlayerLives.class);
 
     /**
      * Create this MonoBehaviour.
@@ -34,7 +38,7 @@ public class PlayerLives extends MonoBehaviour {
     @Override
     public void start() {
         Player.getInstance().getPlayerPaddle().getPaddleHealth().onHealthReachesZero
-                .addListener(this::paddleHealth_onPaddleHealthReachesZero);
+                .addListener(this::paddleHealth_onHealthReachesZero);
         ballsManager_onAllBallDestroyed_ID = BallsManager.getInstance().onAllBallDestroyed
                 .addListener(this::ballsManager_onAllBallDestroyed);
     }
@@ -46,14 +50,20 @@ public class PlayerLives extends MonoBehaviour {
         }
     }
 
+    @Override
+    public void loadProgress() {
+        lives = DataManager.getInstance().getProgress().getLives();
+        onLivesChanged.invoke(this, null);
+    }
+
     /**
-     * Called when {@link PaddleHealth#onPaddleHealthReachesZero} is invoked.<br><br>
+     * Called when {@link PaddleHealth#onHealthReachesZero} is invoked.<br><br>
      * This function decreases lives when the paddle's health reaches zero.
      *
      * @param sender Event caller {@link PaddleHealth}.
      * @param e      Empty event argument.
      */
-    private void paddleHealth_onPaddleHealthReachesZero(Object sender, Void e) {
+    private void paddleHealth_onHealthReachesZero(Object sender, Void e) {
         onPlayerDead();
     }
 
@@ -74,13 +84,14 @@ public class PlayerLives extends MonoBehaviour {
         if (dead) {
             return;
         }
-        dead = true;
+        dead = true;    // Prevent this method from being called twice due to multiple way to die
         lives--;
         if (lives == 0) {
             onLivesReachZero.invoke(this, null);
         } else {
-            onLivesDecreased.invoke(this, null);
+            onLivesChanged.invoke(this, null);
             Player.getInstance().getPlayerPaddle().getPaddleHealth().resetHealth();
+            onPlayerDead.invoke(this, null);
             dead = false;
         }
     }
@@ -88,5 +99,4 @@ public class PlayerLives extends MonoBehaviour {
     public int getLives() {
         return lives;
     }
-
 }

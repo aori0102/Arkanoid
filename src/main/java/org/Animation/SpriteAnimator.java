@@ -116,7 +116,7 @@ public class SpriteAnimator extends MonoBehaviour {
                     currentAnimationNode.frame.getClipAnchor(), currentAnimationNode.frame.getClipSize()
             );
             spriteRenderer.setImageRotation(currentAnimationNode.frame.getRotationAngle());
-            progressFrame_coroutineID = Time.addCoroutine(this::progressFrame, Time.getTime() + currentAnimationNode.frame.getDuration());
+            progressFrame_coroutineID = Time.addCoroutine(this::progressFrame, currentAnimationNode.frame.getDuration());
         } else {
             progressFrame_coroutineID = null;
             if (currentAnimationFinishCallback != null) {

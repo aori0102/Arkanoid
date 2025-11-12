@@ -76,7 +76,7 @@ public final class VoltraxisVisual extends MonoBehaviour {
         if (e.alterType.isDamage()) {
             spriteRenderer.setOverlayColor(Color.RED);
             disableDamageTint_coroutineID
-                    = Time.addCoroutine(this::disableDamageTint, Time.getTime() + DAMAGE_FLASHING_TIME);
+                    = Time.addCoroutine(this::disableDamageTint, DAMAGE_FLASHING_TIME);
         }
     }
 

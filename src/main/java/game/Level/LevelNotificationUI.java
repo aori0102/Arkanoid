@@ -40,7 +40,7 @@ public final class LevelNotificationUI extends MonoBehaviour {
     @Override
     public void awake() {
         startTick = Time.getTime();
-        Time.addCoroutine(() -> GameObjectManager.destroy(gameObject), Time.getTime() + LevelManager.LEVEL_INTRODUCING_TIME);
+        Time.addCoroutine(() -> GameObjectManager.destroy(gameObject), LevelManager.LEVEL_INTRODUCING_TIME);
     }
 
     @Override

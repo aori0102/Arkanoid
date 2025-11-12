@@ -4,6 +4,7 @@ import game.Ball.Ball;
 import game.Player.Paddle.PlayerPaddle;
 import game.PowerUp.Index.PowerUp;
 import game.Effect.StatusEffect;
+import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -18,6 +19,8 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
     private static final double SHIELD_MAX_DURATION = 5.0;
     private static final int HEAL_AMOUNT = 20;
 
+    private EventActionID paddle_onPowerUpConsumed_ID = null;
+
     /**
      * Create this MonoBehaviour.
      *
@@ -29,8 +32,13 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
 
     @Override
     public void start() {
-        Player.getInstance().getPlayerPaddle().onPowerUpConsumed
+        paddle_onPowerUpConsumed_ID = PlayerPaddle.onAnyPowerUpConsumed
                 .addListener(this::paddle_onPowerUpConsumed);
+    }
+
+    @Override
+    protected void onDestroy() {
+        PlayerPaddle.onAnyPowerUpConsumed.removeListener(paddle_onPowerUpConsumed_ID);
     }
 
     /**
@@ -44,27 +52,6 @@ public class PlayerPowerUpHandler extends MonoBehaviour {
      * by the multiple provided within the event argument.
      */
     public EventHandler<Integer> onTriplicateBallRequested = new EventHandler<>(PlayerPowerUpHandler.class);
-
-    /**
-     * Upon called, all {@link Ball} turns into explosive
-     * with the constraints provided.
-     */
-    public EventHandler<OnBallToExplosiveEventArgs> onBallToExplosiveRequested = new EventHandler<>(PlayerPowerUpHandler.class);
-
-    /**
-     * Event arguments for {@link #onBallToExplosiveRequested}.
-     *
-     * @param maxDuration The maximum duration in seconds before the ball turns normal.
-     * @param maxHit      The maximum hit before the ball turns normal.
-     */
-    public record OnBallToExplosiveEventArgs(double maxDuration, int maxHit) {
-    }
-
-    /**
-     * Upon called, the {@link PlayerPaddle} modify its scale
-     * by the amount provided within the event argument.
-     */
-    public EventHandler<Double> onPaddleScaleChangeRequested = new EventHandler<>(PlayerPowerUpHandler.class);
 
     /**
      * Upon called, the {@link Player} creates a shield with the duration

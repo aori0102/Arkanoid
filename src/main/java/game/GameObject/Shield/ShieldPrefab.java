@@ -19,7 +19,7 @@ public class ShieldPrefab extends Prefab {
         shieldVisual.getTransform().setLocalScale(new Vector2(1, 0.5));
         shieldVisual.setActive(false);
 
-        shieldObject.getComponent(Shield.class).linkSpriteRenderer(shieldVisual);
+        shieldObject.getComponent(Shield.class).linkShieldVisual(shieldVisual);
 
         return shieldObject;
     }

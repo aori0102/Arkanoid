@@ -1,16 +1,19 @@
 package game.Player.PlayerSkills.Skills;
 
 import game.GameObject.Shield.Shield;
+import game.Player.Paddle.PlayerStat;
 import game.Player.Player;
 import game.Player.PlayerSkills.SkillIndex;
 import org.GameObject.GameObject;
+import org.Layer.Layer;
 import utils.Time;
 import utils.Vector2;
 
 public class InvincibleSkill extends Skill {
 
-    private static final int SPEED_BOOSTED_MULTIPLIER = 2;
+    private static final double SPEED_BOOSTED_MULTIPLIER_INCREMENT = 0.42;
     private static final double INVINCIBLE_TIME = 5.0;
+    private static final double ENLARGE_SCALE = 1.75;
     private Time.CoroutineID invincibleCoroutineID;
 
     /**
@@ -24,12 +27,17 @@ public class InvincibleSkill extends Skill {
 
     @Override
     public void invoke() {
-        Player.getInstance().getPlayerPaddle().setCanBeDamaged(false);
-        Player.getInstance().getPlayerPaddle().getTransform().setGlobalScale(new Vector2(2.5, 1.25));
-        Player.getInstance().setCurrentSpeed(Player.getInstance().getCurrentSpeed() * SPEED_BOOSTED_MULTIPLIER);
-        Player.getInstance().getPlayerPaddle().getPaddleStat().setDamageTakenMultiplier(0);
+        var paddle = Player.getInstance().getPlayerPaddle();
+        paddle.getTransform().setLocalScale(
+                paddle.getTransform().getLocalScale().multiply(ENLARGE_SCALE)
+        );
+        paddle.getGameObject().setLayer(Layer.Paddle_IgnoreDamage);
+        paddle.getPaddleStat().setStatMultiplier(
+                PlayerStat.PlayerStatIndex.MovementSpeed,
+                paddle.getPaddleStat().getMovementSpeedMultiplier() + SPEED_BOOSTED_MULTIPLIER_INCREMENT
+        );
         Shield.getInstance().turnOn();
-        invincibleCoroutineID = Time.addCoroutine(this::turnOff, Time.getTime() + INVINCIBLE_TIME);
+        invincibleCoroutineID = Time.addCoroutine(this::turnOff, INVINCIBLE_TIME);
     }
 
     @Override
@@ -38,10 +46,15 @@ public class InvincibleSkill extends Skill {
     }
 
     private void turnOff() {
-        Player.getInstance().getPlayerPaddle().setCanBeDamaged(true);
-        Player.getInstance().getPlayerPaddle().getTransform().setGlobalScale(new Vector2(1.25, 1.25));
-        Player.getInstance().setCurrentSpeed(Player.getInstance().getBaseSpeed());
-        Player.getInstance().getPlayerPaddle().getPaddleStat().setDamageTakenMultiplier(1);
+        var paddle = Player.getInstance().getPlayerPaddle();
+        paddle.getTransform().setLocalScale(
+                paddle.getTransform().getLocalScale().divide(ENLARGE_SCALE)
+        );
+        paddle.getGameObject().setLayer(Layer.Paddle);
+        paddle.getPaddleStat().setStatMultiplier(
+                PlayerStat.PlayerStatIndex.MovementSpeed,
+                paddle.getPaddleStat().getMovementSpeedMultiplier() - SPEED_BOOSTED_MULTIPLIER_INCREMENT
+        );
         Shield.getInstance().turnOff();
         Time.removeCoroutine(invincibleCoroutineID);
     }

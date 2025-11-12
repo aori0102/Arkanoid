@@ -25,7 +25,7 @@ public final class VoltraxisSkillHandler extends MonoBehaviour {
     @Override
     public void awake() {
 
-        enhanceSkillStartCoroutineID = Time.addCoroutine(this::startEnhanceSkill, Time.getTime() + VoltraxisData.ENHANCE_SKILL_COOLDOWN);
+        enhanceSkillStartCoroutineID = Time.addCoroutine(this::startEnhanceSkill, VoltraxisData.ENHANCE_SKILL_COOLDOWN);
 
         Voltraxis.getInstance().getVoltraxisGroggy().onGroggyReachedMax
                 .addListener(this::voltraxisGroggy_onGroggyReachedMax);
@@ -51,8 +51,8 @@ public final class VoltraxisSkillHandler extends MonoBehaviour {
         effectInfo.effectEndedCallback = null;
         Voltraxis.getInstance().getVoltraxisEffectManager().addEffect(effectInfo);
 
-        enhanceSkillStartCoroutineID = Time.addCoroutine(this::startEnhanceSkill, Time.getTime() + VoltraxisData.ENHANCE_SKILL_COOLDOWN);
-        enhanceSkillEndCoroutineID = Time.addCoroutine(this::endEnhanceSkill, Time.getTime() + VoltraxisData.ENHANCE_SKILL_DURATION);
+        enhanceSkillStartCoroutineID = Time.addCoroutine(this::startEnhanceSkill, VoltraxisData.ENHANCE_SKILL_COOLDOWN);
+        enhanceSkillEndCoroutineID = Time.addCoroutine(this::endEnhanceSkill, VoltraxisData.ENHANCE_SKILL_DURATION);
         onEnhanceSkillStarted.invoke(this, null);
 
     }

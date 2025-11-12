@@ -3,8 +3,7 @@ package game.Player;
 import game.Entity.EntityHealth;
 import game.Entity.EntityHealthAlterType;
 import game.Player.Paddle.PaddleHealth;
-import game.Player.Paddle.PlayerPaddle;
-import org.Event.EventActionID;
+import org.Annotation.LinkViaPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Rendering.SpriteRenderer;
@@ -14,6 +13,11 @@ public final class PlayerHealthLossVignette extends MonoBehaviour {
 
     private static final double PULSE_TIME = 0.9;
 
+    @LinkViaPrefab
+    private SpriteRenderer vignetteRenderer = null;
+
+    private double pulseStartTime = 0.0;
+
     /**
      * Create this MonoBehaviour.
      *
@@ -22,9 +26,6 @@ public final class PlayerHealthLossVignette extends MonoBehaviour {
     public PlayerHealthLossVignette(GameObject owner) {
         super(owner);
     }
-
-    private SpriteRenderer vignetteRenderer = null;
-    private double pulseStartTime = 0.0;
 
     @Override
     public void start() {

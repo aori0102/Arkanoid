@@ -1,7 +1,7 @@
 package game.Perks.Object;
 
 import game.Perks.Index.Perk;
-import game.Player.Paddle.PaddleStat;
+import game.Player.Paddle.PlayerStat;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
 
@@ -42,8 +42,11 @@ public final class HealthPerk extends Perk {
     }
 
     @Override
-    protected void applyPerk(PaddleStat paddleStat) {
-        paddleStat.setMaxHealthMultiplier(paddleStat.getMaxHealthMultiplier() + getModifierValue());
+    protected void applyPerk(PlayerStat playerStat) {
+        playerStat.setStatMultiplier(
+                PlayerStat.PlayerStatIndex.MaxHealth,
+                playerStat.getMaxHealthMultiplier() + getModifierValue()
+        );
     }
 
 }

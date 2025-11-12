@@ -5,6 +5,7 @@ import game.Brick.BrickEvent.BrickEvent;
 import game.Brick.BrickEvent.EventType;
 import game.Brick.BrickGenMap.GenMap;
 import game.Player.PlayerData.DataManager;
+import game.Player.PlayerData.IPlayerProgressHolder;
 import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
@@ -21,7 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 
 // TODO: Doc
-public final class BrickMapManager extends MonoBehaviour {
+public final class BrickMapManager extends MonoBehaviour implements
+        IPlayerProgressHolder {
 
     public static final int ROW_COUNT = 8;
     public static final int COLUMN_COUNT = 10;
@@ -110,6 +112,7 @@ public final class BrickMapManager extends MonoBehaviour {
 
     }
 
+    @Override
     public void loadProgress() {
         brickDestroyed = DataManager.getInstance().getProgress().getBrickDestroyed();
     }

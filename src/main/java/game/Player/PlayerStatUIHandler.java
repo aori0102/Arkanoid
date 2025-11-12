@@ -1,6 +1,6 @@
 package game.Player;
 
-import game.Player.Paddle.PaddleStat;
+import game.Player.Paddle.PlayerStat;
 import game.Player.Prefab.PlayerStatUIHandlerPrefab;
 import org.Annotation.LinkViaPrefab;
 import org.Event.EventActionID;
@@ -58,18 +58,18 @@ public final class PlayerStatUIHandler extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link PaddleStat#onStatChanged} is invoked.<br><br>
+     * Called when {@link PlayerStat#onStatChanged} is invoked.<br><br>
      * This function updates the stat UI when stat changes.
      *
-     * @param sender Event caller {@link PaddleStat}.
-     * @param e      Empty event argument.
+     * @param sender Event caller {@link PlayerStat}.
+     * @param e      Event argument .
      */
-    private void paddleStat_onStatChanged(Object sender, Void e) {
+    private void paddleStat_onStatChanged(Object sender, PlayerStat.PlayerStatIndex e) {
         updateStatUI();
     }
 
     /**
-     * Update all {@link PlayerStatUI} based on {@link PaddleStat}.
+     * Update all {@link PlayerStatUI} based on {@link PlayerStat}.
      */
     private void updateStatUI() {
         var paddleStat = Player.getInstance().getPlayerPaddle().getPaddleStat();

@@ -61,7 +61,7 @@ public final class PaddleVisual extends MonoBehaviour {
         if (e.alterType.isDamage()) {
             renderer.setOverlayColor(Color.RED);
             resetDamageTint_coroutineID
-                    = Time.addCoroutine(this::resetDamageTint, Time.getTime() + DAMAGE_FLASHING_TIME);
+                    = Time.addCoroutine(this::resetDamageTint, DAMAGE_FLASHING_TIME);
         }
     }
 

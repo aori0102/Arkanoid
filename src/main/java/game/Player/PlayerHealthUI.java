@@ -34,10 +34,12 @@ public final class PlayerHealthUI extends MonoBehaviour {
 
     @Override
     public void start() {
-        Player.getInstance().getPlayerLives().onLivesDecreased
+        Player.getInstance().getPlayerLives().onLivesChanged
                 .addListener(this::playerLives_onLivesChanged);
         Player.getInstance().getPlayerPaddle().getPaddleHealth().onHealthChanged
                 .addListener(this::paddleHealth_onHealthChanged);
+        updateHealthBar();
+        updateLivesBar();
     }
 
     @Override
@@ -47,19 +49,11 @@ public final class PlayerHealthUI extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link PlayerLives#onLivesDecreased} is invoked.<br><br>
+     * Called when {@link PlayerLives#onLivesChanged} is invoked.<br><br>
      * This function updates the health UI as player lives change.
      */
     private void playerLives_onLivesChanged(Object sender, Void e) {
-        var lives = Player.getInstance().getPlayerLives().getLives();
-        for (int i = 0; i < PlayerAttributes.MAX_LIVES; i++) {
-            if (i < lives) {
-                livesRendererArray[i].setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_LifeRemain.getImage());
-            } else {
-                livesRendererArray[i].setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_LifeLost.getImage());
-            }
-            livesRendererArray[i].setSize(PlayerHealthBarPrefab.LIFE_BAR_SIZE);
-        }
+        updateLivesBar();
     }
 
     /**
@@ -70,8 +64,25 @@ public final class PlayerHealthUI extends MonoBehaviour {
      * @param e      Empty event argument.
      */
     private void paddleHealth_onHealthChanged(Object sender, EntityHealth.OnHealthChangedEventArgs e) {
-        var currentHealth = Player.getInstance().getPlayerPaddle().getPaddleHealth().getHealth();
-        targetRatio = (double) currentHealth / PlayerAttributes.MAX_HEALTH;
+        updateHealthBar();
+    }
+
+    private void updateHealthBar() {
+        var paddle = Player.getInstance().getPlayerPaddle();
+        targetRatio = (double) paddle.getPaddleHealth().getHealth()
+                / paddle.getPaddleStat().getActualMaxHealth();
+    }
+
+    private void updateLivesBar() {
+        var lives = Player.getInstance().getPlayerLives().getLives();
+        for (int i = 0; i < PlayerAttributes.MAX_LIVES; i++) {
+            if (i < lives) {
+                livesRendererArray[i].setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_LifeRemain.getImage());
+            } else {
+                livesRendererArray[i].setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_LifeLost.getImage());
+            }
+            livesRendererArray[i].setSize(PlayerHealthBarPrefab.LIFE_BAR_SIZE);
+        }
     }
 
     /**

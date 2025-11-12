@@ -1,13 +1,15 @@
 package game.Player.PlayerSkills.Skills;
 
+import game.Player.Paddle.PlayerStat;
 import game.Player.Player;
 import game.Player.PlayerSkills.SkillIndex;
 import org.GameObject.GameObject;
+import org.Layer.Layer;
 import utils.Time;
 
 public class DashSkill extends Skill {
 
-    private static final int DASH_SPEED = 1500;
+    private static final double DASH_SPEED_MULTIPLIER_INCREMENT = 1.3;
     private static final double DASH_TIME = 0.2;
 
     private Time.CoroutineID dashCoroutineID;
@@ -23,11 +25,14 @@ public class DashSkill extends Skill {
 
     @Override
     public void invoke() {
-        Player.getInstance().setCurrentSpeed(DASH_SPEED);
-        Player.getInstance().getPlayerPaddle().getPaddleDashParticle().startEmit();
-        Player.getInstance().getPlayerPaddle().setCanBeDamaged(false);
-        Player.getInstance().getPlayerPaddle().getPaddleStat().setDamageTakenMultiplier(0);
-        dashCoroutineID = Time.addCoroutine(this::resetDashSpeed, Time.getTime() + DASH_TIME);
+        var paddle = Player.getInstance().getPlayerPaddle();
+        paddle.getPaddleStat().setStatMultiplier(
+                PlayerStat.PlayerStatIndex.MovementSpeed,
+                paddle.getPaddleStat().getMovementSpeedMultiplier() + DASH_SPEED_MULTIPLIER_INCREMENT
+        );
+        paddle.getPaddleDashParticle().startEmit();
+        paddle.getGameObject().setLayer(Layer.Paddle_IgnoreDamage);
+        dashCoroutineID = Time.addCoroutine(this::resetDashSpeed, DASH_TIME);
     }
 
     @Override
@@ -41,10 +46,13 @@ public class DashSkill extends Skill {
     }
 
     private void resetDashSpeed() {
-        Player.getInstance().setCurrentSpeed(Player.getInstance().getBaseSpeed());
-        Player.getInstance().getPlayerPaddle().setCanBeDamaged(true);
-        Player.getInstance().getPlayerPaddle().getPaddleStat().setDamageTakenMultiplier(1);
-        Player.getInstance().getPlayerPaddle().getPaddleDashParticle().stopEmit();
+        var paddle = Player.getInstance().getPlayerPaddle();
+        paddle.getPaddleStat().setStatMultiplier(
+                PlayerStat.PlayerStatIndex.MovementSpeed,
+                paddle.getPaddleStat().getMovementSpeedMultiplier() - DASH_SPEED_MULTIPLIER_INCREMENT
+        );
+        paddle.getGameObject().setLayer(Layer.Paddle);
+        paddle.getPaddleDashParticle().stopEmit();
         Time.removeCoroutine(dashCoroutineID);
     }
 }

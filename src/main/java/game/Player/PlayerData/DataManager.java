@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import game.GameManager.GameManager;
 import game.Level.LevelManager;
 import game.MapGenerator.BrickMapManager;
+import game.Player.Paddle.PlayerStat;
 import game.Player.Player;
+import game.Player.PlayerSkills.SkillIndex;
 import game.Rank.RankManager;
 import game.Score.ScoreManager;
 import org.Exception.ReinitializedSingletonException;
@@ -112,9 +114,22 @@ public final class DataManager extends MonoBehaviour {
 
         progressData.setBrickDestroyed(BrickMapManager.getInstance().getBrickDestroyed());
 
-        progressData.setPerkList(new Integer[]{1, 4, 2, 6});
-        // TODO: update this
-        // TODO: update perk when loading progress
+        var statIndexArray = PlayerStat.PlayerStatIndex.values();
+        double[] statMultiplierArray = new double[statIndexArray.length];
+        for (var index : statIndexArray) {
+            statMultiplierArray[index.ordinal()] = Player.getInstance().getPlayerPaddle().getPaddleStat()
+                    .getStatMultiplier(index);
+        }
+        progressData.setStatMultiplierArray(statMultiplierArray);
+
+        var skillIndexArray = SkillIndex.values();
+        double[] skillCooldownMultiplierArray = new double[statIndexArray.length];
+        for (var index : skillIndexArray) {
+            skillCooldownMultiplierArray[index.ordinal()] = Player.getInstance().getPlayerPaddle().getPaddleStat()
+                    .getSkillCooldownMultiplier(index);
+        }
+        progressData.setSkillCooldownMultiplierArray(skillCooldownMultiplierArray);
+
 
         progressData.setHealth(Player.getInstance().getPlayerPaddle().getPaddleHealth().getHealth());
     }
@@ -128,7 +143,7 @@ public final class DataManager extends MonoBehaviour {
     }
 
     public void resetSave() {
-        progressData.reset();
+        progressData.toDefault();
     }
 
     public ProgressData getProgress() {

@@ -43,7 +43,7 @@ public final class ScorePopUp extends MonoBehaviour {
     @Override
     public void awake() {
         spawnTime = Time.getTime();
-        Time.addCoroutine(() -> GameObjectManager.destroy(gameObject), Time.getTime() + LIFE_TIME);
+        Time.addCoroutine(() -> GameObjectManager.destroy(gameObject), LIFE_TIME);
     }
 
     @Override

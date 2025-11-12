@@ -39,7 +39,7 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
     public void awake() {
         basicSkill_coroutineID = Time.addCoroutine(
                 this::basicSkill,
-                Time.getTime() + Voltraxis.getInstance().getVoltraxisStatManager().getBasicSkillCooldown()
+                Voltraxis.getInstance().getVoltraxisStatManager().getBasicSkillCooldown()
         );
 
         Voltraxis.getInstance().getVoltraxisCharging().onChargingEntered
@@ -63,7 +63,7 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
     private void voltraxisCharging_onChargingTerminated(Object sender, Void e) {
         basicSkill_coroutineID = Time.addCoroutine(
                 this::basicSkill,
-                Time.getTime() + Voltraxis.getInstance().getVoltraxisStatManager().getBasicSkillCooldown()
+                Voltraxis.getInstance().getVoltraxisStatManager().getBasicSkillCooldown()
         );
     }
 
@@ -88,12 +88,12 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
 
         for (int i = 0; i < MAX_SHOT_PER_SEQUENCE; i++) {
             var delay = SEQUENCE_DELAY * i + SHOOTING_DELAY;
-            shootBalls_coroutineIDList[i] = Time.addCoroutine(this::shootBalls, Time.getTime() + delay);
+            shootBalls_coroutineIDList[i] = Time.addCoroutine(this::shootBalls, delay);
         }
         onBasicAttackCommenced.invoke(this, null);
         basicSkill_coroutineID = Time.addCoroutine(
                 this::basicSkill,
-                Time.getTime() + Voltraxis.getInstance().getVoltraxisStatManager().getBasicSkillCooldown()
+                Voltraxis.getInstance().getVoltraxisStatManager().getBasicSkillCooldown()
         );
 
     }

@@ -3,7 +3,6 @@ package org.InputAction;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import com.sun.javafx.scene.input.KeyCodeMap;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import org.Event.EventHandler;
@@ -19,9 +18,9 @@ public class ActionMap extends MonoBehaviour {
         GoLeft,
         GoRight,
         MousePressed,
-        Skill1,
-        Skill2,
-        Skill3,
+        LaserBeam,
+        Updraft,
+        Invincible,
         Dash,
         None
     }
@@ -67,9 +66,9 @@ public class ActionMap extends MonoBehaviour {
         keyActionMap.put(KeyCode.D, Action.GoRight);
         keyActionMap.put(KeyCode.RIGHT, Action.GoRight);
         keyActionMap.put(KeyCode.LEFT, Action.GoLeft);
-        keyActionMap.put(KeyCode.Q, Action.Skill1);
-        keyActionMap.put(KeyCode.E, Action.Skill2);
-        keyActionMap.put(KeyCode.X, Action.Skill3);
+        keyActionMap.put(KeyCode.Q, Action.LaserBeam);
+        keyActionMap.put(KeyCode.E, Action.Updraft);
+        keyActionMap.put(KeyCode.X, Action.Invincible);
         keyActionMap.put(KeyCode.SHIFT, Action.Dash);
         mouseActionMap.put(MouseButton.PRIMARY, Action.MousePressed);
 
