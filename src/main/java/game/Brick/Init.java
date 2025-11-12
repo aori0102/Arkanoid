@@ -80,7 +80,6 @@ public class Init {
 
     /**
      * Destroys the brick at the specified location.
-     * This method calls the {@link GameObjectManager#destroy(Object)} method on the brick's GameObject.
      * It does nothing if the coordinates are invalid (per {@link #valid}).
      *
      * @param brickGrid The 2D list representing the brick grid.

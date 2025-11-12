@@ -9,6 +9,25 @@ import game.Brick.BrickGenMap.SpecialsSprinkler;
 import game.Brick.BrickGenMap.StyleGenerator;
 import java.util.*;
 
+/**
+ * A {@link StyleGenerator} that creates a map resembling a series of
+ * natural caves or caverns.
+ *
+ * <p>This generator uses several procedural generation techniques:
+ * <ol>
+ * <li>Generates 2D pseudo-Perlin noise (using sin/cos).</li>
+ * <li>Applies a threshold to the noise to create an initial "wall" map.</li>
+ * <li>Uses a <b>Cellular Automata</b> "smoothing" algorithm to make the
+ * wall formations more natural and "blob-like".</li>
+ * <li>Applies a <b>Flood Fill</b> algorithm to find all disconnected
+ * open regions (caves).</li>
+ * <li>Keeps only the <b>largest</b> open region, filling in all smaller,
+ * disconnected caves.</li>
+ * <li>Carves several random vertical paths to improve connectivity.</li>
+ * <li>Converts the final boolean wall map into a {@link Matrix} of bricks.</li>
+ * <li>Finally, {@link SpecialsSprinkler} is called to add special bricks.</li>
+ * </ol>
+ */
 public final class CavesStyle implements StyleGenerator {
 
     @Override
@@ -17,9 +36,12 @@ public final class CavesStyle implements StyleGenerator {
         double[][] noise = generatePerlinNoise(rows, cols, 0.1, rng);
         boolean[][] wall = new boolean[rows][cols];
         double threshold = lerp(0.45, 0.6, difficulty);
+
         for (int r = 0; r < rows; r++)
-            for (int c = 0; c < cols; c++)
+            for (int c = 0; c < cols; c++) {
                 wall[r][c] = noise[r][c] > threshold;
+            }
+
         for (int step = 0; step < 3; step++) {
             wall = smooth(wall);
         }
@@ -27,6 +49,7 @@ public final class CavesStyle implements StyleGenerator {
         keepLargestOpenRegion(wall, rows, cols);
         addVerticalPaths(wall, rng, rows, cols);
         Matrix grid = new Matrix(rows, cols);
+
         for (int r = 0; r < rows; r++)
             for (int c = 0; c < cols; c++) {
                 if (r == 0 || r == rows - 1 || c == 0 || c == cols - 1) {
@@ -36,9 +59,14 @@ public final class CavesStyle implements StyleGenerator {
                 if (wall[r][c]) {
                     if (r > rows * 0.7 && rng.nextDouble() < 0.3)
                         grid.set(r, c, transTypeToNumber(BrickType.Diamond));
-                    else grid.set(r, c, transTypeToNumber(BrickType.Steel));
-                } else grid.set(r, c, transTypeToNumber(BrickType.Normal));
+                    else {
+                        grid.set(r, c, transTypeToNumber(BrickType.Steel));
+                    }
+                } else {
+                    grid.set(r, c, transTypeToNumber(BrickType.Normal));
+                }
             }
+
         SpecialsSprinkler.sprinkle(grid, rng, difficulty);
         return grid;
     }

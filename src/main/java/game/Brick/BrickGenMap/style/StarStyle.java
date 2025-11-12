@@ -10,8 +10,40 @@ import game.Brick.BrickGenMap.StyleGenerator;
 import game.Brick.BrickGenMap.TypePickers;
 import java.util.Random;
 
-/** STAR: multiple rays from center; thickness increases with difficulty. */
+/**
+ * A {@link StyleGenerator} that creates a "starburst" pattern.
+ *
+ * <p>It generates multiple "rays" (straight lines) of hard bricks
+ * (Steel or Diamond) that originate from the center of the map.
+ * The number of rays and the "hardness" of the bricks scale
+ * with difficulty.
+ *
+ * <p>The thickness of the rays is handled by a simple, but flawed,
+ * logic that adds extra pixels if difficulty > 0.5.
+ */
 public final class StarStyle implements StyleGenerator {
+
+    /**
+     * Generates a starburst-style map.
+     *
+     * <p><b>WARNING:</b> The thickness logic in this method
+     * ({@code grid.set(r + 1, c, ...)} and {@code grid.set(r, c + 1, ...)})
+     * does <b>NOT</b> perform bounds checking. This will cause an
+     * {@code ArrayIndexOutOfBoundsException} if a ray runs along the
+     * bottom ({@code r = rows - 1}) or right ({@code c = cols - 1}) edge
+     * of the map.
+     *
+     * @param rows The number of rows for the map.
+     * @param cols The number of columns for the map.
+     * @param difficulty The difficulty (0.0 to 1.0). Controls:
+     * <ul>
+     * <li>The number of rays (5 to 8).</li>
+     * <li>The hardness of the brick (Steel vs. Diamond).</li>
+     * <li>The flawed thickness logic (triggers if > 0.5).</li>
+     * </ul>
+     * @param rng The {@link Random} generator to use.
+     * @return The generated and sprinkled {@link Matrix}.
+     */
     @Override
     public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);

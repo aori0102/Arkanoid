@@ -10,7 +10,15 @@ import game.Brick.BrickGenMap.StyleGenerator;
 import game.Brick.BrickGenMap.TypePickers;
 import java.util.Random;
 
-/** SINE: a sinusoidal hard band across the grid. */
+/**
+ * A {@link StyleGenerator} that creates a map with a "hard band" (a line of
+ * hard bricks) that follows a sinusoidal (sine wave) path
+ * horizontally across the grid.
+ *
+ * <p>The remaining cells (the "background") are defaulted to
+ * {@link BrickType#Normal} and are then processed by the
+ * {@link SpecialsSprinkler}.
+ */
 public final class SineStyle implements StyleGenerator {
     @Override
     public Matrix generate(int rows, int cols, double difficulty, Random rng) {
@@ -19,7 +27,7 @@ public final class SineStyle implements StyleGenerator {
 
         double amp = lerp(3, 6, difficulty);
         double freq = lerp(0.8, 1.6, difficulty);
-        int thickness = Math.max(1, (int)Math.round(lerp(1, 3, difficulty)));
+        int thickness = Math.max(1, (int)Math.round(lerp(1, 2, difficulty)));
         BrickType wall = TypePickers.pickFromTopHard(rng, 0.55 + 0.35 * difficulty);
 
         for (int c = 0; c < cols; c++) {

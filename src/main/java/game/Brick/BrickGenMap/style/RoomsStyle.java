@@ -10,8 +10,48 @@ import game.Brick.BrickGenMap.StyleGenerator;
 import game.Brick.BrickGenMap.TypePickers;
 import java.util.Random;
 
-/** ROOMS: hollow rooms with sparse interior. */
+/**
+ * A {@link StyleGenerator} that attempts to create hollow rooms with a
+ * sparse interior, as per its description.
+ *
+ * <p><b>CRITICAL BUG:</b> The current implementation contains a logical flaw
+ * that prevents it from matching its description.
+ *
+ * <p><b>Intended Logic:</b>
+ * <ol>
+ * <li>Draw a border ("wall") of hard bricks.</li>
+ * <li>Fill the <i>inside</i> of that border with "fill" bricks.</li>
+ * </ol>
+ *
+ * <p><b>Actual Logic:</b>
+ * <ol>
+ * <li>It correctly draws the "wall" border in the first loop.</li>
+ * <li>A <b>second loop</b> then iterates over the <b>entire</b> room area
+ * (including the border) and overwrites <b>everything</b> with the "fill"
+ * brick type.</li>
+ * </ol>
+ *
+ * <p><b>Result:</b> The "wall" is instantly erased. The final map consists of
+ * several overlapping, solid rectangles made entirely of the "fill" brick,
+ * not hollow rooms.
+ */
 public final class RoomsStyle implements StyleGenerator {
+
+    /**
+     * Generates the "rooms" map.
+     *
+     * @param rows The number of rows for the map.
+     * @param cols The number of columns for the map.
+     * @param difficulty The difficulty (0.0 to 1.0). This controls:
+     * <ul>
+     * <li>The number of rooms to be drawn (from 5 to 8).</li>
+     * <li>The hardness of the "wall" (Steel/Diamond).</li>
+     * <li>The type of the "fill" (Normal/Steel/Diamond).</li>
+     * </ul>
+     * @param rng The {@link Random} generator to use.
+     * @return The generated {@link Matrix}, which (due to a bug) will
+     * contain solid rectangles, not hollow rooms.
+     */
     @Override
     public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);

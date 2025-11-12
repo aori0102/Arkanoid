@@ -5,9 +5,20 @@ import java.util.Random;
 
 import static game.Brick.BrickGenMap.Mathx.*;
 
+/**
+ * A {@code final} utility class for selecting "core" {@link BrickType}s
+ * (Normal, Steel, Diamond).
+ *
+ * <p>This class provides various weighted-random-selection algorithms
+ * to pick a brick type based on parameters like 'bias' or 'difficulty'.
+ * It is not meant to be instantiated.
+ */
 public final class TypePickers {
     private TypePickers() {}
 
+    /**
+     * Defines the set of core, non-special brick types.
+     */
     private static final BrickType[] CORE = {
             BrickType.Normal,
             BrickType.Steel,
@@ -15,12 +26,30 @@ public final class TypePickers {
     };
 
     /**
-     * Base ratio 5:3:2 (Normal:Steel:Diamond).
+     * Base weight for Normal bricks in the 5:3:2 ratio.
      */
     private static final double BASE_N = 5.0;
+    /**
+     * Base weight for Steel bricks in the 5:3:2 ratio.
+     */
     private static final double BASE_S = 3.0;
+    /**
+     * Base weight for Diamond bricks in the 5:3:2 ratio.
+     */
     private static final double BASE_D = 2.0;
 
+    /**
+     * Selects a {@link BrickType} from the core set based on custom weights.
+     * <p>
+     * Implements a standard weighted random pick. If the sum of all weights
+     * is zero or negative, it defaults to {@link BrickType#Normal}.
+     *
+     * @param rng The {@link Random} generator to use.
+     * @param wN The weight for {@link BrickType#Normal}.
+     * @param wS The weight for {@link BrickType#Steel}.
+     * @param wD The weight for {@link BrickType#Diamond}.
+     * @return The randomly selected {@link BrickType}.
+     */
     private static BrickType weightedPick(Random rng, double wN, double wS, double wD) {
         double sum = wN + wS + wD;
         if (sum <= 0.0) {
