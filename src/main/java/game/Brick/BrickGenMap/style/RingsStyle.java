@@ -10,8 +10,37 @@ import game.Brick.BrickGenMap.StyleGenerator;
 import game.Brick.BrickGenMap.TypePickers;
 import java.util.Random;
 
-/** RINGS: concentric rectangular rings with occasional doorways. */
+/**
+ * A {@link StyleGenerator} that creates a map of concentric rectangular rings.
+ *
+ * <p>This generator works by drawing rectangular borders from the outside-in.
+ * It iterates its "depth" counter ({@code d}) by 2, meaning it draws a
+ * 1-pixel-wide ring, then leaves a 1-pixel-wide gap, then draws the
+ * next ring, and so on.
+ *
+ * <p>Key features:
+ * <ul>
+ * <li><b>Wall Hardness:</b> The rings get <b>weaker</b> (lower bias) as they
+ * approach the center.</li>
+ * <li><b>Doorways:</b> It randomly carves "doorways" (gaps) into the rings.
+ * The chance of a doorway appearing is <b>higher</b> on lower difficulties
+ * (80% chance) and <b>lower</b> on higher difficulties (30% chance).</li>
+ * </ul>
+ * The gaps between rings (and the center) are left as {@link BrickType#Normal}
+ * and are then filled by the {@link SpecialsSprinkler}.
+ */
+
 public final class RingsStyle implements StyleGenerator {
+    /**
+     * Generates the concentric rings map.
+     *
+     * @param rows The number of rows for the map.
+     * @param cols The number of columns for the map.
+     * @param difficulty The difficulty (0.0 to 1.0). Controls wall hardness
+     * and the probability of doorways.
+     * @param rng The {@link Random} generator to use.
+     * @return The generated and sprinkled {@link Matrix}.
+     */
     @Override
     public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);

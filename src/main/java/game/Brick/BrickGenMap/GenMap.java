@@ -94,7 +94,7 @@ public final class GenMap {
             throw new IllegalStateException("No registered map styles!");
         }
 
-        return MapStyle.SINE;
+        return MapStyle.ROOMS;
 
 //        List<MapStyle> styles = new ArrayList<>(strategies.keySet());
 //        return styles.get(rng.nextInt(styles.size()));

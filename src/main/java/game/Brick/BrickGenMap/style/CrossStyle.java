@@ -12,8 +12,39 @@ import game.Brick.Init.Matrix;
 
 import java.util.Random;
 
+/**
+ * A {@link StyleGenerator} that creates a "Cross" pattern by combining
+ * vertical, horizontal, and diagonal lines.
+ *
+ * <p>This generator follows a specific randomized logic:
+ * <ul>
+ * <li>There is a 50% chance it draws <b>both</b> a plus sign (+) and an X (X).</li>
+ * <li>There is a 25% chance it draws <b>only</b> a plus sign (+).</li>
+ * <li>There is a 25% chance it draws <b>only</b> an X (X).</li>
+ * </ul>
+ *
+ * <p>All lines are drawn from a randomly offset center point ({@code midR}, {@code midC}).
+ * The background is initialized to {@link BrickType#Normal} (value 0) and then
+ * filled by the {@link SpecialsSprinkler}.
+ *
+ * <p>Note: This version does <em>not</em> create a "hole" in the center.
+ */
 public final class CrossStyle implements StyleGenerator {
 
+    /**
+     * Generates the cross-pattern map.
+     *
+     * @param rows The number of rows for the map.
+     * @param cols The number of columns for the map.
+     * @param difficulty The difficulty (0.0 to 1.0). This controls:
+     * <ul>
+     * <li>The hardness (Steel/Diamond) of the {@code hard} brick.</li>
+     * <li>The thickness of the lines (interpolating from 0 to 2).</li>
+     * </ul>
+     * @param rng The {@link Random} generator, used for logic branching,
+     * offsets, and brick selection.
+     * @return The generated and sprinkled {@link Matrix}.
+     */
     @Override
     public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);
@@ -21,7 +52,7 @@ public final class CrossStyle implements StyleGenerator {
 
         BrickType hard = TypePickers.pickFromTopHard(rng, 0.55 + 0.4 * difficulty);
 
-        int thick = Math.max(0, (int)Math.round(lerp(0, 2, difficulty)));
+        int thick = Math.max(1, (int)Math.round(lerp(1, 2, difficulty)));
 
         int rOffsetRange = Math.max(1, rows / 4);
         int cOffsetRange = Math.max(1, cols / 4);
