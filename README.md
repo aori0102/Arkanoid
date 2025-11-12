@@ -188,21 +188,21 @@ Không sử dụng hay cài đặt
 ## Future Improvements
 
 ### Planned Features
-1. **Additional game modes**
-    - Time attack mode
-    - Survival mode with endless levels
-    - Co-op multiplayer mode
+1. **Perks System**
+    - Earn a perk for each rank increased.
+    - Perk helps player to increase their stat. 
 
 2. **Enhanced gameplay**
-    - Boss battles at end of worlds
-    - More power-up varieties (freeze time, shield wall, etc.)
-    - Achievements system
+    - Boss battle every 5 levels.
+    - More power-up varieties (Blizzard Ball, Shield, Fire Ball, etc.).
+    - Add skills for more strategic gameplay (Laser Beam, Dash,...).
 
 3. **Technical improvements**
-    - Migrate to LibGDX or JavaFX for better graphics
-    - Add particle effects and advanced animations
-    - Implement AI opponent mode
-    - Add online leaderboard with database backend
+    - Use VLCJ for better videos experience.
+    - Add particle effects and advanced animations.
+    - Add records for ranking.
+    - Clean UI.
+    - Unity-based System.
 
 ---
 
@@ -234,5 +234,5 @@ This project is developed for educational purposes only.
 
 ---
 
-*Last updated: [Ngày/Tháng/Năm]*
+*Last updated: [12/11/2025]*
 
