@@ -52,6 +52,7 @@ public class VoltraxisSFX extends MonoBehaviour {
                 .onEachBallShot.removeListener(sfx_onEachBallShot);
         Voltraxis.getInstance().getVoltraxisCharging()
                 .onUnleashingLaser.removeListener(sfx_onUnleashingUltimate);
+
         instance = null;
     }
 

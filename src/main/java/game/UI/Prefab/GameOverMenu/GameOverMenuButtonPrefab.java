@@ -1,5 +1,6 @@
 package game.UI.Prefab.GameOverMenu;
 
+import game.GameOver.GameOverManager;
 import game.UI.Buttons.GameOverMenuButton;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
@@ -10,6 +11,8 @@ public class GameOverMenuButtonPrefab extends Prefab {
     public GameObject instantiatePrefab() {
         GameOverMenuButton gameOverMenuButton = GameObjectManager.instantiate("GameOverMenuButton")
                 .addComponent(GameOverMenuButton.class);
+
+        GameOverManager.getInstance().linkGameOverMenuButton(gameOverMenuButton);
 
         return gameOverMenuButton.getGameObject();
     }
