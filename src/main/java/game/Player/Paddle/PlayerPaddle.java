@@ -18,57 +18,83 @@ import org.Physics.BoxCollider;
 import org.Physics.PhysicsManager;
 import utils.Time;
 import utils.Vector2;
-
 import javafx.scene.input.MouseEvent;
 
+/**
+ * Represents the player's paddle in the game.
+ * <p>
+ * This class handles the paddle's movement, interaction with power-ups,
+ * arrow aiming, firing logic, and reaction to status effects.
+ * </p>
+ */
 public class PlayerPaddle extends MonoBehaviour {
 
-    // The constant specs of the ball
-    private static final double STUNNED_MOVEMENT_SPEED_MULTIPLIER = 0.1;
+    // --- Constants for directional limits when firing ---
     private static final double DOT_LIMIT_ANGLE_RIGHT = 30;
     private static final double DOT_LIMIT_ANGLE_LEFT = 150;
-    private static final double PADDLE_MAX_MOVABLE_AMPLITUDE = 680.0;
-    private static final double STUN_TIME = 3.2;
-    private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0);
+    private static final Vector2 DIRECTION_VECTOR = new Vector2(1, 0); // reference vector for angle calculation
 
+    // --- Components attached to this paddle ---
     private final PaddleHealth paddleHealth = addComponent(PaddleHealth.class);
     private final PlayerStat playerStat = addComponent(PlayerStat.class);
     private final BoxCollider boxCollider = addComponent(BoxCollider.class);
     private final PaddleEffectController paddleEffectController = addComponent(PaddleEffectController.class);
 
-    private Time.CoroutineID stunnedCoroutineID;
-    private PaddleDashParticle paddleDashParticle;
+    private Time.CoroutineID stunnedCoroutineID; // Coroutine ID for handling stun effect duration
+    private PaddleDashParticle paddleDashParticle; // linked dash particle effect
 
-    private boolean canInvoke;
-    private Arrow arrow;
-    private Vector2 fireDirection = new Vector2();
-    public boolean isFired = false;
+    private Arrow arrow; // arrow visual for aiming
+    private Vector2 fireDirection = new Vector2(); // direction vector for firing
 
+    private boolean canInvoke; // if the paddle can fire
+    public boolean isFired = false; // indicates if a shot has been fired
+    private boolean canBeDamaged = true; // indicates if paddle can take damage
+
+    private Vector2 movementVector = new Vector2(0, 0); // current movement vector
+
+    // --- Events ---
     public EventHandler<Vector2> onMouseReleased = new EventHandler<>(PlayerPaddle.class);
-    public static EventHandler<PowerUp> onAnyPowerUpConsumed = new EventHandler<>(PlayerPaddle.class);
+    public EventHandler<PowerUp> onPowerUpConsumed = new EventHandler<>(PlayerPaddle.class);
 
-    private Vector2 movementVector = Vector2.zero();
-
+    /**
+     * Create a PlayerPaddle MonoBehaviour and set its layer.
+     */
     public PlayerPaddle(GameObject owner) {
         super(owner);
         owner.setLayer(Layer.Paddle);
     }
 
     /**
-     * Initialize paddle specs.
+     * Initialization of paddle.
+     * <p>
+     * Sets up event listeners for status effects, key/mouse input.
+     * </p>
      */
     @Override
     public void awake() {
+        // Listen for effects applied to paddle
         paddleEffectController.onEffectInflicted.addListener(this::paddleEffectController_onEffectInflicted);
 
-        Player.getInstance().getPlayerController().getActionMap().
-                onKeyHeld.addListener(this::handlePaddleMovement);
-        Player.getInstance().getPlayerController().getActionMap().
-                onMouseHeld.addListener(this::handleRayDirection);
-        Player.getInstance().getPlayerController().getActionMap().
-                onMouseReleased.addListener(this::handleRayReleased);
+        // Listen for player input
+        var actionMap = Player.getInstance().getPlayerController().getActionMap();
+        actionMap.onKeyHeld.addListener(this::handlePaddleMovement);
+        actionMap.onMouseHeld.addListener(this::handleRayDirection);
+        actionMap.onMouseReleased.addListener(this::handleRayReleased);
     }
 
+    /**
+     * Subscribe to paddle health event after all Awake calls.
+     */
+    @Override
+    public void start() {
+        paddleHealth.onPaddleHealthReachesZero
+                .addListener(this::playerPaddleHealth_onPaddleHealthReachesZero);
+    }
+
+    /**
+     * Update called every frame.
+     * Handles interactions with power-ups on the paddle.
+     */
     @Override
     public void update() {
         handlePowerUps();
@@ -80,8 +106,8 @@ public class PlayerPaddle extends MonoBehaviour {
         Time.removeCoroutine(stunnedCoroutineID);
     }
 
+    // --- Power-up handling ---
     private void handlePowerUps() {
-
         var overlapCollider = PhysicsManager.getOverlapColliders(boxCollider, true);
         for (var other : overlapCollider) {
             var powerUp = other.getComponent(PowerUp.class);
@@ -91,7 +117,17 @@ public class PlayerPaddle extends MonoBehaviour {
                 }
             }
         }
+    }
 
+    /**
+     * Called when {@link PaddleHealth#onPaddleHealthReachesZero} is invoked.<br><br>
+     * This function destroys the paddle when paddle's health reaches zero.
+     *
+     * @param sender Event caller {@link PaddleHealth}.
+     * @param e      Empty event argument.
+     */
+    private void playerPaddleHealth_onPaddleHealthReachesZero(Object sender, Void e) {
+        GameObjectManager.destroy(gameObject);
     }
 
     private void clampPaddlePositioning() {
@@ -107,9 +143,7 @@ public class PlayerPaddle extends MonoBehaviour {
     }
 
     /**
-     * Get the paddle's current movement vector.
-     *
-     * @return The paddle's current movement vector.
+     * Return the current movement vector of the paddle.
      */
     public Vector2 getMovementVector() {
         return movementVector;
@@ -123,15 +157,17 @@ public class PlayerPaddle extends MonoBehaviour {
         return playerStat;
     }
 
+    // --- Input Handling ---
+
+    /**
+     * Handles left/right movement via key input.
+     */
     private void handlePaddleMovement(Object e, ActionMap.Action action) {
-
         movementVector = new Vector2(0, 0);
-
         switch (action) {
             case GoLeft -> movementVector = movementVector.add(new Vector2(-1, 0));
             case GoRight -> movementVector = movementVector.add(new Vector2(1, 0));
-            default -> {
-            }
+            default -> {}
         }
 
         if (!movementVector.equals(Vector2.zero())) {
@@ -142,10 +178,12 @@ public class PlayerPaddle extends MonoBehaviour {
         getTransform().translate(movementVector);
     }
 
+    /**
+     * Called when mouse is released, triggers firing event.
+     */
     private void handleRayReleased(Object e, ActionMap.Action action) {
-        if (LevelManager.getInstance().getLevelState() != LevelState.Playing) {
-            return;
-        }
+        if (LevelManager.getInstance().getLevelState() != LevelState.Playing) return;
+
         arrow.turnOff();
         if (isDirectionValid(fireDirection) && canInvoke) {
             onMouseReleased.invoke(this, fireDirection);
@@ -154,40 +192,26 @@ public class PlayerPaddle extends MonoBehaviour {
     }
 
     /**
-     * Handle the direction ray.
+     * Handles arrow aiming based on mouse position.
      */
     private void handleRayDirection(Object e, ActionMap.Action action) {
-        if (isFired || LevelManager.getInstance().getLevelState() != LevelState.Playing) {
-            return;
-        }
+        if (isFired || LevelManager.getInstance().getLevelState() != LevelState.Playing) return;
 
-        // If the mouse input is left button, then turn on the line and calculate the fire direction as well as the line's end point
-        if (Player.getInstance().getPlayerController().
-                getPlayerInput().getMouseEvent(MouseButton.PRIMARY) != null) {
-            // Get mouse event
-            MouseEvent mouseEvent = Player.getInstance().getPlayerController().
-                    getPlayerInput().getMouseEvent(MouseButton.PRIMARY);
+        var mouseEvent = Player.getInstance().getPlayerController().getPlayerInput().getMouseEvent(MouseButton.PRIMARY);
+        if (mouseEvent == null) return;
 
-            // Get mouse position
-            Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
+        Vector2 mousePos = new Vector2(mouseEvent.getX(), mouseEvent.getY());
 
-            if (mousePos.y < getTransform().getGlobalPosition().y) {
-                canInvoke = false;
-                return;
-            } else {
-                canInvoke = true;
-            }
+        // Can only fire downward
+        canInvoke = mousePos.y >= getTransform().getGlobalPosition().y;
+        if (!canInvoke) return;
 
-            // The direction we want the ball to follow
-            Vector2 expectedDirection = ((getTransform().getGlobalPosition()
-                    .subtract(mousePos)).normalize());
-            // If the direction is in the range, then assigning it to fire direction
-            if (isDirectionValid(expectedDirection)) {
-                fireDirection = expectedDirection;
-                arrow.turnOn();
-                double angle = Math.toDegrees(Vector2.angle(fireDirection.normalize(), DIRECTION_VECTOR));
-                arrow.handleArrowDirection(angle);
-            }
+        Vector2 expectedDirection = (getTransform().getGlobalPosition().subtract(mousePos)).normalize();
+        if (isDirectionValid(expectedDirection)) {
+            fireDirection = expectedDirection;
+            arrow.turnOn();
+            double angle = Math.toDegrees(Vector2.angle(fireDirection.normalize(), DIRECTION_VECTOR));
+            arrow.handleArrowDirection(angle);
         }
     }
 
@@ -203,22 +227,12 @@ public class PlayerPaddle extends MonoBehaviour {
         return angle >= DOT_LIMIT_ANGLE_RIGHT && angle <= DOT_LIMIT_ANGLE_LEFT;
     }
 
-    /**
-     * Link the arrow
-     *
-     * @param arrow: linked arrow
-     */
+    // --- Linking external components ---
+
     public void linkArrow(Arrow arrow) {
         this.arrow = arrow;
     }
 
-    /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
-     *
-     * @param paddleDashParticle .
-     */
     public void linkPaddleDashParticle(PaddleDashParticle paddleDashParticle) {
         this.paddleDashParticle = paddleDashParticle;
     }
@@ -226,6 +240,8 @@ public class PlayerPaddle extends MonoBehaviour {
     public PaddleDashParticle getPaddleDashParticle() {
         return paddleDashParticle;
     }
+
+    // --- Status Effects ---
 
     private void paddleEffectController_onEffectInflicted(Object o, StatusEffect statusEffect) {
         if (statusEffect == StatusEffect.Stunned) {

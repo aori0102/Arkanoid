@@ -14,25 +14,39 @@ import org.Prefab.PrefabManager;
 
 import java.util.HashSet;
 
+/**
+ * Singleton class that manages all balls in the game.
+ * <p>
+ * Responsibilities:
+ * <ul>
+ *     <li>Track all balls currently in play.</li>
+ *     <li>Handle ball spawn and destruction events.</li>
+ *     <li>Apply status effects to all balls.</li>
+ *     <li>Provide utility functions such as removing random balls.</li>
+ * </ul>
+ * </p>
+ */
 public class BallsManager extends MonoBehaviour {
 
+    // Max number of balls allowed for multiplication
     private static final int MAX_BALL_TO_MULTIPLY = 12;
 
-    private static BallsManager instance = null;
+    private static BallsManager instance = null; // Singleton instance
 
-    private final HashSet<Ball> ballSet = new HashSet<>();
+    private final HashSet<Ball> ballSet = new HashSet<>(); // All active balls
+    public int index = 1; // Optional index for tracking balls
 
-    public int index = 1;
-
+    // Event triggered when all balls are destroyed
     public EventHandler<Void> onAllBallDestroyed = new EventHandler<>(BallsManager.class);
 
+    // Event listener IDs
     private EventActionID ball_onAnyBallDestroyed_ID = null;
     private EventActionID ball_onAnyBallSpawned_ID = null;
 
     /**
-     * Create this MonoBehaviour.
+     * Constructor.
      *
-     * @param owner The owner of this component.
+     * @param owner The owner GameObject of this MonoBehaviour.
      */
     public BallsManager(GameObject owner) {
         super(owner);
@@ -42,12 +56,18 @@ public class BallsManager extends MonoBehaviour {
         instance = this;
     }
 
+    /**
+     * Get the singleton instance.
+     *
+     * @return BallsManager instance.
+     */
     public static BallsManager getInstance() {
         return instance;
     }
 
     @Override
     public void awake() {
+        // Register listeners for ball spawn/destruction
         ball_onAnyBallDestroyed_ID = Ball.onAnyBallDestroyed
                 .addListener(this::ball_onAnyBallDestroyed);
         ball_onAnyBallSpawned_ID = Ball.onAnyBallSpawned
@@ -56,41 +76,45 @@ public class BallsManager extends MonoBehaviour {
 
     @Override
     public void onDestroy() {
+        // Remove listeners and clear singleton
         Ball.onAnyBallDestroyed.removeListener(ball_onAnyBallDestroyed_ID);
         Ball.onAnyBallSpawned.removeListener(ball_onAnyBallSpawned_ID);
         instance = null;
     }
 
     /**
+     * Add a ball to the manager.
      *
-     * @param ball
+     * @param ball The Ball object to add.
      */
     private void addBall(Ball ball) {
         ballSet.add(ball);
     }
 
     /**
+     * Remove a ball from the manager.
      *
-     * @param ball
+     * @param ball The Ball object to remove.
      */
     private void removeBall(Ball ball) {
         ballSet.remove(ball);
         if (ballSet.isEmpty()) {
-            onAllBallDestroyed.invoke(this, null);
+            onAllBallDestroyed.invoke(this, null); // Trigger event if no balls remain
         }
     }
 
+    /**
+     * Remove a random ball from the set and destroy it.
+     *
+     * @return true if a ball was removed, false if none existed.
+     */
     public boolean removeRandomBall() {
+        if (ballSet.isEmpty()) return false;
 
-        if (ballSet.isEmpty()) {
-            return false;
-        }
         var ballToRemove = ballSet.iterator().next();
         ballSet.remove(ballToRemove);
         GameObjectManager.destroy(ballToRemove.getGameObject());
-
         return true;
-
     }
 
     public void destroyAllBalls() {
@@ -101,10 +125,9 @@ public class BallsManager extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link Ball#onAnyBallDestroyed} is invoked.<br><br>
-     * This function removes the destroyed ball from {@link #ballSet}.
+     * Event handler for when a ball is destroyed.
      *
-     * @param sender Event caller {@link Ball}.
+     * @param sender The Ball that was destroyed.
      * @param e      Empty event argument.
      */
     private void ball_onAnyBallDestroyed(Object sender, Void e) {
@@ -114,10 +137,9 @@ public class BallsManager extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link Ball#onAnyBallSpawned} is invoked.<br><br>
-     * This function adds the spawned {@link Ball} to {@link #ballSet}.
+     * Event handler for when a ball is spawned.
      *
-     * @param sender Event caller {@link Ball}.
+     * @param sender The Ball that was spawned.
      * @param e      Empty event argument.
      */
     private void ball_onAnyBallSpawned(Object sender, Void e) {
@@ -127,22 +149,24 @@ public class BallsManager extends MonoBehaviour {
     }
 
     /**
+     * Get all active balls.
      *
-     * @return
+     * @return Set of active Ball objects.
      */
     public HashSet<Ball> getBallSet() {
         return ballSet;
     }
 
     /**
+     * Apply a status effect to all balls.
      *
-     * @param statusEffect
+     * @param statusEffect The status effect to apply.
      */
     public void applyStatusPowerUpEffect(StatusEffect statusEffect) {
         if (statusEffect != null) {
             var statusInfo = new StatusEffectInfo();
             statusInfo.effect = statusEffect;
-            statusInfo.duration = Double.MAX_VALUE;
+            statusInfo.duration = Double.MAX_VALUE; // Permanent effect
             for (var ball : ballSet) {
                 ball.getBallEffectController().inflictEffect(statusInfo);
             }
@@ -150,28 +174,28 @@ public class BallsManager extends MonoBehaviour {
     }
 
     /**
-     * @return
+     * Spawn the initial ball at the start of the game.
      */
     public void spawnInitialBall() {
-
         var ball = PrefabManager.instantiatePrefab(PrefabIndex.Ball)
                 .getComponent(Ball.class);
         Player.getInstance().getPlayerPaddle().isFired = false;
-
         ballSet.add(ball);
     }
 
     /**
+     * Get the current number of active balls.
      *
-     * @return
+     * @return Number of balls.
      */
     public int getBallCount() {
         return ballSet.size();
     }
 
     /**
+     * Check if ball multiplication is allowed.
      *
-     * @return
+     * @return true if current ball count is below maximum allowed.
      */
     public boolean canSpawnBallMultiplication() {
         return getBallCount() < MAX_BALL_TO_MULTIPLY;

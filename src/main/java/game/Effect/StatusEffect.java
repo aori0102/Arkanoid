@@ -12,9 +12,22 @@ public enum StatusEffect {
     public final double damageDelay;
     public final EntityHealthAlterType damageType;
 
+    /**
+     * Constructs a {@code StatusEffect} with the specified parameters.
+     *
+     * @param baseDamageOverTime the base amount of damage this status effect inflicts
+     *                           over time (per tick or interval)
+     * @param damageDelay the delay between each damage application, in seconds
+     * @param damageType the type of damage associated with this effect, defined in
+     *                   {@link EntityHealthAlterType}
+     *
+     * This constructor initializes a specific status effect type with its corresponding
+     * base damage value, delay between damage applications, and the categorized damage type.
+     */
     StatusEffect(int baseDamageOverTime, double damageDelay, EntityHealthAlterType damageType) {
         this.baseDamageOverTime = baseDamageOverTime;
         this.damageDelay = damageDelay;
         this.damageType = damageType;
     }
+
 }

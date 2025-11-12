@@ -20,21 +20,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Class that manages every aspect of the game and exists across all scenes.
- * <p>
- * Below is all of its function:
+ * Manages global game state and persists across scenes.
+ *
+ * <p>This class is a singleton that handles:</p>
  * <ul>
- *     <li>Save, load player data.</li>
- *     <li>Save, load player config.</li>
- *     <li>Jump between scenes.</li>
- *     <li>Quit game</li>
+ *     <li>Loading and saving player data/config.</li>
+ *     <li>Switching between scenes.</li>
+ *     <li>Game state transitions (start, pause, resume, quit).</li>
  * </ul>
- * </p>
  */
 public class GameManager extends MonoBehaviour {
 
+    /** Directory where player data is stored. */
     public static final Path PLAYER_DATA_DIRECTORY = Paths.get(System.getenv("APPDATA"), "Arkanoid");
 
+    /**
+     * Represents different stages of loading the game.
+     */
     public enum GameLoadingState {
         WaitForSpawn,
         LoadProgress,
@@ -43,13 +45,14 @@ public class GameManager extends MonoBehaviour {
     }
 
     private static GameManager instance = null;
-
     private GameLoadingState gameLoadingState = GameLoadingState.None;
 
     /**
-     * Create this MonoBehaviour.
+     * Constructs the GameManager instance.
+     * Ensures that only one instance exists (singleton pattern).
      *
-     * @param owner The owner of this component.
+     * @param owner The GameObject that owns this component.
+     * @throws ReinitializedSingletonException if an instance already exists.
      */
     public GameManager(GameObject owner) {
         super(owner);
@@ -60,15 +63,14 @@ public class GameManager extends MonoBehaviour {
         verifyDataIntegrity();
     }
 
+    /**
+     * Called once per frame. Handles the current loading state of the game.
+     */
     @Override
     public void update() {
         switch (gameLoadingState) {
-
-            case WaitForSpawn:
-                gameLoadingState = GameLoadingState.LoadProgress;
-                break;
-
-            case LoadProgress:
+            case WaitForSpawn -> gameLoadingState = GameLoadingState.LoadProgress;
+            case LoadProgress -> {
                 ScoreManager.getInstance().loadProgress();
                 RankManager.getInstance().loadProgress();
                 BrickMapManager.getInstance().loadProgress();
@@ -77,27 +79,33 @@ public class GameManager extends MonoBehaviour {
                 Player.getInstance().getPlayerPaddle().getPaddleHealth().loadProgress();
                 Player.getInstance().getPlayerLives().loadProgress();
                 gameLoadingState = GameLoadingState.StartGame;
-                break;
-
-            case StartGame:
+            }
+            case StartGame -> {
                 LevelManager.getInstance().startGame();
                 gameLoadingState = GameLoadingState.None;
-                break;
-
+            }
         }
     }
 
+    /**
+     * Called when this object is destroyed. Clears the singleton instance.
+     */
     @Override
     public void onDestroy() {
         instance = null;
     }
 
+    /**
+     * Gets the singleton instance of GameManager.
+     *
+     * @return The current GameManager instance.
+     */
     public static GameManager getInstance() {
         return instance;
     }
 
     /**
-     * @aaa
+     * Starts a completely new game, resetting all player data.
      */
     public void startNewGame() {
         startGameScene();
@@ -105,40 +113,52 @@ public class GameManager extends MonoBehaviour {
     }
 
     /**
-     * @aaaa
+     * Continues the game using the last saved progress.
      */
     public void continueGame() {
         startGameScene();
     }
 
+    /**
+     * Loads the in-game scene and prepares game loading.
+     */
     private void startGameScene() {
         SceneManager.loadScene(SceneKey.InGame);
         gameLoadingState = GameLoadingState.WaitForSpawn;
     }
 
+    /**
+     * Returns to the main menu and resets time scale.
+     */
     public void quitToMainMenu() {
         SceneManager.loadScene(SceneKey.Menu);
         Time.setTimeScale(1.0);
     }
 
+    /**
+     * Exits the entire game application.
+     */
     public void quitGame() {
         Platform.exit();
     }
 
     /**
-     * @aaa
+     * Pauses the game by setting the time scale to zero.
      */
     public void pauseGame() {
         Time.setTimeScale(0);
     }
 
     /**
-     * @aaa
+     * Resumes the game by setting the time scale back to normal.
      */
     public void resumeGame() {
         Time.setTimeScale(1);
     }
 
+    /**
+     * Verifies that the player data directory exists and creates it if missing.
+     */
     private void verifyDataIntegrity() {
         try {
             Files.createDirectories(PLAYER_DATA_DIRECTORY);
@@ -146,5 +166,4 @@ public class GameManager extends MonoBehaviour {
             System.err.println("[GameManager] Error while verifying integrity: " + e.getMessage());
         }
     }
-
 }

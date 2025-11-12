@@ -7,6 +7,10 @@ import org.Text.TextUI;
 
 public final class HealthChangePopUpUIPrefab extends Prefab {
 
+    /**
+     * Instantiate new DamagePopUpUI
+     * @return new DamagePopUpUI
+     */
     @Override
     public GameObject instantiatePrefab() {
 

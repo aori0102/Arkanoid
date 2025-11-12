@@ -7,7 +7,17 @@ import org.Physics.BoxCollider;
 import utils.Time;
 import utils.Vector2;
 
-// TODO: Doc + Prefab
+/**
+ * Singleton class that represents the player's shield.
+ * <p>
+ * Responsibilities:
+ * <ul>
+ *     <li>Activate/deactivate the shield.</li>
+ *     <li>Track shield duration.</li>
+ *     <li>Link shield visual.</li>
+ * </ul>
+ * </p>
+ */
 public class Shield extends MonoBehaviour {
 
     private static final double SHIELD_DURATION = 7.0;
@@ -20,9 +30,9 @@ public class Shield extends MonoBehaviour {
     private Time.CoroutineID turnOff_coroutineID = null;
 
     /**
-     * Create this MonoBehaviour.
+     * Constructor.
      *
-     * @param owner The owner of this component.
+     * @param owner The owner GameObject of this MonoBehaviour.
      */
     public Shield(GameObject owner) {
         super(owner);
@@ -40,7 +50,7 @@ public class Shield extends MonoBehaviour {
         collider.setLocalSize(new Vector2(20000.0, 1.0));
         getTransform().setGlobalPosition(new Vector2(1190, 720));
 
-        turnOff();
+        turnOff(); // Ensure shield starts inactive
     }
 
     public void turnOn() {
@@ -54,17 +64,19 @@ public class Shield extends MonoBehaviour {
         }
     }
 
+    /**
+     * Deactivate the shield and reset timer.
+     */
     public void turnOff() {
         gameObject.setActive(false);
         shieldVisual.setActive(false);
     }
 
     /**
-     * Link this shield's visual<br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
+     * Link the shield visual GameObject.
+     * <p><b><i><u>NOTE</u>:</i></b> Only use during prefab linking process.</p>
      *
-     * @param shieldVisual The visual of this shield.
+     * @param shieldVisual The visual GameObject representing the shield.
      */
     public void linkShieldVisual(GameObject shieldVisual) {
         this.shieldVisual = shieldVisual;
