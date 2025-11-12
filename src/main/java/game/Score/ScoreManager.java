@@ -27,29 +27,9 @@ public final class ScoreManager extends MonoBehaviour implements
     private int _score = 0;
 
     /**
-     * Setter for read-only field {@link #_score}
-     *
-     * @param score The value to set.
-     */
-    private void setScore(int score) {
-        this._score = score;
-        onScoreChanged.invoke(this, score);
-    }
-
-    /**
      * <b>Read-only. Write via {@link #setCombo}.</b>
      */
     private int _combo = 0;
-
-    /**
-     * Setter for read-only field {@link #_combo}
-     *
-     * @param combo The value to set.
-     */
-    private void setCombo(int combo) {
-        this._combo = combo;
-        onComboChanged.invoke(this, combo);
-    }
 
     private EventActionID brick_onAnyBrickDestroyed_ID = null;
     private EventActionID ball_onAnyBallHitBrick_ID = null;
@@ -73,6 +53,11 @@ public final class ScoreManager extends MonoBehaviour implements
     }
 
     @Override
+    public void awake() {
+        loadProgress();
+    }
+
+    @Override
     public void start() {
         brick_onAnyBrickDestroyed_ID = Brick.onAnyBrickDestroyed.addListener(this::brick_onAnyBrickDestroyed);
         ball_onAnyBallHitBrick_ID = Ball.onAnyBallHitBrick.addListener(this::ball_onAnyBallHitBrick);
@@ -91,6 +76,13 @@ public final class ScoreManager extends MonoBehaviour implements
                     .removeListener(ballsManager_onAllBallDestroyed_ID);
         }
         instance = null;
+    }
+
+    @Override
+    public void loadProgress() {
+        var save = DataManager.getInstance().getProgress();
+        setScore(save.getScore());
+        setCombo(save.getCombo());
     }
 
     /**
@@ -147,11 +139,24 @@ public final class ScoreManager extends MonoBehaviour implements
         return instance;
     }
 
-    @Override
-    public void loadProgress() {
-        var save = DataManager.getInstance().getProgress();
-        setScore(save.getScore());
-        setCombo(save.getCombo());
+    /**
+     * Setter for read-only field {@link #_score}
+     *
+     * @param score The value to set.
+     */
+    private void setScore(int score) {
+        this._score = score;
+        onScoreChanged.invoke(this, score);
+    }
+
+    /**
+     * Setter for read-only field {@link #_combo}
+     *
+     * @param combo The value to set.
+     */
+    private void setCombo(int combo) {
+        this._combo = combo;
+        onComboChanged.invoke(this, combo);
     }
 
     public int getScore() {

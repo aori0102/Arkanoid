@@ -3,16 +3,12 @@ package game.Brick;
 import game.Rank.ExperienceHolder;
 import javafx.scene.paint.Color;
 import org.Annotation.LinkViaPrefab;
-import org.Audio.AudioManager;
-import org.Audio.SFXAsset;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Physics.BoxCollider;
 import org.Physics.CollisionData;
 import utils.Vector2;
-
-// TODO: Refactor
 
 /**
  * Central class of a brick.
@@ -30,7 +26,6 @@ public class Brick extends MonoBehaviour {
     private BrickVisual brickVisual = null;
 
     private BrickType brickType = BrickType.Normal;
-    private boolean isJustDamaged = false;      // TODO: this can be removed
 
     public static EventHandler<OnBrickDestroyedEventArgs> onAnyBrickDestroyed = new EventHandler<>(Brick.class);
 
@@ -65,11 +60,6 @@ public class Brick extends MonoBehaviour {
         onAnyBrickDestroyed.invoke(this, onBrickDestroyedEventArgs);
     }
 
-    @Override
-    public void lateUpdate() {
-        isJustDamaged = false;
-    }
-
     public BrickType getBrickType() {
         return brickType;
     }
@@ -97,15 +87,10 @@ public class Brick extends MonoBehaviour {
      */
     private void onCollisionEnter(CollisionData data) {
         onAnyBrickHit.invoke(this, null);
-        isJustDamaged = true;
     }
 
     public void setBrickType(BrickType brickType) {
         this.brickType = brickType;
-    }
-
-    public boolean isJustDamaged() {
-        return isJustDamaged;
     }
 
     public void setWaveIndex(int idx) {

@@ -13,14 +13,13 @@ import org.Rendering.ImageAsset;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
-// TODO: Make constants
 public final class BallPrefab extends Prefab {
 
     @Override
     public GameObject instantiatePrefab() {
 
         // Core
-        var ballObject = GameObjectManager.instantiate("ball")
+        var ballObject = GameObjectManager.instantiate("Ball")
                 .addComponent(Ball.class)
                 .addComponent(BallEffectController.class)
                 .addComponent(BallDamageDealer.class)
@@ -41,7 +40,7 @@ public final class BallPrefab extends Prefab {
         ballCollider.setLocalSize(new Vector2(20, 16));
 
         // Visual
-        var ballVisual = GameObjectManager.instantiate("ballVisual");
+        var ballVisual = GameObjectManager.instantiate("BallVisual");
         ballVisual.setParent(ball.getGameObject());
         ballVisual.addComponent(SpriteRenderer.class).setImage(ImageAsset.ImageIndex.Ball.getImage());
         ballVisual.getComponent(SpriteRenderer.class).setPivot(new Vector2(0.5, 0.5));

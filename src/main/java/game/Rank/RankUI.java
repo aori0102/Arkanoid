@@ -62,12 +62,14 @@ public final class RankUI extends MonoBehaviour {
                 .addListener(this::rankManager_onAccumulatedRankGained);
         rankManager_onAccumulatedRankEmptied_ID = RankManager.getInstance().onAccumulatedRankEmptied
                 .addListener(this::rankManager_onAccumulatedRankEmptied);
+
+        updateRankText(RankManager.getInstance().getRank());
     }
 
     @Override
     public void update() {
-        updateFill();
-        updateRankText();
+        updateFillOpacity();
+        updateRankTextScaling();
     }
 
     @Override
@@ -87,7 +89,7 @@ public final class RankUI extends MonoBehaviour {
     /**
      * Update the filling of {@link #fillRenderer} (The EXP fill bar)
      */
-    private void updateFill() {
+    private void updateFillOpacity() {
         fillRatio = MathUtils.lerp(fillRatio, targetFillRatio, Time.getDeltaTime() * FILL_RATE);
         fillRenderer.setFillAmount(fillRatio);
     }
@@ -95,9 +97,14 @@ public final class RankUI extends MonoBehaviour {
     /**
      * Update {@link #rankText} scaling, achieving an enlarge-then-shrink effect.
      */
-    private void updateRankText() {
+    private void updateRankTextScaling() {
         var scale = Vector2.lerp(rankText.getTransform().getLocalScale(), Vector2.one(), Time.getDeltaTime() * RANK_SHRINK_RATE);
         rankText.getTransform().setLocalScale(scale);
+    }
+
+    private void updateRankText(int rank) {
+        rankText.setText(RANK_PREFIX + rank);
+        rankText.getTransform().setLocalScale(Vector2.one().multiply(RANK_POP_UP_SIZE));
     }
 
     /**
@@ -108,8 +115,7 @@ public final class RankUI extends MonoBehaviour {
      * @param e      Event argument indicating the new rank.
      */
     private void rankManager_onRankChanged(Object sender, Integer e) {
-        rankText.setText(RANK_PREFIX + e);
-        rankText.getTransform().setLocalScale(Vector2.one().multiply(RANK_POP_UP_SIZE));
+        updateRankText(e);
     }
 
     /**

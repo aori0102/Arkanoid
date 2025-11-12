@@ -62,6 +62,11 @@ public final class RankManager extends MonoBehaviour implements
     }
 
     @Override
+    public void awake() {
+        loadProgress();
+    }
+
+    @Override
     public void start() {
         experienceHolder_onAnyExperienceHolderDestroyed_ID = ExperienceHolder.onAnyExperienceHolderDestroyed
                 .addListener(this::experienceHolder_onAnyExperienceHolderDestroyed);

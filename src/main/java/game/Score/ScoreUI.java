@@ -49,6 +49,9 @@ public final class ScoreUI extends MonoBehaviour {
                 .addListener(this::scoreManager_onComboChanged);
         levelManager_onLevelLoaded_ID = LevelManager.onAnyLevelLoaded
                 .addListener(this::levelManager_onLevelLoaded);
+
+        updateScoreText(ScoreManager.getInstance().getScore());
+        updateComboText(ScoreManager.getInstance().getCombo());
     }
 
     @Override
@@ -76,11 +79,7 @@ public final class ScoreUI extends MonoBehaviour {
      * @param e      Event argument indicating the new score.
      */
     private void scoreManager_onScoreChanged(Object sender, Integer e) {
-        scoreText.setText(String.valueOf(e));
-        var popUp = PrefabManager.instantiatePrefab(PrefabIndex.Scoreboard_ScoreUI_PopUp)
-                .getComponent(ScorePopUp.class);
-        popUp.setAmount(e);
-        popUp.setEntryPoint(scoreText.getTransform().getGlobalPosition());
+        updateScoreText(e);
     }
 
     /**
@@ -93,9 +92,6 @@ public final class ScoreUI extends MonoBehaviour {
     private void scoreManager_onComboChanged(Object sender, Integer e) {
         if (comboText.getGameObject().isDestroyed()) {
             return;
-        }
-        if (e > 0) {
-            comboText.getTransform().setLocalScale(Vector2.one().multiply(COMBO_POP_UP_SIZE));
         }
         updateComboText(e);
     }
@@ -111,8 +107,29 @@ public final class ScoreUI extends MonoBehaviour {
         levelText.setText(LEVEL_PREFIX + (e.index + 1));
     }
 
+    /**
+     * Update the text corresponding to the combo.
+     *
+     * @param combo Combo.
+     */
     private void updateComboText(int combo) {
         comboText.setText(COMBO_PREFIX + combo);
+        if (combo > 0) {
+            comboText.getTransform().setLocalScale(Vector2.one().multiply(COMBO_POP_UP_SIZE));
+        }
+    }
+
+    /**
+     * Update the text corresponding to the score.
+     *
+     * @param score Score.
+     */
+    private void updateScoreText(int score) {
+        scoreText.setText(String.valueOf(score));
+        var popUp = PrefabManager.instantiatePrefab(PrefabIndex.Scoreboard_ScoreUI_PopUp)
+                .getComponent(ScorePopUp.class);
+        popUp.setAmount(score);
+        popUp.setEntryPoint(scoreText.getTransform().getGlobalPosition());
     }
 
     /**

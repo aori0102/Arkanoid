@@ -17,11 +17,6 @@ public final class AttackPerk extends Perk {
     }
 
     @Override
-    public void awake() {
-        super.awake();
-    }
-
-    @Override
     protected String getPerkDescription(double amount) {
         return "Increase attack by " + String.format("%.1f", amount * 100) + "%";
     }

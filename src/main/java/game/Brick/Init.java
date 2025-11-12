@@ -25,7 +25,7 @@ public class Init {
      * @param fi The first integer (e.g., row).
      * @param se The second integer (e.g., column).
      */
-    public static record IntPair(int fi, int se) {
+    public record IntPair(int fi, int se) {
     }
 
     /**
@@ -50,19 +50,6 @@ public class Init {
      */
     public static boolean inBounds(int r, int c, int rows, int cols) {
         return r >= 0 && r < rows && c >= 0 && c < cols;
-    }
-
-    /**
-     * Checks if the brick at the specified grid location was just damaged.
-     *
-     * @param brickGrid The 2D list representing the brick grid.
-     * @param row       The row index of the brick.
-     * @param col       The column index of the brick.
-     * @return {@code true} if the brick exists, is valid (per {@link #valid}), and is in a "just damaged" state, {@code false} otherwise.
-     */
-    public static boolean isJustDamaged(List<List<Brick>> brickGrid, int row, int col) {
-        if (!valid(brickGrid, row, col)) return false;
-        return brickGrid.get(row).get(col).isJustDamaged();
     }
 
     /**

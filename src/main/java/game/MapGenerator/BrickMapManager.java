@@ -17,6 +17,7 @@ import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
 import utils.Vector2;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,6 +99,11 @@ public final class BrickMapManager extends MonoBehaviour implements
                 brickGrid.get(i).add(null);
             }
         }
+    }
+
+    @Override
+    public void awake() {
+        loadProgress();
     }
 
     /**

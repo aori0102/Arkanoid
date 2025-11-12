@@ -233,7 +233,7 @@ public class PlayerPaddle extends MonoBehaviour {
         if (statusEffect == StatusEffect.Stunned) {
             playerStat.setStatMultiplier(
                     PlayerStat.PlayerStatIndex.MovementSpeed,
-                    playerStat.getMovementSpeedMultiplier() + STUNNED_MOVEMENT_SPEED_MULTIPLIER
+                    playerStat.getMovementSpeedMultiplier() - STUNNED_MOVEMENT_SPEED_MULTIPLIER
             );
             stunnedCoroutineID = Time.addCoroutine(this::resetPaddleSpeed, STUN_TIME);
         }
@@ -242,7 +242,7 @@ public class PlayerPaddle extends MonoBehaviour {
     private void resetPaddleSpeed() {
         playerStat.setStatMultiplier(
                 PlayerStat.PlayerStatIndex.MovementSpeed,
-                playerStat.getMovementSpeedMultiplier() - STUNNED_MOVEMENT_SPEED_MULTIPLIER
+                playerStat.getMovementSpeedMultiplier() + STUNNED_MOVEMENT_SPEED_MULTIPLIER
         );
     }
 

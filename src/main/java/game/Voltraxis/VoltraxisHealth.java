@@ -2,7 +2,6 @@ package game.Voltraxis;
 
 import game.Entity.EntityHealth;
 import game.Entity.EntityStat;
-import game.Player.PlayerSkills.Skills.UpdraftSkill;
 import org.GameObject.GameObject;
 
 public final class VoltraxisHealth extends EntityHealth {
@@ -14,11 +13,6 @@ public final class VoltraxisHealth extends EntityHealth {
      */
     public VoltraxisHealth(GameObject owner) {
         super(owner);
-    }
-
-    @Override
-    public void awake() {
-        super.awake();
     }
 
     @Override

@@ -21,6 +21,7 @@ public final class PaddleHealth extends EntityHealth implements
 
     @Override
     public void awake() {
+        loadProgress();
         getComponent(PlayerStat.class).onStatChanged.addListener(this::paddleStat_onStatChanged);
     }
 

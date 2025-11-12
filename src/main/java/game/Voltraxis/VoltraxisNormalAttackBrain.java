@@ -86,6 +86,10 @@ public class VoltraxisNormalAttackBrain extends MonoBehaviour {
      * @param e      Empty event argument.
      */
     private void voltraxisCharging_onBossWeakened(Object sender, Void e) {
+        if (basicSkill_coroutineID != null) {
+            Time.removeCoroutine(basicSkill_coroutineID);
+            basicSkill_coroutineID = null;
+        }
     }
 
     /**

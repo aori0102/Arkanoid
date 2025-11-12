@@ -197,7 +197,6 @@ public class Time {
         return realTime;
     }
 
-
     /**
      * The time difference in seconds between this and last frame.
      */
@@ -206,6 +205,7 @@ public class Time {
     }
 
     /**
+     * Get the delta time unaffected by timescale.
      *
      * @return The delta time that is not affected by timescale.
      */

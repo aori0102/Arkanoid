@@ -5,7 +5,6 @@ import game.Interface.*;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
-import org.Rendering.SpriteRenderer;
 
 /**
  * Core component responsible for translating low-level pointer events from the engine
@@ -22,7 +21,6 @@ public class ButtonUI extends MonoBehaviour
         IPointerEnterHandler,
         IPointerExitHandler {
 
-    private SpriteRenderer image;
     public EventHandler<MouseEvent> onPointerClick = new EventHandler<>(ButtonUI.class);
     public EventHandler<MouseEvent> onPointerUp = new EventHandler<>(ButtonUI.class);
     public EventHandler<MouseEvent> onPointerEnter = new EventHandler<>(ButtonUI.class);
@@ -37,8 +35,6 @@ public class ButtonUI extends MonoBehaviour
     public ButtonUI(GameObject owner) {
 
         super(owner);
-
-        image = owner.addComponent(SpriteRenderer.class);
 
         //Attach mouse event
         attachPointerClick(getTransform());

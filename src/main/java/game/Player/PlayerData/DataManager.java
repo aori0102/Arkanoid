@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Core class that's responsible for saving and loading player progress and records.
+ */
 public final class DataManager extends MonoBehaviour {
 
     private static final int MAX_RECORD = 5;
@@ -63,6 +66,9 @@ public final class DataManager extends MonoBehaviour {
         instance = null;
     }
 
+    /**
+     * Load the ongoing player progress.
+     */
     public void loadProgress() {
 
         try {
@@ -77,15 +83,18 @@ public final class DataManager extends MonoBehaviour {
             ProgressData progressData = gsonLoader.fromJson(json, ProgressData.class);
             this.progressData.overrideSave(progressData);
 
-            System.out.println("[ProgressManager] Progress save file loaded.");
+            System.out.println("[DataManager] Progress save file loaded.");
             System.out.println(progressData);
 
         } catch (Exception e) {
-            System.err.println("[ProgressManager] Error while loading records: " + e.getMessage());
+            System.err.println("[DataManager] Error while loading records: " + e.getMessage());
         }
 
     }
 
+    /**
+     * Save the player progress.
+     */
     private void saveProgress() {
 
         try {
@@ -102,7 +111,9 @@ public final class DataManager extends MonoBehaviour {
 
     }
 
-    // TODO: update save when perk is selected
+    /**
+     * Update the current save to match with current player's progress.
+     */
     public void updateSave() {
         progressData.setScore(ScoreManager.getInstance().getScore());
         progressData.setCombo(ScoreManager.getInstance().getCombo());
@@ -134,6 +145,9 @@ public final class DataManager extends MonoBehaviour {
         progressData.setHealth(Player.getInstance().getPlayerPaddle().getPaddleHealth().getHealth());
     }
 
+    /**
+     * Generate a record based on the last save.
+     */
     public void generateNewRecord() {
         recordList.add(new Record(progressData));
         recordList.sort(recordComparator);
@@ -142,14 +156,25 @@ public final class DataManager extends MonoBehaviour {
         }
     }
 
+    /**
+     * Reset save to default.
+     */
     public void resetSave() {
         progressData.toDefault();
     }
 
+    /**
+     * Get the current saved progress.
+     *
+     * @return The current saved progress.
+     */
     public ProgressData getProgress() {
         return progressData;
     }
 
+    /**
+     * Load all records.
+     */
     private void loadRecords() {
 
         try {
@@ -167,11 +192,14 @@ public final class DataManager extends MonoBehaviour {
             recordList.sort(recordComparator);
 
         } catch (Exception e) {
-            System.err.println("[ProgressManager] Error while loading records: " + e.getMessage());
+            System.err.println("[DataManager] Error while loading records: " + e.getMessage());
         }
 
     }
 
+    /**
+     * Save all records.
+     */
     private void saveRecords() {
 
         try {
@@ -181,7 +209,7 @@ public final class DataManager extends MonoBehaviour {
             Files.writeString(RECORD_FILE, json);
 
         } catch (Exception e) {
-            System.err.println("[ProgressManager] Error while saving records: " + e.getMessage());
+            System.err.println("[DataManager] Error while saving records: " + e.getMessage());
         }
 
     }

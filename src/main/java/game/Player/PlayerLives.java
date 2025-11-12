@@ -36,6 +36,11 @@ public class PlayerLives extends MonoBehaviour implements
     }
 
     @Override
+    public void awake() {
+        loadProgress();
+    }
+
+    @Override
     public void start() {
         Player.getInstance().getPlayerPaddle().getPaddleHealth().onHealthReachesZero
                 .addListener(this::paddleHealth_onHealthReachesZero);
