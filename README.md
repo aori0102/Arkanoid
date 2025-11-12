@@ -119,10 +119,10 @@ Không sử dụng hay cài đặt
 ### Power-ups
 | Icon                                                                 | Name         | Effect |
 |----------------------------------------------------------------------|--------------|---|
-| <img src="src/main/resources/PowerUp/BlizzardBallicon.png" width="50px"> |      Blizzard Ball        |Attach frostbite effect to the ball|
-| <img src="src/main/resources/PowerUp/DuplicateBall.png" width="50px"> | | |
-| <img src="src/main/resources/PowerUp/FireBallIcon.png" width="50px"> | | |
-| <img src="src/main/resources/PowerUp/HealIcon.png" width="50px">     | | |
+| <img src="src/main/resources/PowerUp/BlizzardBallIcon.png" width="50px"> |      Blizzard Ball        |Attach frostbite effect to the ball|
+| <img src="src/main/resources/PowerUp/DuplicateBall.png" width="50px"> | Duplicate Ball | Duplicate the number of existing ball |
+| <img src="src/main/resources/PowerUp/FireBallIcon.png" width="50px"> | Fire Ball | Attach Burn effect to the ball |
+| <img src="src/main/resources/PowerUp/HealIcon.png" width="50px">     | Recovery | Heal player by an amount of health |
 
 ### Bricks
 
