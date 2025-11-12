@@ -102,10 +102,11 @@ Không sử dụng hay cài đặt
 |-----|--------|
 | `←` or `A` | Move paddle left |
 | `→` or `D` | Move paddle right |
-| `SPACE` | Launch ball / Shoot laser |
-| `P` or `ESC` | Pause game |
-| `R` | Restart game |
-| `Q` | Quit to menu |
+| `ESC` | Pause game |
+| `Q` | Use Laser Beam skill |
+| `E` | Use Updraft skill |
+| `X`| Use Invincible skill|
+| ` SHIFT ` | Use Dash Skill|
 
 ### How to Play
 1. **Start the game**: Click "New Game" from the main menu.
