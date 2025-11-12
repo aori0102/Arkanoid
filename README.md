@@ -131,7 +131,7 @@ Không sử dụng hay cài đặt
 | Icon                                                                 | Name         | Effect |
 |----------------------------------------------------------------------|--------------|---|
 | <img src="src/main/resources/Player/UI/Skill/Icon/InvincibleSkillIcon.png" width="50px"> |      Invincible        |Make the player invincible, increase speed, increase size and create a shield|
-| <img src="src/main/resources/Player/UI/Skill/Icon/DashSkillIcon.png" width="50px"> | Dash | Make the paddle dash to a specific direction |
+| <img src="src/main/resources/Player/UI/Skill/Icon/DashSKillIcon.png" width="50px"> | Dash | Make the paddle dash to a specific direction |
 | <img src="src/main/resources/Player/UI/Skill/Icon/LaserBeamSkillIcon.png" width="50px"> | Laser Beam | Fire a laser beam which goes up and deals damage to the enemies |
 | <img src="src/main/resources/Player/UI/Skill/Icon/UpdraftSkillIcon.png" width="50px"> | Updraft | Make all the go-down balls change direction and fly up |
 
