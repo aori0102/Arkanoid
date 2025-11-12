@@ -11,6 +11,10 @@ import org.Text.TextUI;
 import utils.Time;
 import utils.Vector2;
 
+/**
+ * Displays a floating text popup when an entity's health changes (damage or heal).
+ * The popup moves upward, fades out over time, and is automatically destroyed.
+ */
 public final class HealthChangePopUpUI extends MonoBehaviour {
 
     private static final double LIFE_TIME = 0.8;
@@ -25,9 +29,9 @@ public final class HealthChangePopUpUI extends MonoBehaviour {
     private double spawnTime = 0.0;
 
     /**
-     * Create this MonoBehaviour.d
+     * Creates a new {@code HealthChangePopUpUI}.
      *
-     * @param owner The owner of this component.
+     * @param owner the GameObject that owns this component
      */
     public HealthChangePopUpUI(GameObject owner) {
         super(owner);
@@ -59,14 +63,30 @@ public final class HealthChangePopUpUI extends MonoBehaviour {
         damageText.setOpacity(opacity);
     }
 
+    /**
+     * Sets the numeric amount displayed by the popup.
+     *
+     * @param amount the value to display
+     */
     public void setAmount(int amount) {
         damageText.setText(String.valueOf(amount));
     }
 
+    /**
+     * Sets the color based on the health alteration type.
+     *
+     * @param type the {@link EntityHealthAlterType} defining the display color
+     */
     public void setHealthAlterType(EntityHealthAlterType type) {
         damageText.setSolidFill(type.displayColor);
     }
 
+    /**
+     * Sets a gradient color using two health alteration types.
+     *
+     * @param firstType  the first color
+     * @param secondType the second color
+     */
     public void setCombinedHealthAlterType(EntityHealthAlterType firstType, EntityHealthAlterType secondType) {
         damageText.setGradientFill(
                 Vector2.zero(),
@@ -76,8 +96,12 @@ public final class HealthChangePopUpUI extends MonoBehaviour {
         );
     }
 
+    /**
+     * Sets the movement direction of the popup.
+     *
+     * @param direction the direction vector
+     */
     public void setDirection(Vector2 direction) {
         this.direction = direction;
     }
-
 }

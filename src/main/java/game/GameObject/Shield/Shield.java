@@ -9,20 +9,30 @@ import org.Rendering.SpriteRenderer;
 import utils.Time;
 import utils.Vector2;
 
-// TODO: Doc + Prefab
+/**
+ * Singleton class that represents the player's shield.
+ * <p>
+ * Responsibilities:
+ * <ul>
+ *     <li>Activate/deactivate the shield.</li>
+ *     <li>Track shield duration.</li>
+ *     <li>Link shield visual.</li>
+ * </ul>
+ * </p>
+ */
 public class Shield extends MonoBehaviour {
 
-    private static final double DURATION = 5.0;
-    private static Shield instance;
+    private static final double DURATION = 5.0; // Shield active duration in seconds
+    private static Shield instance; // Singleton instance
 
-    private boolean isExisted = false;
-    private double counter = 0;
-    private GameObject shieldVisual;
+    private boolean isExisted = false; // Whether shield is currently active
+    private double counter = 0; // Timer for shield duration
+    private GameObject shieldVisual; // Visual representation of shield
 
     /**
-     * Create this MonoBehaviour.
+     * Constructor.
      *
-     * @param owner The owner of this component.
+     * @param owner The owner GameObject of this MonoBehaviour.
      */
     public Shield(GameObject owner) {
         super(owner);
@@ -30,6 +40,11 @@ public class Shield extends MonoBehaviour {
         addComponent(BoxCollider.class);
     }
 
+    /**
+     * Get the singleton instance.
+     *
+     * @return Shield instance.
+     */
     public static Shield getInstance() {
         return instance;
     }
@@ -40,15 +55,21 @@ public class Shield extends MonoBehaviour {
         collider.setLocalSize(new Vector2(20000.0, 1.0));
         getTransform().setGlobalPosition(new Vector2(1190, 720));
 
-        turnOff();
+        turnOff(); // Ensure shield starts inactive
     }
 
+    @Override
     public void update() {
         if (isExisted) {
             handleShieldDuration(DURATION);
         }
     }
 
+    /**
+     * Handle shield duration and automatically turn off when expired.
+     *
+     * @param duration Duration of shield in seconds.
+     */
     private void handleShieldDuration(double duration) {
         if (!Player.getInstance().getPlayerPaddle().canBeDamaged()) {
             return;
@@ -60,12 +81,18 @@ public class Shield extends MonoBehaviour {
         }
     }
 
+    /**
+     * Activate the shield.
+     */
     public void turnOn() {
         gameObject.setActive(true);
         shieldVisual.setActive(true);
         isExisted = true;
     }
 
+    /**
+     * Deactivate the shield and reset timer.
+     */
     public void turnOff() {
         gameObject.setActive(false);
         shieldVisual.setActive(false);
@@ -74,11 +101,10 @@ public class Shield extends MonoBehaviour {
     }
 
     /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
+     * Link the shield visual GameObject.
+     * <p><b><i><u>NOTE</u>:</i></b> Only use during prefab linking process.</p>
      *
-     * @param shieldVisual .
+     * @param shieldVisual The visual GameObject representing the shield.
      */
     public void linkSpriteRenderer(GameObject shieldVisual) {
         this.shieldVisual = shieldVisual;

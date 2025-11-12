@@ -11,12 +11,13 @@ import org.Physics.PhysicsManager;
 import utils.Random;
 
 /**
- * Base class that represents entity's ability to deal damage.
+ * Base class that represents an entity's ability to deal damage.
+ *
  * <p>
- * This class automatically checks for
- * collision with any objects that contain {@link EntityHealth} and perform dealing damage on the
- * target.
+ * This class automatically checks for collision with any objects that contain
+ * {@link EntityHealth} and performs damage dealing logic on the target.
  * </p>
+ *
  * <p>
  * Do note that this class only handles the listed {@link EntityHealthAlterType}:
  * <ul>
@@ -81,6 +82,18 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
         }
     }
 
+    /**
+     * Handles inflicting status effects on a target entity when hit.
+     *
+     * <p>
+     * If this entity has a {@link StatusEffectInfo}, it will attempt to apply
+     * the corresponding status effect on the target. If the combination of effects
+     * matches a defined {@link StatusEffectCombination}, it will trigger that reaction
+     * instead of applying a single effect.
+     * </p>
+     *
+     * @param effectController The target's {@link EntityEffectController}.
+     */
     private void handleEffectInflicting(EntityEffectController effectController) {
 
         var statusInfo = getStatusEffectInfo();
@@ -95,6 +108,22 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
 
     }
 
+    /**
+     * Handles checking and triggering possible {@link StatusEffectCombination}
+     * reactions when an entity with one effect is hit by another.
+     *
+     * <p>
+     * This method looks for a valid combination where the incoming
+     * {@code statusEffect} reacts with one that the target currently has.
+     * If a combination is found, the target's previous effect is removed,
+     * and the combination effect is stored for later damage modification.
+     * </p>
+     *
+     * @param statusEffect     The status effect applied by the attacker.
+     * @param effectController The target's {@link EntityEffectController}.
+     * @return {@code true} if a valid combination was found and triggered,
+     *         otherwise {@code false}.
+     */
     private boolean handleStatusCombination(StatusEffect statusEffect, EntityEffectController effectController) {
 
         currentStatusEffectCombination = null;
@@ -113,7 +142,15 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
     }
 
     /**
-     * Handle collision with any objects with {@link EntityHealth} and deal damage accordingly.
+     * Handles applying health changes (damage) to a target entity when hit.
+     *
+     * <p>
+     * This includes calculating the final damage amount, checking for critical hits,
+     * applying damage multipliers from active {@link StatusEffectCombination},
+     * and invoking {@link EntityHealth#alterHealth(EntityHealthAlterType, EntityHealthAlterType, int)}.
+     * </p>
+     *
+     * @param healthObject The {@link EntityHealth} component of the target.
      */
     private void handleHealthManipulation(EntityHealth healthObject) {
 
@@ -153,42 +190,88 @@ public abstract class EntityDamageDealer extends MonoBehaviour {
     }
 
     /**
-     * Handles what happen after this object deals damage.
+     * Called whenever this entity successfully deals damage to another entity.
      *
-     * @param entityHealth The {@link EntityHealth} of the object that was hit.
+     * <p>
+     * Override this method to handle logic that should occur after a damage
+     * event, such as spawning hit effects, increasing score, or applying knockback.
+     * </p>
+     *
+     * @param entityHealth The {@link EntityHealth} component of the damaged entity.
      */
     protected abstract void onDamageDealt(EntityHealth entityHealth);
 
     /**
-     * Check whether this object can deal damage when called.
+     * Determines whether this entity is currently able to deal damage.
      *
-     * @return {@code true} if this object can deal damage, otherwise {@code false}.
+     * <p>
+     * This is typically used to control when the entity should perform
+     * collision-based damage checks — for instance, a projectile might
+     * only deal damage once before being destroyed, or a melee attack
+     * might only deal damage during a specific animation frame.
+     * </p>
+     *
+     * @return {@code true} if this entity can deal damage in the current frame,
+     *         otherwise {@code false}.
      */
     protected abstract boolean canDealDamage();
 
     /**
-     * Check whether the given {@link EntityHealth} belongs to an object that this entity
-     * can deal damage on.
+     * Determines whether the given {@link EntityHealth} belongs to a valid
+     * damage target for this entity.
      *
-     * @param entityHealth The {@link EntityHealth} component of the object to check.
-     * @return {@code true} if this object can deal damage on the given object,
-     * *                                 otherwise {@code false}.
+     * <p>
+     * This method allows filtering which entities can be damaged —
+     * for example, preventing friendly fire or excluding inanimate objects.
+     * </p>
+     *
+     * @param entityHealth The {@link EntityHealth} component of the potential target.
+     * @return {@code true} if this entity can deal damage to the given target,
+     *         otherwise {@code false}.
      */
     protected abstract boolean isDamageTarget(EntityHealth entityHealth);
 
     /**
-     * Get the corresponding class stat holder class of this entity.
+     * Returns the corresponding {@link EntityStat} subclass that holds this
+     * entity’s stats (e.g., attack power, critical rate, etc.).
+     *
      * <p>
-     * <b><i><u>NOTE</u> : Every class that inherits from this must create a corresponding class for
-     * holding stat which inherits from {@link EntityStat}.</i></b>
+     * Each subclass of {@code EntityDamageDealer} must define its own
+     * stat container by extending {@link EntityStat}, and return its class
+     * type here so the base class can instantiate it automatically.
      * </p>
      *
-     * @return The class signature of the stat holding class.
+     * @return The class type that extends {@link EntityStat} for this entity.
      */
     protected abstract Class<? extends EntityStat> getStatComponentClass();
 
+    /**
+     * Called immediately after this entity successfully inflicts a status effect
+     * on a target through its {@link EntityEffectController}.
+     *
+     * <p>
+     * This method can be overridden to implement additional logic such as
+     * visual feedback, sound effects, or applying extra mechanics
+     * (e.g., chaining reactions, triggering achievements, etc.).
+     * </p>
+     *
+     * @param effectController The {@link EntityEffectController} of the target that received the effect.
+     */
     protected abstract void onEffectInflicted(EntityEffectController effectController);
 
+    /**
+     * Retrieves the {@link StatusEffectInfo} that represents the type of
+     * status effect this entity can inflict on hit.
+     *
+     * <p>
+     * Override this method to define which effect should be applied when
+     * this entity successfully hits a valid target. For example, a fireball
+     * entity might return a {@code StatusEffectInfo} with {@link StatusEffect#Burn}.
+     * </p>
+     *
+     * @return A {@link StatusEffectInfo} object describing the effect to be inflicted,
+     *         or {@code null} if this entity does not apply any status effects.
+     */
     protected abstract StatusEffectInfo getStatusEffectInfo();
 
 }

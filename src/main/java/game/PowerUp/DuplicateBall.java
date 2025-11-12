@@ -14,30 +14,37 @@ import utils.Vector2;
 import java.util.HashSet;
 
 /**
- * Duplicate the number of the balls currently existing
+ * DuplicateBall is a type of power-up that duplicates all currently existing balls.
+ *
+ * When applied, for each existing ball, it spawns a new ball whose direction
+ * is slightly rotated (45 degrees) relative to the original ball's direction.
+ * After applying its effect, the power-up destroys itself.
  */
 public class DuplicateBall extends MultipleBall {
 
-    private EventActionID duplicateBallEventActionID = null;
 
     /**
      * Create this MonoBehaviour.
      *
-     * @param owner The owner of this component.
+     * @param owner The GameObject that owns this component.
      */
     public DuplicateBall(GameObject owner) {
         super(owner);
     }
 
+    /**
+     * Initialize the DuplicateBall power-up.
+     * Sets the PowerUpIndex to DuplicateBall.
+     */
     @Override
     public void awake() {
         setPowerUpIndex(PowerUpIndex.DuplicateBall);
     }
 
     /**
-     * Override the handleOnMultipleRequest method from MultipleBall base class
-     * Will spawn a ball which direction makes with the current ball direction a
-     * 45'degree angle
+     * Override the handleOnMultipleRequest method from MultipleBall base class.
+     * Spawns a new ball for each existing ball. The new ball's direction is rotated
+     * 45 degrees relative to the current ball's direction.
      */
     @Override
     protected void handleOnMultipleRequest() {
@@ -54,6 +61,10 @@ public class DuplicateBall extends MultipleBall {
         }
     }
 
+    /**
+     * Called when the power-up is applied.
+     * Executes the duplication logic and destroys this power-up GameObject.
+     */
     @Override
     public void onApplied() {
         handleOnMultipleRequest();

@@ -21,8 +21,6 @@ import utils.Random;
 import utils.Vector2;
 import utils.Time;
 
-// TODO: Doc
-
 public class Ball extends MonoBehaviour {
 
     private static final double NEAR_PARALLEL_THRESHOLD = 0.1;
@@ -110,7 +108,8 @@ public class Ball extends MonoBehaviour {
     }
 
     /**
-     * Handle ball movement.
+     * Handle ball movement. If the ball is not fired yet, then make the ball<br>
+     * follow the paddle. Otherwise, it will follow a calculated direction
      */
     public void handleMovement() {
         // Make the ball follow the paddle position if player haven't fired it
@@ -128,8 +127,13 @@ public class Ball extends MonoBehaviour {
     }
 
     /**
-     *
-     * @param collisionData
+     * Handle collision of the ball with each type of object.<br>
+     * <p>
+     *     If the object is the bottom border then the ball will be deleted<br>
+     *     If object is a brick then dealing damage to it and firing onAnyBallHitBrick event<br>
+     *     If object is a paddle then reflecting its direction and firing onAnyBallHitPaddle event<br>
+     * </p>
+     * @param collisionData hit object collision data
      */
     private void handleCollision(CollisionData collisionData) {
         if (isCollidedWith(collisionData, Border.class)) {
@@ -145,7 +149,12 @@ public class Ball extends MonoBehaviour {
     }
 
     /**
-     *
+     * Handling ball hit direction when the ball hit any object.
+     * <p>
+     *     The reflected direction is calculated by {@code direction + normal vector}<br>
+     *     If the direction is perpendicular with the vector left or right, then rotating it
+     *     to make it escaping from that situation.
+     * </p>
      * @param collisionData
      */
     private void handleHitHandle(CollisionData collisionData) {

@@ -18,25 +18,31 @@ import org.Prefab.PrefabIndex;
 import org.Prefab.PrefabManager;
 import utils.Time;
 
+/**
+ * LevelManager is responsible for managing all aspects of the game levels.
+ * <p>
+ * Responsibilities:
+ * <ul>
+ *     <li>Load and progress levels based on predefined LEVEL_DATA.</li>
+ *     <li>Handle level start, end, and transitions.</li>
+ *     <li>Manage events like player losing a life, boss defeated, map cleared, or perk selection.</li>
+ *     <li>Spawn balls, handle level notifications, and trigger game over.</li>
+ * </ul>
+ * </p>
+ */
 public final class LevelManager extends MonoBehaviour {
 
-    public static final double LEVEL_INTRODUCING_TIME = 3.2;
-    public static final double LEVEL_CONCLUDING_TIME = 3.0;
-    public static final double BALL_REMOVAL_DELAY = 0.01;
+    public static final double LEVEL_INTRODUCING_TIME = 3.2; // Delay before gameplay starts
+    public static final double LEVEL_CONCLUDING_TIME = 3.0;  // Delay before next level
+    public static final double BALL_REMOVAL_DELAY = 0.01;    // Delay between removing balls at end of level
 
     private static final String LEVEL_PREFIX = "Level ";
     private static final String FRENZY_LABEL = "F R E N Z Y !";
     private static final String CLEARED_SUFFIX = " cleared!";
     private static final LevelType[] LEVEL_DATA = {
-            LevelType.Normal,
-            LevelType.Normal,
-            LevelType.Frenzy,
-            LevelType.Normal,
-            LevelType.Showdown,
-            LevelType.Frenzy,
-            LevelType.Normal,
-            LevelType.Frenzy,
-            LevelType.Normal,
+            LevelType.Normal, LevelType.Normal, LevelType.Frenzy,
+            LevelType.Normal, LevelType.Showdown, LevelType.Frenzy,
+            LevelType.Normal, LevelType.Frenzy, LevelType.Normal,
             LevelType.Showdown
     };
 
@@ -47,9 +53,9 @@ public final class LevelManager extends MonoBehaviour {
      */
     private LevelState _levelState = LevelState.IntroducingLevel;
 
-    private int levelIndex = 0;
-    private int clearedLevel = 0;
-    private double mapClearingStartTick = 0.0;
+    private int levelIndex = 0;           // Current level index
+    private int clearedLevel = 0;         // Number of levels cleared
+    private double mapClearingStartTick = 0.0; // Timestamp when map cleaning started
 
     private EventActionID brickMapManager_onMapCleared_ID = null;
     private EventActionID voltraxis_onBossDestroyed_ID = null;
@@ -68,15 +74,18 @@ public final class LevelManager extends MonoBehaviour {
 
     public EventHandler<OnLevelLoadedEventArgs> onLevelLoaded = new EventHandler<>(LevelManager.class);
 
+    /**
+     * Event argument for level loaded event.
+     */
     public static class OnLevelLoadedEventArgs {
-        public int index;
-        public LevelType type;
+        public int index;         // Level index
+        public LevelType type;    // Type of level
     }
 
     /**
-     * Create this MonoBehaviour.
+     * Constructor.
      *
-     * @param owner The owner of this component.
+     * @param owner The owner GameObject of this MonoBehaviour.
      */
     public LevelManager(GameObject owner) {
         super(owner);
@@ -88,6 +97,7 @@ public final class LevelManager extends MonoBehaviour {
 
     @Override
     public void onDestroy() {
+        // Cleanup listeners and coroutines
         instance = null;
         if (Voltraxis.getInstance() != null) {
             Voltraxis.getInstance().onBossDestroyed.removeListener(voltraxis_onBossDestroyed_ID);
@@ -110,6 +120,7 @@ public final class LevelManager extends MonoBehaviour {
 
     @Override
     public void start() {
+        // Register listeners for game events
         brickMapManager_onMapCleared_ID = BrickMapManager.getInstance().onMapCleared
                 .addListener(this::brickMapManager_onMapCleared);
         playerLives_onLivesReachZero_ID = Player.getInstance().getPlayerLives().onLivesReachZero
@@ -124,71 +135,38 @@ public final class LevelManager extends MonoBehaviour {
         return instance;
     }
 
+    /** Load progress from saved data. */
     public void loadProgress() {
         levelIndex = DataManager.getInstance().getProgress().getLevel();
     }
 
-    /**
-     * Setter for read-only field {@link #_levelState}
-     *
-     * @param levelState The value to set.
-     */
+    /** Setter for read-only level state. */
     private void setLevelState(LevelState levelState) {
         this._levelState = levelState;
     }
 
-    /**
-     * Called when {@link BrickMapManager#onMapCleared} is invoked.<br><br>
-     * This function ends a level as a map is cleared.
-     *
-     * @param sender Event caller {@link BrickMapManager}.
-     * @param e      Empty event argument.
-     */
+    /** Ends the level when map is cleared. */
     private void brickMapManager_onMapCleared(Object sender, Void e) {
         endLevel();
     }
 
-    /**
-     * Called when {@link PlayerLives#onLivesReachZero} is invoked.<br><br>
-     * Ends the game as player's live reaches zero.
-     *
-     * @param sender Event caller {@link PlayerLives}.
-     * @param e      Empty event argument.
-     */
+    /** Ends the game when player lives reach zero. */
     private void playerLives_onLivesReachZero(Object sender, Void e) {
         onGameOver();
     }
 
-    /**
-     * Called when {@link PlayerLives#onLivesDecreased} is invoked.<br><br>
-     * This function creates a ball as player loses a live.
-     *
-     * @param sender Event caller {@link PlayerLives}.
-     * @param e      Empty event argument.
-     */
+    /** Spawns a ball when player loses a life. */
     private void playerLives_onLivesDecreased(Object sender, Void e) {
         BallsManager.getInstance().spawnInitialBall();
     }
 
-    /**
-     * Called when {@link Voltraxis#onBossDestroyed} is invoked.<br><br>
-     * This function ends a boss level when {@link Voltraxis} is defeated.
-     *
-     * @param sender Event caller {@link Voltraxis}.
-     * @param e      Empty event argument.
-     */
+    /** Ends boss level when boss is destroyed. */
     private void voltraxis_onBossDestroyed(Object sender, Void e) {
         Voltraxis.getInstance().onBossDestroyed.removeListener(voltraxis_onBossDestroyed_ID);
         endLevel();
     }
 
-    /**
-     * Called when {@link PerkManager#onPerkSelectionCompleted} is invoked.<br><br>
-     * This function ends perk selection to load new round.
-     *
-     * @param sender Event caller {@link PerkManager}.
-     * @param e      Empty event argument.
-     */
+    /** Ends perk selection to load next level. */
     private void perkManager_onPerkSelectionCompleted(Object sender, Void e) {
         if (_levelState != LevelState.PerkSelection) {
             throw new RuntimeException("Perk selection done not within " + LevelState.PerkSelection);
@@ -196,10 +174,12 @@ public final class LevelManager extends MonoBehaviour {
         progressToNextLevel();
     }
 
+    /** Start the current level. */
     public void startGame() {
         loadCurrentLevel();
     }
 
+    /** Ends the level, cleans map, and shows cleared notification. */
     private void endLevel() {
         onLevelCleared.invoke(this, null);
         clearedLevel = levelIndex + 1;
@@ -208,12 +188,14 @@ public final class LevelManager extends MonoBehaviour {
         displayLevelCleared();
     }
 
+    /** Progress to the next level and save data. */
     private void progressToNextLevel() {
         DataManager.getInstance().updateSave();
         levelIndex++;
         loadCurrentLevel();
     }
 
+    /** Display notification when entering level. */
     private void displayLevelEnter() {
         var notificationUI = PrefabManager.instantiatePrefab(PrefabIndex.LevelNotificationUI)
                 .getComponent(LevelNotificationUI.class);
@@ -224,14 +206,15 @@ public final class LevelManager extends MonoBehaviour {
         }
     }
 
+    /** Display level cleared notification. */
     private void displayLevelCleared() {
         var notificationUI = PrefabManager.instantiatePrefab(PrefabIndex.LevelNotificationUI)
                 .getComponent(LevelNotificationUI.class);
         notificationUI.setNotification(LEVEL_PREFIX + (levelIndex + 1) + CLEARED_SUFFIX);
     }
 
+    /** Load the current level, generate map or boss, spawn ball, and start delay coroutine. */
     private void loadCurrentLevel() {
-
         if (levelIndex >= LEVEL_DATA.length) {
             throw new RuntimeException("All level cleared!");
         }
@@ -241,9 +224,7 @@ public final class LevelManager extends MonoBehaviour {
             BrickMapManager.getInstance().generateMap();
         }
 
-        // Display notification
         displayLevelEnter();
-
         setLevelState(LevelState.IntroducingLevel);
 
         var onLevelLoadedEventArgs = new OnLevelLoadedEventArgs();
@@ -253,28 +234,30 @@ public final class LevelManager extends MonoBehaviour {
 
         BallsManager.getInstance().spawnInitialBall();
 
-        // Delay before enable playing
         enablePlaying_coroutineID
                 = Time.addCoroutine(this::enablePlaying, Time.getTime() + LEVEL_INTRODUCING_TIME);
-
     }
 
+    /** Enable playing state after delay. */
     private void enablePlaying() {
         setLevelState(LevelState.Playing);
     }
 
+    /** Load boss prefab and register listener. */
     private void loadBoss() {
         PrefabManager.instantiatePrefab(PrefabIndex.Voltraxis);
         voltraxis_onBossDestroyed_ID = Voltraxis.getInstance().onBossDestroyed
                 .addListener(this::voltraxis_onBossDestroyed);
     }
 
+    /** Clean up map at end of level by destroying balls gradually. */
     private void cleanUpMap() {
         destroyRandomBall_coroutineID
                 = Time.addCoroutine(this::destroyRandomBall, Time.getTime() + BALL_REMOVAL_DELAY);
         mapClearingStartTick = Time.getTime();
     }
 
+    /** Remove balls one by one at level end, then proceed to perk selection. */
     private void destroyRandomBall() {
         if (BallsManager.getInstance().removeRandomBall()) {
             destroyRandomBall_coroutineID
@@ -290,11 +273,13 @@ public final class LevelManager extends MonoBehaviour {
         }
     }
 
+    /** Select perk after level concludes. */
     private void selectPerk() {
         setLevelState(LevelState.PerkSelection);
         onPerkSelectionRequested.invoke(this, null);
     }
 
+    /** Handle game over: reset data and quit to main menu. */
     private void onGameOver() {
         DataManager.getInstance().resetSave();
         DataManager.getInstance().generateNewRecord();
@@ -302,10 +287,12 @@ public final class LevelManager extends MonoBehaviour {
         GameManager.getInstance().quitToMainMenu();
     }
 
+    /** Get current level state. */
     public LevelState getLevelState() {
         return _levelState;
     }
 
+    /** Get number of cleared levels. */
     public int getClearedLevel() {
         return clearedLevel;
     }

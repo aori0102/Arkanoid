@@ -10,22 +10,30 @@ import org.Prefab.PrefabManager;
 import utils.Random;
 import utils.Vector2;
 
-
 /**
- * Manage all the power up of the game
+ * PowerUpManager is responsible for managing all PowerUps in the game.
+ * - Spawns new power-ups.
+ * - Keeps track of the number of active power-ups for each type.
+ * - Handles events when power-ups are destroyed.
+ *
+ * This class is implemented as a singleton.
  */
 public class PowerUpManager extends MonoBehaviour {
 
+    // Singleton instance
     private static PowerUpManager instance = null;
 
+    // Keeps track of how many instances of each power-up type are active
     private final Integer[] assignedPowerUp;
 
+    // Event listener ID for global power-up destruction event
     private EventActionID powerUp_onAnyPowerUpDestroyed_ID = null;
 
     /**
-     * Create this MonoBehaviour.
+     * Constructor for PowerUpManager.
      *
-     * @param owner The owner of this component.
+     * @param owner The GameObject that owns this component.
+     * @throws ReinitializedSingletonException If a PowerUpManager instance already exists.
      */
     public PowerUpManager(GameObject owner) {
         super(owner);
@@ -39,15 +47,23 @@ public class PowerUpManager extends MonoBehaviour {
         for (int i = 0; i < powerUpCount; i++) {
             assignedPowerUp[i] = 0;
         }
-
     }
 
+    /**
+     * Called when the component is awakened.
+     * Registers a listener for when any power-up is destroyed.
+     */
     @Override
     public void awake() {
         powerUp_onAnyPowerUpDestroyed_ID = PowerUp.onAnyPowerUpDestroyed
                 .addListener(this::powerUp_onAnyPowerUpDestroyed);
     }
 
+    /**
+     * Called when the component is destroyed.
+     * - Removes the singleton instance.
+     * - Unregisters the global power-up destroyed listener.
+     */
     @Override
     public void onDestroy() {
         instance = null;
@@ -55,10 +71,10 @@ public class PowerUpManager extends MonoBehaviour {
     }
 
     /**
-     * Called when {@link PowerUp#onAnyPowerUpDestroyed} is invoked.<br><br>
-     * This function removes a power up as it's destroyed.
+     * Event handler for when any power-up is destroyed.
+     * Decrements the count of the destroyed power-up type.
      *
-     * @param sender Event caller {@link PowerUp}.
+     * @param sender The PowerUp that was destroyed.
      * @param e      Empty event argument.
      */
     private void powerUp_onAnyPowerUpDestroyed(Object sender, Void e) {
@@ -67,18 +83,30 @@ public class PowerUpManager extends MonoBehaviour {
         }
     }
 
+    /**
+     * Spawns a new power-up at the specified position.
+     * - Randomly selects a PowerUpIndex.
+     * - Checks for maximum concurrent limit.
+     * - Prevents spawning DuplicateBall/TriplicateBall if not allowed by BallsManager.
+     *
+     * @param position The world position to spawn the power-up at.
+     */
     public void spawnPowerUp(Vector2 position) {
 
         var powerUpIndexArray = PowerUpIndex.values();
         int target = 0;
-        if (Random.range(0, 1) == target) {
+        if (Random.range(0, 1) == target) {  // Random chance to spawn
 
             var chosenKey = powerUpIndexArray[Random.range(0, powerUpIndexArray.length)];
+
+            // Check if ball multiplication power-ups can spawn
             if (chosenKey == PowerUpIndex.DuplicateBall || chosenKey == PowerUpIndex.TriplicateBall) {
                 if (!BallsManager.getInstance().canSpawnBallMultiplication()) {
                     return;
                 }
             }
+
+            // Spawn if below max concurrent limit
             if (assignedPowerUp[chosenKey.ordinal()] < chosenKey.maxCocurrent) {
                 PrefabManager.instantiatePrefab(chosenKey.prefabIndex)
                         .getTransform().setGlobalPosition(position);
@@ -88,6 +116,11 @@ public class PowerUpManager extends MonoBehaviour {
         }
     }
 
+    /**
+     * Returns the singleton instance of PowerUpManager.
+     *
+     * @return PowerUpManager instance.
+     */
     public static PowerUpManager getInstance() {
         return instance;
     }

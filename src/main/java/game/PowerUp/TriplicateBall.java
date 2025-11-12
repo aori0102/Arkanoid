@@ -14,22 +14,23 @@ import utils.Vector2;
 import java.util.HashSet;
 
 /**
- * Triplicate the number of the balls currently existing
+ * Triplicate Ball power-up.
+ *
+ * When applied, this power-up creates two additional balls for each existing ball,
+ * forming a 45-degree angle relative to the original ball's direction.
+ * This effectively triples the number of balls in play.
  */
 public class TriplicateBall extends MultipleBall {
-
-    private EventActionID triplicateBallEventActionID = null;
 
     /**
      * Create this MonoBehaviour.
      *
-     * @param owner The owner of this component.
+     * @param owner The GameObject that owns this component.
      */
     public TriplicateBall(GameObject owner) {
         super(owner);
         System.out.println("TriplicateBall constructor " + this);
     }
-
 
     @Override
     public void awake() {
@@ -37,9 +38,10 @@ public class TriplicateBall extends MultipleBall {
     }
 
     /**
-     * Override the handleOnMultipleRequest method from MultipleBall base class
-     * Will spawn two balls which direction makes with the current ball direction a
-     * 45'degree angle
+     * Handles the ball multiplication logic.
+     * <p>
+     * For each existing ball, this method spawns two new balls at the same position.
+     * The new balls' directions form ±45° angles with the original ball's direction.
      */
     @Override
     protected void handleOnMultipleRequest() {
@@ -60,9 +62,14 @@ public class TriplicateBall extends MultipleBall {
             secondBall.getTransform().setGlobalPosition(ball.getTransform().getGlobalPosition());
             secondBall.setDirection(secondDirection);
         }
-
     }
 
+    /**
+     * Called when this power-up is applied.
+     * <p>
+     * This method triggers the ball multiplication and then destroys
+     * the power-up object to remove it from the game.
+     */
     @Override
     public void onApplied() {
         handleOnMultipleRequest();
