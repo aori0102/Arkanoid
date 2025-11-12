@@ -130,12 +130,11 @@ Không sử dụng hay cài đặt
 ### Skills
 | Icon                                                                 | Name         | Effect |
 |----------------------------------------------------------------------|--------------|---|
-| <img src="src/main/resources/Player/UI/Skill/Icon/InvincibleSkillIcon.png" width="50px"> |      Blizzard Ball        |Attach frostbite effect to the ball|
-| <img src="src/main/resources/PowerUp/DuplicateBall.png" width="50px"> | Duplicate Ball | Duplicate the number of existing ball |
-| <img src="src/main/resources/PowerUp/FireBallIcon.png" width="50px"> | Fire Ball | Attach Burn effect to the ball |
-| <img src="src/main/resources/PowerUp/HealIcon.png" width="50px">     | Recovery | Heal player by an amount of health |
-| <img src="src/main/resources/PowerUp/TriplicateBall.png" width="50px">| Triplicate Ball | Triplicate the number of existing ball |
-| <img src="src/main/resources/PowerUp/ShieldIcon.png" width="50px"> | Shield | Create a shield in the bottom to prevent the ball from falling |
+| <img src="src/main/resources/Player/UI/Skill/Icon/InvincibleSkillIcon.png" width="50px"> |      Invincible        |Make the player invincible, increase speed, increase size and create a shield|
+| <img src="src/main/resources/Player/UI/Skill/Icon/DashSkillIcon.png" width="50px"> | Dash | Make the paddle dash to a specific direction |
+| <img src="src/main/resources/Player/UI/Skill/Icon/LaserBeamSkillIcon.png" width="50px"> | Laser Beam | Fire a laser beam which goes up and deals damage to the enemies |
+| <img src="src/main/resources/Player/UI/Skill/Icon/UpdraftSkillIcon" width="50px"> | Updraft | Make all the go-down balls change direction and fly up |
+
 
 ### Bricks
 
