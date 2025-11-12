@@ -127,6 +127,16 @@ Không sử dụng hay cài đặt
 | <img src="src/main/resources/PowerUp/TriplicateBall.png" width="50px">| Triplicate Ball | Triplicate the number of existing ball |
 | <img src="src/main/resources/PowerUp/ShieldIcon.png" width="50px"> | Shield | Create a shield in the bottom to prevent the ball from falling |
 
+### Skills
+| Icon                                                                 | Name         | Effect |
+|----------------------------------------------------------------------|--------------|---|
+| <img src="src/main/resources/Player/UI/Skill/Icon/InvincibleSkillIcon.png" width="50px"> |      Blizzard Ball        |Attach frostbite effect to the ball|
+| <img src="src/main/resources/PowerUp/DuplicateBall.png" width="50px"> | Duplicate Ball | Duplicate the number of existing ball |
+| <img src="src/main/resources/PowerUp/FireBallIcon.png" width="50px"> | Fire Ball | Attach Burn effect to the ball |
+| <img src="src/main/resources/PowerUp/HealIcon.png" width="50px">     | Recovery | Heal player by an amount of health |
+| <img src="src/main/resources/PowerUp/TriplicateBall.png" width="50px">| Triplicate Ball | Triplicate the number of existing ball |
+| <img src="src/main/resources/PowerUp/ShieldIcon.png" width="50px"> | Shield | Create a shield in the bottom to prevent the ball from falling |
+
 ### Bricks
 
 | Icon | Name | Effect | Health |
