@@ -1,5 +1,6 @@
 package game.Voltraxis;
 
+import game.Entity.EntityHealth;
 import org.Audio.AudioManager;
 import org.Audio.SFXAsset;
 import org.Event.EventActionID;
@@ -13,6 +14,7 @@ public class VoltraxisSFX extends MonoBehaviour {
     private EventActionID sfx_onEachBallShot = null;
     private EventActionID sfx_onUnleashingUltimate = null;
     private EventActionID sfx_onChargingTerminated = null;
+    private EventActionID sfx_onHealthChanged = null;
 
     /**
      * Create this MonoBehaviour.
@@ -21,7 +23,7 @@ public class VoltraxisSFX extends MonoBehaviour {
      */
     public VoltraxisSFX(GameObject owner) {
         super(owner);
-        if(instance != null) {
+        if (instance != null) {
             throw new ReinitializedSingletonException("VoltraxisSFX already initialized");
         }
 
@@ -30,7 +32,7 @@ public class VoltraxisSFX extends MonoBehaviour {
 
     @Override
     public void start() {
-        sfx_onChargingEntered =  Voltraxis.getInstance().getVoltraxisCharging()
+        sfx_onChargingEntered = Voltraxis.getInstance().getVoltraxisCharging()
                 .onChargingEntered.addListener(this::sfx_onChargingEntered);
         sfx_onEachBallShot = Voltraxis.getInstance().getVoltraxisNormalAttackBrain()
                 .onEachBallShot.addListener(this::sfx_onEachBallShot);
@@ -38,6 +40,9 @@ public class VoltraxisSFX extends MonoBehaviour {
                 .onUnleashingLaser.addListener(this::sfx_onUnleashingUltimate);
         sfx_onChargingTerminated = Voltraxis.getInstance().getVoltraxisCharging()
                 .onChargingTerminated.addListener(this::sfx_onChargingTerminated);
+        sfx_onHealthChanged = Voltraxis.getInstance().getVoltraxisHealth()
+                .onHealthChanged.addListener(this::setSfx_onHealthChanged);
+
     }
 
     public VoltraxisSFX getInstance() {
@@ -52,6 +57,10 @@ public class VoltraxisSFX extends MonoBehaviour {
                 .onEachBallShot.removeListener(sfx_onEachBallShot);
         Voltraxis.getInstance().getVoltraxisCharging()
                 .onUnleashingLaser.removeListener(sfx_onUnleashingUltimate);
+        Voltraxis.getInstance().getVoltraxisCharging()
+                .onChargingTerminated.removeListener(sfx_onChargingTerminated);
+        Voltraxis.getInstance().getVoltraxisHealth()
+                .onHealthChanged.removeListener(sfx_onHealthChanged);
 
         instance = null;
     }
@@ -72,6 +81,9 @@ public class VoltraxisSFX extends MonoBehaviour {
         AudioManager.stopSFX(SFXAsset.SFXIndex.BossCharging);
     }
 
+    private void setSfx_onHealthChanged(Object sender, EntityHealth.OnHealthChangedEventArgs e) {
+        AudioManager.playSFX(SFXAsset.SFXIndex.OnBrickHit);
+    }
 
 
 }

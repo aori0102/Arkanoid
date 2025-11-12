@@ -17,6 +17,12 @@ import utils.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages the main menu UI elements, including buttons and the game title.
+ * <p>
+ * This class implements the Singleton pattern, instantiates all necessary prefabs,
+ * and controls the slide-in/slide-out animations of the menu components.
+ */
 public class MainMenuManager extends MonoBehaviour {
     private static MainMenuManager instance;
     private StartButton startButton;
@@ -68,6 +74,10 @@ public class MainMenuManager extends MonoBehaviour {
         showUI();
     }
 
+    /**
+     * Animates the main menu UI elements into view from the left side of the screen.
+     * The buttons slide in with a staggered delay for a cascading effect.
+     */
     public void showUI() {
         double i = 0;
         for (var button : mainMenuButtons) {
@@ -83,6 +93,9 @@ public class MainMenuManager extends MonoBehaviour {
 
     }
 
+    /**
+     * Animates the main menu UI elements out of view, sliding them back to the left.
+     */
     public void hideUI() {
         for (var button : mainMenuButtons) {
             Tween.to(button.getGameObject())

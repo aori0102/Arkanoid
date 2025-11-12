@@ -11,6 +11,13 @@ import org.Layer.RenderLayer;
 import org.Rendering.SpriteRenderer;
 import utils.Vector2;
 
+/**
+ * Abstract base class for all interactive buttons in the UI.
+ * <p>
+ * This class provides common functionality for button states (Idle, Hover, Pressed, etc.),
+ * handles state transitions based on pointer events from {@link ButtonUI}, manages sprite
+ * animation playback, and controls a subtle scale-based feedback animation.
+ */
 public abstract class BaseButton extends MonoBehaviour {
     //JavaFX nodes
     protected SpriteAnimator spriteAnimator;
@@ -27,6 +34,7 @@ public abstract class BaseButton extends MonoBehaviour {
 
     //ButtonState
     protected enum ButtonState {Idle, Hover, Pressed, Released, Clicked}
+
     protected ButtonState buttonState = ButtonState.Idle;
     private ButtonState prevState = null;
 
@@ -46,7 +54,10 @@ public abstract class BaseButton extends MonoBehaviour {
         buttonUI = owner.addComponent(ButtonUI.class);
     }
 
-    // Each subclass defines its own visuals and animation keys
+    /**
+     * Abstract method that must be implemented by subclasses to define the visual
+     * appearance and animation clip data for the specific button type.
+     */
     protected abstract void setupButtonAppearance();
 
     @Override
@@ -81,6 +92,10 @@ public abstract class BaseButton extends MonoBehaviour {
         scaleAnimation();
     }
 
+    /**
+     * Sets up listeners for the {@link ButtonUI} events and maps them to
+     * state transitions, target scale changes, and audio feedback.
+     */
     private void setupEventHandler() {
         buttonUI.onPointerClick.addListener((s, e) -> {
             buttonState = ButtonState.Clicked;
@@ -117,11 +132,21 @@ public abstract class BaseButton extends MonoBehaviour {
         System.out.println("[ButtonUI] State handlers initialized successfully for " + gameObject.getName());
     }
 
+    /**
+     * Retrieves the {@link ButtonUI} component, allowing other classes to register
+     * for pointer interaction events.
+     *
+     * @return The {@link ButtonUI} instance attached to this button's owner.
+     */
     public ButtonUI getButtonUI() {
         return buttonUI;
     }
 
-    private void scaleAnimation(){
+    /**
+     * Updates the button's scale over time, smoothly moving the current scale
+     * towards the {@link #targetScale} value using unscaled delta time.
+     */
+    private void scaleAnimation() {
         scale += (targetScale - scale) * SCALE_SPEED * utils.Time.getUnscaledDeltaTime();
         getTransform().setGlobalScale(new Vector2(scale, scale));
     }

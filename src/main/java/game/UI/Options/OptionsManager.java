@@ -18,6 +18,12 @@ import utils.UITween.Ease;
 import utils.UITween.Tween;
 import utils.Vector2;
 
+/**
+ * Manages the display, animation, and state of the Options Menu UI.
+ * <p>
+ * This Singleton class controls the slide-in and slide-out animations of volume sliders,
+ * volume labels, and the options title.
+ */
 public class OptionsManager extends MonoBehaviour {
     private static OptionsManager instance;
     private MasterVolumeSlider masterVolumeSlider = null;
@@ -69,6 +75,11 @@ public class OptionsManager extends MonoBehaviour {
 
     }
 
+    /**
+     * Retrieves the Singleton instance of the OptionsManager.
+     *
+     * @return The single active instance.
+     */
     public static OptionsManager getInstance() {
         return instance;
     }
@@ -78,6 +89,10 @@ public class OptionsManager extends MonoBehaviour {
         instance = null;
     }
 
+    /**
+     * Animates the Options UI elements onto the screen.
+     * Sliders slide in from the right (positive move), and text labels slide in from the left (negative move).
+     */
     public void showUI() {
         movePositiveAnimation(masterVolumeSlider.getGameObject());
         movePositiveAnimation(musicVolumeSlider.getGameObject());
@@ -92,6 +107,10 @@ public class OptionsManager extends MonoBehaviour {
         isOptionsMenuShowed = true;
     }
 
+    /**
+     * Animates the Options UI elements off the screen.
+     * Sliders slide out to the right (negative move), and text labels slide out to the left (positive move).
+     */
     public void hideUI() {
         moveNegativeAnimation(masterVolumeSlider.getGameObject());
         moveNegativeAnimation(musicVolumeSlider.getGameObject());
@@ -106,16 +125,20 @@ public class OptionsManager extends MonoBehaviour {
         isOptionsMenuShowed = false;
     }
 
+    /**
+     * Checks if the Options Menu UI is currently visible.
+     *
+     * @return true if the menu is visible, false otherwise.
+     */
     public boolean isOptionsMenuShowed() {
         return isOptionsMenuShowed;
     }
 
     /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
+     * Links the {@link MasterVolumeSlider} component.
+     * <p>NOTE: Only use within the prefab linking process.</p>
      *
-     * @param masterVolumeSlider .
+     * @param masterVolumeSlider The MasterVolumeSlider component.
      */
     public void linkMasterVolumeSlider(MasterVolumeSlider masterVolumeSlider) {
         this.masterVolumeSlider = masterVolumeSlider;
@@ -123,22 +146,20 @@ public class OptionsManager extends MonoBehaviour {
 
 
     /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
+     * Links the {@link MusicVolumeSlider} component.
+     * <p>NOTE: Only use within the prefab linking process.</p>
      *
-     * @param musicVolumeSlider .
+     * @param musicVolumeSlider The MusicVolumeSlider component.
      */
     public void linkMusicVolumeSlider(MusicVolumeSlider musicVolumeSlider) {
         this.musicVolumeSlider = musicVolumeSlider;
     }
 
     /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
+     * Links the {@link SFXVolumeSlider} component.
+     * <p>NOTE: Only use within the prefab linking process.</p>
      *
-     * @param sFXVolumeSlider .
+     * @param sFXVolumeSlider The SFXVolumeSlider component.
      */
     public void linkSFXVolumeSlider(SFXVolumeSlider sFXVolumeSlider) {
         this.sFXVolumeSlider = sFXVolumeSlider;
@@ -147,11 +168,10 @@ public class OptionsManager extends MonoBehaviour {
     private MasterVolumeText masterVolumeText = null;
 
     /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
+     * Links the {@link MasterVolumeText} component.
+     * <p>NOTE: Only use within the prefab linking process.</p>
      *
-     * @param masterVolumeText .
+     * @param masterVolumeText The MasterVolumeText component.
      */
     public void linkMasterVolumeText(MasterVolumeText masterVolumeText) {
         this.masterVolumeText = masterVolumeText;
@@ -160,11 +180,10 @@ public class OptionsManager extends MonoBehaviour {
     private MusicVolumeText musicVolumeText = null;
 
     /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
+     * Links the {@link MusicVolumeText} component.
+     * <p>NOTE: Only use within the prefab linking process.</p>
      *
-     * @param musicVolumeText .
+     * @param musicVolumeText The MusicVolumeText component.
      */
     public void linkMusicVolumeText(MusicVolumeText musicVolumeText) {
         this.musicVolumeText = musicVolumeText;
@@ -173,11 +192,10 @@ public class OptionsManager extends MonoBehaviour {
     private SFXVolumeText sFXVolumeText = null;
 
     /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
+     * Links the {@link SFXVolumeText} component.
+     * <p>NOTE: Only use within the prefab linking process.</p>
      *
-     * @param sFXVolumeText .
+     * @param sFXVolumeText The SFXVolumeText component.
      */
     public void linkSFXVolumeText(SFXVolumeText sFXVolumeText) {
         this.sFXVolumeText = sFXVolumeText;
@@ -186,17 +204,22 @@ public class OptionsManager extends MonoBehaviour {
     private OptionsTitle optionsTitle = null;
 
     /**
-     * <br><br>
-     * <b><i><u>NOTE</u> : Only use within {@link }
-     * as part of component linking process.</i></b>
+     * Links the {@link OptionsTitle} component.
+     * <p>NOTE: Only use within the prefab linking process.</p>
      *
-     * @param optionsTitle .
+     * @param optionsTitle The OptionsTitle component.
      */
     public void linkOptionsTitle(OptionsTitle optionsTitle) {
         this.optionsTitle = optionsTitle;
     }
 
-    private void movePositiveAnimation(GameObject gameObject){
+    /**
+     * Creates a Tween animation to move the GameObject to its final on-screen position (from right to center).
+     * The movement is equivalent to adding the absolute slide distance to the current X position.
+     *
+     * @param gameObject The GameObject to animate.
+     */
+    private void movePositiveAnimation(GameObject gameObject) {
         Tween.to(gameObject)
                 .moveX(SLIDE_DISTANCE, SLIDE_DURATION)
                 .ease(Ease.OUT_BACK)
@@ -204,7 +227,13 @@ public class OptionsManager extends MonoBehaviour {
                 .play();
     }
 
-    private void moveNegativeAnimation(GameObject gameObject){
+    /**
+     * Creates a Tween animation to move the GameObject to its final on-screen position (from left to center).
+     * The movement is equivalent to subtracting the absolute slide distance from the current X position.
+     *
+     * @param gameObject The GameObject to animate.
+     */
+    private void moveNegativeAnimation(GameObject gameObject) {
         Tween.to(gameObject)
                 .moveX(-SLIDE_DISTANCE, SLIDE_DURATION)
                 .ease(Ease.OUT_BACK)

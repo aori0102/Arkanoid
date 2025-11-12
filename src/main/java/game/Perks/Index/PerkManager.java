@@ -87,6 +87,10 @@ public class PerkManager extends MonoBehaviour {
         instantiatePerks();
     }
 
+    /**
+     * Generates and instantiates a new set of random {@link Perk} objects.
+     * If the player cannot afford to trade a rank for a perk, the selection phase ends.
+     */
     public void instantiatePerks() {
         if (!RankManager.getInstance().tryFetchAccumulatedRank()) {
             onPerkSelectionCompleted.invoke(this, null);
@@ -101,15 +105,33 @@ public class PerkManager extends MonoBehaviour {
         showPerksAnimation();
     }
 
+    /**
+     * Internal handler for when a perk is chosen.
+     * Destroys the current perks on screen and initiates the generation of a new set.
+     *
+     * @param sender The object that invoked the event.
+     * @param e Empty event argument.
+     */
     public void perkManager_OnPerkChosen(Object sender, Void e) {
         destroyPerks();
         instantiatePerks();
     }
 
+    /**
+     * Internal handler for when a pointer clicks on one of the perk objects.
+     * This simply relays the event by invoking {@link #onPerkChosen}.
+     *
+     * @param sender The {@link Perk} object that was clicked.
+     * @param e The mouse event data.
+     */
     public void perkManager_OnPointerClickedPerk(Object sender, MouseEvent e) {
         onPerkChosen.invoke(this, null);
     }
 
+    /**
+     * Destroys all currently displayed perk {@link GameObject}s.
+     * The associated text components are cleared before destruction.
+     */
     private void destroyPerks() {
         for (Perk perk : currentPerksOnScreen) {
             perk.destroyText();
@@ -119,6 +141,9 @@ public class PerkManager extends MonoBehaviour {
         currentPerksOnScreen.clear();
     }
 
+    /**
+     * Animates the current set of perks onto the screen using a smooth slide-in tween.
+     */
     private void showPerksAnimation() {
         for (var perk : currentPerksOnScreen) {
             Tween.to(perk.getGameObject())

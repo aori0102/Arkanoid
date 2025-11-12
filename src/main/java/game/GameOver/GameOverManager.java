@@ -192,6 +192,13 @@ public final class GameOverManager extends MonoBehaviour {
         }
     }
 
+    /**
+     * Shows the final action buttons (Restart and Menu) by making them active and fading them in.
+     * This method is triggered by the {@link #onAllInfoRevealed} event.
+     *
+     * @param sender The object that invoked the event.
+     * @param e      Empty event argument.
+     */
     private void showButtons(Object sender, Void e) {
         restartButton.getGameObject().setActive(true);
         gameOverMenuButton.getGameObject().setActive(true);
@@ -205,10 +212,20 @@ public final class GameOverManager extends MonoBehaviour {
                 .play();
     }
 
+    /**
+     * Retrieves the {@link RestartButton} component.
+     *
+     * @return The RestartButton instance.
+     */
     public RestartButton getRestartButton() {
         return restartButton;
     }
 
+    /**
+     * Retrieves the {@link GameOverMenuButton} component.
+     *
+     * @return The GameOverMenuButton instance.
+     */
     public GameOverMenuButton getGameOverMenuButton() {
         return gameOverMenuButton;
     }
