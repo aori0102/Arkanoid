@@ -35,17 +35,14 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 ## UML Diagram
 
 ### Class Diagram
-![Class Diagram](docs/uml/class-diagram.png)
-
-_Có thể sử dụng IntelliJ để generate ra Class Diagrams: https://www.youtube.com/watch?v=yCkTqNxZkbY_
-
-*Complete UML diagrams are available in the `docs/uml/` folder*
-
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/uml-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/uml-light.svg">
+  <img alt="Sơ đồ UML" src="src/UML/Arkanoid.drawio.svg">
+</picture>
 ---
 
 ## Design Patterns Implementation
-
-_Có dùng hay không và dùng ở đâu_
 
 ### 1. Singleton Pattern
 **Used in:** `GameManager`, `AudioManager`, `ResourceLoader`

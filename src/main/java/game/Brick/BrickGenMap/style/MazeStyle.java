@@ -11,8 +11,43 @@ import game.Brick.BrickGenMap.TypePickers;
 import java.util.Random;
 import java.util.Stack;
 
-/** MAZE: DFS-carved corridors on a grid of hard walls. */
+/**
+ * Generates a maze-like structure using a randomized Depth-First Search (DFS)
+ * algorithm, also known as "recursive backtracking."
+ * <p>
+ * This generator works by "carving" corridors out of a solid grid of hard bricks.
+ * <ol>
+ * <li>The entire grid is first filled with a 'hard' wall brick type.</li>
+ * <li>A random starting cell (at an odd-numbered coordinate) is chosen
+ * and its wall is replaced with a weak, breakable brick.</li>
+ * <li>The algorithm then performs a randomized DFS, moving two steps at a time
+ * (e.g., from (1,1) to (1,3)).</li>
+ * <li>It carves a path by replacing the walls at both the destination cell
+ * (1,3) and the cell in between (1,2) with weak bricks.</li>
+ * <li>The process continues, backtracking with a {@link Stack} when a dead end
+ * is reached, until all reachable cells have been carved out.</li>
+ * <li>Finally, {@link SpecialsSprinkler} is used to add special bricks
+ * onto the newly created paths.</li>
+ * </ol>
+ *
+ * @see StyleGenerator
+ * @see SpecialsSprinkler
+ * @see TypePickers
+ */
 public final class MazeStyle implements StyleGenerator {
+
+    /**
+     * Generates a maze-like brick layout using a randomized DFS algorithm.
+     *
+     * @param rows       The number of rows for the grid.
+     * @param cols       The number of columns for the grid.
+     * @param difficulty The difficulty level (0.0 to 1.0), which influences the
+     * hardness of the walls and the density of special bricks.
+     * @param rng        The {@link Random} instance to use for all randomized
+     * operations (maze path, brick types).
+     * @return A {@link Matrix} where 'hard' bricks form the maze walls and
+     * 'weak' or 'special' bricks form the carved-out paths.
+     */
     @Override
     public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);

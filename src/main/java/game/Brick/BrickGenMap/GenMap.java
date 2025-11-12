@@ -144,6 +144,7 @@ public final class GenMap {
             List<BrickType> rowList = new ArrayList<>();
             for (int col = 0; col < cols; col++) {
                 rowList.add(transNumberToType(mapType.get(row, col)));
+
             }
             result.add(rowList);
         }

@@ -10,12 +10,52 @@ import game.Brick.BrickType;
 import game.Brick.BrickGenMap.StyleGenerator;
 import java.util.Random;
 
+/**
+ * Generates a "dungeon" layout consisting of several rooms connected by corridors.
+ * <p>
+ * This generator follows several steps:
+ * <ol>
+ * <li><b>Create Border:</b> Fills the entire grid's outermost border with
+ * 'Diamond' bricks (indestructible).</li>
+ * <li><b>Fill Walls:</b> Fills the interior of the grid with 'Steel' bricks
+ * to act as the base "rock" or "wall" material.</li>
+ * <li><b>Carve Rooms:</b> Randomly generates 3 to 6 {@link Room} objects with
+ * random sizes and positions. It carves these rooms out of the 'Steel'
+ * interior by filling them with 'Normal' (breakable) bricks.</li>
+ * <li><b>Connect Rooms:</b> Connects the rooms in sequence (room 0 to 1, 1 to 2, etc.)
+ * by carving "L-shaped" corridors. It draws a vertical corridor from the
+ * center of one room and a horizontal corridor from the center of the next,
+ * creating a connection where they meet. These corridors are also filled
+ * with 'Normal' bricks.</li>
+ * <li><b>Add Vertical Shafts (Optional):</b> Iterates over the columns, and with a
+ * 30% chance every 3 columns, it carves a vertical shaft of 'Normal' bricks
+ * from the bottom-middle of the grid upwards, simulating extra paths or "stalactites."</li>
+ * <li><b>Sprinkle Specials:</b> Finally, {@link SpecialsSprinkler} adds special bricks
+ * to the 'Normal' brick areas (rooms and corridors).</li>
+ * </ol>
+ *
+ * @see StyleGenerator
+ * @see SpecialsSprinkler
+ * @see Room
+ */
 public final class DungeonStyle implements StyleGenerator {
     private static final class Room {
         final int r0, c0, h, w;
         Room(int r0, int c0, int h, int w) { this.r0 = r0; this.c0 = c0; this.h = h; this.w = w; }
     }
 
+    /**
+     * Generates the dungeon-style brick layout.
+     *
+     * @param rows       The number of rows for the grid.
+     * @param cols       The number of columns for the grid.
+     * @param difficulty The difficulty level (0.0 to 1.0), used only by the
+     * {@link SpecialsSprinkler}.
+     * @param rng        The {@link Random} instance to use for all randomized
+     * operations (room placement, size, connections, etc.).
+     * @return A {@link Matrix} containing the integer representations
+     * of the {@link BrickType}s, forming a dungeon layout.
+     */
     @Override
     public Matrix generate(int rows, int cols, double difficulty, Random rng) {
         difficulty = keep01(difficulty);
