@@ -1,26 +1,25 @@
 package game.Player.Paddle;
 
 import game.Entity.EntityStat;
-import game.Player.PlayerData;
+import game.Player.PlayerAttributes;
+import game.Player.PlayerSkills.SkillIndex;
+import org.Event.EventHandler;
 import org.GameObject.GameObject;
 
+import java.util.EnumMap;
+
 public final class PaddleStat extends EntityStat {
-    private int attack = 20;
-    private int defence = 20;
+
     private double attackMultiplier = 1;
     private double defenceMultiplier = 1;
     private double damageTakenMultiplier = 1;
+    private double maxHealthMultiplier = 1;
     private double regenerationMultiplier = 1;
-    private double criticalChance = 0.1;
-    private double criticalDamage = 1.5;
-    private int maxHealth = 100;
-    private double movementSpeed = 800;
     private double movementSpeedMultiplier = 1;
-    private double laserBeamCooldown = 5;
-    private double dashCooldown = 0.2;
-    private double updraftCooldown = 5;
-    private double invincibleCooldown = 5;
 
+    private final EnumMap<SkillIndex, Double> skillCooldownMultiplierMap = new EnumMap<>(SkillIndex.class);
+
+    public EventHandler<Void> onStatChanged = new EventHandler<>(PaddleStat.class);
 
     /**
      * Create this MonoBehaviour.
@@ -29,16 +28,21 @@ public final class PaddleStat extends EntityStat {
      */
     public PaddleStat(GameObject owner) {
         super(owner);
+
+        skillCooldownMultiplierMap.put(SkillIndex.LaserBeam, 1.0);
+        skillCooldownMultiplierMap.put(SkillIndex.Dash, 1.0);
+        skillCooldownMultiplierMap.put(SkillIndex.Invincible, 1.0);
+        skillCooldownMultiplierMap.put(SkillIndex.Updraft, 1.0);
     }
 
     @Override
-    public int getAttack() {
-        return attack;
+    public int getBaseAttack() {
+        return PlayerAttributes.BASE_ATTACK;
     }
 
     @Override
-    public int getDefence() {
-        return defence;
+    public int getBaseDefense() {
+        return PlayerAttributes.BASE_DEFENSE;
     }
 
     @Override
@@ -63,22 +67,27 @@ public final class PaddleStat extends EntityStat {
 
     @Override
     public double getCriticalChance() {
-        return criticalChance;
+        return PlayerAttributes.CRITICAL_CHANGE;
     }
 
     @Override
     public double getCriticalDamage() {
-        return criticalDamage;
+        return PlayerAttributes.CRITICAL_DAMAGE;
     }
 
     @Override
-    public int getMaxHealth() {
-        return maxHealth;
+    public int getBaseMaxHealth() {
+        return PlayerAttributes.MAX_HEALTH;
     }
 
     @Override
-    public double getMovementSpeed() {
-        return movementSpeed;
+    public double getMaxHealthMultiplier() {
+        return maxHealthMultiplier;
+    }
+
+    @Override
+    public double getBaseMovementSpeed() {
+        return PlayerAttributes.BASE_MOVEMENT_SPEED;
     }
 
     @Override
@@ -86,79 +95,48 @@ public final class PaddleStat extends EntityStat {
         return movementSpeedMultiplier;
     }
 
-    public void setAttack(int value) {
-        attack = value;
+    public double getSkillCooldownMultiplier(SkillIndex skillIndex) {
+        return skillCooldownMultiplierMap.get(skillIndex);
     }
 
-    public void setDefence(int value) {
-        defence = value;
+    public double getSkillCooldown(SkillIndex skillIndex) {
+        return PlayerAttributes.BASE_SKILL_COOLDOWN_MAP.get(skillIndex)
+                * skillCooldownMultiplierMap.get(skillIndex);
     }
 
     public void setDamageTakenMultiplier(double value) {
         damageTakenMultiplier = value;
+        onStatChanged.invoke(this, null);
     }
 
     public void setRegenerationMultiplier(double value) {
         regenerationMultiplier = value;
-    }
-
-    public void setCriticalChance(double value) {
-        criticalChance = value;
-    }
-
-    public void setCriticalDamage(double value) {
-        criticalDamage = value;
-    }
-
-    public void setMaxHealth(int value) {
-        maxHealth = value;
-    }
-
-    public void setMovementSpeed(double value) {
-        movementSpeed = value;
+        onStatChanged.invoke(this, null);
     }
 
     public void setMovementSpeedMultiplier(double value) {
         movementSpeedMultiplier = value;
+        onStatChanged.invoke(this, null);
     }
 
     public void setAttackMultiplier(double value) {
         attackMultiplier = value;
+        onStatChanged.invoke(this, null);
     }
 
     public void setDefenceMultiplier(double value) {
         defenceMultiplier = value;
+        onStatChanged.invoke(this, null);
     }
 
-    public double getLaserBeamCooldown() {
-        return laserBeamCooldown;
+    public void setMaxHealthMultiplier(double maxHealthMultiplier) {
+        this.maxHealthMultiplier = maxHealthMultiplier;
+        onStatChanged.invoke(this, null);
     }
 
-    public void setLaserBeamCooldown(double laserBeamCooldown) {
-        this.laserBeamCooldown = laserBeamCooldown;
+    public void setSkillCooldownMultiplier(SkillIndex skillIndex, double invincibilityMultiplier) {
+        skillCooldownMultiplierMap.put(skillIndex, invincibilityMultiplier);
+        onStatChanged.invoke(this, null);
     }
 
-    public double getDashCooldown() {
-        return dashCooldown;
-    }
-
-    public void setDashCooldown(double dashCooldown) {
-        this.dashCooldown = dashCooldown;
-    }
-
-    public double getUpdraftCooldown() {
-        return updraftCooldown;
-    }
-
-    public void setUpdraftCooldown(double updraftCooldown) {
-        this.updraftCooldown = updraftCooldown;
-    }
-
-    public double getInvincibleCooldown() {
-        return invincibleCooldown;
-    }
-
-    public void setInvincibleCooldown(double invincibleCooldown) {
-        this.invincibleCooldown = invincibleCooldown;
-    }
 }

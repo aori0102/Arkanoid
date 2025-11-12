@@ -19,13 +19,10 @@ import game.MapGenerator.BrickMapManagerPrefab;
 import game.Obstacle.Index.ObstacleManagerPrefab;
 import game.Particle.ExplodingBrick.ExplodingBrickParticlePrefab;
 import game.Perks.Index.PerkManagerPrefab;
-import game.Player.Prefab.PaddlePrefab;
-import game.Player.Prefab.PlayerHealthBarPrefab;
-import game.Player.Prefab.PlayerHealthLossVignettePrefab;
-import game.Player.Prefab.PlayerPrefab;
-import game.PlayerData.DataManagerPrefab;
-import game.PlayerSkills.SkillSetUIPrefab;
-import game.PlayerSkills.SkillUIPrefab;
+import game.Player.PlayerData.DataManagerPrefab;
+import game.Player.Prefab.*;
+import game.Player.PlayerSkills.SkillSetUIPrefab;
+import game.Player.PlayerSkills.SkillUIPrefab;
 import game.PowerUp.Prefab.*;
 import game.Rank.RankManagerPrefab;
 import game.Rank.RankUIPrefab;
@@ -159,6 +156,10 @@ public enum PrefabIndex {
 
     /// Particle
     ExplodingBrickParticle(new ExplodingBrickParticlePrefab()),
+
+    /// Stat
+    PlayerStatUI(new PlayerStatUIPrefab()),
+    PlayerStatUIHandler(new PlayerStatUIHandlerPrefab()),
 
     None(null);
 

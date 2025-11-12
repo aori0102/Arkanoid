@@ -1,4 +1,4 @@
-package game.PlayerData;
+package game.Player.PlayerData;
 
 import com.google.gson.Gson;
 import game.GameManager.GameManager;
@@ -7,7 +7,6 @@ import game.MapGenerator.BrickMapManager;
 import game.Player.Player;
 import game.Rank.RankManager;
 import game.Score.ScoreManager;
-import org.Event.EventActionID;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;

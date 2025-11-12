@@ -3,6 +3,8 @@ package game.Perks.Index;
 import game.Interface.IPointerClickHandler;
 import game.Interface.IPointerEnterHandler;
 import game.Interface.IPointerExitHandler;
+import game.Player.Paddle.PaddleStat;
+import game.Player.Player;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.Animation.AnimationClipData;
@@ -17,11 +19,15 @@ import org.Text.FontDataIndex;
 import org.Text.TextHorizontalAlignment;
 import org.Text.TextUI;
 import org.Text.TextVerticalAlignment;
+import utils.Random;
 import utils.Time;
 import utils.UITween.Ease;
 import utils.UITween.Tween;
 import utils.Vector2;
 
+/**
+ * Base class for all player perks.
+ */
 public abstract class Perk extends MonoBehaviour
         implements IPointerClickHandler,
         IPointerEnterHandler,
@@ -35,6 +41,8 @@ public abstract class Perk extends MonoBehaviour
     private static final double FLUCTUATION_RATE = 1.2;
     private static final Vector2 TEXT_OFFSET = new Vector2(0.0, -16.0);
 
+    private double modifierValue = 0.0;
+
     public EventHandler<MouseEvent> onPointerClicked = new EventHandler<>(Perk.class);
     public EventHandler<MouseEvent> onPointerEntered = new EventHandler<>(Perk.class);
     public EventHandler<MouseEvent> onPointerExited = new EventHandler<>(Perk.class);
@@ -42,10 +50,8 @@ public abstract class Perk extends MonoBehaviour
     protected TextUI textUI;
     protected SpriteAnimator spriteAnimator;
 
-    protected AnimationClipData perkKey;
     private Vector2 oldPosition;
 
-    //ButtonState
     protected enum ButtonState {Idle, Hover, Pressed, Released, Clicked}
 
     protected ButtonState buttonState = ButtonState.Idle;
@@ -80,8 +86,9 @@ public abstract class Perk extends MonoBehaviour
 
     @Override
     public void awake() {
-        setUpVisual();
-        spriteAnimator.addAnimationClip(perkKey);
+        modifierValue = Random.range(getMinModifierValue(), getMaxModifierValue());
+        textUI.setText(getPerkDescription(modifierValue));
+        spriteAnimator.addAnimationClip(getPerkAnimationKey());
 
         onPointerEntered.addListener(this::perk_onPointerEntered);
         onPointerExited.addListener(this::perk_onPointerExited);
@@ -93,7 +100,7 @@ public abstract class Perk extends MonoBehaviour
     public void start() {
         oldPosition = getTransform().getGlobalPosition();
 
-        spriteAnimator.playAnimation(perkKey, null);
+        spriteAnimator.playAnimation(getPerkAnimationKey(), null);
         idleAnimation();
     }
 
@@ -117,22 +124,24 @@ public abstract class Perk extends MonoBehaviour
         onPointerExited.invoke(this, null);
     }
 
-    protected abstract void setUpVisual();
-
-    protected void perk_onPointerClicked(Object sender, MouseEvent e) {
-        System.out.println("perk_onPointerClicked");
+    private void perk_onPointerClicked(Object sender, MouseEvent e) {
+        applyPerk(Player.getInstance().getPlayerPaddle().getPaddleStat());
         AudioManager.playSFX(SFXAsset.SFXIndex.OnPerkReceived);
     }
 
-    protected void perk_onPointerEntered(Object sender, MouseEvent e) {
+    public double getModifierValue() {
+        return modifierValue;
+    }
+
+    private void perk_onPointerEntered(Object sender, MouseEvent e) {
         hoverAnimation();
         buttonState = ButtonState.Hover;
         System.out.println("[Perk] Hover");
 
     }
 
-    protected void perk_onPointerExited(Object sender, MouseEvent e) {
-        if(!getGameObject().isDestroyed()){
+    private void perk_onPointerExited(Object sender, MouseEvent e) {
+        if (!getGameObject().isDestroyed()) {
             exitAnimation();
             buttonState = ButtonState.Idle;
             System.out.println("[Perk] Idle");
@@ -178,5 +187,15 @@ public abstract class Perk extends MonoBehaviour
                 .ease(Ease.IN_OUT)
                 .play();
     }
+
+    protected abstract String getPerkDescription(double amount);
+
+    protected abstract double getMinModifierValue();
+
+    protected abstract double getMaxModifierValue();
+
+    protected abstract AnimationClipData getPerkAnimationKey();
+
+    protected abstract void applyPerk(PaddleStat paddleStat);
 
 }

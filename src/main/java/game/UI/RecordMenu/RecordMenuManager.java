@@ -1,7 +1,7 @@
 package game.UI.RecordMenu;
 
-import game.PlayerData.DataManager;
-import game.PlayerData.Record;
+import game.Player.PlayerData.DataManager;
+import game.Player.PlayerData.Record;
 import game.UI.GoBackButtonManager;
 import javafx.scene.paint.Color;
 import org.Exception.ReinitializedSingletonException;

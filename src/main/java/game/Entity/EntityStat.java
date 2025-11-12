@@ -15,16 +15,24 @@ public abstract class EntityStat extends MonoBehaviour {
     }
 
     public final int getActualAttack() {
-        return (int) (getAttack() * getAttackMultiplier());
+        return (int) (getBaseAttack() * getAttackMultiplier());
     }
 
     public final int getActualDefense() {
-        return (int) (getDefence() * getDefenceMultiplier());
+        return (int) (getBaseDefense() * getDefenceMultiplier());
     }
 
-    public abstract int getAttack();
+    public final int getActualMaxHealth() {
+        return (int) (getBaseMaxHealth() * getMaxHealthMultiplier());
+    }
 
-    public abstract int getDefence();
+    public final double getActualMovementSpeed() {
+        return getBaseMovementSpeed() * getMovementSpeedMultiplier();
+    }
+
+    public abstract int getBaseAttack();
+
+    public abstract int getBaseDefense();
 
     public abstract double getAttackMultiplier();
 
@@ -38,9 +46,11 @@ public abstract class EntityStat extends MonoBehaviour {
 
     public abstract double getCriticalDamage();
 
-    public abstract int getMaxHealth();
+    public abstract int getBaseMaxHealth();
 
-    public abstract double getMovementSpeed();
+    public abstract double getMaxHealthMultiplier();
+
+    public abstract double getBaseMovementSpeed();
 
     public abstract double getMovementSpeedMultiplier();
 

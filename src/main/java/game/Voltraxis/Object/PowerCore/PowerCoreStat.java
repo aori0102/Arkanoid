@@ -16,12 +16,12 @@ public final class PowerCoreStat extends EntityStat {
     }
 
     @Override
-    public int getAttack() {
+    public int getBaseAttack() {
         return 0;
     }
 
     @Override
-    public int getDefence() {
+    public int getBaseDefense() {
         return 0;
     }
 
@@ -56,12 +56,17 @@ public final class PowerCoreStat extends EntityStat {
     }
 
     @Override
-    public int getMaxHealth() {
+    public int getBaseMaxHealth() {
         return (int) (VoltraxisData.BASE_MAX_HEALTH * VoltraxisData.POWER_CORE_PROPORTIONAL_HEALTH);
     }
 
     @Override
-    public double getMovementSpeed() {
+    public double getMaxHealthMultiplier() {
+        return 1;
+    }
+
+    @Override
+    public double getBaseMovementSpeed() {
         return 0;
     }
 

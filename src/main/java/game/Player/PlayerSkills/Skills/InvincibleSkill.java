@@ -1,8 +1,8 @@
-package game.PlayerSkills.Skills;
+package game.Player.PlayerSkills.Skills;
 
 import game.GameObject.Shield;
 import game.Player.Player;
-import game.PlayerSkills.SkillIndex;
+import game.Player.PlayerSkills.SkillIndex;
 import org.GameObject.GameObject;
 import utils.Time;
 import utils.Vector2;

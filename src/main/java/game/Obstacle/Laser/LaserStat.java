@@ -14,12 +14,17 @@ public class LaserStat extends EntityStat {
     }
 
     @Override
-    public int getAttack() {
+    public int getBaseAttack() {
         return 20;
     }
 
     @Override
-    public int getDefence() {
+    public double getMaxHealthMultiplier() {
+        return 1;
+    }
+
+    @Override
+    public int getBaseDefense() {
         return 0;
     }
 
@@ -54,12 +59,12 @@ public class LaserStat extends EntityStat {
     }
 
     @Override
-    public int getMaxHealth() {
+    public int getBaseMaxHealth() {
         return 0;
     }
 
     @Override
-    public double getMovementSpeed() {
+    public double getBaseMovementSpeed() {
         return 0;
     }
 

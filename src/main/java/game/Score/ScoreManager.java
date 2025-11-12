@@ -6,7 +6,7 @@ import game.Ball.BallsManager;
 import game.GameManager.LevelState;
 import game.Level.LevelManager;
 import game.MapGenerator.BrickMapManager;
-import game.PlayerData.DataManager;
+import game.Player.PlayerData.DataManager;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;

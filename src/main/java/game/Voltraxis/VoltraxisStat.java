@@ -38,12 +38,12 @@ public final class VoltraxisStat extends EntityStat {
     }
 
     @Override
-    public int getAttack() {
+    public int getBaseAttack() {
         return VoltraxisData.BASE_ATTACK;
     }
 
     @Override
-    public int getDefence() {
+    public int getBaseDefense() {
         return VoltraxisData.BASE_DEFENSE;
     }
 
@@ -73,12 +73,17 @@ public final class VoltraxisStat extends EntityStat {
     }
 
     @Override
-    public int getMaxHealth() {
+    public int getBaseMaxHealth() {
         return VoltraxisData.BASE_MAX_HEALTH;
     }
 
     @Override
-    public double getMovementSpeed() {
+    public double getMaxHealthMultiplier() {
+        return 1;
+    }
+
+    @Override
+    public double getBaseMovementSpeed() {
         return 0;
     }
 

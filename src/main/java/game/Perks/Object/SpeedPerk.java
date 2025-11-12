@@ -2,11 +2,8 @@ package game.Perks.Object;
 
 import game.Perks.Index.Perk;
 import game.Player.Paddle.PaddleStat;
-import game.Player.Player;
-import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
-import utils.Random;
 
 public final class SpeedPerk extends Perk {
     /**
@@ -24,17 +21,27 @@ public final class SpeedPerk extends Perk {
     }
 
     @Override
-    protected void setUpVisual() {
-        textUI.setText("Increase speed!");
-
-        perkKey = AnimationClipData.Speed_Perk;
+    protected String getPerkDescription(double amount) {
+        return "Increase paddle speed by " + String.format("%.1f", amount * 100) + "%";
     }
 
     @Override
-    protected void perk_onPointerClicked(Object sender, MouseEvent e) {
-        super.perk_onPointerClicked(sender, e);
-        System.out.println("Increase speed!");
-        PaddleStat paddleStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
-        paddleStat.setMovementSpeed(paddleStat.getMovementSpeed() + 50);
+    protected double getMinModifierValue() {
+        return 0.04;
+    }
+
+    @Override
+    protected double getMaxModifierValue() {
+        return 0.16;
+    }
+
+    @Override
+    protected AnimationClipData getPerkAnimationKey() {
+        return AnimationClipData.Speed_Perk;
+    }
+
+    @Override
+    protected void applyPerk(PaddleStat paddleStat) {
+        paddleStat.setMovementSpeedMultiplier(paddleStat.getMovementSpeedMultiplier() + getModifierValue());
     }
 }

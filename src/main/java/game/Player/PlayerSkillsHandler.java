@@ -1,7 +1,7 @@
 package game.Player;
 
-import game.PlayerSkills.SkillIndex;
-import game.PlayerSkills.Skills.*;
+import game.Player.PlayerSkills.SkillIndex;
+import game.Player.PlayerSkills.Skills.Skill;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.InputAction.ActionMap;

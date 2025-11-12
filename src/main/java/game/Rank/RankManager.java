@@ -1,6 +1,6 @@
 package game.Rank;
 
-import game.PlayerData.DataManager;
+import game.Player.PlayerData.DataManager;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;

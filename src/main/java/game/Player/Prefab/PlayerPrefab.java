@@ -2,11 +2,11 @@ package game.Player.Prefab;
 
 import game.Player.*;
 import game.Player.Paddle.PlayerPaddle;
-import game.PlayerSkills.SkillIndex;
-import game.PlayerSkills.Skills.DashSkill;
-import game.PlayerSkills.Skills.InvincibleSkill;
-import game.PlayerSkills.Skills.LaserBeamSkill;
-import game.PlayerSkills.Skills.UpdraftSkill;
+import game.Player.PlayerSkills.SkillIndex;
+import game.Player.PlayerSkills.Skills.DashSkill;
+import game.Player.PlayerSkills.Skills.InvincibleSkill;
+import game.Player.PlayerSkills.Skills.LaserBeamSkill;
+import game.Player.PlayerSkills.Skills.UpdraftSkill;
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;
 import org.Prefab.Prefab;

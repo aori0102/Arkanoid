@@ -24,12 +24,17 @@ public final class BrickStat extends EntityStat {
     }
 
     @Override
-    public int getAttack() {
+    public double getMaxHealthMultiplier() {
+        return 1;
+    }
+
+    @Override
+    public int getBaseAttack() {
         return 0;
     }
 
     @Override
-    public int getDefence() {
+    public int getBaseDefense() {
         return 0;
     }
 
@@ -64,12 +69,12 @@ public final class BrickStat extends EntityStat {
     }
 
     @Override
-    public int getMaxHealth() {
+    public int getBaseMaxHealth() {
         return brick.getBrickType().maxHealth;
     }
 
     @Override
-    public double getMovementSpeed() {
+    public double getBaseMovementSpeed() {
         return 0;
     }
 

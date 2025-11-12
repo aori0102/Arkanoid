@@ -1,7 +1,6 @@
 package game.Player;
 
 import game.Entity.EntityHealth;
-import game.Entity.EntityHealthAlterType;
 import game.Player.Paddle.PaddleHealth;
 import game.Player.Prefab.PlayerHealthBarPrefab;
 import org.GameObject.GameObject;
@@ -22,7 +21,7 @@ public final class PlayerHealthUI extends MonoBehaviour {
     private double ratio = 1.0;
     private double targetRatio = 1.0;
     private SpriteRenderer fillRenderer = null;
-    private SpriteRenderer[] livesRendererArray = new SpriteRenderer[PlayerData.MAX_LIVES];
+    private SpriteRenderer[] livesRendererArray = new SpriteRenderer[PlayerAttributes.MAX_LIVES];
 
     /**
      * Create this MonoBehaviour.
@@ -53,7 +52,7 @@ public final class PlayerHealthUI extends MonoBehaviour {
      */
     private void playerLives_onLivesChanged(Object sender, Void e) {
         var lives = Player.getInstance().getPlayerLives().getLives();
-        for (int i = 0; i < PlayerData.MAX_LIVES; i++) {
+        for (int i = 0; i < PlayerAttributes.MAX_LIVES; i++) {
             if (i < lives) {
                 livesRendererArray[i].setImage(ImageAsset.ImageIndex.Player_UI_HealthBar_LifeRemain.getImage());
             } else {
@@ -72,7 +71,7 @@ public final class PlayerHealthUI extends MonoBehaviour {
      */
     private void paddleHealth_onHealthChanged(Object sender, EntityHealth.OnHealthChangedEventArgs e) {
         var currentHealth = Player.getInstance().getPlayerPaddle().getPaddleHealth().getHealth();
-        targetRatio = (double) currentHealth / PlayerData.MAX_HEALTH;
+        targetRatio = (double) currentHealth / PlayerAttributes.MAX_HEALTH;
     }
 
     /**

@@ -17,12 +17,12 @@ public final class UltimateLaserStat extends EntityStat {
     }
 
     @Override
-    public int getAttack() {
+    public int getBaseAttack() {
         return Voltraxis.getInstance().getVoltraxisStatManager().getActualAttack();
     }
 
     @Override
-    public int getDefence() {
+    public int getBaseDefense() {
         return 0;
     }
 
@@ -57,12 +57,17 @@ public final class UltimateLaserStat extends EntityStat {
     }
 
     @Override
-    public int getMaxHealth() {
+    public int getBaseMaxHealth() {
         return 0;
     }
 
     @Override
-    public double getMovementSpeed() {
+    public double getMaxHealthMultiplier() {
+        return 0;
+    }
+
+    @Override
+    public double getBaseMovementSpeed() {
         return 0;
     }
 

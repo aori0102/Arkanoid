@@ -1,11 +1,9 @@
 package game.UI.MainMenu;
 
 import game.GameManager.GameManager;
-import game.PlayerData.Record;
 import game.UI.Buttons.*;
 import game.UI.Options.OptionsManager;
 import game.UI.RecordMenu.RecordMenuManager;
-import javafx.application.Platform;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 

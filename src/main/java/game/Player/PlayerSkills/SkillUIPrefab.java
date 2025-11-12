@@ -1,4 +1,4 @@
-package game.PlayerSkills;
+package game.Player.PlayerSkills;
 
 import javafx.scene.paint.Color;
 import org.GameObject.GameObject;

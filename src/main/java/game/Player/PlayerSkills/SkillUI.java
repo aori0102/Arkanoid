@@ -1,7 +1,7 @@
-package game.PlayerSkills;
+package game.Player.PlayerSkills;
 
 import game.Player.Player;
-import game.PlayerSkills.Skills.Skill;
+import game.Player.PlayerSkills.Skills.Skill;
 import org.Annotation.LinkViaPrefab;
 import org.Event.EventActionID;
 import org.GameObject.GameObject;

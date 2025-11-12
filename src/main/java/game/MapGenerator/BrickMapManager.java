@@ -4,7 +4,7 @@ import game.Brick.Brick;
 import game.Brick.BrickEvent.BrickEvent;
 import game.Brick.BrickEvent.EventType;
 import game.Brick.BrickGenMap.GenMap;
-import game.PlayerData.DataManager;
+import game.Player.PlayerData.DataManager;
 import game.PowerUp.Index.PowerUpManager;
 import org.Event.EventActionID;
 import org.Event.EventHandler;

@@ -17,13 +17,18 @@ public final class ElectricBallStat extends EntityStat {
     }
 
     @Override
-    public int getAttack() {
+    public int getBaseAttack() {
         return Voltraxis.getInstance().getVoltraxisStatManager().getActualAttack();
     }
 
     @Override
-    public int getDefence() {
+    public int getBaseDefense() {
         return 0;
+    }
+
+    @Override
+    public double getMaxHealthMultiplier() {
+        return 1;
     }
 
     @Override
@@ -57,12 +62,12 @@ public final class ElectricBallStat extends EntityStat {
     }
 
     @Override
-    public int getMaxHealth() {
+    public int getBaseMaxHealth() {
         return 0;
     }
 
     @Override
-    public double getMovementSpeed() {
+    public double getBaseMovementSpeed() {
         return 0;
     }
 

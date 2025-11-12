@@ -14,7 +14,7 @@ import org.GameObject.MonoBehaviour;
  */
 public class PlayerLives extends MonoBehaviour {
 
-    private int lives = PlayerData.MAX_LIVES;
+    private int lives = PlayerAttributes.MAX_LIVES;
     private boolean dead = false;
 
     private EventActionID ballsManager_onAllBallDestroyed_ID = null;

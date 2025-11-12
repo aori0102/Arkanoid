@@ -1,14 +1,14 @@
 package game.Ball;
 
 import game.Entity.EntityStat;
+import game.Player.Paddle.PaddleStat;
 import game.Player.Player;
+import game.Player.PlayerStatUIHandler;
 import org.GameObject.GameObject;
 
 public final class BallStat extends EntityStat {
 
-    private static final double BALL_CRITICAL_CHANCE = 0.27;
-    private static final double BALL_CRITICAL_AMOUNT = 0.59;
-    private static final int BALL_DAMAGE = 160;
+    private PaddleStat paddleStat = null;
 
     /**
      * Create this MonoBehaviour.
@@ -20,18 +20,23 @@ public final class BallStat extends EntityStat {
     }
 
     @Override
-    public int getAttack() {
-        return BALL_DAMAGE;
+    public void start() {
+        paddleStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
     }
 
     @Override
-    public int getDefence() {
+    public int getBaseAttack() {
+        return paddleStat.getBaseAttack();
+    }
+
+    @Override
+    public int getBaseDefense() {
         return 0;
     }
 
     @Override
     public double getAttackMultiplier() {
-        return 1;
+        return paddleStat.getAttackMultiplier();
     }
 
     @Override
@@ -51,21 +56,26 @@ public final class BallStat extends EntityStat {
 
     @Override
     public double getCriticalChance() {
-        return BALL_CRITICAL_CHANCE;
+        return paddleStat.getCriticalChance();
     }
 
     @Override
     public double getCriticalDamage() {
-        return BALL_CRITICAL_AMOUNT;
+        return paddleStat.getCriticalDamage();
     }
 
     @Override
-    public int getMaxHealth() {
+    public int getBaseMaxHealth() {
         return 0;
     }
 
     @Override
-    public double getMovementSpeed() {
+    public double getMaxHealthMultiplier() {
+        return 1;
+    }
+
+    @Override
+    public double getBaseMovementSpeed() {
         return 0;
     }
 

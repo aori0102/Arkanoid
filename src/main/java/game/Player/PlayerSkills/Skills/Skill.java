@@ -1,6 +1,8 @@
-package game.PlayerSkills.Skills;
+package game.Player.PlayerSkills.Skills;
 
-import game.PlayerSkills.SkillIndex;
+import game.Player.Paddle.PaddleStat;
+import game.Player.Player;
+import game.Player.PlayerSkills.SkillIndex;
 import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
@@ -18,6 +20,8 @@ public abstract class Skill extends MonoBehaviour {
      */
     private int _skillCharge = 0;
 
+    private PaddleStat paddleStat = null;
+
     public EventHandler<Void> onChargingRatioChanged = new EventHandler<>(Skill.class);
     public EventHandler<Void> onChargeAmountChanged = new EventHandler<>(Skill.class);
     public EventHandler<Void> onNewChargeObtained = new EventHandler<>(Skill.class);
@@ -34,9 +38,11 @@ public abstract class Skill extends MonoBehaviour {
     }
 
     @Override
-    public void awake() {
+    public void start() {
+        paddleStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
+
         setSkillCharge(getSkillIndex().maxSkillCharge);
-        setSkillCooldownTime(getSkillIndex().baseSkillCooldown);
+        setSkillCooldownTime(paddleStat.getSkillCooldown(getSkillIndex()));
     }
 
     @Override
@@ -71,7 +77,7 @@ public abstract class Skill extends MonoBehaviour {
     }
 
     private void resetCooldown() {
-        _skillCooldownTime = getSkillIndex().baseSkillCooldown;
+        _skillCooldownTime = paddleStat.getSkillCooldown(getSkillIndex());
     }
 
     /**
@@ -99,9 +105,10 @@ public abstract class Skill extends MonoBehaviour {
     }
 
     public double getChargingRatio() {
+        var base = paddleStat.getSkillCooldown(getSkillIndex());
         return maxCharge()
                 ? 1.0
-                : (getSkillIndex().baseSkillCooldown - _skillCooldownTime) / getSkillIndex().baseSkillCooldown;
+                : (base - _skillCooldownTime) / base;
     }
 
     public boolean hasCharge() {

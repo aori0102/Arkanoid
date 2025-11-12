@@ -1,4 +1,4 @@
-package game.PlayerData;
+package game.Player.PlayerData;
 
 public final class Record {
 

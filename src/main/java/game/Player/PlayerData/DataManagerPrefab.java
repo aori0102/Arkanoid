@@ -1,4 +1,4 @@
-package game.PlayerData;
+package game.Player.PlayerData;
 
 import org.GameObject.GameObject;
 import org.GameObject.GameObjectManager;

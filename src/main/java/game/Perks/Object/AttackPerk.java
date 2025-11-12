@@ -2,14 +2,10 @@ package game.Perks.Object;
 
 import game.Perks.Index.Perk;
 import game.Player.Paddle.PaddleStat;
-import game.Player.Player;
-import javafx.scene.input.MouseEvent;
 import org.Animation.AnimationClipData;
 import org.GameObject.GameObject;
 
 public final class AttackPerk extends Perk {
-
-    private static final double ADDITIONAL_MUlTIPLIER = 0.1;
 
     /**
      * Create this MonoBehaviour.
@@ -26,17 +22,28 @@ public final class AttackPerk extends Perk {
     }
 
     @Override
-    protected void setUpVisual() {
-        textUI.setText("Increase attack!");
-        perkKey = AnimationClipData.Attack_Perk;
+    protected String getPerkDescription(double amount) {
+        return "Increase attack by " + String.format("%.1f", amount * 100) + "%";
     }
 
     @Override
-    protected void perk_onPointerClicked(Object sender, MouseEvent e) {
-        super.perk_onPointerClicked(sender, e);
-        PaddleStat paddleStat = Player.getInstance().getPlayerPaddle().getPaddleStat();
+    protected double getMinModifierValue() {
+        return 0.1;
+    }
 
-        paddleStat.setAttackMultiplier(paddleStat.getAttackMultiplier() + ADDITIONAL_MUlTIPLIER);
+    @Override
+    protected double getMaxModifierValue() {
+        return 0.25;
+    }
+
+    @Override
+    protected AnimationClipData getPerkAnimationKey() {
+        return AnimationClipData.Attack_Perk;
+    }
+
+    @Override
+    protected void applyPerk(PaddleStat paddleStat) {
+        paddleStat.setAttackMultiplier(paddleStat.getAttackMultiplier() + getModifierValue());
     }
 
 }
