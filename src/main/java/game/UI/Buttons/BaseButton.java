@@ -68,7 +68,7 @@ public abstract class BaseButton extends MonoBehaviour {
         spriteAnimator.addAnimationClip(releasedKey);
         spriteAnimator.addAnimationClip(clickedKey);
         setupEventHandler();
-        spriteAnimator.getComponent(SpriteRenderer.class).setRenderLayer(RenderLayer.UI_Top);
+        spriteAnimator.getComponent(SpriteRenderer.class).setRenderLayer(RenderLayer.UI_4);
 
 
     }

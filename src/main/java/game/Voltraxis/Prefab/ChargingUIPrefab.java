@@ -33,7 +33,7 @@ public final class ChargingUIPrefab extends Prefab {
         var backgroundRenderer = backgroundObject.addComponent(SpriteRenderer.class);
         backgroundRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_Charging_Background.getImage());
         backgroundRenderer.setPivot(centerPivot);
-        backgroundRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        backgroundRenderer.setRenderLayer(RenderLayer.UI_3);
         backgroundRenderer.setSize(CHARGING_UI_RENDER_SIZE);
         backgroundObject.setParent(uiHolderObject);
 
@@ -42,7 +42,7 @@ public final class ChargingUIPrefab extends Prefab {
         var fillRenderer = fillObject.addComponent(SpriteRenderer.class);
         fillRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_Charging_Fill.getImage());
         fillRenderer.setPivot(centerPivot);
-        fillRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        fillRenderer.setRenderLayer(RenderLayer.UI_3);
         fillRenderer.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);
         fillRenderer.setSize(CHARGING_UI_RENDER_SIZE);
         fillObject.setParent(uiHolderObject);
@@ -52,7 +52,7 @@ public final class ChargingUIPrefab extends Prefab {
         var outlineRenderer = outlineObject.addComponent(SpriteRenderer.class);
         outlineRenderer.setImage(ImageAsset.ImageIndex.Voltraxis_UI_Charging_Outline.getImage());
         outlineRenderer.setPivot(centerPivot);
-        outlineRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        outlineRenderer.setRenderLayer(RenderLayer.UI_3);
         outlineRenderer.setSize(CHARGING_UI_RENDER_SIZE);
         outlineObject.setParent(uiHolderObject);
 

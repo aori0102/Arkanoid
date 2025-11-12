@@ -50,7 +50,7 @@ public final class LevelNotificationUI extends MonoBehaviour {
 
         // Configure the TextUI component
         levelText.setFontSize(LEVEL_TEXT_SIZE);
-        levelText.setRenderLayer(RenderLayer.UI_Middle);
+        levelText.setRenderLayer(RenderLayer.UI_3);
         levelText.setGradientFill(
                 GRADIENT_ANCHOR_START,
                 GRADIENT_ANCHOR_END,

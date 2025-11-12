@@ -23,7 +23,7 @@ public final class ScoreboardPrefab extends Prefab {
         var backgroundRenderer = GameObjectManager.instantiate("Background")
                 .addComponent(SpriteRenderer.class);
         backgroundRenderer.setImage(ImageAsset.ImageIndex.Player_UI_Scoreboard_Background.getImage());
-        backgroundRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        backgroundRenderer.setRenderLayer(RenderLayer.UI_3);
         backgroundRenderer.getTransform().setGlobalPosition(BACKGROUND_POSITION);
         backgroundRenderer.getGameObject().setParent(playerInfoObject);
 

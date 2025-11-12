@@ -18,7 +18,7 @@ public class SFXVolumeSlider extends MonoBehaviour {
         super(owner);
 
         slider = owner.addComponent(SliderComponent.class);
-        slider.setRenderLayer(RenderLayer._16);
+        slider.setRenderLayer(RenderLayer.UI_5);
 
     }
 

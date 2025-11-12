@@ -44,7 +44,7 @@ public final class GameOverInfoDisplayUIPrefab extends Prefab {
                 new Stop(0.0, TEXT_COLOR_GRADIENT_START),
                 new Stop(1.0, TEXT_COLOR_GRADIENT_END)
         );
-        labelText.setRenderLayer(RenderLayer.UI_Top);
+        labelText.setRenderLayer(RenderLayer.UI_4);
         labelText.getGameObject().setParent(gameOverInfoDisplayObject);
 
         // Backing amount text
@@ -60,7 +60,7 @@ public final class GameOverInfoDisplayUIPrefab extends Prefab {
                 new Stop(0.0, BACKING_COLOR_GRADIENT_START),
                 new Stop(1.0, BACKING_COLOR_GRADIENT_END)
         );
-        backingAmountText.setRenderLayer(RenderLayer.UI_Top);
+        backingAmountText.setRenderLayer(RenderLayer.UI_4);
         backingAmountText.getGameObject().setParent(gameOverInfoDisplayObject);
 
         // Amount text
@@ -76,7 +76,7 @@ public final class GameOverInfoDisplayUIPrefab extends Prefab {
                 new Stop(0.0, TEXT_COLOR_GRADIENT_START),
                 new Stop(1.0, TEXT_COLOR_GRADIENT_END)
         );
-        amountText.setRenderLayer(RenderLayer.UI_Top);
+        amountText.setRenderLayer(RenderLayer.UI_4);
         amountText.getGameObject().setParent(gameOverInfoDisplayObject);
 
         // Link component

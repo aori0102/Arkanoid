@@ -138,12 +138,12 @@ public class RecordUI extends MonoBehaviour {
      * The background is set lower than the text fields to ensure proper layering.
      */
     private void setRenderLayer() {
-        background.setRenderLayer(RenderLayer.UI_Bottom);
-        recordRanking.setRenderLayer(RenderLayer.UI_Middle);
-        rank.setRenderLayer(RenderLayer.UI_Middle);
-        score.setRenderLayer(RenderLayer.UI_Middle);
-        numberOfBrickDestroyed.setRenderLayer(RenderLayer.UI_Middle);
-        levelCleared.setRenderLayer(RenderLayer.UI_Middle);
+        background.setRenderLayer(RenderLayer.UI_2);
+        recordRanking.setRenderLayer(RenderLayer.UI_3);
+        rank.setRenderLayer(RenderLayer.UI_3);
+        score.setRenderLayer(RenderLayer.UI_3);
+        numberOfBrickDestroyed.setRenderLayer(RenderLayer.UI_3);
+        levelCleared.setRenderLayer(RenderLayer.UI_3);
     }
 
     /**

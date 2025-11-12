@@ -48,7 +48,7 @@ public final class ScoreUIPrefab extends Prefab {
         scoreText.setText(SCORE_TEXT_DEFAULT);
         scoreText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         scoreText.setVerticalAlignment(TextVerticalAlignment.Middle);
-        scoreText.setRenderLayer(RenderLayer.UI_Middle);
+        scoreText.setRenderLayer(RenderLayer.UI_3);
         scoreText.getGameObject().setParent(scoreUI.getGameObject());
         scoreText.getTransform().setGlobalPosition(SCORE_TEXT_POSITION);
 
@@ -66,7 +66,7 @@ public final class ScoreUIPrefab extends Prefab {
         levelText.setText(LEVEL_TEXT_DEFAULT);
         levelText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         levelText.setVerticalAlignment(TextVerticalAlignment.Middle);
-        levelText.setRenderLayer(RenderLayer.UI_Middle);
+        levelText.setRenderLayer(RenderLayer.UI_3);
         levelText.getGameObject().setParent(scoreUI.getGameObject());
         levelText.getTransform().setGlobalPosition(LEVEL_TEXT_POSITION);
 
@@ -84,7 +84,7 @@ public final class ScoreUIPrefab extends Prefab {
         comboText.setText(COMBO_TEXT_DEFAULT);
         comboText.setHorizontalAlignment(TextHorizontalAlignment.Center);
         comboText.setVerticalAlignment(TextVerticalAlignment.Middle);
-        comboText.setRenderLayer(RenderLayer.UI_Middle);
+        comboText.setRenderLayer(RenderLayer.UI_3);
         comboText.getGameObject().setParent(scoreUI.getGameObject());
         comboText.getTransform().setGlobalPosition(COMBO_TEXT_POSITION);
 

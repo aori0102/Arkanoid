@@ -36,7 +36,7 @@ public final class RankUIPrefab extends Prefab {
                 .addComponent(SpriteRenderer.class);
         expBarBackgroundRenderer.setImage(ImageAsset.ImageIndex.Player_UI_Rank_Background.getImage());
         expBarBackgroundRenderer.setPivot(centerPivot);
-        expBarBackgroundRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        expBarBackgroundRenderer.setRenderLayer(RenderLayer.UI_3);
         expBarBackgroundRenderer.getTransform().setGlobalPosition(EXP_BAR_POSITION);
         expBarBackgroundRenderer.getGameObject().setParent(rankUIObject);
 
@@ -45,7 +45,7 @@ public final class RankUIPrefab extends Prefab {
                 .addComponent(SpriteRenderer.class);
         expBarFillRenderer.setImage(ImageAsset.ImageIndex.Player_UI_Rank_Fill.getImage());
         expBarFillRenderer.setPivot(centerPivot);
-        expBarFillRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        expBarFillRenderer.setRenderLayer(RenderLayer.UI_3);
         expBarFillRenderer.setFillType(SpriteRenderer.FillType.Horizontal_LeftToRight);
         expBarFillRenderer.setFillAmount(0.0);
         expBarFillRenderer.getTransform().setGlobalPosition(EXP_BAR_POSITION);
@@ -56,7 +56,7 @@ public final class RankUIPrefab extends Prefab {
                 .addComponent(SpriteRenderer.class);
         expBarOutlineRenderer.setImage(ImageAsset.ImageIndex.Player_UI_Rank_Outline.getImage());
         expBarOutlineRenderer.setPivot(centerPivot);
-        expBarOutlineRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        expBarOutlineRenderer.setRenderLayer(RenderLayer.UI_3);
         expBarOutlineRenderer.getTransform().setGlobalPosition(EXP_BAR_POSITION);
         expBarOutlineRenderer.getGameObject().setParent(rankUIObject);
 
@@ -69,7 +69,7 @@ public final class RankUIPrefab extends Prefab {
         rankText.setHorizontalAlignment(TextHorizontalAlignment.Left);
         rankText.setVerticalAlignment(TextVerticalAlignment.Top);
         rankText.setSolidFill(RANK_TEXT_COLOR);
-        rankText.setRenderLayer(RenderLayer.UI_Middle);
+        rankText.setRenderLayer(RenderLayer.UI_3);
         rankText.getTransform().setGlobalPosition(RANK_TEXT_POSITION);
         rankText.getGameObject().setParent(rankUIObject);
 
@@ -78,7 +78,7 @@ public final class RankUIPrefab extends Prefab {
                 .addComponent(SpriteRenderer.class);
         rankUpIconRenderer.setImage(ImageAsset.ImageIndex.Player_UI_Rank_LevelUpIcon.getImage());
         rankUpIconRenderer.setPivot(centerPivot);
-        rankUpIconRenderer.setRenderLayer(RenderLayer.UI_Middle);
+        rankUpIconRenderer.setRenderLayer(RenderLayer.UI_3);
         rankUpIconRenderer.getTransform().setGlobalPosition(RANK_UP_ICON_POSITION);
         rankUpIconRenderer.getGameObject().setParent(rankUIObject);
 

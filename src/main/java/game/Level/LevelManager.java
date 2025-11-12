@@ -54,7 +54,6 @@ public final class LevelManager extends MonoBehaviour implements
     private LevelState _levelState = LevelState.IntroducingLevel;
 
     private int levelIndex = 0;                 // Current level index
-    private int clearedLevel = 0;               // Number of levels cleared
     private double mapClearingStartTick = 0.0;  // Timestamp when map cleaning started
     private LevelType currentLevelType = LevelType.Normal;
 
@@ -261,7 +260,6 @@ public final class LevelManager extends MonoBehaviour implements
      */
     private void endLevel() {
         onLevelCleared.invoke(this, null);
-        clearedLevel = levelIndex + 1;
         setLevelState(LevelState.ConcludingLevel);
         cleanUpMap();
         displayLevelCleared();
@@ -387,8 +385,8 @@ public final class LevelManager extends MonoBehaviour implements
     private void onGameOver() {
         DataManager.getInstance().updateSave();
         DataManager.getInstance().generateNewRecord();
-        DataManager.getInstance().resetSave();
         onGameOver.invoke(this, null);
+        DataManager.getInstance().resetSave();
     }
 
     /**
@@ -402,7 +400,7 @@ public final class LevelManager extends MonoBehaviour implements
      * Get number of cleared levels.
      */
     public int getClearedLevel() {
-        return clearedLevel;
+        return levelIndex + 1;
     }
 
     public LevelType getCurrentLevelType() {

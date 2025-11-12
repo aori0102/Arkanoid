@@ -16,7 +16,7 @@ public class MusicVolumeSlider extends MonoBehaviour {
     public MusicVolumeSlider(GameObject owner) {
         super(owner);
         slider = owner.addComponent(SliderComponent.class);
-        slider.setRenderLayer(RenderLayer._16);
+        slider.setRenderLayer(RenderLayer.UI_5);
 
     }
 

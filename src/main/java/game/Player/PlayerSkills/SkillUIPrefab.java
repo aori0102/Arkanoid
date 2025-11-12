@@ -36,14 +36,14 @@ public final class SkillUIPrefab extends Prefab {
                 .addComponent(SpriteRenderer.class);
         skillBackgroundRenderer.setImage(ImageAsset.ImageIndex.Player_UI_Skill_SkillBackground.getImage());
         skillBackgroundRenderer.setPivot(centerPivot);
-        skillBackgroundRenderer.setRenderLayer(RenderLayer.UI_Top);
+        skillBackgroundRenderer.setRenderLayer(RenderLayer.UI_3);
         skillBackgroundRenderer.getGameObject().setParent(skillUIObject);
 
         // Skill icon
         var skillIconRenderer = GameObjectManager.instantiate("SkillIcon")
                 .addComponent(SpriteRenderer.class);
         skillIconRenderer.setPivot(centerPivot);
-        skillIconRenderer.setRenderLayer(RenderLayer.UI_Top);
+        skillIconRenderer.setRenderLayer(RenderLayer.UI_3);
         skillIconRenderer.getGameObject().setParent(skillUIObject);
 
         // Not ready overlay
@@ -51,7 +51,7 @@ public final class SkillUIPrefab extends Prefab {
                 .addComponent(SpriteRenderer.class);
         notReadyOverlayRenderer.setImage(ImageAsset.ImageIndex.Player_UI_Skill_NotReadyOverlay.getImage());
         notReadyOverlayRenderer.setPivot(centerPivot);
-        notReadyOverlayRenderer.setRenderLayer(RenderLayer.UI_Top);
+        notReadyOverlayRenderer.setRenderLayer(RenderLayer.UI_3);
         notReadyOverlayRenderer.getGameObject().setParent(skillUIObject);
 
         // Ready overlay
@@ -59,7 +59,7 @@ public final class SkillUIPrefab extends Prefab {
                 .addComponent(SpriteRenderer.class);
         readyOverlayRenderer.setImage(ImageAsset.ImageIndex.Player_UI_Skill_ReadyOverlay.getImage());
         readyOverlayRenderer.setPivot(centerPivot);
-        readyOverlayRenderer.setRenderLayer(RenderLayer.UI_Top);
+        readyOverlayRenderer.setRenderLayer(RenderLayer.UI_3);
         readyOverlayRenderer.getGameObject().setParent(skillUIObject);
 
         // Charging ring
@@ -69,7 +69,7 @@ public final class SkillUIPrefab extends Prefab {
         chargingRingRenderer.setPivot(centerPivot);
         chargingRingRenderer.setFillType(SpriteRenderer.FillType.Radial_CounterClockwise);
         chargingRingRenderer.setRadialStartPoint(SpriteRenderer.RadialStartPoint.Top);
-        chargingRingRenderer.setRenderLayer(RenderLayer.UI_Top);
+        chargingRingRenderer.setRenderLayer(RenderLayer.UI_3);
         chargingRingRenderer.getGameObject().setParent(skillUIObject);
 
         // Tooltip
@@ -82,7 +82,7 @@ public final class SkillUIPrefab extends Prefab {
                 .addComponent(SpriteRenderer.class);
         tooltipBackgroundRenderer.setImage(ImageAsset.ImageIndex.Player_UI_Skill_TooltipBackground.getImage());
         tooltipBackgroundRenderer.setPivot(centerPivot);
-        tooltipBackgroundRenderer.setRenderLayer(RenderLayer.UI_Top);
+        tooltipBackgroundRenderer.setRenderLayer(RenderLayer.UI_3);
         tooltipBackgroundRenderer.getGameObject().setParent(tooltipObject);
 
         // Tooltip key
@@ -92,7 +92,7 @@ public final class SkillUIPrefab extends Prefab {
         toolTipKeyText.setSolidFill(TOOLTIP_TEXT_COLOR);
         toolTipKeyText.setVerticalAlignment(TextVerticalAlignment.Middle);
         toolTipKeyText.setHorizontalAlignment(TextHorizontalAlignment.Center);
-        toolTipKeyText.setRenderLayer(RenderLayer.UI_Top);
+        toolTipKeyText.setRenderLayer(RenderLayer.UI_3);
         toolTipKeyText.setFont(FontDataIndex.Jersey_25);
         toolTipKeyText.getGameObject().setParent(tooltipObject);
 
@@ -103,7 +103,7 @@ public final class SkillUIPrefab extends Prefab {
         chargeText.setSolidFill(CHARGE_TEXT_COLOR);
         chargeText.setVerticalAlignment(TextVerticalAlignment.Middle);
         chargeText.setHorizontalAlignment(TextHorizontalAlignment.Center);
-        chargeText.setRenderLayer(RenderLayer.UI_Top);
+        chargeText.setRenderLayer(RenderLayer.UI_3);
         chargeText.setFont(FontDataIndex.Jersey_25);
         chargeText.getGameObject().setParent(skillUIObject);
         chargeText.getTransform().setLocalPosition(CHARGE_TEXT_OFFSET);
@@ -113,7 +113,7 @@ public final class SkillUIPrefab extends Prefab {
                 .addComponent(SpriteRenderer.class);
         chargingNobRenderer.setImage(ImageAsset.ImageIndex.Player_UI_Skill_ChargingIndicatorNob.getImage());
         chargingNobRenderer.setPivot(centerPivot);
-        chargingNobRenderer.setRenderLayer(RenderLayer.UI_Top);
+        chargingNobRenderer.setRenderLayer(RenderLayer.UI_3);
         chargingNobRenderer.getGameObject().setParent(skillUIObject);
 
         // Link component

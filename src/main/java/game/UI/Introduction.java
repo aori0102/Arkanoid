@@ -37,8 +37,8 @@ public class Introduction extends MonoBehaviour {
         logo.setPivot(new Vector2(0.5, 0.5));
         logo.getTransform().setGlobalPosition(new Vector2(Main.STAGE_WIDTH/2, Main.STAGE_HEIGHT/2));
 
-        logo.setRenderLayer(RenderLayer.UI_Top);
-        blackBackground.setRenderLayer(RenderLayer.UI_Bottom);
+        logo.setRenderLayer(RenderLayer.UI_4);
+        blackBackground.setRenderLayer(RenderLayer.UI_2);
 
         logo.setImage(ImageAsset.ImageIndex.Nidemoka.getImage());
         blackBackground.setImage(ImageAsset.ImageIndex.BlackBackground.getImage());
