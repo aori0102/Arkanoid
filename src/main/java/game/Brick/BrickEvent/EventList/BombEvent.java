@@ -10,6 +10,14 @@ import java.util.List;
 
 import static game.Brick.Init.*;
 
+/**
+ * Represents a "Bomb" event on the brick grid.
+ * <p>
+ * When triggered by its host brick's destruction, this event targets the
+ * eight adjacent (neighboring) bricks for a delayed explosion.
+ * The targeted bricks will blink for a short duration ({@code EXECUTE_TIME} ticks)
+ * before taking a large amount of damage.
+ */
 public class BombEvent implements Event {
 
     private final int rowData;
@@ -29,6 +37,13 @@ public class BombEvent implements Event {
         this.targets = new ArrayList<>();
     }
 
+    /**
+     * Initializes a new BombEvent.
+     *
+     * @param row    The number of rows in the grid.
+     * @param col    The number of columns in the grid.
+     * @param matrix A reference to the main 2D brick grid.
+     */
     @Override
     public void runEvent() {
         timeAccum += Time.getDeltaTime();
@@ -74,6 +89,14 @@ public class BombEvent implements Event {
         }
     }
 
+    /**
+     * Executes the event's update logic (the countdown).
+     * <p>
+     * This method is called continuously. It handles the timing,
+     * creates the blinking effect (red/yellow) for the 8 target bricks,
+     * and finally applies the explosion damage ({@code DAMAGE}) when the
+     * countdown ({@code EXECUTE_TIME}) finishes. It then resets itself.
+     */
     @Override
     public void getStartEvent(int r, int c) {
         if (valid(brickGrid, r, c)) {

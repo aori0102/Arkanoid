@@ -7,7 +7,7 @@ Group [Số nhóm] - Class [Mã lớp]
 3. [Họ tên 3] - [MSSV 3]
 4. Đào Văn Đức - 24021409
 
-**Instructor**: Kiều Văn Tuyên / Trần Việt Cường
+**Instructor**: Kiều Văn Tuyên / Trần Hoàng Việt
 
 **Semester**: HK1/2025-2026
 
@@ -35,17 +35,10 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 ## UML Diagram
 
 ### Class Diagram
-![Class Diagram](docs/uml/class-diagram.png)
-
-_Có thể sử dụng IntelliJ để generate ra Class Diagrams: https://www.youtube.com/watch?v=yCkTqNxZkbY_
-
-*Complete UML diagrams are available in the `docs/uml/` folder*
-
+![Sơ đồ UML](src/UML/Arkanoid.drawio.svg)
 ---
 
 ## Design Patterns Implementation
-
-_Có dùng hay không và dùng ở đâu_
 
 ### 1. Singleton Pattern
 **Used in:** `GameManager`, `AudioManager`, `ResourceLoader`
@@ -55,45 +48,48 @@ _Có dùng hay không và dùng ở đâu_
 ### 2. Strategy Pattern
 **Used in:** `BrickEvent`, `BrickGenMap`
 
-**Purpose:** 
+**Purpose:** Allows defining a family of algorithms (e.g., different event logics or map generation styles), putting each into a separate class, and making their objects interchangeable.
 ### 3. Factory Pattern
 **Used in:**
 
-**Purpose:**
+**Purpose:** Provides an interface for creating objects, but lets subclasses (or handler classes) decide which class to instantiate. It centralizes object creation logic.
 
 ### 4.Composite Pattern
 **Used in:**
 
-**Purpose:** 
+**Purpose:** Lets you compose objects into tree structures to represent part-whole hierarchies. It allows clients to treat individual objects and compositions of objects uniformly.
 
 ### 5. Adapter
 **Used in:**
 
-**Purpose:**
+**Purpose:** Allows objects with incompatible interfaces to collaborate. It acts as a wrapper or translator between two different interfaces.
 ### 6. Prototype
-**Used in:**
+**Used in:** `Brick.Init`
 
-**Purpose:**
+**Purpose:** Lets you copy existing objects (prototypes) without making your code dependent on their concrete classes. Ideal for creating new objects by cloning a pre-configured template.
 
 ### 7. Chain of Responsibility
 **Used in:** `balanceRule`
 
-**Purpose:**
+**Purpose:** Lets you pass requests along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.
 
+### 8. FlyWeight
+**Used in:** ``
 
+**Purpose:** Purpose: Lets you fit more objects into the available RAM by sharing common (intrinsic) state between multiple objects instead of keeping all data in each object.
 
 ---
 
 ## Multithreading Implementation
-Không sử dụng hay cài đặt
-
+No implement.
 ---
 
 ## Installation
 
 1. Clone the project from the repository.
 2. Open the project in the IDE.
-3. Run the project.
+3. Download VLC application.
+4. Run the project.
 
 ## Usage
 
@@ -157,10 +153,10 @@ Không sử dụng hay cài đặt
 ![Main Menu](docs/screenshots/menu.png)
 
 **Gameplay**  
-![Gameplay](docs/screenshots/gameplay.png)
+![Gameplay](src/UML/GamePlay.png)
 
 **Power-ups in Action**  
-![Power-ups](docs/screenshots/powerups.png)
+![Power-ups](src/UML/PowerUp.png)
 
 **Leaderboard**  
 ![Leaderboard](docs/screenshots/leaderboard.png)
@@ -221,5 +217,5 @@ This project is developed for educational purposes only.
 
 ---
 
-*Last updated: [Ngày/Tháng/Năm]*
+*Last updated: [12/11/2025]*
 

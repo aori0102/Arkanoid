@@ -11,6 +11,23 @@ import java.util.Random;
 
 import static game.Brick.Init.*;
 
+/**
+ * Represents a "Wheel" or "Column Strike" event.
+ * <p>
+ * This is a two-phase event that is functionally similar to {@link RockEvent} but
+ * operates on randomly selected columns instead of an expanding cross-wave.
+ * <ol>
+ * <li><b>Detection Phase:</b> When triggered (by destroying the host brick at (r, c)),
+ * this event does *not* act at its own location. Instead, it randomly selects
+ * two columns on the grid and spawns a "beam" at the very top (row 0) of each.
+ * This beam travels straight down, setting bricks to `maxBrightness` as a warning.</li>
+ * <li><b>Destruction Phase:</b> After a beam hits the bottom of the grid, it
+ * restarts at the top (row 0) of the same column and enters the destruction phase.
+ * It travels down again, but now on a 4-tick cycle: blink (red/yellow) for 3 ticks,
+ * then destroy the brick on the 4th tick, then move down.</li>
+ * </ol>
+ * This process repeats until the destruction beam also travels off the bottom of the grid.
+ */
 public class WheelEvent implements Event {
 
     private final int rowData;
@@ -28,6 +45,13 @@ public class WheelEvent implements Event {
         this.brickGrid = matrix;
     }
 
+    /**
+     * An inner class that represents a single vertical "beam"
+     * traveling straight down a column.
+     * <p>
+     * This object manages the state of one beam, tracking its vertical position
+     * and its internal 4-tick destruction timer.
+     */
     static class cellExecute {
         private final int row;
         private final int colBound;
@@ -75,6 +99,14 @@ public class WheelEvent implements Event {
         }
     }
 
+
+    /**
+     * The main update loop for all active WheelEvent beams.
+     * <p>
+     * This method manages the two lists of beams (detection and destruction).
+     * It processes each beam, transitions beams from detection to destruction when they
+     * hit the bottom, and removes destruction beams when they hit the bottom a second time.
+     */
     @Override
     public void runEvent() {
         timeAccum += Time.getDeltaTime();
@@ -144,21 +176,34 @@ public class WheelEvent implements Event {
         obj.execute();
     }
 
+    /**
+     * Triggers the WheelEvent.
+     * <p>
+     * This method destroys the host brick at (r, c). It then randomly selects
+     * two columns from the grid (or fewer if the grid is narrower than 2 columns).
+     * For each selected column, it creates a new {@link cellExecute} beam
+     * starting at row 0 of that column and adds it to the 'detection' list.
+     *
+     * @param r The row index of the brick that triggered the event.
+     * @param c The column index of the brick that triggered the event.
+     */
     @Override
     public void getStartEvent(int r, int c) {
-        timeAccum = 0.0;
-        destroyBrick(brickGrid, r, c);
+        if(valid(brickGrid, r, c)) {
+            timeAccum = 0.0;
+            destroyBrick(brickGrid, r, c);
 
-        List<Integer> allCols = new ArrayList<>();
-        for (int i = 0; i < colData; i++) allCols.add(i);
-        Collections.shuffle(allCols, rng);
+            List<Integer> allCols = new ArrayList<>();
+            for (int i = 0; i < colData; i++) allCols.add(i);
+            Collections.shuffle(allCols, rng);
 
-        int numCols = Math.min(2, colData);
-        for (int i = 0; i < numCols; i++) {
-            int col = allCols.get(i);
-            if (!valid(brickGrid, 0, col)) continue;
-            IntPair start = new IntPair(0, col);
-            listDectecPhare.add(new cellExecute(start, rowData, colData));
+            int numCols = Math.min(2, colData);
+            for (int i = 0; i < numCols; i++) {
+                int col = allCols.get(i);
+                if (!valid(brickGrid, 0, col)) continue;
+                IntPair start = new IntPair(0, col);
+                listDectecPhare.add(new cellExecute(start, rowData, colData));
+            }
         }
     }
 }

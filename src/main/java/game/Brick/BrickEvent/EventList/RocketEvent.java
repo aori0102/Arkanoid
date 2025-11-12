@@ -13,6 +13,15 @@ import java.util.Random;
 
 import static game.Brick.Init.*;
 
+/**
+ * Represents a "Rocket" event on the brick grid.
+ * <p>
+ * This event functions similarly to an {@link AngelEvent} but deals a massive
+ * amount of damage instead of healing. When triggered by its host brick's destruction,
+ * it randomly selects up to {@code MAX_TARGETS} other living bricks.
+ * These targets will blink (red/max-brightness) for a delay period
+ * ({@code EXECUTE_TIME} ticks) before being hit with devastating damage.
+ */
 public class RocketEvent implements Event {
 
     private final int rowData;
@@ -26,6 +35,13 @@ public class RocketEvent implements Event {
     private int executeTime = 0;
     private double timeAccum = 0.0;
 
+    /**
+     * Initializes a new RocketEvent.
+     *
+     * @param row    The number of rows in the grid.
+     * @param col    The number of columns in the grid.
+     * @param matrix A reference to the main 2D brick grid.
+     */
     public RocketEvent(int row, int col, List<List<Brick>> matrix) {
         this.rowData = row;
         this.colData = col;
@@ -33,6 +49,14 @@ public class RocketEvent implements Event {
         this.targets = new ArrayList<>();
     }
 
+    /**
+     * Executes the event's update logic (the countdown to impact).
+     * <p>
+     * This method is called continuously. It handles the timing,
+     * creates the blinking effect (red/max-brightness) for the random targets,
+     * and finally applies the massive damage ({@code DAMAGE}) when the
+     * countdown ({@code EXECUTE_TIME}) finishes. It then resets itself.
+     */
     @Override
     public void runEvent() {
         timeAccum += Time.getDeltaTime();
@@ -83,6 +107,17 @@ public class RocketEvent implements Event {
         }
     }
 
+    /**
+     * Triggers the rocket event at a specific location.
+     * <p>
+     * This method is typically called when the brick containing this event is destroyed.
+     * It will destroy the brick at (r, c), find all other living bricks,
+     * randomly select up to {@code MAX_TARGETS} of them, and add them to the
+     * {@code targets} list. It then sets {@code flag = true} to begin the rocket impact countdown.
+     *
+     * @param r The row index of the brick that triggered the event.
+     * @param c The column index of the brick that triggered the event.
+     */
     @Override
     public void getStartEvent(int r, int c) {
         if (valid(brickGrid, r, c)) {

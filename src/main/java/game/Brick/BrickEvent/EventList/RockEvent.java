@@ -8,6 +8,21 @@ import java.util.*;
 
 import static game.Brick.Init.*;
 
+/**
+ * Represents a "Rock" or "Cross-Wave" event on the brick grid.
+ * <p>
+ * This is a two-phase event.
+ * <ol>
+ * <li><b>Detection Phase:</b> When triggered, a wave starts from the origin (r, c)
+ * and expands one cell at a time in all four cardinal directions (up, down, left, right),
+ * forming an expanding "plus" sign. Bricks on this path are set to max brightness as a warning.
+ * This phase lasts until all four arms of the wave are off the grid.</li>
+ * <li><b>Destruction Phase:</b> The wave then resets to the origin and expands outwards again.
+ * This time, it operates on a 4-tick cycle: for 3 ticks, it blinks the bricks
+ * on its path (red/yellow), and on the 4th tick, it destroys them. This
+ * pulsing destruction continues until the wave expands off the grid a second time.</li>
+ * </ol>
+ */
 public class RockEvent implements Event {
     private final int rowData;
     private final int colData;
@@ -17,12 +32,25 @@ public class RockEvent implements Event {
     private List<cellExecute> listDectecPhare = new ArrayList<>();
     private List<cellExecute> listDestroyPhare = new ArrayList<>();
 
+    /**
+     * Initializes a new RockEvent.
+     *
+     * @param row    The number of rows in the grid.
+     * @param col    The number of columns in the grid.
+     * @param matrix A reference to the main 2D brick grid.
+     */
     public RockEvent(int row, int col, List<List<Brick>> matrix) {
         this.rowData = row;
         this.colData = col;
         this.brickGrid = matrix;
     }
 
+    /**
+     * An inner class that represents a single expanding "cross-wave".
+     * <p>
+     * This object manages the state of one event, tracking the four expanding
+     * "arms" of the wave and its internal state (like the destruction timer).
+     */
     static class cellExecute {
         private final int row, col;
         private final IntPair start;
@@ -95,6 +123,14 @@ public class RockEvent implements Event {
         }
     }
 
+    /**
+     * The main update loop for all active RockEvents.
+     * <p>
+     * This method manages the two lists of waves (detection and destruction).
+     * It processes each wave, moves waves from detection to destruction when they
+     * go out of bounds, and removes waves from destruction when they go out of bounds
+     * a second time.
+     */
     @Override
     public void runEvent() {
 
@@ -178,6 +214,16 @@ public class RockEvent implements Event {
         obj.execute();
     }
 
+    /**
+     * Triggers the rock event at a specific location.
+     * <p>
+     * This method is typically called when the brick containing this event is destroyed.
+     * It destroys the host brick at (r, c) and creates a new {@link cellExecute} wave
+     * at that position, adding it to the 'detection' list to start the two-phase process.
+     *
+     * @param r The row index of the brick that triggered the event.
+     * @param c The column index of the brick that triggered the event.
+     */
     @Override
     public void getStartEvent(int r, int c) {
         if (valid(brickGrid, r, c)) {

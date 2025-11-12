@@ -13,6 +13,14 @@ import java.util.Random;
 
 import static game.Brick.Init.*;
 
+/**
+ * Represents an "Angel" event on the brick grid.
+ * <p>
+ * When this event is triggered (usually by destroying its host brick),
+ * it randomly selects several other bricks on the board and "heals"
+ * (increases their health) after a delay.
+ * During the delay, the target bricks will blink to indicate they are targeted.
+ */
 public class AngelEvent implements Event {
 
     private final int rowData; // size of row
@@ -34,7 +42,11 @@ public class AngelEvent implements Event {
     }
 
     /**
-     * Execute
+     * Initializes a new AngelEvent.
+     *
+     * @param row    The number of rows in the grid.
+     * @param col    The number of columns in the grid.
+     * @param matrix A reference to the main 2D brick grid.
      */
     @Override
     public void runEvent() {
