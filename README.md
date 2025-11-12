@@ -122,17 +122,17 @@ No implement.
 
 ### Bricks
 
-| Icon | Name | Effect | Health |
-|---|---|---|---|
-| <img src="src/main/resources/Brick/brick_normal.png" width="50px"> | Normal | No Effect | 36 |
-| <img src="src/main/resources/Brick/SteelBrick.png" width="50px"> | Steel | No Effect | 90 |
-| <img src="src/main/resources/Brick/DiamondBrick.png" width="50px"> | Diamond | No Effect | 999 |
-| <img src="src/main/resources/Brick/RockBrick.png" width="50px"> | Rock | Destroy all brick in same column or same row | 90 |
-| <img src="src/main/resources/Brick/RocketBrick.png" width="50px"> | Rocket | Select amount of random brick then destroy them | 90 |
-| <img src="src/main/resources/Brick/RebornBrick.png" width="50px"> | Wheel | Destroy all brick in two random column | 90 |
-| <img src="src/main/resources/Brick/GiftBrick.png" width="50px"> | Gift | Increase amount of health for all brick that have same side with it | 90 |
-| <img src="src/main/resources/Brick/BombBrick.png" width="50px"> | Bomb | Destroy all brick that have same side | 90 |
-| <img src="src/main/resources/Brick/AngelBrick.png" width="50px"> | Angel | Increase amount of health for some random brick | 90 |
+| Icon | Name | Effect | Health | Score |
+|---|---|---|--------|-------|
+| <img src="src/main/resources/Brick/brick_normal.png" width="50px"> | Normal | No Effect | 36     | 2     |
+| <img src="src/main/resources/Brick/SteelBrick.png" width="50px"> | Steel | No Effect | 80     | 6     | 
+| <img src="src/main/resources/Brick/DiamondBrick.png" width="50px"> | Diamond | No Effect | 999    | 8     |
+| <img src="src/main/resources/Brick/RockBrick.png" width="50px"> | Rock | Destroy all brick in same column or same row | 100    | 4     | 
+| <img src="src/main/resources/Brick/RocketBrick.png" width="50px"> | Rocket | Select amount of random brick then destroy them | 100    | 7     | 
+| <img src="src/main/resources/Brick/RebornBrick.png" width="50px"> | Wheel | Destroy all brick in two random column | 100    | 3     | 
+| <img src="src/main/resources/Brick/GiftBrick.png" width="50px"> | Gift | Increase amount of health for all brick that have same side with it | 100    | 2     |
+| <img src="src/main/resources/Brick/BombBrick.png" width="50px"> | Bomb | Destroy all brick that have same side | 100    | 4     |
+| <img src="src/main/resources/Brick/AngelBrick.png" width="50px"> | Angel | Increase amount of health for some random brick | 100    | 5     | 
 
 
 
