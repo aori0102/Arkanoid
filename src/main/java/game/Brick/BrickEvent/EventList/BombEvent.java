@@ -20,34 +20,26 @@ import static game.Brick.Init.*;
  */
 public class BombEvent implements Event {
 
-    private final int rowData;
-    private final int colData;
     private final List<List<Brick>> brickGrid;
-    private final int EXECUTE_TIME = 18;
-    private final int DAMAGE = 3000;
+    private static final int EXECUTE_TIME = 18;
+    private static final int DAMAGE = 3000;
     private boolean flag = false;
     private final List<IntPair> targets;
     private int executeTime = 0;
-    private double timeAccum = 0.0;
+    private double timeAccumulated = 0.0;
 
     public BombEvent(int row, int col, List<List<Brick>> matrix) {
-        this.rowData = row;
-        this.colData = col;
         this.brickGrid = matrix;
         this.targets = new ArrayList<>();
     }
 
     /**
      * Initializes a new BombEvent.
-     *
-     * @param row    The number of rows in the grid.
-     * @param col    The number of columns in the grid.
-     * @param matrix A reference to the main 2D brick grid.
      */
     @Override
     public void runEvent() {
-        timeAccum += Time.getDeltaTime();
-        if (timeAccum >= UPDATE_INTERVAL && executeTime == EXECUTE_TIME && flag) {
+        timeAccumulated += Time.getDeltaTime();
+        if (timeAccumulated >= UPDATE_INTERVAL && executeTime == EXECUTE_TIME && flag) {
             for (var index : targets) {
                 int r = index.fi();
                 int c = index.se();
@@ -83,9 +75,9 @@ public class BombEvent implements Event {
             }
         }
 
-        if (timeAccum >= UPDATE_INTERVAL) {
-            if(flag) executeTime++;
-            timeAccum = 0;
+        if (timeAccumulated >= UPDATE_INTERVAL) {
+            if (flag) executeTime++;
+            timeAccumulated = 0;
         }
     }
 
@@ -117,7 +109,7 @@ public class BombEvent implements Event {
             }
 
             flag = true;
-            timeAccum = 0;
+            timeAccumulated = 0;
             executeTime = 0;
         }
     }

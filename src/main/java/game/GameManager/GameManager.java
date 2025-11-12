@@ -71,13 +71,6 @@ public class GameManager extends MonoBehaviour {
         switch (gameLoadingState) {
             case WaitForSpawn -> gameLoadingState = GameLoadingState.LoadProgress;
             case LoadProgress -> {
-                ScoreManager.getInstance().loadProgress();
-                RankManager.getInstance().loadProgress();
-                BrickMapManager.getInstance().loadProgress();
-                LevelManager.getInstance().loadProgress();
-                Player.getInstance().getPlayerPaddle().getPaddleStat().loadProgress();
-                Player.getInstance().getPlayerPaddle().getPaddleHealth().loadProgress();
-                Player.getInstance().getPlayerLives().loadProgress();
                 gameLoadingState = GameLoadingState.StartGame;
             }
             case StartGame -> {

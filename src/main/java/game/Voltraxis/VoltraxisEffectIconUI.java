@@ -35,14 +35,6 @@ public class VoltraxisEffectIconUI extends MonoBehaviour {
         getTransform().setLocalPosition(targetPosition);
     }
 
-    /**
-     * Initiate the pulse effect for this icon, making it
-     * constantly fading and reappearing.
-     */
-    void setPulse() {
-
-    }
-
     public void setEffectIndex(VoltraxisData.EffectIndex effectIndex) {
         visualRenderer.setImage(effectIndex.getImageIndex().getImage());
         visualRenderer.setSize(ICON_SIZE);

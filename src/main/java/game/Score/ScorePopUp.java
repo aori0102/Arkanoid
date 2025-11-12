@@ -51,7 +51,6 @@ public final class ScorePopUp extends MonoBehaviour {
         var timeInterval = (Time.getTime() - spawnTime) / LIFE_TIME;
         var opacity = Math.sin(3.0 * timeInterval) * (-Math.log(timeInterval / 1.1));
         var altitude = Math.pow(Math.log(14.8 * timeInterval), 3.0) / 20.0 + 0.4;
-        //TODO: add a queue here
 
         scoreText.setOpacity(opacity);
         getTransform().setGlobalPosition(entryPoint.add(Vector2.up().multiply(altitude * POP_UP_AMPLITUDE)));

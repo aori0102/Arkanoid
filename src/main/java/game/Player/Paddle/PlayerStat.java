@@ -48,6 +48,11 @@ public final class PlayerStat extends EntityStat implements
     }
 
     @Override
+    public void awake() {
+        loadProgress();
+    }
+
+    @Override
     public void loadProgress() {
 
         var progress = DataManager.getInstance().getProgress();

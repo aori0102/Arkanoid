@@ -3,7 +3,6 @@ package game.UI.Buttons;
 import org.Animation.AnimationClipData;
 import org.Audio.AudioManager;
 import org.Audio.SFXAsset;
-import org.Event.EventHandler;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Animation.SpriteAnimator;
@@ -41,12 +40,12 @@ public abstract class BaseButton extends MonoBehaviour {
     //For scaling animations
     private double scale = 1.0;
     private double targetScale = 1.0;
-    private final double SCALE_SPEED = 8.0; // higher = faster pop
-    private final double CLICKED_SCALE = 1.15;
-    private final double EXIT_SCALE = 1.0;
-    private final double ENTER_SCALE = 1.05;
-    private final double RELEASE_SCALE = 1.0;
-    private final double PRESS_SCALE = 1.15;
+    private static final double SCALE_SPEED = 8.0; // higher = faster pop
+    private static final double CLICKED_SCALE = 1.15;
+    private static final double EXIT_SCALE = 1.0;
+    private static final double ENTER_SCALE = 1.05;
+    private static final double RELEASE_SCALE = 1.0;
+    private static final double PRESS_SCALE = 1.15;
 
     public BaseButton(GameObject owner) {
         super(owner);

@@ -22,7 +22,8 @@ public class InvincibleSkill extends Skill {
     private static final double SPEED_BOOSTED_MULTIPLIER_INCREMENT = 0.42;
     private static final double INVINCIBLE_TIME = 5.0;
     private static final double ENLARGE_SCALE = 1.75;
-    private Time.CoroutineID invincibleCoroutineID;
+
+    private Time.CoroutineID invincibleCoroutineID = null;
 
     /**
      * Create this MonoBehaviour.
@@ -31,6 +32,11 @@ public class InvincibleSkill extends Skill {
      */
     public InvincibleSkill(GameObject owner) {
         super(owner);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Time.removeCoroutine(invincibleCoroutineID);
     }
 
     /**

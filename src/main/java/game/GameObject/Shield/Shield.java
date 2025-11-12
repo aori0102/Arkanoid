@@ -1,11 +1,14 @@
 package game.GameObject.Shield;
 
+import game.Brick.Brick;
 import org.Annotation.LinkViaPrefab;
 import org.GameObject.GameObject;
 import org.GameObject.MonoBehaviour;
 import org.Physics.BoxCollider;
 import utils.Time;
 import utils.Vector2;
+
+import javax.management.Descriptor;
 
 /**
  * Singleton class that represents the player's shield.
@@ -51,6 +54,11 @@ public class Shield extends MonoBehaviour {
         getTransform().setGlobalPosition(new Vector2(1190, 720));
 
         turnOff(); // Ensure shield starts inactive
+    }
+
+    @Override
+    protected void onDestroy() {
+        Time.removeCoroutine(turnOff_coroutineID);
     }
 
     public void turnOn() {

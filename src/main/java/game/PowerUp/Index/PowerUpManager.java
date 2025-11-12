@@ -1,7 +1,8 @@
 package game.PowerUp.Index;
 
 import game.Ball.BallsManager;
-import game.PowerUp.*;
+import game.Level.LevelManager;
+import game.Level.LevelType;
 import org.Event.EventActionID;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
@@ -15,10 +16,12 @@ import utils.Vector2;
  * - Spawns new power-ups.
  * - Keeps track of the number of active power-ups for each type.
  * - Handles events when power-ups are destroyed.
- *
  * This class is implemented as a singleton.
  */
 public class PowerUpManager extends MonoBehaviour {
+
+    private static final double NORMAL_SPAWN_RATE = 0.36;
+    private static final double FRENZY_SPAWN_RATE = 0.7;
 
     // Singleton instance
     private static PowerUpManager instance = null;
@@ -93,8 +96,7 @@ public class PowerUpManager extends MonoBehaviour {
      */
     public void spawnPowerUp(Vector2 position) {
         var powerUpIndexArray = PowerUpIndex.values();
-        int target = 0;
-        if (Random.range(0, 1) == target) {  // Random chance to spawn
+        if (Random.range(0.0, 1.0) < getSpawnRate()) {  // Random chance to spawn
 
             var chosenKey = powerUpIndexArray[Random.range(0, powerUpIndexArray.length)];
 
@@ -122,6 +124,12 @@ public class PowerUpManager extends MonoBehaviour {
      */
     public static PowerUpManager getInstance() {
         return instance;
+    }
+
+    private double getSpawnRate() {
+        return LevelManager.getInstance().getCurrentLevelType() == LevelType.Frenzy
+                ? FRENZY_SPAWN_RATE
+                : NORMAL_SPAWN_RATE;
     }
 
 }

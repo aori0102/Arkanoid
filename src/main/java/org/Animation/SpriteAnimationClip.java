@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contains data for animating on a sprite sheet.
+ * Contains data for animating on a sprite sheet. This is serialized and deserialized
+ * under {@link AnimationClipAdapter}.
  */
 public class SpriteAnimationClip {
 
@@ -74,52 +75,12 @@ public class SpriteAnimationClip {
         spriteSheet = imageIndex.getImage();
     }
 
-    /**
-     * Set this clip's looping. Should only be
-     * called within {@link SpriteAnimator}.
-     *
-     * @param loop Whether to loop the clip.
-     */
-    protected void setLoop(boolean loop) {
-
-        isLoop = loop;
-        if (tail != null) {
-
-            if (loop) {
-                tail.next = head;
-            } else {
-                tail.next = null;
-            }
-
-        }
-
-    }
-
-    // TODO: doc this script again since changed from animator to clip adapter
-
-    /**
-     * Get the sprite sheet bound to this animation clip.
-     *
-     * @return The sprite sheet bound to this animation clip.
-     */
     protected Image getSpriteSheet() {
         return spriteSheet;
     }
 
-    public void setRenderSize(Vector2 renderSize) {
-        this.renderSize = renderSize;
-    }
-
     public Vector2 getRenderSize() {
         return renderSize;
-    }
-
-    public Vector2 getPivot() {
-        return pivot;
-    }
-
-    public void setPivot(Vector2 renderPivot) {
-        this.pivot = renderPivot;
     }
 
     public ImageAsset.ImageIndex getImageIndex() {
@@ -141,6 +102,33 @@ public class SpriteAnimationClip {
 
     public boolean getLoop() {
         return isLoop;
+    }
+
+    public Vector2 getPivot() {
+        return pivot;
+    }
+
+    public void setRenderSize(Vector2 renderSize) {
+        this.renderSize = renderSize;
+    }
+
+    public void setPivot(Vector2 renderPivot) {
+        this.pivot = renderPivot;
+    }
+
+    public void setLoop(boolean loop) {
+
+        isLoop = loop;
+        if (tail != null) {
+
+            if (loop) {
+                tail.next = head;
+            } else {
+                tail.next = null;
+            }
+
+        }
+
     }
 
 }

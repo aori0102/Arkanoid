@@ -13,6 +13,7 @@ import org.Scene.SceneManager;
 public class MusicHandler extends MonoBehaviour {
 
     private EventActionID musicHandler_onLevelLoaded = null;
+
     /**
      * Create this MonoBehaviour.
      *
@@ -38,7 +39,6 @@ public class MusicHandler extends MonoBehaviour {
 
 
     public static void audioHandler_onSceneChanged(Object sender, SceneKey e) {
-        System.out.println("Music Handler on scene changed!");
         if (e == SceneKey.Menu) {
             AudioManager.stopMusic();
             AudioManager.setCurrentMusicPlayer(MusicAsset.MusicIndex.MainMenuOST);
@@ -47,12 +47,11 @@ public class MusicHandler extends MonoBehaviour {
             AudioManager.stopMusic();
             AudioManager.setCurrentMusicPlayer(MusicAsset.MusicIndex.GameOST);
             AudioManager.playMusic();
-            // TODO: boss fight event fuck you
         }
     }
 
     public static void audioHandler_onLevelLoaded(Object sender, LevelManager.OnLevelLoadedEventArgs e) {
-        if(e.type == LevelType.Showdown){
+        if (e.type == LevelType.Showdown) {
             AudioManager.stopMusic();
             AudioManager.setCurrentMusicPlayer(MusicAsset.MusicIndex.BossOST);
             AudioManager.playMusic();

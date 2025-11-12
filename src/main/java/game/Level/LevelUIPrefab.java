@@ -8,7 +8,7 @@ public final class LevelUIPrefab extends Prefab {
 
     @Override
     public GameObject instantiatePrefab() {
-        return GameObjectManager.instantiate("LevelUI")
+        return GameObjectManager.instantiate("LevelNotificationUI")
                 .addComponent(LevelNotificationUI.class)
                 .getGameObject();
     }

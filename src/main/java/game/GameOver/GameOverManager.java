@@ -29,6 +29,11 @@ public final class GameOverManager extends MonoBehaviour {
 
     private static final double INFO_TWEEN_DELAY = 1.0;
     private static final double DELAY_BETWEEN_REVEAL = 0.8;
+    private static final double DELAY_TO_MENU = 1.0;
+
+    private static final double BUTTON_POSITION_OFFSET = 250;
+    private static final double BUTTON_POSITION_Y = 600;
+    private static final double BUTTON_TWEEN_DURATION = 0.6;
 
     private enum InfoIndex {
         Score,
@@ -42,6 +47,8 @@ public final class GameOverManager extends MonoBehaviour {
     private final InfoIndex[] infoIndices = InfoIndex.values();
 
     private EventActionID levelManager_onGameOver_ID = null;
+
+    private Time.CoroutineID toMenu_coroutineID = null;
 
     @LinkViaPrefab
     private SpriteRenderer background = null;
@@ -66,10 +73,6 @@ public final class GameOverManager extends MonoBehaviour {
 
     @LinkViaPrefab
     private GameOverMenuButton gameOverMenuButton = null;
-
-    private final double BUTTON_POSITION_OFFSET = 250;
-    private final double BUTTON_POSITION_Y = 600;
-    private final double BUTTON_TWEEN_DURATION = 0.6;
 
     private int currentDisplayIndex = 0;
     private Time.CoroutineID revealInfo_coroutineID = null;
@@ -140,6 +143,7 @@ public final class GameOverManager extends MonoBehaviour {
         instance = null;
 
         Time.removeCoroutine(revealInfo_coroutineID);
+        Time.removeCoroutine(toMenu_coroutineID);
     }
 
     public static GameOverManager getInstance() {
@@ -188,7 +192,8 @@ public final class GameOverManager extends MonoBehaviour {
         if (currentDisplayIndex < infoIndices.length) {
             revealInfo_coroutineID = Time.addCoroutine(this::revealInfo, DELAY_BETWEEN_REVEAL);
         } else {
-            Time.addCoroutine(() -> onMainMenuRequested.invoke(this, null), 1); // TODO: magic
+            toMenu_coroutineID
+                    = Time.addCoroutine(() -> onMainMenuRequested.invoke(this, null), DELAY_TO_MENU);
         }
     }
 
