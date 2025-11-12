@@ -212,7 +212,7 @@ Không sử dụng hay cài đặt
 |------------|---------|---------|
 | Java | 17+ | Core language |
 | JavaFX | 19.0.2 | GUI framework |
-| Gradle | 3.9+ | Build tool |
+| Gradle | 2.0+ | Build tool |
 | Jackson | 2.15.0 | JSON processing |
 
 ---
