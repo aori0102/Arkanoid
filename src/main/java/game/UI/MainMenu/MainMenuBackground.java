@@ -10,6 +10,11 @@ import org.Rendering.VideoAsset;
 import org.Rendering.VideoPlayer;
 import utils.Vector2;
 
+/**
+ * Manages the background video display for the main menu screen.
+ * This component initializes a {@link VideoPlayer}, configures it to loop, mute,
+ * and scale up slightly to cover the entire stage area, and starts playback.
+ */
 public class MainMenuBackground extends MonoBehaviour {
     private VideoPlayer videoPlayer;
 
@@ -29,6 +34,12 @@ public class MainMenuBackground extends MonoBehaviour {
         setVideoPlayer(videoPlayer);
     }
 
+    /**
+     * Configures the properties of the {@link VideoPlayer} component.
+     * Sets the video source, pivot, dimensions, and playback options.
+     *
+     * @param videoPlayer The {@link VideoPlayer} component to configure.
+     */
     private void setVideoPlayer(VideoPlayer videoPlayer) {
         videoPlayer.setVideo(VideoAsset.VideoIndex.MainMenuBackground.getVideoPath());
         videoPlayer.setPivot(pivot);

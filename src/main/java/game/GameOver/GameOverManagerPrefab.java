@@ -26,9 +26,9 @@ public final class GameOverManagerPrefab extends Prefab {
 
     private static final String GAME_OVER_LABEL = "Game Over";
     private static final double GAME_OVER_TEXT_SIZE = 128.0;
-    private static final Vector2 GAME_OVER_TEXT_POSITION = new Vector2(Main.STAGE_WIDTH / 2.0, 315.0);
+    private static final Vector2 GAME_OVER_TEXT_POSITION = new Vector2(Main.STAGE_WIDTH / 2.0 , 150.0);
 
-    private static final Vector2 INFO_STARTING_TEXT_POSITION = new Vector2(Main.STAGE_WIDTH / 2.0, 485.0);
+    private static final Vector2 INFO_STARTING_TEXT_POSITION = new Vector2(Main.STAGE_WIDTH / 2.0, 300.0);
     private static final Vector2 INFO_TEXT_OFFSET = new Vector2(0.0, 62.0);
 
     private static final String SCORE_LABEL = "Score";

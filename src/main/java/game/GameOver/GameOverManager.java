@@ -1,22 +1,33 @@
 package game.GameOver;
 
 import game.Level.LevelManager;
+import game.Player.PlayerData.DataManager;
+import game.Player.PlayerData.ProgressData;
+import game.UI.Buttons.GameOverMenuButton;
+import game.UI.Buttons.RestartButton;
+import game.UI.GameOverMenuController;
 import org.Annotation.LinkViaPrefab;
 import org.Event.EventActionID;
 import org.Event.EventHandler;
 import org.Exception.ReinitializedSingletonException;
 import org.GameObject.GameObject;
+import org.GameObject.GameObjectManager;
 import org.GameObject.MonoBehaviour;
+import org.Main;
+import org.Prefab.PrefabIndex;
+import org.Prefab.PrefabManager;
 import org.Rendering.SpriteRenderer;
 import org.Text.TextUI;
 import utils.Time;
+import utils.UITween.Tween;
+import utils.Vector2;
 
 /**
  * Manager class that handles interaction and UI upon game over.
  */
 public final class GameOverManager extends MonoBehaviour {
 
-    private static final double INFO_TWEEN_DELAY = 1.9;
+    private static final double INFO_TWEEN_DELAY = 1.0;
     private static final double DELAY_BETWEEN_REVEAL = 0.8;
 
     private enum InfoIndex {
@@ -50,11 +61,22 @@ public final class GameOverManager extends MonoBehaviour {
     @LinkViaPrefab
     private TextUI gameOverText = null;
 
+    @LinkViaPrefab
+    private RestartButton restartButton = null;
+
+    @LinkViaPrefab
+    private GameOverMenuButton gameOverMenuButton = null;
+
+    private final double BUTTON_POSITION_OFFSET = 250;
+    private final double BUTTON_POSITION_Y = 600;
+    private final double BUTTON_TWEEN_DURATION = 0.6;
+
     private int currentDisplayIndex = 0;
     private Time.CoroutineID revealInfo_coroutineID = null;
 
     public EventHandler<Void> onRetryRequested = new EventHandler<>(GameOverManager.class);
     public EventHandler<Void> onMainMenuRequested = new EventHandler<>(GameOverManager.class);
+    public EventHandler<Void> onAllInfoRevealed = new EventHandler<>(GameOverManager.class);
 
     /**
      * Create this MonoBehaviour.
@@ -67,18 +89,46 @@ public final class GameOverManager extends MonoBehaviour {
             throw new ReinitializedSingletonException("GameOverManager is a singleton!");
         }
         instance = this;
+
+        PrefabManager.instantiatePrefab(PrefabIndex.RestartButton);
+        PrefabManager.instantiatePrefab(PrefabIndex.GameOverMenuButton);
     }
 
     @Override
     public void awake() {
         background.getGameObject().setActive(false);
         gameOverText.getGameObject().setActive(false);
+        restartButton.getGameObject().setActive(false);
+        gameOverMenuButton.getGameObject().setActive(false);
+
+        restartButton.getTransform()
+                .setGlobalPosition(new Vector2(
+                        Main.STAGE_WIDTH / 2 + BUTTON_POSITION_OFFSET,
+                        BUTTON_POSITION_Y));
+
+        gameOverMenuButton.getTransform()
+                .setGlobalPosition(new Vector2(
+                        Main.STAGE_WIDTH / 2 - BUTTON_POSITION_OFFSET,
+                        BUTTON_POSITION_Y
+                ));
+
+        Tween.to(restartButton.getGameObject())
+                .fadeTo(0, 0.0001)
+                .play();
+
+        Tween.to(gameOverMenuButton.getGameObject())
+                .fadeTo(0, 0.0001)
+                .play();
+
+        GameObjectManager.instantiate("GameOverMenuController")
+                .addComponent(GameOverMenuController.class);
     }
 
     @Override
     public void start() {
         levelManager_onGameOver_ID = LevelManager.getInstance().onGameOver
                 .addListener(this::levelManager_onGameOver);
+        onAllInfoRevealed.addListener(this::showButtons);
     }
 
     @Override
@@ -107,10 +157,12 @@ public final class GameOverManager extends MonoBehaviour {
         background.getGameObject().setActive(true);
         gameOverText.getGameObject().setActive(true);
 
-        scoreInfo.setAmountText("57275");
-        levelClearedInfo.setAmountText("23");
-        brickDestroyedInfo.setAmountText("3324");
-        rankInfo.setAmountText("43");
+        ProgressData progressData = DataManager.getInstance().getProgress();
+
+        scoreInfo.setAmountText(String.valueOf(progressData.getScore()));
+        levelClearedInfo.setAmountText(String.valueOf(progressData.getLevel()));
+        brickDestroyedInfo.setAmountText(String.valueOf(progressData.getBrickDestroyed()));
+        rankInfo.setAmountText(String.valueOf(progressData.getRank()));
 
         scoreInfo.flyInInfo();
         levelClearedInfo.flyInInfo();
@@ -136,8 +188,46 @@ public final class GameOverManager extends MonoBehaviour {
         if (currentDisplayIndex < infoIndices.length) {
             revealInfo_coroutineID = Time.addCoroutine(this::revealInfo, DELAY_BETWEEN_REVEAL);
         } else {
-            Time.addCoroutine(() -> onMainMenuRequested.invoke(this, null), 3);
+            Time.addCoroutine(() -> onMainMenuRequested.invoke(this, null), 1); // TODO: magic
         }
+    }
+
+    /**
+     * Shows the final action buttons (Restart and Menu) by making them active and fading them in.
+     * This method is triggered by the {@link #onAllInfoRevealed} event.
+     *
+     * @param sender The object that invoked the event.
+     * @param e      Empty event argument.
+     */
+    private void showButtons(Object sender, Void e) {
+        restartButton.getGameObject().setActive(true);
+        gameOverMenuButton.getGameObject().setActive(true);
+
+        Tween.to(restartButton.getGameObject())
+                .fadeTo(1, BUTTON_TWEEN_DURATION)
+                .play();
+
+        Tween.to(gameOverMenuButton.getGameObject())
+                .fadeTo(1, BUTTON_TWEEN_DURATION)
+                .play();
+    }
+
+    /**
+     * Retrieves the {@link RestartButton} component.
+     *
+     * @return The RestartButton instance.
+     */
+    public RestartButton getRestartButton() {
+        return restartButton;
+    }
+
+    /**
+     * Retrieves the {@link GameOverMenuButton} component.
+     *
+     * @return The GameOverMenuButton instance.
+     */
+    public GameOverMenuButton getGameOverMenuButton() {
+        return gameOverMenuButton;
     }
 
     /**
@@ -204,6 +294,30 @@ public final class GameOverManager extends MonoBehaviour {
      */
     public void linkGameOverText(TextUI gameOverText) {
         this.gameOverText = gameOverText;
+    }
+
+
+    /**
+     * <br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link }
+     * as part of component linking process.</i></b>
+     *
+     * @param restartButton .
+     */
+    public void linkRestartButton(RestartButton restartButton) {
+        this.restartButton = restartButton;
+    }
+
+
+    /**
+     * <br><br>
+     * <b><i><u>NOTE</u> : Only use within {@link }
+     * as part of component linking process.</i></b>
+     *
+     * @param gameOverMenuButton .
+     */
+    public void linkGameOverMenuButton(GameOverMenuButton gameOverMenuButton) {
+        this.gameOverMenuButton = gameOverMenuButton;
     }
 
 }

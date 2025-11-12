@@ -117,7 +117,7 @@ public enum PrefabIndex {
 
     /// GameOverMenu
     GameOverMenuButton(new GameOverMenuButtonPrefab()),
-    RestartMenuButton(new RestartButtonPrefab()),
+    RestartButton(new RestartButtonPrefab()),
 
     /// Voltraxis
     Voltraxis(new VoltraxisPrefab()),

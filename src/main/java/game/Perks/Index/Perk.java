@@ -26,7 +26,12 @@ import utils.UITween.Tween;
 import utils.Vector2;
 
 /**
- * Base class for all player perks.
+ * Base class for all player perks (temporary power-ups/modifiers).
+ * <p>
+ * This class handles the core UI behavior, including animation (idle float, hover scale),
+ * pointer interaction events, random generation of a modifier value, and the display
+ * of the perk's description.
+ * </p>
  */
 public abstract class Perk extends MonoBehaviour
         implements IPointerClickHandler,
@@ -124,15 +129,34 @@ public abstract class Perk extends MonoBehaviour
         onPointerExited.invoke(this, null);
     }
 
+    /**
+     * Internal handler for the pointer clicked event.
+     * Applies the perk's effect to the player's paddle stats and plays a sound effect.
+     *
+     * @param sender The object that invoked the event.
+     * @param e The mouse event data (currently ignored).
+     */
     private void perk_onPointerClicked(Object sender, MouseEvent e) {
         applyPerk(Player.getInstance().getPlayerPaddle().getPaddleStat());
         AudioManager.playSFX(SFXAsset.SFXIndex.OnPerkReceived);
     }
 
+    /**
+     * Gets the randomly generated modifier value for this perk instance.
+     *
+     * @return The modifier value (e.g., speed increase, size change percentage).
+     */
     public double getModifierValue() {
         return modifierValue;
     }
 
+    /**
+     * Internal handler for the pointer entered event.
+     * Triggers the hover scale-up animation and updates the button state.
+     *
+     * @param sender The object that invoked the event.
+     * @param e The mouse event data.
+     */
     private void perk_onPointerEntered(Object sender, MouseEvent e) {
         hoverAnimation();
         buttonState = ButtonState.Hover;
@@ -140,6 +164,13 @@ public abstract class Perk extends MonoBehaviour
 
     }
 
+    /**
+     * Internal handler for the pointer exited event.
+     * Triggers the exit (scale-down) animation and updates the button state.
+     *
+     * @param sender The object that invoked the event.
+     * @param e The mouse event data.
+     */
     private void perk_onPointerExited(Object sender, MouseEvent e) {
         if (!getGameObject().isDestroyed()) {
             exitAnimation();
@@ -149,14 +180,27 @@ public abstract class Perk extends MonoBehaviour
 
     }
 
+    /**
+     * Retrieves the {@link TextUI} component used to display the perk's description.
+     *
+     * @return The text UI component.
+     */
     public TextUI getTextUI() {
         return textUI;
     }
 
+    /**
+     * Clears the text content of the description UI.
+     */
     public void destroyText() {
         textUI.setText("");
     }
 
+    /**
+     * Executes the continuous subtle vertical floating animation (idle animation).
+     * This uses a sine wave function based on real time to create a smooth,
+     * low-amplitude vertical fluctuation (±5 pixels).
+     */
     private void idleAnimation() {
         if (oldPosition == null) {
             oldPosition = getTransform().getGlobalPosition();
@@ -167,6 +211,9 @@ public abstract class Perk extends MonoBehaviour
         getTransform().setGlobalPosition(oldPosition.add(new Vector2(0, swing)));
     }
 
+    /**
+     * Tween animation to scale the perk up when the pointer hovers over it.
+     */
     private void hoverAnimation() {
         Tween.to(getGameObject())
                 .scaleTo(TARGET_SCALE, ANIMATION_DURATION)
@@ -174,6 +221,9 @@ public abstract class Perk extends MonoBehaviour
                 .play();
     }
 
+    /**
+     * Tween animation to scale the perk back down when the pointer exits.
+     */
     private void exitAnimation() {
         Tween.to(getGameObject())
                 .scaleTo(ORIGINAL_SCALE, ANIMATION_DURATION)
@@ -181,21 +231,40 @@ public abstract class Perk extends MonoBehaviour
                 .play();
     }
 
-    private void startAnimation() {
-        Tween.to(getGameObject())
-                .moveY(400, 0.3)
-                .ease(Ease.IN_OUT)
-                .play();
-    }
-
+    /**
+     * Defines the description string for the perk, incorporating the modifier amount.
+     *
+     * @param amount The random modifier value generated for this instance.
+     * @return The formatted description text.
+     */
     protected abstract String getPerkDescription(double amount);
 
+    /**
+     * Defines the minimum value for the random modifier generation.
+     *
+     * @return The minimum modifier value.
+     */
     protected abstract double getMinModifierValue();
 
+    /**
+     * Defines the maximum value for the random modifier generation.
+     *
+     * @return The maximum modifier value.
+     */
     protected abstract double getMaxModifierValue();
 
+    /**
+     * Defines the animation clip data required for the {@link SpriteAnimator}.
+     *
+     * @return The {@link AnimationClipData} for the perk's sprite.
+     */
     protected abstract AnimationClipData getPerkAnimationKey();
 
-    protected abstract void applyPerk(PlayerStat playerStat);
+    /**
+     * Applies the specific effect of the perk to the player's paddle statistics.
+     *
+     * @param paddleStat The {@link PaddleStat} object of the player's paddle.
+     */
+    protected abstract void applyPerk(PaddleStat paddleStat);
 
 }
