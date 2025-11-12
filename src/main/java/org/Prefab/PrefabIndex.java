@@ -124,6 +124,9 @@ public enum PrefabIndex {
     Voltraxis_Visual(new VoltraxisVisualPrefab()),
     Voltraxis_SFX(new VoltraxisSFXPrefab()),
 
+    /// Introduction
+    Introduction(new IntroductionPrefab()),
+
     /// Ball
     Ball(new BallPrefab()),
     Ball_Particle(new BallParticlePrefab()),

@@ -13,6 +13,7 @@ public final class SceneBuilderManager {
         sceneBuilderMap.put(SceneKey.Menu, new MenuSceneBuilder());
         sceneBuilderMap.put(SceneKey.InGame, new InGameSceneBuilder());
         sceneBuilderMap.put(SceneKey.DoNotDestroyOnLoad, new DoNotDestroyOnLoadSceneBuilder());
+        sceneBuilderMap.put(SceneKey.Introduction, new IntroductionSceneBuilder());
     }
 
     public static void buildScene(SceneKey key) {

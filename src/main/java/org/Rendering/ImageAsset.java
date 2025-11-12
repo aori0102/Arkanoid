@@ -42,6 +42,9 @@ public class ImageAsset {
         DimmedBackground("/UI/DimmedBackground.png"),
         BlackBackground("/UI/BlackBackground.png"),
 
+        /// Logo
+        Nidemoka("/UI/Nidemoka.png"),
+
         /// Perks
         Perks("/UI/Perks.png"),
 
