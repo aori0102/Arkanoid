@@ -7,7 +7,7 @@ Group [Số nhóm] - Class [Mã lớp]
 3. [Họ tên 3] - [MSSV 3]
 4. Đào Văn Đức - 24021409
 
-**Instructor**: Kiều Văn Tuyên / Trần Việt Cường
+**Instructor**: Kiều Văn Tuyên / Trần Hoàng Việt
 
 **Semester**: HK1/2025-2026
 
@@ -64,7 +64,7 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 
 **Purpose:** Allows objects with incompatible interfaces to collaborate. It acts as a wrapper or translator between two different interfaces.
 ### 6. Prototype
-**Used in:**
+**Used in:** `Brick.Init`
 
 **Purpose:** Lets you copy existing objects (prototypes) without making your code dependent on their concrete classes. Ideal for creating new objects by cloning a pre-configured template.
 
@@ -74,7 +74,7 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 **Purpose:** Lets you pass requests along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.
 
 ### 8. FlyWeight
-**Used in:** ''
+**Used in:** ``
 
 **Purpose:** Purpose: Lets you fit more objects into the available RAM by sharing common (intrinsic) state between multiple objects instead of keeping all data in each object.
 
@@ -153,10 +153,10 @@ No implement.
 ![Main Menu](docs/screenshots/menu.png)
 
 **Gameplay**  
-![Gameplay](docs/screenshots/gameplay.png)
+![Gameplay](src/UML/GamePlay.png)
 
 **Power-ups in Action**  
-![Power-ups](docs/screenshots/powerups.png)
+![Power-ups](src/UML/PowerUp.png)
 
 **Leaderboard**  
 ![Leaderboard](docs/screenshots/leaderboard.png)
