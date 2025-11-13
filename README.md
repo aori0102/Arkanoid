@@ -50,18 +50,18 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 **Used in:** `BrickEvent`, `BrickGenMap`
 
 **Purpose:** Allows defining a family of algorithms (e.g., different event logics or map generation styles), putting each into a separate class, and making their objects interchangeable.
-### 3. Factory Pattern
-**Used in:**
+### 3. Abstract factory Pattern
+**Used in:** `ObstaclePrefab`, `Particle`
 
 **Purpose:** Provides an interface for creating objects, but lets subclasses (or handler classes) decide which class to instantiate. It centralizes object creation logic.
 
 ### 4.Composite Pattern
-**Used in:**
+**Used in:** ``,``
 
 **Purpose:** Lets you compose objects into tree structures to represent part-whole hierarchies. It allows clients to treat individual objects and compositions of objects uniformly.
 
 ### 5. Adapter
-**Used in:**
+**Used in:** ``,``
 
 **Purpose:** Allows objects with incompatible interfaces to collaborate. It acts as a wrapper or translator between two different interfaces.
 ### 6. Prototype
@@ -75,7 +75,7 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 **Purpose:** Lets you pass requests along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.
 
 ### 8. FlyWeight
-**Used in:** ``
+**Used in:** `` 
 
 **Purpose:** Purpose: Lets you fit more objects into the available RAM by sharing common (intrinsic) state between multiple objects instead of keeping all data in each object.
 
