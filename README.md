@@ -90,7 +90,8 @@ Không sử dụng hay cài đặt
 
 1. Clone the project from the repository.
 2. Open the project in the IDE.
-3. Run the project.
+3. Download VLC application.
+4. Run the project.
 
 ## Usage
 
