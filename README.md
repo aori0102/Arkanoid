@@ -16,18 +16,18 @@ Group 8 - Class 2526I-INT2204-11
 This is a classic Arkanoid game developed in Java as a final project for Object-Oriented Programming course. The project demonstrates the implementation of OOP principles and design patterns.
 
 **Key features:**
-1. The game is developed using Java 17+ with JavaFX/Swing for GUI.
+1. The game is developed using Java 17+ with JavaFX for GUI.
 2. Implements core OOP principles: Encapsulation, Inheritance, Polymorphism, and Abstraction.
 3. Applies multiple design patterns: Singleton, Factory Method, Strategy, Observer, and State.
-4. Features multithreading for smooth gameplay and responsive UI.
-5. Includes sound effects, animations.
-6. Supports save/load game functionality and leaderboard system.
-7. Update gameplay by adding a boss, skill system and power-up system. 
+4. Includes sound effects, animations.
+5. Supports save/load game functionality and leaderboard system.
+6. Update gameplay by adding a boss, skill system and power-up system. 
 
 **Game mechanics:**
 - Control a paddle to bounce a ball and destroy bricks
 - Collect power-ups for special abilities
 - Progress through multiple levels with increasing difficulty
+- Defeat boss
 - Score points and compete on the leaderboard
 
 ---
@@ -42,7 +42,7 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 ## Design Patterns Implementation
 
 ### 1. Singleton Pattern
-**Used in:** `GameManager`, `AudioManager`, `ResourceLoader`
+**Used in:** `GameManager`, `AudioManager`, `ResourceLoader`, etc.
 
 **Purpose:** Ensure only one instance exists throughout the application.
 
@@ -50,20 +50,22 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 **Used in:** `BrickEvent`, `BrickGenMap`
 
 **Purpose:** Allows defining a family of algorithms (e.g., different event logics or map generation styles), putting each into a separate class, and making their objects interchangeable.
-### 3. Abstract factory Pattern
-**Used in:** `ObstaclePrefab`, `Particle`
+
+### 3. Factory Pattern
+**Used in:** `ObstaclePrefab`, `Particle`, `Prefab`
 
 **Purpose:** Provides an interface for creating objects, but lets subclasses (or handler classes) decide which class to instantiate. It centralizes object creation logic.
 
 ### 4.Composite Pattern
-**Used in:** ``,``
+**Used in:** `GameObject`, any class under `MonoBehaviour`
 
 **Purpose:** Lets you compose objects into tree structures to represent part-whole hierarchies. It allows clients to treat individual objects and compositions of objects uniformly.
 
 ### 5. Adapter
-**Used in:** ``,``
+**Used in:** `AnimationClipAdapter`
 
 **Purpose:** Allows objects with incompatible interfaces to collaborate. It acts as a wrapper or translator between two different interfaces.
+
 ### 6. Prototype
 **Used in:** `Brick.Init`
 
@@ -74,15 +76,10 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 
 **Purpose:** Lets you pass requests along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.
 
-### 8. FlyWeight
-**Used in:** `` 
-
-**Purpose:** Purpose: Lets you fit more objects into the available RAM by sharing common (intrinsic) state between multiple objects instead of keeping all data in each object.
-
 ---
 
 ## Multithreading Implementation
-Không sử dụng hay cài đặt
+Not implemented.
 
 ---
 
@@ -100,20 +97,21 @@ Không sử dụng hay cài đặt
 |-----|--------|
 | `←` or `A` | Move paddle left |
 | `→` or `D` | Move paddle right |
-| `ESC` | Pause game |
 | `Q` | Use Laser Beam skill |
 | `E` | Use Updraft skill |
 | `X`| Use Invincible skill|
-| ` SHIFT ` | Use Dash Skill|
+| `SHIFT` | Use Dash Skill|
 
 ### How to Play
-1. **Start the game**: Click "New Game" from the main menu.
+1. **Start the game**: Click "Start" from the main menu.
 2. **Control the paddle**: Use arrow keys or A/D to move left and right.
-3. **Launch the ball**: Press SPACE to launch the ball from the paddle.
+3. **Launch the ball**: Hold the mouse and drag to any direction desired, then release to shoot the ball.
 4. **Destroy bricks**: Bounce the ball to hit and destroy bricks.
 5. **Collect power-ups**: Catch falling power-ups for special abilities.
 6. **Avoid losing the ball**: Keep the ball from falling below the paddle.
 7. **Complete the level**: Destroy all destructible bricks to advance.
+8. **Earn perks**: Earn a perk for every rank advanced.
+9. **Boss fight**: Defeat boss every 5 levels.
 
 ### Power-ups
 | Icon                                                                 | Name         | Effect |
@@ -136,26 +134,23 @@ Không sử dụng hay cài đặt
 
 ### Bricks
 
-| Icon | Name | Effect | Health | Score |
+| Icon | Name | Effect | Health | Score | EXP |
 |---|---|---|--------|-------|
-| <img src="src/main/resources/Brick/brick_normal.png" width="50px"> | Normal | No Effect | 36     | 2     |
-| <img src="src/main/resources/Brick/SteelBrick.png" width="50px"> | Steel | No Effect | 80     | 6     | 
-| <img src="src/main/resources/Brick/DiamondBrick.png" width="50px"> | Diamond | No Effect | 999    | 8     |
-| <img src="src/main/resources/Brick/RockBrick.png" width="50px"> | Rock | Destroy all brick in same column or same row | 100    | 4     | 
-| <img src="src/main/resources/Brick/RocketBrick.png" width="50px"> | Rocket | Select amount of random brick then destroy them | 100    | 7     | 
-| <img src="src/main/resources/Brick/RebornBrick.png" width="50px"> | Wheel | Destroy all brick in two random column | 100    | 3     | 
-| <img src="src/main/resources/Brick/GiftBrick.png" width="50px"> | Gift | Increase amount of health for all brick that have same side with it | 100    | 2     |
-| <img src="src/main/resources/Brick/BombBrick.png" width="50px"> | Bomb | Destroy all brick that have same side | 100    | 4     |
-| <img src="src/main/resources/Brick/AngelBrick.png" width="50px"> | Angel | Increase amount of health for some random brick | 100    | 5     | 
+| <img src="src/main/resources/Brick/brick_normal.png" width="50px"> | Normal | No Effect | 36     | 100     | 2     |
+| <img src="src/main/resources/Brick/SteelBrick.png" width="50px"> | Steel | No Effect | 80     | 320     |  6     |
+| <img src="src/main/resources/Brick/DiamondBrick.png" width="50px"> | Diamond | No Effect | 999    | 280     | 8     |
+| <img src="src/main/resources/Brick/RockBrick.png" width="50px"> | Rock | Destroy all brick in same column or same row | 100    | 130     |  4     |
+| <img src="src/main/resources/Brick/RocketBrick.png" width="50px"> | Rocket | Select amount of random brick then destroy them | 100    | 110     |  7     |
+| <img src="src/main/resources/Brick/RebornBrick.png" width="50px"> | Wheel | Destroy all brick in two random column | 100    | 90     |   3     |
+| <img src="src/main/resources/Brick/GiftBrick.png" width="50px"> | Gift | Increase amount of health for all brick that have same side with it | 100    | 50     | 2     |
+| <img src="src/main/resources/Brick/BombBrick.png" width="50px"> | Bomb | Destroy all brick that have same side | 100    | 210     | 4     |
+| <img src="src/main/resources/Brick/AngelBrick.png" width="50px"> | Angel | Increase amount of health for some random brick | 100    | 180     |  5     |
 
 
 
 ### Scoring System
-- Normal Brick: 100 points
-- Strong Brick: 300 points
-- Explosive Brick: 500 points + nearby bricks
-- Power-up Collection: 50 points
-- Combo Multiplier: x2, x3, x4... for consecutive hits
+- Combo Multiplier: x2, x3, x4... for consecutive hits without losing every balls
+- Score increment is based on the brick's score specified above, with an additional amount of the current combo
 
 ---
 
