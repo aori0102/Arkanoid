@@ -171,9 +171,7 @@ Not implemented.
 ![Leaderboard](docs/screenshots/leaderboard.png)
 
 ### Video Demo
-[![Video Demo](docs/screenshots/video-thumbnail.png)](docs/demo/gameplay.mp4)
-
-*Full gameplay video is available in `docs/demo/gameplay.mp4`*
+[![Watch video](https://img.youtube.com/vi/RNZWym0eedA/hqdefault.jpg)](https://www.youtube.com/watch?v=RNZWym0eedA)
 
 ---
 
