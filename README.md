@@ -158,17 +158,11 @@ Not implemented.
 
 ### Screenshots
 
-**Main Menu**  
-![Main Menu](docs/screenshots/menu.png)
-
 **Gameplay**  
 ![Gameplay](src/UML/GamePlay.png)
 
 **Power-ups in Action**  
 ![Power-ups](src/UML/PowerUp.png)
-
-**Leaderboard**  
-![Leaderboard](docs/screenshots/leaderboard.png)
 
 ### Video Demo
 [![Watch video](https://img.youtube.com/vi/RNZWym0eedA/hqdefault.jpg)](https://www.youtube.com/watch?v=RNZWym0eedA)
