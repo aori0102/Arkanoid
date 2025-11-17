@@ -135,7 +135,7 @@ Not implemented.
 ### Bricks
 
 | Icon | Name | Effect | Health | Score | EXP |
-|---|---|---|--------|-------|
+|------|------|--------|--------|-------|-----|
 | <img src="src/main/resources/Brick/brick_normal.png" width="50px"> | Normal | No Effect | 36     | 100     | 2     |
 | <img src="src/main/resources/Brick/SteelBrick.png" width="50px"> | Steel | No Effect | 80     | 320     |  6     |
 | <img src="src/main/resources/Brick/DiamondBrick.png" width="50px"> | Diamond | No Effect | 999    | 280     | 8     |
