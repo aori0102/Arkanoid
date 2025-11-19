@@ -76,6 +76,11 @@ This is a classic Arkanoid game developed in Java as a final project for Object-
 
 **Purpose:** Lets you pass requests along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.
 
+### 8. Observer
+**Used in:** `EventHandler` and any of its declaration
+
+**Purpose:** Lets you define a subscription mechanism to notify multiple objects about any events that happen to the object they’re observing.
+
 ---
 
 ## Multithreading Implementation
